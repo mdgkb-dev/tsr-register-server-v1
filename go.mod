@@ -14,4 +14,5 @@ require (
 	github.com/uptrace/bun/dialect/sqlitedialect v0.4.0
 	github.com/uptrace/bun/driver/pgdriver v0.4.0
 	github.com/uptrace/bun/extra/bundebug v0.4.0
+	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
 )

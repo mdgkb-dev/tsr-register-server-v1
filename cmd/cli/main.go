@@ -32,7 +32,6 @@ func doActionApi(action *string, name NameFormats) {
 		path := fmt.Sprintf("models/%s.go", name.PascalCase)
 		writeFile(path, &res)
 
-		fmt.Println(name)
 		err := os.Mkdir(fmt.Sprintf("handlers/%s", name.CamelCase), os.ModePerm)
 		if err != nil {
 			log.Fatal(err)

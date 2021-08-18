@@ -1,4 +1,4 @@
-package helpers
+package models
 
 import (
 	"errors"
@@ -6,24 +6,35 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v7"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"os"
 	"strings"
 	"time"
 )
 
-type AccessDetails struct {
-	AccessUuid string
-	UserId     int64
+type User struct {
+	ID           *uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Email        *string    `json:"email"`
+	Password     *string    `bun:"-" json:"password"`
+	HashPassword []byte     `json:"password"`
 }
 
-type TokenDetails struct {
-	AccessToken  string `json:"accessToken"`
-	RefreshToken string `json:"refreshToken"`
-	AccessUuid   string
-	RefreshUuid  string
-	AtExpires    int64
-	RtExpires    int64
+func (u *User) GenerateHashPassword() error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(*u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	u.HashPassword = hash
+	return nil
+}
+
+func (u *User) CompareWithHashPassword(password *string) bool {
+	return bcrypt.CompareHashAndPassword(u.HashPassword, []byte(*password)) == nil
+}
+
+func (u *User) CreateToken() (*TokenDetails, error) {
+	return CreateToken(u.ID.String())
 }
 
 func CreateToken(userid string) (*TokenDetails, error) {

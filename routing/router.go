@@ -3,7 +3,8 @@ package routing
 import (
 	"mdgkb/tsr-tegister-server-v1/config"
 	"mdgkb/tsr-tegister-server-v1/helpers"
-	"mdgkb/tsr-tegister-server-v1/routing/test"
+	"mdgkb/tsr-tegister-server-v1/routing/anthropometry"
+	"mdgkb/tsr-tegister-server-v1/routing/auth"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
@@ -16,5 +17,6 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	r.Static("/static", "./static/")
 	api := r.Group("/api/v1")
 
-	test.Init(api.Group("/users"), db, localUploader)
+	anthropometry.Init(api.Group("/anthropometry"), db, localUploader)
+	auth.Init(api.Group("/auth"), db, redisClient)
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/go-redis/redis/v7"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/extra/bundebug"
-	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
@@ -26,8 +25,7 @@ func InitDB(conf *config.Config) *bun.DB {
 }
 
 func recognizeModels(db *bun.DB) {
-	db.RegisterModel((*models.NewsToCategory)(nil))
-	db.RegisterModel((*models.NewsToTag)(nil))
+	//db.RegisterModel((*models.NewsToCategory)(nil))
 }
 
 var client *redis.Client
