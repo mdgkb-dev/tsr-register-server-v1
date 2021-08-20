@@ -1,11 +1,18 @@
 package documentTypes
 
 import (
+	documentTypeFields "mdgkb/tsr-tegister-server-v1/handlers/documentTypesFields"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
 func (s *Service) Create(item *models.DocumentType) error {
-	return s.repository.create(item)
+	err := s.repository.create(item)
+	if err != nil {
+		return err
+	}
+	item.SetIdForChildren()
+	err = documentTypeFields.CreateService(s.repository.getDB()).CreateMany(item.DocumentTypeFields)
+	return err
 }
 
 func (s *Service) GetAll() ([]*models.DocumentType, error) {
@@ -25,7 +32,20 @@ func (s *Service) Get(id *string) (*models.DocumentType, error) {
 }
 
 func (s *Service) Update(item *models.DocumentType) error {
-	return s.repository.update(item)
+	err := s.repository.update(item)
+	if err != nil {
+		return err
+	}
+	item.SetIdForChildren()
+	documentTypeFieldsService := documentTypeFields.CreateService(s.repository.getDB())
+	err = documentTypeFieldsService.UpsertMany(item.DocumentTypeFields)
+	if err != nil {
+		return err
+	}
+	if len(item.DocumentTypeFieldsForDelete) > 0 {
+		err = documentTypeFieldsService.DeleteMany(item.DocumentTypeFieldsForDelete)
+	}
+	return err
 }
 
 func (s *Service) Delete(id *string) error {

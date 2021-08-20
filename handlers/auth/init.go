@@ -21,7 +21,7 @@ type IService interface {
 }
 
 type IRepository interface {
-	getByEmail(*string) (*models.User, error)
+	getByLogin(*string) (*models.User, error)
 	create(*models.User) error
 }
 

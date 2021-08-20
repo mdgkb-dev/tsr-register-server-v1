@@ -1,7 +1,9 @@
 package auth
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 )
@@ -9,24 +11,25 @@ import (
 func (h *Handler) Register(c *gin.Context) {
 	var user *models.User
 	err := c.Bind(&user)
-	if err != nil {
-		c.JSON(500, err.Error())
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	res, err := h.service.Register(user)
-	if err != nil {
-		c.JSON(500, err.Error())
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(200, res)
+	c.JSON(http.StatusOK, res)
 }
 
 func (h *Handler) Login(c *gin.Context) {
-	var user *models.User
-	err := c.Bind(user)
-	res, err := h.service.Login(user)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+	var user models.User
+	err := c.Bind(&user)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	fmt.Println(user)
+	res, err := h.service.Login(&user)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, res)
@@ -34,8 +37,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 func (h *Handler) Logout(c *gin.Context) {
 	_, err := models.ExtractTokenMetadata(c.Request)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, "unauthorized")
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	//delErr := helpers.DeleteTokens(metadata, h.redis)

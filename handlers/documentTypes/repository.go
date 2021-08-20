@@ -2,8 +2,13 @@ package documentTypes
 
 import (
 	"context"
+	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
+
+func (r *Repository) getDB() *bun.DB {
+	return r.db
+}
 
 func (r *Repository) create(item *models.DocumentType) (err error) {
 	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
@@ -17,7 +22,10 @@ func (r *Repository) getAll() (items []*models.DocumentType, err error) {
 
 func (r *Repository) get(id *string) (*models.DocumentType, error) {
 	item := models.DocumentType{}
-	err := r.db.NewSelect().Model(&item).Where("documentTypes.id = ?", *id).Scan(context.Background())
+	err := r.db.NewSelect().Model(&item).
+		Relation("DocumentTypeFields").
+		Where("document_types.id = ?", *id).
+		Scan(context.Background())
 	return &item, err
 }
 

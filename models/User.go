@@ -14,10 +14,10 @@ import (
 )
 
 type User struct {
-	ID           *uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Email        *string    `json:"email"`
-	Password     *string    `bun:"-" json:"password"`
-	HashPassword []byte     `json:"password"`
+	ID    *uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Login *string    `json:"login"`
+	//Email        *string    `json:"email"`
+	Password *string `json:"password"`
 }
 
 func (u *User) GenerateHashPassword() error {
@@ -25,12 +25,17 @@ func (u *User) GenerateHashPassword() error {
 	if err != nil {
 		return err
 	}
-	u.HashPassword = hash
+	pass := string(hash)
+	u.Password = &pass
 	return nil
 }
 
 func (u *User) CompareWithHashPassword(password *string) bool {
-	return bcrypt.CompareHashAndPassword(u.HashPassword, []byte(*password)) == nil
+	p, err := bcrypt.GenerateFromPassword([]byte(*password), bcrypt.DefaultCost)
+	if err != nil {
+		return false
+	}
+	return bcrypt.CompareHashAndPassword(p, []byte(*password)) == nil
 }
 
 func (u *User) CreateToken() (*TokenDetails, error) {

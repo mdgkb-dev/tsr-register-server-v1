@@ -5,10 +5,10 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
-func (r *Repository) getByEmail(email *string) (*models.User, error) {
+func (r *Repository) getByLogin(login *string) (*models.User, error) {
 	user := models.User{}
 	err := r.db.NewSelect().Model(&user).
-		Where("email = ?", *email).
+		Where("login = ?", *login).
 		Scan(r.ctx)
 	return &user, err
 }
