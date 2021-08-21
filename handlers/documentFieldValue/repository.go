@@ -1,29 +1,29 @@
-package documentTypeFields
+package documentFieldValues
 
 import (
 	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
-func (r *Repository) createMany(items []*models.DocumentTypeField) (err error) {
+func (r *Repository) createMany(items []*models.DocumentFieldValue) (err error) {
 	_, err = r.db.NewInsert().Model(&items).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) deleteMany(idPool []string) (err error) {
 	_, err = r.db.NewDelete().
-		Model((*models.DocumentTypeField)(nil)).
+		Model((*models.DocumentFieldValue)(nil)).
 		Where("id IN (?)", bun.In(idPool)).
 		Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) upsertMany(items []*models.DocumentTypeField) (err error) {
+func (r *Repository) upsertMany(items []*models.DocumentFieldValue) (err error) {
 	_, err = r.db.NewInsert().On("conflict (id) do update").
+		Set("value_string = EXCLUDED.value_string").
+		Set("value_number = EXCLUDED.value_number").
+		Set("value_date = EXCLUDED.value_date").
 		Model(&items).
-		Set("name = EXCLUDED.name").
-		Set(`"order" = EXCLUDED."order"`).
-		Set("type = EXCLUDED.type").
 		Exec(r.ctx)
 	return err
 }

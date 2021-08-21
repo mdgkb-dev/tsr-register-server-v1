@@ -16,7 +16,7 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.Patient, error)
+	GetAll(*int) ([]*models.Patient, error)
 	Get(*string) (*models.Patient, error)
 	Create(*models.Patient) error
 	Update(*models.Patient) error
@@ -24,8 +24,9 @@ type IService interface {
 }
 
 type IRepository interface {
+	getDB() *bun.DB
 	create(*models.Patient) error
-	getAll() ([]*models.Patient, error)
+	getAll(*int) ([]*models.Patient, error)
 	get(*string) (*models.Patient, error)
 	update(*models.Patient) error
 	delete(*string) error

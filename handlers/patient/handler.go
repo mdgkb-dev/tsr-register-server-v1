@@ -1,15 +1,19 @@
 package patient
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Patient
-	err := c.Bind(&item)
+	form, _ := c.MultipartForm()
+	err := json.Unmarshal([]byte(form.Value["form"][0]), &item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -21,7 +25,11 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	items, err := h.service.GetAll()
+	offset, err := strconv.Atoi(c.Query("offset"))
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	items, err := h.service.GetAll(&offset)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -48,7 +56,9 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Patient
-	err := c.Bind(&item)
+	form, _ := c.MultipartForm()
+	err := json.Unmarshal([]byte(form.Value["form"][0]), &item)
+	fmt.Println(err)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

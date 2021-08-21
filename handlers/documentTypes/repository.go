@@ -16,7 +16,7 @@ func (r *Repository) create(item *models.DocumentType) (err error) {
 }
 
 func (r *Repository) getAll() (items []*models.DocumentType, err error) {
-	err = r.db.NewSelect().Model(&items).Scan(r.ctx)
+	err = r.db.NewSelect().Model(&items).Relation("DocumentTypeFields").Scan(r.ctx)
 	return items, err
 }
 

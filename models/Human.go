@@ -19,14 +19,30 @@ type Human struct {
 
 	Documents          []*Document `bun:"rel:has-many" json:"documents"`
 	DocumentsForDelete []string    `bun:"-" json:"documentsForDelete"`
+
+	InsuranceCompanyToHuman          []*InsuranceCompanyToHuman `bun:"rel:has-many" json:"insuranceCompanyToHuman"`
+	InsuranceCompanyToHumanForDelete []string                   `bun:"-" json:"insuranceCompanyToHumanForDelete"`
+}
+
+func (item *Human) SetIdForChildren() {
+	if len(item.Documents) > 0 {
+		for i := range item.Documents {
+			item.Documents[i].HumanID = item.ID
+		}
+	}
+	if len(item.InsuranceCompanyToHuman) > 0 {
+		for i := range item.InsuranceCompanyToHuman {
+			item.InsuranceCompanyToHuman[i].HumanID = item.ID
+		}
+	}
 }
 
 type InsuranceCompanyToHuman struct {
 	bun.BaseModel      `bun:"insurance_company_to_human,alias:insurance_company_to_human"`
 	ID                 uuid.UUID         `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Number             int               `json:"number"`
+	Number             string            `json:"number"`
 	InsuranceCompany   *InsuranceCompany `bun:"rel:belongs-to" json:"insuranceCompany"`
 	InsuranceCompanyID uuid.UUID         `bun:"type:uuid" json:"insuranceCompanyId"`
-	Human              *Human            `bun:"rel:has-one" json:"human"`
+	Human              *Human            `bun:"rel:belongs-to" json:"human"`
 	HumanID            uuid.UUID         `bun:"type:uuid" json:"humanId"`
 }

@@ -17,8 +17,33 @@ type Patient struct {
 	AnthropometryData                []*AnthropometryData       `bun:"rel:has-many" json:"anthropometryData"`
 	AnthropometryDataForDelete       []string                   `bun:"-" json:"anthropometryDataForDelete"`
 	Disabilities                     []*Disability              `bun:"rel:has-many" json:"disabilities"`
+	DisabilitiesForDelete            []string                   `bun:"-" json:"disabilitiesForDelete"`
 
-	PatientDiagnosis []*PatientDiagnosis `bun:"rel:has-many" json:"PatientDiagnosis"`
+	PatientDiagnosis          []*PatientDiagnosis `bun:"rel:has-many" json:"patientDiagnosis"`
+	PatientDiagnosisForDelete []string            `bun:"-" json:"patientDiagnosisForDelete"`
+}
+
+func (item *Patient) SetIdForChildren() {
+	if len(item.RepresentativeToPatient) > 0 {
+		for i := range item.RepresentativeToPatient {
+			item.RepresentativeToPatient[i].PatientID = item.ID
+		}
+	}
+	if len(item.AnthropometryData) > 0 {
+		for i := range item.AnthropometryData {
+			item.AnthropometryData[i].PatientID = item.ID
+		}
+	}
+	if len(item.Disabilities) > 0 {
+		for i := range item.Disabilities {
+			item.Disabilities[i].PatientID = item.ID
+		}
+	}
+	if len(item.PatientDiagnosis) > 0 {
+		for i := range item.PatientDiagnosis {
+			item.PatientDiagnosis[i].PatientID = item.ID
+		}
+	}
 }
 
 type RepresentativeToPatient struct {
