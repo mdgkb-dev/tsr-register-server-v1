@@ -16,7 +16,7 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.Representative, error)
+	GetAll(*int) ([]*models.Representative, error)
 	Get(*string) (*models.Representative, error)
 	Create(*models.Representative) error
 	Update(*models.Representative) error
@@ -25,7 +25,7 @@ type IService interface {
 
 type IRepository interface {
 	create(*models.Representative) error
-	getAll() ([]*models.Representative, error)
+	getAll(*int) ([]*models.Representative, error)
 	get(*string) (*models.Representative, error)
 	update(*models.Representative) error
 	delete(*string) error

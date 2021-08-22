@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"path/filepath"
 	"time"
 )
 
@@ -21,6 +22,24 @@ type Patient struct {
 
 	PatientDiagnosis          []*PatientDiagnosis `bun:"rel:has-many" json:"patientDiagnosis"`
 	PatientDiagnosisForDelete []string            `bun:"-" json:"patientDiagnosisForDelete"`
+
+	RegisterToPatient          []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
+	RegisterToPatientForDelete []string             `bun:"-" json:"registerToPatientForDelete"`
+
+	RegisterPropertyToPatient    []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
+	RegisterPropertySetToPatient []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
+}
+
+func (item *Patient) SetFilePath(fileInfoId *string) *string {
+	newPath := filepath.Join(item.Human.ID.String(), *fileInfoId)
+
+	for i := range item.Human.Documents {
+		item.Human.Documents[i].SetFilePath(fileInfoId, &newPath)
+	}
+	for i := range item.Disabilities {
+		item.Disabilities[i].SetFilePath(fileInfoId, &newPath)
+	}
+	return &newPath
 }
 
 func (item *Patient) SetIdForChildren() {
@@ -44,6 +63,11 @@ func (item *Patient) SetIdForChildren() {
 			item.PatientDiagnosis[i].PatientID = item.ID
 		}
 	}
+	if len(item.RegisterToPatient) > 0 {
+		for i := range item.RegisterToPatient {
+			item.RegisterToPatient[i].PatientID = item.ID
+		}
+	}
 }
 
 type RepresentativeToPatient struct {
@@ -64,8 +88,8 @@ type PatientDiagnosis struct {
 	PatientID         uuid.UUID        `bun:"type:uuid" json:"PatientId"`
 	MkbDiagnosis      *MkbDiagnosis    `bun:"rel:belongs-to" json:"mkbDiagnosis"`
 	MkbDiagnosisID    uuid.UUID        `bun:"type:uuid" json:"mkbDiagnosisId"`
-	MkbSubDiagnosis   *MkbSubDiagnosis `bun:"rel:has-one" json:"mkbSubDiagnosis"`
-	MkbSubDiagnosisID uuid.UUID        `bun:"type:uuid" json:"mkbSubDiagnosisId"`
+	MkbSubDiagnosis   *MkbSubDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
+	MkbSubDiagnosisID uuid.NullUUID    `bun:"type:uuid,nullzero" json:"mkbSubDiagnosisId"`
 	Primary           bool             `json:"primary"`
 }
 
@@ -92,7 +116,7 @@ type RegisterToPatient struct {
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Register      *Register `bun:"rel:belongs-to" json:"register"`
 	RegisterID    uuid.UUID `bun:"type:uuid" json:"registerId"`
-	Patient       *Patient  `bun:"rel:has-one" json:"patient"`
+	Patient       *Patient  `bun:"rel:belongs-to" json:"patient"`
 	PatientID     uuid.UUID `bun:"type:uuid" json:"PatientId"`
 }
 

@@ -22,7 +22,19 @@ func (r *Repository) getAll() (items []*models.Register, err error) {
 func (r *Repository) get(id *string) (*models.Register, error) {
 	item := models.Register{}
 	err := r.db.NewSelect().
-		Model(&item).Relation("RegisterGroupToRegister.RegisterGroup").Where("register.id = ?", *id).Scan(r.ctx)
+		Model(&item).
+		Relation("RegisterGroupToRegister.RegisterGroup").
+		Relation("RegisterDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
+		Relation("RegisterDiagnosis.MkbDiagnosis.MkbGroup").
+		Relation("RegisterDiagnosis.MkbSubDiagnosis").
+		Relation("RegisterGroupToRegister.RegisterGroup.RegisterPropertyToRegisterGroup.RegisterProperty.ValueType").
+		Relation("RegisterGroupToRegister.RegisterGroup.RegisterPropertyToRegisterGroup.RegisterProperty.RegisterPropertySet").
+		Relation("RegisterGroupToRegister.RegisterGroup.RegisterPropertyToRegisterGroup.RegisterProperty.RegisterPropertyRadio").
+		Relation("RegisterToPatient.Patient.Human").
+		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
+		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
+		Relation("RegisterToPatient.Patient.RegisterPropertySetToPatient.RegisterPropertySet").
+		Where("register.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }
 

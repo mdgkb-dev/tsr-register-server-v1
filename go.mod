@@ -10,7 +10,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/kennygrant/sanitize v1.2.4
 	github.com/spf13/viper v1.8.1
-	github.com/uptrace/bun v0.4.0
+	github.com/uptrace/bun v1.0.0-rc.1
 	github.com/uptrace/bun/dialect/sqlitedialect v0.4.0
 	github.com/uptrace/bun/driver/pgdriver v0.4.0
 	github.com/uptrace/bun/extra/bundebug v0.4.0

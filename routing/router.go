@@ -2,7 +2,7 @@ package routing
 
 import (
 	"mdgkb/tsr-tegister-server-v1/config"
-	"mdgkb/tsr-tegister-server-v1/helpers"
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 	"mdgkb/tsr-tegister-server-v1/routing/anthropometry"
 	"mdgkb/tsr-tegister-server-v1/routing/auth"
 	"mdgkb/tsr-tegister-server-v1/routing/documentTypes"
@@ -23,7 +23,7 @@ import (
 )
 
 func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Config) {
-	localUploader := helpers.NewLocalUploader(&config.UploadPath)
+	localUploader := uploadHelper.NewLocalUploader(&config.UploadPath)
 	r.Static("/static", "./static/")
 	api := r.Group("/api/v1")
 
@@ -36,7 +36,7 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	registerProperty.Init(api.Group("/register-properties"), db)
 	registerGroup.Init(api.Group("/register-groups"), db)
 	register.Init(api.Group("/registers"), db)
-	patient.Init(api.Group("/patients"), db)
+	patient.Init(api.Group("/patients"), db, localUploader)
 	meta.Init(api.Group("/meta"), db)
 	representative.Init(api.Group("/representatives"), db)
 }

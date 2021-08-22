@@ -277,6 +277,8 @@ github.com/ugorji/go/codec v1.1.7 h1:2SvQaVZ1ouYrrKKwoSk2pzd4A9evlKJb9oTL+OaLUSs
 github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=
 github.com/uptrace/bun v0.4.0 h1:qzVbiSQa4Md2mXkiIBDB1ypyBuXBWirCiwofRbYMm4o=
 github.com/uptrace/bun v0.4.0/go.mod h1:aL6D9vPw8DXaTQTwGrEPtUderBYXx7ShUmPfnxnqscw=
+github.com/uptrace/bun v1.0.0-rc.1 h1:yMjz/JdlgYRema5mk59URzjAV7HpOV58Fj3KID34K9U=
+github.com/uptrace/bun v1.0.0-rc.1/go.mod h1:aL6D9vPw8DXaTQTwGrEPtUderBYXx7ShUmPfnxnqscw=
 github.com/uptrace/bun/dialect/sqlitedialect v0.4.0 h1:zkKx4ZhQPaOlIZ2a10Ee3ds+lSBcYn2UNfEjKZGCs4Q=
 github.com/uptrace/bun/dialect/sqlitedialect v0.4.0/go.mod h1:2mWkxqt5qEnU0UuFhb9B9m6vmASyBGt8MnscYusJJRA=
 github.com/uptrace/bun/driver/pgdriver v0.4.0 h1:t+qjdZZ87tFcNBcshlPzJ6mmwcOJNSUKM8pKYUa5lVk=

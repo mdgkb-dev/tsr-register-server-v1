@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"path/filepath"
 )
 
 type Disability struct {
@@ -20,6 +21,17 @@ func (item *Disability) SetIdForChildren() {
 	if len(item.Edvs) > 0 {
 		for i := range item.Edvs {
 			item.Edvs[i].DisabilityID = item.ID
+		}
+	}
+}
+
+func (item *Disability) SetFilePath(fileCategory *string, path *string) {
+	for i := range item.Edvs {
+		fileId := item.Edvs[i].FileInfo.ID.String()
+		if fileId == *fileCategory {
+			newPath := filepath.Join(*path, item.ID.String(), fileId)
+			path = &newPath
+			item.Edvs[i].FileInfo.FileSystemPath = newPath
 		}
 	}
 }

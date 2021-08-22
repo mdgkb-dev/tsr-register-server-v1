@@ -13,6 +13,8 @@ type Register struct {
 	RegisterGroupToRegisterForDelete []string                   `bun:"-" json:"registerGroupToRegisterForDelete"`
 	RegisterDiagnosis                []*RegisterDiagnosis       `bun:"rel:has-many" json:"registerDiagnosis"`
 	RegisterDiagnosisForDelete       []string                   `bun:"-" json:"registerDiagnosisForDelete"`
+
+	RegisterToPatient []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
 }
 
 func (item *Register) SetIdForChildren() {
@@ -31,19 +33,19 @@ func (item *Register) SetIdForChildren() {
 type RegisterGroupToRegister struct {
 	bun.BaseModel   `bun:"register_group_to_register,alias:register_group_to_register"`
 	ID              uuid.UUID      `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Register        *Register      `bun:"rel:belongs-to" json:"register"`
 	RegisterID      uuid.UUID      `bun:"type:uuid" json:"registerId"`
-	Register        *Register      `bun:"rel:has-one" json:"register"`
+	RegisterGroup   *RegisterGroup `bun:"rel:belongs-to" json:"registerGroup"`
 	RegisterGroupID uuid.UUID      `bun:"type:uuid" json:"registerGroupId"`
-	RegisterGroup   *RegisterGroup `bun:"rel:has-one" json:"registerGroup"`
 }
 
 type RegisterDiagnosis struct {
 	bun.BaseModel     `bun:"register_diagnosis,alias:register_diagnosis"`
 	ID                uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Register          *Register     `bun:"rel:belongs-to" json:"register"`
 	RegisterID        uuid.UUID     `bun:"type:uuid" json:"registerId"`
-	Register          *Register     `bun:"rel:has-one" json:"register"`
+	MkbDiagnosis      *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbDiagnosis"`
 	MkbDiagnosisID    uuid.UUID     `bun:"type:uuid" json:"mkbDiagnosisId"`
-	MkbDiagnosis      *MkbDiagnosis `bun:"rel:has-one" json:"mkbDiagnosis"`
+	MkbSubDiagnosis   *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
 	MkbSubDiagnosisID uuid.UUID     `bun:"type:uuid" json:"mkbSubDiagnosisId"`
-	MkbSubDiagnosis   *MkbDiagnosis `bun:"rel:has-one" json:"mkbSubDiagnosis"`
 }

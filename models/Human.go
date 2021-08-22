@@ -16,6 +16,8 @@ type Human struct {
 	DateBirth           time.Time `json:"dateBirth"`
 	AddressRegistration string    `json:"addressRegistration"`
 	AddressResidential  string    `json:"addressResidential"`
+	Contact             *Contact  `bun:"rel:belongs-to" json:"contact"`
+	ContactID           uuid.UUID `bun:"type:uuid" json:"contactId"`
 
 	Documents          []*Document `bun:"rel:has-many" json:"documents"`
 	DocumentsForDelete []string    `bun:"-" json:"documentsForDelete"`

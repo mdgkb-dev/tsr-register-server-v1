@@ -2,6 +2,8 @@ package document
 
 import (
 	documentFieldValues "mdgkb/tsr-tegister-server-v1/handlers/documentFieldValue"
+	"mdgkb/tsr-tegister-server-v1/handlers/fileInfo"
+	fileInfoForDocument "mdgkb/tsr-tegister-server-v1/handlers/fileInfoToDocument"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -17,6 +19,12 @@ func (s *Service) CreateMany(items []*models.Document) error {
 	if err != nil {
 		return err
 	}
+
+	err = fileInfoForDocument.CreateService(s.repository.getDB()).CreateMany(models.GetFileInfoToDocument(items))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -29,6 +37,10 @@ func (s *Service) UpsertMany(items []*models.Document) error {
 		return err
 	}
 	err = documentFieldValues.CreateService(s.repository.getDB()).UpsertMany(models.GetDocumentsFiledValues(items))
+	if err != nil {
+		return err
+	}
+	err = fileInfo.CreateService(s.repository.getDB()).UpsertMany(models.GetFileInfosFromDocuments(items))
 	if err != nil {
 		return err
 	}

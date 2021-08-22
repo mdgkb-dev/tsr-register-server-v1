@@ -15,6 +15,8 @@ type Edv struct {
 	Parameter3    bool        `json:"parameter3"`
 	Period        *Period     `bun:"rel:belongs-to" json:"period"`
 	PeriodID      uuid.UUID   `bun:"type:uuid" json:"periodId"`
+	FileInfo      *FileInfo   `bun:"rel:belongs-to" json:"fileInfo"`
+	FileInfoID    uuid.UUID   `bun:"type:uuid" json:"fileInfoId"`
 }
 
 func GetPeriodsFromEdv(items []*Edv) []*Period {
@@ -28,12 +30,32 @@ func GetPeriodsFromEdv(items []*Edv) []*Period {
 	return itemsForGet
 }
 
+func GetFilesFromEdv(items []*Edv) []*FileInfo {
+	itemsForGet := make([]*FileInfo, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].FileInfo)
+	}
+	return itemsForGet
+}
+
 func SetPeriodIDToEdv(items []*Edv) {
 	if len(items) == 0 {
 		return
 	}
 	for i := range items {
 		items[i].PeriodID = items[i].Period.ID
+	}
+	return
+}
+func SetFileInfoIDToEdv(items []*Edv) {
+	if len(items) == 0 {
+		return
+	}
+	for i := range items {
+		items[i].FileInfoID = items[i].FileInfo.ID
 	}
 	return
 }

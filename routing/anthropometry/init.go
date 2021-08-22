@@ -5,11 +5,11 @@ import (
 	_ "github.com/go-pg/pg/v10/orm"
 	"github.com/uptrace/bun"
 	handler "mdgkb/tsr-tegister-server-v1/handlers/anthropometry"
-	"mdgkb/tsr-tegister-server-v1/helpers"
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 )
 
 // Init func
-func Init(r *gin.RouterGroup, db *bun.DB, uploader helpers.Uploader) {
+func Init(r *gin.RouterGroup, db *bun.DB, uploader uploadHelper.Uploader) {
 	var h = handler.CreateHandler(db)
 	r.GET("/", h.GetAll)
 	r.GET("/:id", h.Get)

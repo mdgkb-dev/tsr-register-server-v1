@@ -5,6 +5,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
@@ -34,6 +35,10 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = patientDiagnosis.CreateService(s.repository.getDB()).CreateMany(item.PatientDiagnosis)
+	if err != nil {
+		return err
+	}
+	err = registerToPatient.CreateService(s.repository.getDB()).CreateMany(item.RegisterToPatient)
 	if err != nil {
 		return err
 	}
@@ -102,6 +107,15 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 	err = patientDiagnosisService.DeleteMany(item.PatientDiagnosisForDelete)
+	if err != nil {
+		return err
+	}
+	registerToPatientService := registerToPatient.CreateService(s.repository.getDB())
+	err = registerToPatientService.UpsertMany(item.RegisterToPatient)
+	if err != nil {
+		return err
+	}
+	err = registerToPatientService.DeleteMany(item.RegisterToPatientForDelete)
 	if err != nil {
 		return err
 	}
