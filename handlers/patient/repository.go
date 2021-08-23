@@ -1,7 +1,6 @@
 package patient
 
 import (
-	"fmt"
 	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
@@ -56,7 +55,6 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
 		Where("patient.id = ?", *id).Scan(r.ctx)
-	fmt.Println(item.PatientDiagnosis[0].MkbSubDiagnosisID)
 	return &item, err
 }
 

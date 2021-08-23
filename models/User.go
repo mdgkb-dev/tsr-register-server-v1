@@ -14,19 +14,18 @@ import (
 )
 
 type User struct {
-	ID    *uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Login *string    `json:"login"`
-	//Email        *string    `json:"email"`
-	Password *string `json:"password"`
+	ID       uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Login    string    `json:"login"`
+	Password string    `json:"password"`
 }
 
 func (u *User) GenerateHashPassword() error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(*u.Password), bcrypt.DefaultCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
 	pass := string(hash)
-	u.Password = &pass
+	u.Password = pass
 	return nil
 }
 

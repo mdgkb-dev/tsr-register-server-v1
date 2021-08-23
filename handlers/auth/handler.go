@@ -11,6 +11,7 @@ import (
 func (h *Handler) Register(c *gin.Context) {
 	var user *models.User
 	err := c.Bind(&user)
+	fmt.Println(user)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -27,7 +28,6 @@ func (h *Handler) Login(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	fmt.Println(user)
 	res, err := h.service.Login(&user)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return

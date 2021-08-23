@@ -7,16 +7,16 @@ import (
 
 type Edv struct {
 	bun.BaseModel `bun:"edv,alias:edv"`
-	ID            uuid.UUID   `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Disability    *Disability `bun:"rel:belongs-to" json:"disability"`
-	DisabilityID  uuid.UUID   `bun:"type:uuid" json:"disabilityId"`
-	Parameter1    bool        `json:"parameter1"`
-	Parameter2    bool        `json:"parameter2"`
-	Parameter3    bool        `json:"parameter3"`
-	Period        *Period     `bun:"rel:belongs-to" json:"period"`
-	PeriodID      uuid.UUID   `bun:"type:uuid" json:"periodId"`
-	FileInfo      *FileInfo   `bun:"rel:belongs-to" json:"fileInfo"`
-	FileInfoID    uuid.UUID   `bun:"type:uuid" json:"fileInfoId"`
+	ID            uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Disability    *Disability   `bun:"rel:belongs-to" json:"disability"`
+	DisabilityID  uuid.UUID     `bun:"type:uuid" json:"disabilityId"`
+	Parameter1    bool          `json:"parameter1"`
+	Parameter2    bool          `json:"parameter2"`
+	Parameter3    bool          `json:"parameter3"`
+	Period        *Period       `bun:"rel:belongs-to" json:"period"`
+	PeriodID      uuid.UUID     `bun:"type:uuid" json:"periodId"`
+	FileInfo      *FileInfo     `bun:"rel:belongs-to" json:"fileInfo"`
+	FileInfoID    uuid.NullUUID `bun:"type:uuid" json:"fileInfoId"`
 }
 
 func GetPeriodsFromEdv(items []*Edv) []*Period {
@@ -36,7 +36,9 @@ func GetFilesFromEdv(items []*Edv) []*FileInfo {
 		return itemsForGet
 	}
 	for i := range items {
-		itemsForGet = append(itemsForGet, items[i].FileInfo)
+		if items[i].FileInfo != nil {
+			itemsForGet = append(itemsForGet, items[i].FileInfo)
+		}
 	}
 	return itemsForGet
 }
@@ -55,7 +57,9 @@ func SetFileInfoIDToEdv(items []*Edv) {
 		return
 	}
 	for i := range items {
-		items[i].FileInfoID = items[i].FileInfo.ID
+		if items[i].FileInfo != nil {
+			items[i].FileInfoID.UUID = items[i].FileInfo.ID
+		}
 	}
 	return
 }

@@ -7,6 +7,7 @@ import (
 
 func (s *Service) Register(item *models.User) (*models.TokensWithUser, error) {
 	err := item.GenerateHashPassword()
+
 	if err != nil {
 		return nil, err
 	}
@@ -21,12 +22,12 @@ func (s *Service) Register(item *models.User) (*models.TokensWithUser, error) {
 }
 
 func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
-	findedUser, err := s.repository.getByLogin(user.Login)
+	findedUser, err := s.repository.getByLogin(&user.Login)
 	if err != nil {
 		return nil, err
 	}
 
-	if !findedUser.CompareWithHashPassword(user.Password) {
+	if !findedUser.CompareWithHashPassword(&user.Password) {
 		return nil, errors.New("wrong password")
 	}
 	token, err := findedUser.CreateToken()

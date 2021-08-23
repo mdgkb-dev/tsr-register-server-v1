@@ -1,4 +1,4 @@
-create table file_info_documents
+create table file_info_to_document
 (
     id uuid not null,
     file_info_id uuid
@@ -12,9 +12,9 @@ create table file_info_documents
 );
 
 create unique index file_info_to_document_id_uindex
-    on file_info_documents (id);
+    on file_info_to_document (id);
 
-alter table file_info_documents
+alter table file_info_to_document
     add constraint file_info_to_document_pk
         primary key (id);
 
