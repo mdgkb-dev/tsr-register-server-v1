@@ -1,6 +1,7 @@
 package representative
 
 import (
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -9,13 +10,24 @@ func (r *Repository) create(item *models.Representative) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(offset *int) (items []*models.Representative, err error) {
+func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.Representative, err error) {
 	err = r.db.NewSelect().
 		Model(&items).
 		Relation("Human").
-		Offset(*offset * 25).
-		Limit(25).
+		Offset(*pagination.Offset).
+		Limit(*pagination.Limit).
 		Order("human.surname").
+		Scan(r.ctx)
+	return items, err
+}
+
+func (r *Repository) getOnlyNames() (items []*models.Representative, err error) {
+	err = r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Order("human.surname").
+		Order("human.name").
+		Order("human.patronymic").
 		Scan(r.ctx)
 	return items, err
 }

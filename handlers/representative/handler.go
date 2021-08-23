@@ -5,7 +5,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
-	"strconv"
 )
 
 func (h *Handler) Create(c *gin.Context) {
@@ -22,11 +21,11 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	offset, err := strconv.Atoi(c.Query("offset"))
+	pagination, err := httpHelper.CreatePagination(c)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	items, err := h.service.GetAll(&offset)
+	items, err := h.service.GetAll(pagination)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

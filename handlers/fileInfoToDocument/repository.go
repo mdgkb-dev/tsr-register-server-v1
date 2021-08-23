@@ -24,9 +24,8 @@ func (r *Repository) deleteMany(idPool []string) (err error) {
 
 func (r *Repository) upsertMany(items []*models.FileInfoToDocument) (err error) {
 	_, err = r.db.NewInsert().On("conflict (id) do update").
-		Set("parameter1 = EXCLUDED.parameter1").
-		Set("parameter2 = EXCLUDED.parameter2").
-		Set("parameter3 = EXCLUDED.parameter3").
+		Set("file_info_id = EXCLUDED.file_info_id").
+		Set("document_id = EXCLUDED.document_id").
 		Model(&items).
 		Exec(r.ctx)
 	return err

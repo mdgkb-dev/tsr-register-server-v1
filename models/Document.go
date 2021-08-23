@@ -42,7 +42,7 @@ func GetFileInfoToDocument(items []*Document) []*FileInfoToDocument {
 }
 
 type FileInfoToDocument struct {
-	bun.BaseModel `bun:"file_info_documents,alias:file_info_documents"`
+	bun.BaseModel `bun:"file_info_to_document,alias:file_info_to_document"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	FileInfo      *FileInfo `bun:"rel:belongs-to" json:"fileInfo"`
 	FileInfoID    uuid.UUID `bun:"type:uuid" json:"fileInfoId"`

@@ -1,17 +1,19 @@
 package representative
 
-import "mdgkb/tsr-tegister-server-v1/models"
+import (
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+	"mdgkb/tsr-tegister-server-v1/models"
+)
 
 func (s *Service) Create(item *models.Representative) error {
 	return s.repository.create(item)
 }
 
-func (s *Service) GetAll(offset *int) ([]*models.Representative, error) {
-	items, err := s.repository.getAll(offset)
-	if err != nil {
-		return nil, err
+func (s *Service) GetAll(pagination *httpHelper.Pagination) ([]*models.Representative, error) {
+	if pagination != nil {
+		return s.repository.getAll(pagination)
 	}
-	return items, nil
+	return s.repository.getOnlyNames()
 }
 
 func (s *Service) Get(id *string) (*models.Representative, error) {

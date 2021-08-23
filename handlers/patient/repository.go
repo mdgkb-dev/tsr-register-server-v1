@@ -22,6 +22,7 @@ func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Period").
 		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
 		Relation("RepresentativeToPatient.Representative.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
@@ -41,8 +42,10 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 	err := r.db.NewSelect().Model(&item).
 		Relation("AnthropometryData.Anthropometry").
 		Relation("Disabilities.Edvs.Period").
+		Relation("Disabilities.Edvs.FileInfo").
 		Relation("Disabilities.Period").
 		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
 		Relation("Human.Contact").
