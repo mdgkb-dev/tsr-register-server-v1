@@ -1,8 +1,9 @@
 package patient
 
 import (
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
 
 func (r *Repository) getDB() *bun.DB {
@@ -17,7 +18,7 @@ func (r *Repository) create(item *models.Patient) (err error) {
 func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
 	err = r.db.NewSelect().
 		Model(&items).
-		Relation("AnthropometryData.Anthropometry").
+		Relation("HeightWeight").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Period").
 		Relation("Human.Documents.DocumentType").
@@ -39,7 +40,7 @@ func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
 func (r *Repository) get(id *string) (*models.Patient, error) {
 	item := models.Patient{}
 	err := r.db.NewSelect().Model(&item).
-		Relation("AnthropometryData.Anthropometry").
+		Relation("HeightWeight").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
 		Relation("Disabilities.Period").

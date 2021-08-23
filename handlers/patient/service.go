@@ -1,8 +1,8 @@
 package patient
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/anthropometryData"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
+	"mdgkb/tsr-tegister-server-v1/handlers/heightWeight"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
@@ -21,12 +21,11 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	item.SetIdForChildren()
-
 	err = representativeToPatient.CreateService(s.repository.getDB()).CreateMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
 	}
-	err = anthropometryData.CreateService(s.repository.getDB()).CreateMany(item.AnthropometryData)
+	err = heightWeight.CreateService(s.repository.getDB()).CreateMany(item.HeightWeight)
 	if err != nil {
 		return err
 	}
@@ -82,12 +81,12 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	anthropometryDataService := anthropometryData.CreateService(s.repository.getDB())
-	err = anthropometryDataService.UpsertMany(item.AnthropometryData)
+	heightWeightService := heightWeight.CreateService(s.repository.getDB())
+	err = heightWeightService.UpsertMany(item.HeightWeight)
 	if err != nil {
 		return err
 	}
-	err = anthropometryDataService.DeleteMany(item.AnthropometryDataForDelete)
+	err = heightWeightService.DeleteMany(item.HeightWeightForDelete)
 	if err != nil {
 		return err
 	}

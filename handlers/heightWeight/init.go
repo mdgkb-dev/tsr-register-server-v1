@@ -1,4 +1,4 @@
-package anthropometryData
+package heightWeight
 
 import (
 	"context"
@@ -7,12 +7,12 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.AnthropometryData) error
+	CreateMany([]*models.HeightWeight) error
 }
 
 type IRepository interface {
-	createMany([]*models.AnthropometryData) error
-	upsertMany([]*models.AnthropometryData) error
+	createMany([]*models.HeightWeight) error
+	upsertMany([]*models.HeightWeight) error
 	deleteMany([]string) error
 }
 

@@ -3,7 +3,6 @@ package routing
 import (
 	"mdgkb/tsr-tegister-server-v1/config"
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
-	"mdgkb/tsr-tegister-server-v1/routing/anthropometry"
 	"mdgkb/tsr-tegister-server-v1/routing/auth"
 	"mdgkb/tsr-tegister-server-v1/routing/documentTypes"
 	"mdgkb/tsr-tegister-server-v1/routing/insuranceCompany"
@@ -28,7 +27,6 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	api := r.Group("/api/v1")
 
 	auth.Init(api.Group("/auth"), db, redisClient)
-	anthropometry.Init(api.Group("/anthropometries"), db, localUploader)
 	documentTypes.Init(api.Group("/document-types"), db)
 	representativeTypes.Init(api.Group("/representative-types"), db)
 	insuranceCompany.Init(api.Group("/insurance-companies"), db)

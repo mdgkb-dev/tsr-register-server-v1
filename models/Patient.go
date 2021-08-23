@@ -1,10 +1,11 @@
 package models
 
 import (
-	"github.com/google/uuid"
-	"github.com/uptrace/bun"
 	"path/filepath"
 	"time"
+
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
 )
 
 type Patient struct {
@@ -15,8 +16,8 @@ type Patient struct {
 
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
 	RepresentativeToPatientForDelete []string                   `bun:"-" json:"representativeToPatientForDelete"`
-	AnthropometryData                []*AnthropometryData       `bun:"rel:has-many" json:"anthropometryData"`
-	AnthropometryDataForDelete       []string                   `bun:"-" json:"anthropometryDataForDelete"`
+	HeightWeight                     []*HeightWeight            `bun:"rel:has-many" json:"heightWeight"`
+	HeightWeightForDelete            []string                   `bun:"-" json:"heightWeightForDelete"`
 	Disabilities                     []*Disability              `bun:"rel:has-many" json:"disabilities"`
 	DisabilitiesForDelete            []string                   `bun:"-" json:"disabilitiesForDelete"`
 
@@ -48,9 +49,9 @@ func (item *Patient) SetIdForChildren() {
 			item.RepresentativeToPatient[i].PatientID = item.ID
 		}
 	}
-	if len(item.AnthropometryData) > 0 {
-		for i := range item.AnthropometryData {
-			item.AnthropometryData[i].PatientID = item.ID
+	if len(item.HeightWeight) > 0 {
+		for i := range item.HeightWeight {
+			item.HeightWeight[i].PatientID = item.ID
 		}
 	}
 	if len(item.Disabilities) > 0 {
