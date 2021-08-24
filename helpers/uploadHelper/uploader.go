@@ -10,6 +10,7 @@ import (
 
 type Uploader interface {
 	GetUploaderPath() *string
+	GetFullPath(*string) *string
 	Upload(*gin.Context, []*multipart.FileHeader, string) error
 }
 
@@ -27,10 +28,12 @@ func (u *LocalUploader) Upload(c *gin.Context, file []*multipart.FileHeader, nam
 	uploadPath := u.GetUploaderPath()
 	path := filepath.Join(*uploadPath, name)
 	parts := strings.Split(path, string(os.PathSeparator))
-	err = os.MkdirAll(filepath.Join(parts[:len(parts)-1]...), os.ModePerm)
+
+	err = os.MkdirAll("/"+filepath.Join(parts[:len(parts)-1]...), os.ModePerm)
 	if err != nil {
 		return err
 	}
+
 	err = c.SaveUploadedFile(file[0], path)
 	if err != nil {
 		return err
@@ -40,4 +43,10 @@ func (u *LocalUploader) Upload(c *gin.Context, file []*multipart.FileHeader, nam
 
 func (u *LocalUploader) GetUploaderPath() *string {
 	return u.UploadPath
+}
+
+func (u *LocalUploader) GetFullPath(path *string) *string {
+	basePath := u.GetUploaderPath()
+	fullPath := filepath.Join(*basePath, *path)
+	return &fullPath
 }

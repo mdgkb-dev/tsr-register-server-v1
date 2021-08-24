@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 	"path/filepath"
@@ -18,15 +19,23 @@ type Document struct {
 	FileInfoToDocument  []*FileInfoToDocument `bun:"rel:has-many" json:"fileInfoToDocument"`
 }
 
-func (item *Document) SetFilePath(fileCategory *string, path *string) {
+func (item *Document) SetFilePath(fileCategory *string, path *string) string {
+	//fmt.Println(fileCategory)
+	//fmt.Println(item.ID)
+	newPath := ""
 	for i := range item.FileInfoToDocument {
-		fileId := item.FileInfoToDocument[i].FileInfo.ID.String()
+		fileId := item.FileInfoToDocument[i].FileInfoID.String()
+		fmt.Println(fileId, *fileCategory)
 		if fileId == *fileCategory {
-			newPath := filepath.Join(*path, item.ID.String(), fileId)
-			path = &newPath
-			item.FileInfoToDocument[i].FileInfo.FileSystemPath = newPath
+			fileId := item.FileInfoToDocument[i].FileInfo.ID.String()
+			newPath = filepath.Join(item.ID.String(), fileId)
+			fmt.Println(newPath)
+			item.FileInfoToDocument[i].FileInfo.FileSystemPath = filepath.Join(*path, item.ID.String(), fileId)
+			break
 		}
+
 	}
+	return newPath
 }
 
 func GetFileInfoToDocument(items []*Document) []*FileInfoToDocument {

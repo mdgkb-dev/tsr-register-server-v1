@@ -105,7 +105,7 @@ func (r *Repository) getDiagnosisBySearch(search *string) (items []*models.MkbDi
 	err = r.db.NewSelect().Model(&items).
 		Relation("MkbGroup").
 		Where("lower(regexp_replace(mkb_diagnosis.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		Where("lower(regexp_replace(mkb_diagnosis.code, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(mkb_diagnosis.code, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
 		Scan(r.ctx)
 	return items, err
 }

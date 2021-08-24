@@ -11,6 +11,10 @@ func (s *Service) Create(item *models.FileInfo) error {
 	return s.repository.create(item)
 }
 
+func (s *Service) Get(id *string) (*models.FileInfo, error) {
+	return s.repository.get(id)
+}
+
 func (s *Service) Update(item *models.FileInfo) error {
 	if item == nil {
 		return nil
