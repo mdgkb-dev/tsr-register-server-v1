@@ -1,6 +1,7 @@
 package patient
 
 import (
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -15,7 +16,7 @@ func (r *Repository) create(item *models.Patient) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
+func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.Patient, err error) {
 	err = r.db.NewSelect().
 		Model(&items).
 		Relation("HeightWeight").
@@ -29,10 +30,10 @@ func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
 		Relation("PatientDiagnosis.MkbDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
-		Offset(*offset).
-		Limit(25).
 		Order("human.surname").
 		Order("human.name").
+		Offset(*pagination.Offset).
+		Limit(*pagination.Limit).
 		Scan(r.ctx)
 	return items, err
 }
@@ -41,9 +42,9 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 	item := models.Patient{}
 	err := r.db.NewSelect().Model(&item).
 		Relation("HeightWeight").
+		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
-		Relation("Disabilities.Period").
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
@@ -67,4 +68,40 @@ func (r *Repository) delete(id *string) (err error) {
 func (r *Repository) update(item *models.Patient) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+func (r *Repository) getOnlyNames() (items []*models.Patient, err error) {
+	err = r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Order("human.surname").
+		Order("human.name").
+		Order("human.patronymic").
+		Scan(r.ctx)
+	return items, err
+}
+
+func (r *Repository) getBySearch(search *string) (items []*models.Patient, err error) {
+	err = r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		Scan(r.ctx)
+	return items, err
+}
+
+func (r *Repository) getDisabilities() ([]*models.Patient, error) {
+	items := make([]*models.Patient, 0)
+	err := r.db.NewSelect().
+		Model(&items).
+		Join("JOIN disability ON disability.patient_id = patient.id").
+		Relation("Human").
+		Relation("Disabilities.Period").
+		Relation("Disabilities.Edvs.Period").
+		Relation("Disabilities.Edvs.FileInfo").
+		Group("patient.id", "human.id").
+		Scan(r.ctx)
+	return items, err
 }

@@ -7,6 +7,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -44,12 +45,11 @@ func (s *Service) Create(item *models.Patient) error {
 	return err
 }
 
-func (s *Service) GetAll(offset *int) ([]*models.Patient, error) {
-	items, err := s.repository.getAll(offset)
-	if err != nil {
-		return nil, err
+func (s *Service) GetAll(pagination *httpHelper.Pagination) ([]*models.Patient, error) {
+	if pagination != nil {
+		return s.repository.getAll(pagination)
 	}
-	return items, nil
+	return s.repository.getOnlyNames()
 }
 
 func (s *Service) Get(id *string) (*models.Patient, error) {
@@ -123,4 +123,20 @@ func (s *Service) Update(item *models.Patient) error {
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
+}
+
+func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
+	items, err := s.repository.getBySearch(query)
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+func (s *Service) GetDisabilities() ([]*models.Patient, error) {
+	items, err := s.repository.getDisabilities()
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
 }
