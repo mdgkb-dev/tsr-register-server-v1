@@ -6,6 +6,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/routing/anthropometry"
 	"mdgkb/tsr-tegister-server-v1/routing/auth"
 	"mdgkb/tsr-tegister-server-v1/routing/documentTypes"
+	"mdgkb/tsr-tegister-server-v1/routing/fileInfo"
 	"mdgkb/tsr-tegister-server-v1/routing/insuranceCompany"
 	"mdgkb/tsr-tegister-server-v1/routing/meta"
 	"mdgkb/tsr-tegister-server-v1/routing/mkb"
@@ -39,4 +40,5 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	patient.Init(api.Group("/patients"), db, localUploader)
 	meta.Init(api.Group("/meta"), db)
 	representative.Init(api.Group("/representatives"), db)
+	fileInfo.Init(api.Group("/files-info"), db, localUploader)
 }

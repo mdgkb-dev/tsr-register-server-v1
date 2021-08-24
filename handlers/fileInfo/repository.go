@@ -9,6 +9,13 @@ func (r *Repository) create(item *models.FileInfo) (err error) {
 	return err
 }
 
+func (r *Repository) get(id *string) (*models.FileInfo, error) {
+	item := models.FileInfo{}
+	err := r.db.NewSelect().Model(&item).
+		Where("file_infos.id = ?", *id).Scan(r.ctx)
+	return &item, err
+}
+
 func (r *Repository) update(item *models.FileInfo) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err

@@ -30,14 +30,17 @@ type Patient struct {
 	RegisterPropertySetToPatient []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
 }
 
-func (item *Patient) SetFilePath(fileInfoId *string) *string {
-	newPath := filepath.Join(item.Human.ID.String(), *fileInfoId)
+func (item *Patient) SetFilePath(parentId *string) *string {
+	newPath := filepath.Join(item.Human.ID.String())
 
 	for i := range item.Human.Documents {
-		item.Human.Documents[i].SetFilePath(fileInfoId, &newPath)
+		path := item.Human.Documents[i].SetFilePath(parentId, &newPath)
+		if path != "" {
+			newPath = filepath.Join(newPath, path)
+		}
 	}
 	for i := range item.Disabilities {
-		item.Disabilities[i].SetFilePath(fileInfoId, &newPath)
+		item.Disabilities[i].SetFilePath(parentId, &newPath)
 	}
 	return &newPath
 }
