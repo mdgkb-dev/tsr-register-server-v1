@@ -3,7 +3,13 @@ package representative
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
+
+func (r *Repository) getDB() *bun.DB {
+	return r.db
+}
 
 func (r *Repository) create(item *models.Representative) (err error) {
 	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
@@ -14,6 +20,8 @@ func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.
 	err = r.db.NewSelect().
 		Model(&items).
 		Relation("Human").
+		Relation("RepresentativeToPatient.Patient.Human").
+		Relation("RepresentativeToPatient.RepresentativeType").
 		Offset(*pagination.Offset).
 		Limit(*pagination.Limit).
 		Order("human.surname").
@@ -34,7 +42,11 @@ func (r *Repository) getOnlyNames() (items []*models.Representative, err error) 
 
 func (r *Repository) get(id *string) (*models.Representative, error) {
 	item := models.Representative{}
-	err := r.db.NewSelect().Model(&item).Where("id = ?", *id).Scan(r.ctx)
+	err := r.db.NewSelect().Model(&item).
+	Relation("Human").
+	Relation("RepresentativeToPatient.Patient.Human").
+	Relation("RepresentativeToPatient.RepresentativeType").
+	Where("representative.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }
 

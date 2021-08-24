@@ -1,15 +1,18 @@
 package representative
 
 import (
-	"github.com/gin-gonic/gin"
+	"encoding/json"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Representative
-	err := c.Bind(&item)
+	form, _ := c.MultipartForm()
+	err := json.Unmarshal([]byte(form.Value["form"][0]), &item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -52,7 +55,11 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Representative
-	err := c.Bind(&item)
+	form, _ := c.MultipartForm()
+	err := json.Unmarshal([]byte(form.Value["form"][0]), &item)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
