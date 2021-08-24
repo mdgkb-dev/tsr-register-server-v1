@@ -24,6 +24,15 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	withDisabilities := c.Query("withDisabilities")
+	if withDisabilities != "" {
+		items, err := h.service.GetDisabilities()
+		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
+		c.JSON(http.StatusOK, items)
+		return
+	}
 	offsetStr := c.Query("offset")
 	if offsetStr != "" {
 		offset, err := strconv.Atoi(offsetStr)

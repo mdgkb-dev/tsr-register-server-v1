@@ -1,7 +1,6 @@
 package patient
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -42,9 +41,9 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 	item := models.Patient{}
 	err := r.db.NewSelect().Model(&item).
 		Relation("HeightWeight").
+		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
-		Relation("Disabilities.Period").
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
@@ -71,13 +70,26 @@ func (r *Repository) update(item *models.Patient) (err error) {
 }
 
 func (r *Repository) getBySearch(search *string) (items []*models.Patient, err error) {
-	fmt.Println(search)
 	err = r.db.NewSelect().
 		Model(&items).
 		Relation("Human").
 		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
 		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
 		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		Scan(r.ctx)
+	return items, err
+}
+
+func (r *Repository) getDisabilities() ([]*models.Patient, error) {
+	items := make([]*models.Patient, 0)
+	err := r.db.NewSelect().
+		Model(&items).
+		Join("JOIN disability ON disability.patient_id = patient.id").
+		Relation("Human").
+		Relation("Disabilities.Period").
+		Relation("Disabilities.Edvs.Period").
+		Relation("Disabilities.Edvs.FileInfo").
+		Group("patient.id", "human.id").
 		Scan(r.ctx)
 	return items, err
 }
