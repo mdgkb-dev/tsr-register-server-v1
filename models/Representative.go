@@ -15,3 +15,11 @@ type Representative struct {
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
 	RepresentativeToPatientForDelete []string                   `bun:"-" json:"representativeToPatientForDelete"`
 }
+
+func (item *Representative) SetIdForChildren() {
+	if len(item.RepresentativeToPatient) > 0 {
+		for i := range item.RepresentativeToPatient {
+			item.RepresentativeToPatient[i].RepresentativeID = item.ID
+		}
+	}
+}

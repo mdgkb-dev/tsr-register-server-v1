@@ -25,6 +25,7 @@ type IService interface {
 }
 
 type IRepository interface {
+	getDB() *bun.DB
 	create(*models.Representative) error
 	getAll(pagination *httpHelper.Pagination) ([]*models.Representative, error)
 	get(*string) (*models.Representative, error)

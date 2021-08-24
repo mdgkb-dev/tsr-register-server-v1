@@ -3,7 +3,13 @@ package representative
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
+
+func (r *Repository) getDB() *bun.DB {
+	return r.db
+}
 
 func (r *Repository) create(item *models.Representative) (err error) {
 	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
