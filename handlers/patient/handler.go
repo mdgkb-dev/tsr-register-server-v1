@@ -24,15 +24,29 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	offset, err := strconv.Atoi(c.Query("offset"))
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	offsetStr := c.Query("offset")
+	if offsetStr != "" {
+		offset, err := strconv.Atoi(offsetStr)
+		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
+		items, err := h.service.GetAll(&offset)
+		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
+		c.JSON(http.StatusOK, items)
 		return
 	}
-	items, err := h.service.GetAll(&offset)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	query := c.Query("query")
+	if query != "" {
+		items, err := h.service.GetBySearch(&query)
+		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
+		c.JSON(http.StatusOK, items)
 		return
 	}
-	c.JSON(http.StatusOK, items)
+	c.JSON(http.StatusOK, nil)
 }
 
 func (h *Handler) Get(c *gin.Context) {

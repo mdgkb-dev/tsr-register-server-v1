@@ -23,6 +23,8 @@ type IService interface {
 	Create(*models.Patient) error
 	Update(*models.Patient) error
 	Delete(*string) error
+
+	GetBySearch(*string) ([]*models.Patient, error)
 }
 
 type IRepository interface {
@@ -32,6 +34,8 @@ type IRepository interface {
 	get(*string) (*models.Patient, error)
 	update(*models.Patient) error
 	delete(*string) error
+
+	getBySearch(*string) ([]*models.Patient, error)
 }
 
 type IFilesService interface {

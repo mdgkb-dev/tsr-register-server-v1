@@ -1,6 +1,7 @@
 package patient
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -67,4 +68,16 @@ func (r *Repository) delete(id *string) (err error) {
 func (r *Repository) update(item *models.Patient) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+func (r *Repository) getBySearch(search *string) (items []*models.Patient, err error) {
+	fmt.Println(search)
+	err = r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		Scan(r.ctx)
+	return items, err
 }

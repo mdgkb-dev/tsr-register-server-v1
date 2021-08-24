@@ -124,3 +124,11 @@ func (s *Service) Update(item *models.Patient) error {
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
 }
+
+func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
+	items, err := s.repository.getBySearch(query)
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
+}
