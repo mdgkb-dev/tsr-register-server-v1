@@ -27,8 +27,9 @@ type Patient struct {
 	RegisterToPatient          []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
 	RegisterToPatientForDelete []string             `bun:"-" json:"registerToPatientForDelete"`
 
-	RegisterPropertyToPatient    []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
-	RegisterPropertySetToPatient []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
+	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
+	RegisterPropertySetToPatient          []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
+	RegisterPropertySetToPatientForDelete []string                        `bun:"-" json:"registerPropertySetToPatientForDelete"`
 }
 
 func (item *Patient) SetFilePath(parentId *string) *string {
@@ -70,6 +71,16 @@ func (item *Patient) SetIdForChildren() {
 	if len(item.RegisterToPatient) > 0 {
 		for i := range item.RegisterToPatient {
 			item.RegisterToPatient[i].PatientID = item.ID
+		}
+	}
+	if len(item.RegisterPropertyToPatient) > 0 {
+		for i := range item.RegisterPropertyToPatient {
+			item.RegisterPropertyToPatient[i].PatientID = item.ID
+		}
+	}
+	if len(item.RegisterPropertySetToPatient) > 0 {
+		for i := range item.RegisterPropertySetToPatient {
+			item.RegisterPropertySetToPatient[i].PatientID = item.ID
 		}
 	}
 }
@@ -128,13 +139,13 @@ type RegisterPropertyToPatient struct {
 	bun.BaseModel `bun:"register_property_to_patient,alias:register_property_to_patient"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 
-	ValueString string `json:"valueString"`
-	ValueNumber string `json:"valueNumber"`
-	ValueDate   string `json:"valueDate"`
-	ValueOther  string `json:"valueOther"`
+	ValueString string    `json:"valueString"`
+	ValueNumber int       `json:"valueNumber"`
+	ValueDate   time.Time `json:"valueDate"`
+	ValueOther  string    `json:"valueOther"`
 
 	RegisterPropertyRadio   *RegisterPropertyRadio `bun:"rel:belongs-to" json:"registerPropertyRadio"`
-	RegisterPropertyRadioID uuid.UUID              `bun:"type:uuid" json:"registerPropertyRadioId"`
+	RegisterPropertyRadioID uuid.NullUUID          `bun:"type:uuid" json:"registerPropertyRadioId"`
 
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`

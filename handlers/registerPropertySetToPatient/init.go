@@ -1,4 +1,4 @@
-package insuranceCompanyToHuman
+package registerPropertySetToPatient
 
 import (
 	"context"
@@ -7,13 +7,13 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.InsuranceCompanyToHuman) error
+	CreateMany([]*models.RegisterPropertySetToPatient) error
 }
 
 type IRepository interface {
-	createMany([]*models.InsuranceCompanyToHuman) error
-	upsertMany([]*models.InsuranceCompanyToHuman) error
-
+	getDB() *bun.DB
+	createMany([]*models.RegisterPropertySetToPatient) error
+	upsertMany([]*models.RegisterPropertySetToPatient) error
 	deleteMany([]string) error
 }
 

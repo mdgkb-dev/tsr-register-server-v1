@@ -56,7 +56,10 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
+		Relation("RegisterPropertyToPatient.RegisterProperty").
+		Relation("RegisterPropertySetToPatient.RegisterPropertySet").
 		Where("patient.id = ?", *id).Scan(r.ctx)
+
 	return &item, err
 }
 
