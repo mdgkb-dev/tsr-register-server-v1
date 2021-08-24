@@ -29,10 +29,10 @@ func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
 		Relation("PatientDiagnosis.MkbDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
-		Order("human.surname").
-		Order("human.name").
 		Offset(*offset).
 		Limit(25).
+		Order("human.surname").
+		Order("human.name").
 		Scan(r.ctx)
 	return items, err
 }
