@@ -1,6 +1,7 @@
 package patient
 
 import (
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -15,7 +16,7 @@ func (r *Repository) create(item *models.Patient) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
+func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.Patient, err error) {
 	err = r.db.NewSelect().
 		Model(&items).
 		Relation("HeightWeight").
@@ -31,8 +32,8 @@ func (r *Repository) getAll(offset *int) (items []*models.Patient, err error) {
 		Relation("RegisterToPatient.Register").
 		Order("human.surname").
 		Order("human.name").
-		Offset(*offset).
-		Limit(25).
+		Offset(*pagination.Offset).
+		Limit(*pagination.Limit).
 		Scan(r.ctx)
 	return items, err
 }
@@ -67,6 +68,17 @@ func (r *Repository) delete(id *string) (err error) {
 func (r *Repository) update(item *models.Patient) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+func (r *Repository) getOnlyNames() (items []*models.Patient, err error) {
+	err = r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Order("human.surname").
+		Order("human.name").
+		Order("human.patronymic").
+		Scan(r.ctx)
+	return items, err
 }
 
 func (r *Repository) getBySearch(search *string) (items []*models.Patient, err error) {

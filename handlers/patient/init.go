@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
@@ -18,7 +19,7 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll(*int) ([]*models.Patient, error)
+	GetAll(*httpHelper.Pagination) ([]*models.Patient, error)
 	Get(*string) (*models.Patient, error)
 	Create(*models.Patient) error
 	Update(*models.Patient) error
@@ -31,11 +32,12 @@ type IService interface {
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Patient) error
-	getAll(*int) ([]*models.Patient, error)
+	getAll(*httpHelper.Pagination) ([]*models.Patient, error)
 	get(*string) (*models.Patient, error)
 	update(*models.Patient) error
 	delete(*string) error
 
+	getOnlyNames() ([]*models.Patient, error)
 	getBySearch(*string) ([]*models.Patient, error)
 	getDisabilities() ([]*models.Patient, error)
 }
