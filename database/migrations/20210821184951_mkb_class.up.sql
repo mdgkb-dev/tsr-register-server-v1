@@ -12,5 +12,3 @@ create table mkb_class
     relevant boolean default true not null
 );
 
-alter table mkb_class owner to mdgkb;
-

@@ -4,8 +4,5 @@ create table value_type
         constraint "PK_38e761371cca3cc3051fb60674a"
         primary key,
     name varchar,
-    value_relation value_type_value_relation_enum not null
+    value_relation varchar not null
 );
-
-alter table value_type owner to mdgkb;
-

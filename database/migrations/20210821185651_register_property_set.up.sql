@@ -9,8 +9,5 @@ create table register_property_set
         references register_property
 );
 
-alter table register_property_set owner to mdgkb;
-
 create index "IDX_8f6019b4369c0bc9eef2c65d5a"
     on register_property_set (register_property_id);
-

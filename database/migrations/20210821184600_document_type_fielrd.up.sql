@@ -5,12 +5,10 @@ create table document_type_fields
         primary key,
     name varchar not null,
     "order" integer,
-    type document_type_field_type_enum not null,
+    type varchar not null,
     document_type_id uuid
         constraint "FK_040777158438fdb7a2ca0d9a3bd"
         references document_types
         on delete cascade
 );
-
-alter table document_type_fields owner to mdgkb;
 

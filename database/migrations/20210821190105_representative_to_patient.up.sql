@@ -17,8 +17,6 @@ create table representative_to_patient
         on update cascade on delete cascade
 );
 
-alter table representative_to_patient owner to mdgkb;
-
 create index "IDX_3e3f0b4a9e1a050b6fb525158e"
     on representative_to_patient (representative_type_id);
 
@@ -27,4 +25,3 @@ create index "IDX_e6a11936ba24e187c82910aea3"
 
 create index "IDX_8ae4fe72ff71cdee5b07ff9f4f"
     on representative_to_patient (representative_id);
-

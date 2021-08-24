@@ -5,6 +5,3 @@ create table register_group
         primary key,
     name varchar not null
 );
-
-alter table register_group owner to mdgkb;
-

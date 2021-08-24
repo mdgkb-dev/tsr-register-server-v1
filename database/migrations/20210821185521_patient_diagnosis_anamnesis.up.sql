@@ -10,8 +10,5 @@ create table patient_diagnosis_anamnesis
         references patient_diagnosis
 );
 
-alter table patient_diagnosis_anamnesis owner to mdgkb;
-
 create index "IDX_acf9b8a991f6feae36841ccc51"
     on patient_diagnosis_anamnesis (patient_diagnosis_id);
-

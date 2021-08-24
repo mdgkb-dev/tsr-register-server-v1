@@ -11,11 +11,8 @@ create table register_to_patient
         references patient
 );
 
-alter table register_to_patient owner to mdgkb;
-
 create index "IDX_869a2523a06d431f82897e1ce2"
     on register_to_patient (register_id);
 
 create index "IDX_b192a657a48ce5e370b8bedd93"
     on register_to_patient (patient_id);
-

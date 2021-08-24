@@ -14,6 +14,3 @@ create table users
         constraint "FK_456771a1f9cf5a06f562f7d753a"
         references human
 );
-
-alter table users owner to mdgkb;
-

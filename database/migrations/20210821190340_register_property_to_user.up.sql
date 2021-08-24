@@ -12,11 +12,8 @@ create table register_property_to_user
         on update cascade
 );
 
-alter table register_property_to_user owner to mdgkb;
-
 create index "IDX_ab3c8fcecaad7908dcd890f944"
     on register_property_to_user (register_property_id);
 
 create index "IDX_7d243e83ece8913b37c6e85f91"
     on register_property_to_user (user_id);
-

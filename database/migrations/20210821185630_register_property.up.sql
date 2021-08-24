@@ -10,8 +10,5 @@ create table register_property
     with_other boolean default false
 );
 
-alter table register_property owner to mdgkb;
-
 create index "IDX_f021d1969d6682de1f265c62a6"
     on register_property (value_type_id);
-

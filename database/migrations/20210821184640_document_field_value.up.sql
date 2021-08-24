@@ -16,6 +16,3 @@ create table document_field_value
     constraint "UQ_278c4f317fc1505fa2001957d32"
         unique (document_id, document_type_field_id)
 );
-
-alter table document_field_value owner to mdgkb;
-
