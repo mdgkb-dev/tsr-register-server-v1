@@ -1,7 +1,6 @@
 package patient
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/heightWeight"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
@@ -68,20 +67,14 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(1)
 	item.HumanID = item.Human.ID
-	fmt.Println(item)
 	err = s.repository.update(item)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
-	fmt.Println(3)
 	item.SetIdForChildren()
-	fmt.Println(4)
 
 	representativeToPatientService := representativeToPatient.CreateService(s.repository.getDB())
-	fmt.Println(5)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
