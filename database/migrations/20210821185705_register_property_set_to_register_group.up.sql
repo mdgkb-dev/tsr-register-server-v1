@@ -14,11 +14,8 @@ create table register_property_to_register_group
         on update cascade on delete cascade
 );
 
-alter table register_property_to_register_group owner to mdgkb;
-
 create index "IDX_545f0c4061aba481d84622a3a8"
     on register_property_to_register_group (register_property_id);
 
 create index "IDX_4e2c97c03a043d9f5358701243"
     on register_property_to_register_group (register_group_id);
-

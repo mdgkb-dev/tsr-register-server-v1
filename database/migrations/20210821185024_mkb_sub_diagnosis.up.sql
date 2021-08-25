@@ -13,6 +13,3 @@ create table mkb_sub_diagnosis
         references mkb_diagnosis
         on delete cascade
 );
-
-alter table mkb_sub_diagnosis owner to mdgkb;
-

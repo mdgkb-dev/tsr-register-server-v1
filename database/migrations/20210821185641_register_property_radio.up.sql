@@ -9,8 +9,5 @@ create table register_property_radio
         references register_property
 );
 
-alter table register_property_radio owner to mdgkb;
-
 create index "IDX_4d4a161c891e6e45b3590c8a9d"
     on register_property_radio (register_property_id);
-

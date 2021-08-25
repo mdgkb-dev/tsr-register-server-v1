@@ -12,6 +12,3 @@ create table representative
     contact_phone varchar,
     contact_email varchar
 );
-
-alter table representative owner to mdgkb;
-

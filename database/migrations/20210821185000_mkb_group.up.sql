@@ -14,6 +14,3 @@ create table mkb_group
     leaf boolean default false not null,
     relevant boolean default true not null
 );
-
-alter table mkb_group owner to mdgkb;
-

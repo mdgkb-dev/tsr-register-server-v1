@@ -9,5 +9,5 @@ type ValueType struct {
 	bun.BaseModel `bun:"value_type,alias:value_type"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
-	ValueRelation string    `bun:"type:value_type_value_relation_enum" json:"valueRelation"`
+	ValueRelation string    `json:"valueRelation"`
 }

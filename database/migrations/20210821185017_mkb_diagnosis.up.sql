@@ -25,6 +25,3 @@ create table mkb_diagnosis
     leaf boolean default false not null,
     relevant boolean default true not null
 );
-
-alter table mkb_diagnosis owner to mdgkb;
-

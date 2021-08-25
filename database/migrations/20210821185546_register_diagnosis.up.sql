@@ -15,8 +15,6 @@ create table register_diagnosis
         on delete cascade
 );
 
-alter table register_diagnosis owner to mdgkb;
-
 create index "IDX_a3649e77a04511ca712018cf65"
     on register_diagnosis (mkb_diagnosis_id);
 
@@ -25,4 +23,3 @@ create index "IDX_a83764b0590c2525c00f894ec2"
 
 create index "IDX_960bb84f4428048129d2406096"
     on register_diagnosis (register_id);
-

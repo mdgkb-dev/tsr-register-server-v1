@@ -5,6 +5,3 @@ create table representative_types (
   child_male_type varchar,
   child_woman_type varchar
 );
-
-alter table
-  representative_types owner to mdgkb;

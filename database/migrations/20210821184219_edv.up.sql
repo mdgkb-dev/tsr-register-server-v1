@@ -17,8 +17,6 @@ create table edv
         on update cascade on delete cascade
 );
 
-alter table edv owner to mdgkb;
-
 create index "IDX_fce3fe296a18bbb9bac5be1b8f"
     on edv (disability_id);
 
