@@ -2,8 +2,9 @@ package httpHelper
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
 	"mime/multipart"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetForm(c *gin.Context, item interface{}) (map[string][]*multipart.FileHeader, error) {

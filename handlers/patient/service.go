@@ -1,7 +1,6 @@
 package patient
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/heightWeight"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
@@ -11,6 +10,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/utilHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -68,20 +68,14 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(1)
 	item.HumanID = item.Human.ID
-	fmt.Println(item)
 	err = s.repository.update(item)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
-	fmt.Println(3)
 	item.SetIdForChildren()
-	fmt.Println(4)
 
 	representativeToPatientService := representativeToPatient.CreateService(s.repository.getDB())
-	fmt.Println(5)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
@@ -139,6 +133,7 @@ func (s *Service) Update(item *models.Patient) error {
 	err = registerPropertySetToPatientService.DeleteMany(item.RegisterPropertySetToPatientForDelete)
 	if err != nil {
 		return err
+
 	}
 
 	return nil
@@ -149,7 +144,8 @@ func (s *Service) Delete(id *string) error {
 }
 
 func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
-	items, err := s.repository.getBySearch(query)
+	queryRu := utilHelper.TranslitToRu(*query)
+	items, err := s.repository.getBySearch(&queryRu)
 	if err != nil {
 		return nil, err
 	}

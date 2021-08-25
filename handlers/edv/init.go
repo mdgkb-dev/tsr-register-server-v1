@@ -2,8 +2,9 @@ package edv
 
 import (
 	"context"
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
 
 type IService interface {

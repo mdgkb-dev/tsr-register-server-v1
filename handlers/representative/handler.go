@@ -24,6 +24,15 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	query := c.Query("query")
+	if query != "" {
+		items, err := h.service.GetBySearch(&query)
+		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
+		c.JSON(http.StatusOK, items)
+		return
+	}
 	pagination, err := httpHelper.CreatePagination(c)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return

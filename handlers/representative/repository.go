@@ -43,10 +43,10 @@ func (r *Repository) getOnlyNames() (items []*models.Representative, err error) 
 func (r *Repository) get(id *string) (*models.Representative, error) {
 	item := models.Representative{}
 	err := r.db.NewSelect().Model(&item).
-	Relation("Human").
-	Relation("RepresentativeToPatient.Patient.Human").
-	Relation("RepresentativeToPatient.RepresentativeType").
-	Where("representative.id = ?", *id).Scan(r.ctx)
+		Relation("Human").
+		Relation("RepresentativeToPatient.Patient.Human").
+		Relation("RepresentativeToPatient.RepresentativeType").
+		Where("representative.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }
 
@@ -58,4 +58,17 @@ func (r *Repository) delete(id *string) (err error) {
 func (r *Repository) update(item *models.Representative) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+func (r *Repository) getBySearch(search *string) ([]*models.Representative, error) {
+	items := make([]*models.Representative, 0)
+
+	err := r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		Scan(r.ctx)
+	return items, err
 }

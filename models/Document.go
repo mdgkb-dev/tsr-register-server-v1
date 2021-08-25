@@ -2,9 +2,10 @@ package models
 
 import (
 	"fmt"
+	"path/filepath"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"path/filepath"
 )
 
 type Document struct {

@@ -2,22 +2,21 @@ package representativeToPatient
 
 import (
 	"context"
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
 
 type IService interface {
 	CreateMany([]*models.RepresentativeToPatient) error
+	UpsertMany([]*models.RepresentativeToPatient) error
+	DeleteMany([]string) error
 }
 
 type IRepository interface {
 	createMany([]*models.RepresentativeToPatient) error
 	upsertMany([]*models.RepresentativeToPatient) error
 	deleteMany([]string) error
-}
-
-type Handler struct {
-	service IService
 }
 
 type Service struct {

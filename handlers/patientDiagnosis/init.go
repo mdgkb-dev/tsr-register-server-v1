@@ -2,8 +2,9 @@ package patientDiagnosis
 
 import (
 	"context"
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
 
 type IService interface {
@@ -11,6 +12,7 @@ type IService interface {
 }
 
 type IRepository interface {
+	getDB() *bun.DB
 	createMany([]*models.PatientDiagnosis) error
 	upsertMany([]*models.PatientDiagnosis) error
 	deleteMany([]string) error

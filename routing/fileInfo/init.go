@@ -1,9 +1,10 @@
 package fileInfo
 
 import (
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 
 	handler "mdgkb/tsr-tegister-server-v1/handlers/fileInfo"
 )

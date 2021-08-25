@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 
-	_ "github.com/go-pg/pg/v10/orm"
 	"log"
 	"mdgkb/tsr-tegister-server-v1/config"
 	"mdgkb/tsr-tegister-server-v1/database/connect"
 	"mdgkb/tsr-tegister-server-v1/routing"
 	"net/http"
+
+	_ "github.com/go-pg/pg/v10/orm"
 )
 
 func CORSMiddleware() gin.HandlerFunc {

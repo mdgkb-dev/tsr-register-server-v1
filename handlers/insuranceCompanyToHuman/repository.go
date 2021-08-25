@@ -1,8 +1,9 @@
 package insuranceCompanyToHuman
 
 import (
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
 
 func (r *Repository) createMany(items []*models.InsuranceCompanyToHuman) (err error) {

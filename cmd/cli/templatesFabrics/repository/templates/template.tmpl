@@ -1,5 +1,9 @@
 package {{.Package}}
 
+func (r *Repository) getDB() *bun.DB {
+return r.db
+}
+
 func (r *Repository) create(item *models.{{.Model}}) (err error) {
 _, err = r.db.NewInsert().Model(item).Exec(r.ctx)
 return err

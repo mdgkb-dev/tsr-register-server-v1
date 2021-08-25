@@ -1,10 +1,11 @@
 package insuranceCompany
 
 import (
+	handler "mdgkb/tsr-tegister-server-v1/handlers/insuranceCompany"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
 	"github.com/uptrace/bun"
-	handler "mdgkb/tsr-tegister-server-v1/handlers/insuranceCompany"
 )
 
 // Init func

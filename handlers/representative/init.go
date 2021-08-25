@@ -2,10 +2,11 @@ package representative
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
@@ -22,6 +23,8 @@ type IService interface {
 	Create(*models.Representative) error
 	Update(*models.Representative) error
 	Delete(*string) error
+
+	GetBySearch(*string) ([]*models.Representative, error)
 }
 
 type IRepository interface {
@@ -33,6 +36,7 @@ type IRepository interface {
 	delete(*string) error
 
 	getOnlyNames() ([]*models.Representative, error)
+	getBySearch(*string) ([]*models.Representative, error)
 }
 
 type Handler struct {

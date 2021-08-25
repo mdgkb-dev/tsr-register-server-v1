@@ -40,7 +40,10 @@ drop_database:
 	go run $(database) -action=dropDatabase
 
 create_model:
-	go run $(cli) -mode=model -action=create -name=${name}
+	go run $(cli) -mode=model -action=create -name=${name} && goimports -w ./
 
 create_api:
-	go run $(cli) -mode=api -action=create -name=${name}
+	go run $(cli) -mode=api -action=create -name=${name} && goimports -w ./
+
+create_service:
+	go run $(cli) -mode=service -action=create -name=${name} && goimports -w ./

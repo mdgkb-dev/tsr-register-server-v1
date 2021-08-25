@@ -2,9 +2,10 @@ package patient
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (s *FilesService) Upload(c *gin.Context, item *models.Patient, files map[string][]*multipart.FileHeader) (err error) {

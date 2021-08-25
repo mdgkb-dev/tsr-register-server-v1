@@ -4,6 +4,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/utilHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -66,4 +67,13 @@ func (s *Service) Update(item *models.Representative) error {
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
+}
+
+func (s *Service) GetBySearch(query *string) ([]*models.Representative, error) {
+	queryRu := utilHelper.TranslitToRu(*query)
+	items, err := s.repository.getBySearch(&queryRu)
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
 }

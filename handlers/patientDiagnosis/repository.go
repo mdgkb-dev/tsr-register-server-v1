@@ -1,9 +1,14 @@
 package patientDiagnosis
 
 import (
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
+
+func (r *Repository) getDB() *bun.DB {
+	return r.db
+}
 
 func (r *Repository) createMany(items []*models.PatientDiagnosis) (err error) {
 	_, err = r.db.NewInsert().Model(&items).Exec(r.ctx)

@@ -55,6 +55,7 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
+		Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
 		Relation("RegisterToPatient.Register").
 		Relation("RegisterPropertyToPatient.RegisterProperty").
 		Relation("RegisterPropertySetToPatient.RegisterPropertySet").
@@ -84,8 +85,10 @@ func (r *Repository) getOnlyNames() (items []*models.Patient, err error) {
 	return items, err
 }
 
-func (r *Repository) getBySearch(search *string) (items []*models.Patient, err error) {
-	err = r.db.NewSelect().
+func (r *Repository) getBySearch(search *string) ([]*models.Patient, error) {
+	items := make([]*models.Patient, 0)
+
+	err := r.db.NewSelect().
 		Model(&items).
 		Relation("Human").
 		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").

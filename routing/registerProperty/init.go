@@ -1,10 +1,11 @@
 package registerProperty
 
 import (
+	handler "mdgkb/tsr-tegister-server-v1/handlers/registerProperty"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
 	"github.com/uptrace/bun"
-	handler "mdgkb/tsr-tegister-server-v1/handlers/registerProperty"
 )
 
 // Init func

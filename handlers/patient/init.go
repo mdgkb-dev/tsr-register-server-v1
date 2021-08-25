@@ -2,12 +2,13 @@ package patient
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
+
+	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
