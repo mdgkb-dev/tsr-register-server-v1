@@ -10,6 +10,6 @@ type DocumentTypeField struct {
 	ID             uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name           string    `json:"name"`
 	Order          uint      `json:"order"`
-	Type           string    `json:"type"`
+	Type           string    `bun:"type:document_type_field_type_enum" json:"type"`
 	DocumentTypeID uuid.UUID `bun:"type:uuid" json:"documentTypeID"`
 }
