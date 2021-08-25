@@ -23,6 +23,8 @@ type IService interface {
 	Create(*models.Representative) error
 	Update(*models.Representative) error
 	Delete(*string) error
+
+	GetBySearch(*string) ([]*models.Representative, error)
 }
 
 type IRepository interface {
@@ -34,6 +36,7 @@ type IRepository interface {
 	delete(*string) error
 
 	getOnlyNames() ([]*models.Representative, error)
+	getBySearch(*string) ([]*models.Representative, error)
 }
 
 type Handler struct {

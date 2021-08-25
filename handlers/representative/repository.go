@@ -59,3 +59,16 @@ func (r *Repository) update(item *models.Representative) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
+
+func (r *Repository) getBySearch(search *string) ([]*models.Representative, error) {
+	items := make([]*models.Representative, 0)
+
+	err := r.db.NewSelect().
+		Model(&items).
+		Relation("Human").
+		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
+		Scan(r.ctx)
+	return items, err
+}
