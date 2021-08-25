@@ -1,8 +1,9 @@
 package auth
 
 import (
-	_ "github.com/go-pg/pg/v10/orm"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	_ "github.com/go-pg/pg/v10/orm"
 )
 
 func (r *Repository) getByLogin(login *string) (*models.User, error) {

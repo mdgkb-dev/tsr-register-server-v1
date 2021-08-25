@@ -25,10 +25,14 @@ drop_database:
 	go run database/*.go -action=dropDatabase
 
 create_model:
-	go run cmd/cli/*.go -mode=model -action=create -name=${name}
-
+	go run cmd/cli/*.go -mode=model -action=create -name=${name} && goimports -w ./
 
 create_api:
-	go run cmd/cli/*.go -mode=api -action=create -name=${name}
+	go run cmd/cli/*.go -mode=api -action=create -name=${name} && goimports -w ./
 
+create_model:
+	go run cmd/cli/*.go -mode=model -action=create -name=${name} && goimports -w ./
+
+create_service:
+	go run cmd/cli/*.go -mode=service -action=create -name=${name} && goimports -w ./
 

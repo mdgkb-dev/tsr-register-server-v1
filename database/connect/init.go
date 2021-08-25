@@ -3,10 +3,11 @@ package connect
 import (
 	"database/sql"
 	"fmt"
+	"mdgkb/tsr-tegister-server-v1/models"
+
 	"github.com/go-redis/redis/v7"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/extra/bundebug"
-	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"

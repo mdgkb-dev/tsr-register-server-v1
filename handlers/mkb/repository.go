@@ -2,8 +2,9 @@ package mkb
 
 import (
 	"fmt"
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 )
 
 func (r *Repository) getDB() *bun.DB {

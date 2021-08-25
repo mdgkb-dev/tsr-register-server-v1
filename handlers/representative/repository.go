@@ -43,10 +43,10 @@ func (r *Repository) getOnlyNames() (items []*models.Representative, err error) 
 func (r *Repository) get(id *string) (*models.Representative, error) {
 	item := models.Representative{}
 	err := r.db.NewSelect().Model(&item).
-	Relation("Human").
-	Relation("RepresentativeToPatient.Patient.Human").
-	Relation("RepresentativeToPatient.RepresentativeType").
-	Where("representative.id = ?", *id).Scan(r.ctx)
+		Relation("Human").
+		Relation("RepresentativeToPatient.Patient.Human").
+		Relation("RepresentativeToPatient.RepresentativeType").
+		Where("representative.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }
 

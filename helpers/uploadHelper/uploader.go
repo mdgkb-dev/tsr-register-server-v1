@@ -1,11 +1,12 @@
 package uploadHelper
 
 import (
-	"github.com/gin-gonic/gin"
 	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Uploader interface {

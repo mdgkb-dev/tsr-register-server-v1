@@ -1,10 +1,11 @@
 package auth
 
 import (
+	handler "mdgkb/tsr-tegister-server-v1/handlers/auth"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
 	"github.com/uptrace/bun"
-	handler "mdgkb/tsr-tegister-server-v1/handlers/auth"
 
 	_ "github.com/go-pg/pg/v10/orm"
 )

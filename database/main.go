@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/uptrace/bun"
-	"github.com/uptrace/bun/migrate"
 	"log"
 	"mdgkb/tsr-tegister-server-v1/config"
 	"mdgkb/tsr-tegister-server-v1/database/connect"
 	"mdgkb/tsr-tegister-server-v1/database/migrations"
 	"mdgkb/tsr-tegister-server-v1/database/seeding"
+
+	"github.com/uptrace/bun"
+	"github.com/uptrace/bun/migrate"
 )
 
 func main() {

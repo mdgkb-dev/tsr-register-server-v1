@@ -10,6 +10,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/utilHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -142,7 +143,8 @@ func (s *Service) Delete(id *string) error {
 }
 
 func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
-	items, err := s.repository.getBySearch(query)
+	queryRu := utilHelper.TranslitToRu(*query)
+	items, err := s.repository.getBySearch(&queryRu)
 	if err != nil {
 		return nil, err
 	}

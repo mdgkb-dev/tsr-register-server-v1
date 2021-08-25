@@ -1,30 +1,31 @@
 package registerPropertyRadio
 
+import "mdgkb/tsr-tegister-server-v1/models"
 
 func (s *Service) Create(item *models.RegisterPropertyRadio) error {
-return s.repository.create(item)
+	return s.repository.create(item)
 }
 
 func (s *Service) GetAll() ([]*models.RegisterPropertyRadio, error) {
-items, err := s.repository.getAll()
-if err != nil {
-return nil, err
-}
-return items, nil
+	items, err := s.repository.getAll()
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 func (s *Service) Get(id *string) (*models.RegisterPropertyRadio, error) {
-item, err := s.repository.get(id)
-if err != nil {
-return nil, err
-}
-return item, nil
+	item, err := s.repository.get(id)
+	if err != nil {
+		return nil, err
+	}
+	return item, nil
 }
 
 func (s *Service) Update(item *models.RegisterPropertyRadio) error {
-return s.repository.update(item)
+	return s.repository.update(item)
 }
 
 func (s *Service) Delete(id *string) error {
-return s.repository.delete(id)
+	return s.repository.delete(id)
 }

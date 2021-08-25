@@ -1,11 +1,12 @@
 package patient
 
 import (
+	handler "mdgkb/tsr-tegister-server-v1/handlers/patient"
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
 	"github.com/uptrace/bun"
-	handler "mdgkb/tsr-tegister-server-v1/handlers/patient"
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 )
 
 // Init func
