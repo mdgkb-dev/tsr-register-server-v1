@@ -6,10 +6,13 @@ import (
 	"mdgkb/tsr-tegister-server-v1/cmd/cli/nameBuilder"
 	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/handler"
 	initFabric "mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/init"
+	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/initMany"
 	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/model"
 	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/repository"
+	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/repositoryMany"
 	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/routing"
 	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/service"
+	"mdgkb/tsr-tegister-server-v1/cmd/cli/templatesFabrics/serviceMany"
 	"os"
 )
 
@@ -48,20 +51,12 @@ func doActionService(action *string, names *nameBuilder.NameFormats) {
 	switch *action {
 	case "create":
 		createModel(names)
-
 		err := os.Mkdir(fmt.Sprintf("handlers/%s", *names.CamelCase), os.ModePerm)
 		if err != nil {
 			log.Fatal(err)
 		}
-		writeFile(fmt.Sprintf("handlers/%s/init.go", *names.CamelCase), initFabric.Fabric(names))
-		writeFile(fmt.Sprintf("handlers/%s/handler.go", *names.CamelCase), handler.Fabric(names))
-		writeFile(fmt.Sprintf("handlers/%s/service.go", *names.CamelCase), service.Fabric(names))
-		writeFile(fmt.Sprintf("handlers/%s/repository.go", *names.CamelCase), repository.Fabric(names))
-
-		err = os.Mkdir(fmt.Sprintf("routing/%s", *names.CamelCase), os.ModePerm)
-		if err != nil {
-			log.Fatal(err)
-		}
-		writeFile(fmt.Sprintf("routing/%s/init.go", *names.CamelCase), routing.Fabric(names))
+		writeFile(fmt.Sprintf("handlers/%s/init.go", *names.CamelCase), initMany.Fabric(names))
+		writeFile(fmt.Sprintf("handlers/%s/service.go", *names.CamelCase), serviceMany.Fabric(names))
+		writeFile(fmt.Sprintf("handlers/%s/repository.go", *names.CamelCase), repositoryMany.Fabric(names))
 	}
 }
