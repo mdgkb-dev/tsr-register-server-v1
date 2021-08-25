@@ -1,4 +1,4 @@
-package patientDiagnosis
+package patientDiagnosisAnamnesis
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -10,24 +10,22 @@ func (r *Repository) getDB() *bun.DB {
 	return r.db
 }
 
-func (r *Repository) createMany(items []*models.PatientDiagnosis) (err error) {
+func (r *Repository) createMany(items []*models.PatientDiagnosisAnamnesis) (err error) {
 	_, err = r.db.NewInsert().Model(&items).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) deleteMany(idPool []string) (err error) {
 	_, err = r.db.NewDelete().
-		Model((*models.PatientDiagnosis)(nil)).
+		Model((*models.PatientDiagnosisAnamnesis)(nil)).
 		Where("id IN (?)", bun.In(idPool)).
 		Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) upsertMany(items []*models.PatientDiagnosis) (err error) {
+func (r *Repository) upsertMany(items []*models.PatientDiagnosisAnamnesis) (err error) {
 	_, err = r.db.NewInsert().On("conflict (id) do update").
-		Set("mkb_diagnosis_id = EXCLUDED.mkb_diagnosis_id").
-		Set("mkb_sub_diagnosis_id = EXCLUDED.mkb_sub_diagnosis_id").
-		Set(`"primary" = EXCLUDED."primary"`).
+		Set("id = EXCLUDED.id").
 		Model(&items).
 		Exec(r.ctx)
 	return err

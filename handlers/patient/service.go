@@ -133,6 +133,7 @@ func (s *Service) Update(item *models.Patient) error {
 	err = registerPropertySetToPatientService.DeleteMany(item.RegisterPropertySetToPatientForDelete)
 	if err != nil {
 		return err
+
 	}
 
 	return nil

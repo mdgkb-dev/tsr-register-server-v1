@@ -1,4 +1,4 @@
-package patientDiagnosis
+package patientDiagnosisAnamnesis
 
 import (
 	"context"
@@ -8,18 +8,16 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.PatientDiagnosis) error
+	CreateMany([]*models.PatientDiagnosisAnamnesis) error
+	UpsertMany([]*models.PatientDiagnosisAnamnesis) error
+	DeleteMany([]string) error
 }
 
 type IRepository interface {
 	getDB() *bun.DB
-	createMany([]*models.PatientDiagnosis) error
-	upsertMany([]*models.PatientDiagnosis) error
+	createMany([]*models.PatientDiagnosisAnamnesis) error
+	upsertMany([]*models.PatientDiagnosisAnamnesis) error
 	deleteMany([]string) error
-}
-
-type Handler struct {
-	service IService
 }
 
 type Service struct {
