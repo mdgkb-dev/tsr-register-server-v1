@@ -1,11 +1,9 @@
 package models
 
 import (
-	"fmt"
-	"path/filepath"
-
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 )
 
 type Document struct {
@@ -16,27 +14,19 @@ type Document struct {
 	Human          *Human        `bun:"rel:has-one" json:"human"`
 	HumanID        uuid.UUID     `bun:"type:uuid" json:"humanId"`
 
-	DocumentFieldValues []*DocumentFieldValue `bun:"rel:has-many" json:"documentFieldValues"`
-	FileInfoToDocument  []*FileInfoToDocument `bun:"rel:has-many" json:"fileInfoToDocument"`
+	DocumentFieldValues         []*DocumentFieldValue `bun:"rel:has-many" json:"documentFieldValues"`
+	FileInfoToDocument          []*FileInfoToDocument `bun:"rel:has-many" json:"fileInfoToDocument"`
+	FileInfoToDocumentForDelete []string              `bun:"-" json:"fileInfoToDocumentForDelete"`
 }
 
-func (item *Document) SetFilePath(fileCategory *string, path *string) string {
-	//fmt.Println(fileCategory)
-	//fmt.Println(item.ID)
-	newPath := ""
+func (item *Document) SetFilePath(fileId *string) *string {
 	for i := range item.FileInfoToDocument {
-		fileId := item.FileInfoToDocument[i].FileInfoID.String()
-		fmt.Println(fileId, *fileCategory)
-		if fileId == *fileCategory {
-			fileId := item.FileInfoToDocument[i].FileInfo.ID.String()
-			newPath = filepath.Join(item.ID.String(), fileId)
-			fmt.Println(newPath)
-			item.FileInfoToDocument[i].FileInfo.FileSystemPath = filepath.Join(*path, item.ID.String(), fileId)
-			break
+		if item.FileInfoToDocument[i].FileInfoID.String() == *fileId {
+			item.FileInfoToDocument[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileId)
+			return &item.FileInfoToDocument[i].FileInfo.FileSystemPath
 		}
-
 	}
-	return newPath
+	return nil
 }
 
 func GetFileInfoToDocument(items []*Document) []*FileInfoToDocument {
@@ -47,6 +37,18 @@ func GetFileInfoToDocument(items []*Document) []*FileInfoToDocument {
 	for i := range items {
 		items[i].SetIdForChildren()
 		itemsForGet = append(itemsForGet, items[i].FileInfoToDocument...)
+	}
+	return itemsForGet
+}
+
+func GetFileInfoToDocumentForDelete(items []*Document) []string {
+	itemsForGet := make([]string, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	for i := range items {
+		items[i].SetIdForChildren()
+		itemsForGet = append(itemsForGet, items[i].FileInfoToDocumentForDelete...)
 	}
 	return itemsForGet
 }

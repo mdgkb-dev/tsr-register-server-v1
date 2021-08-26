@@ -28,6 +28,7 @@ func (r *Repository) upsertMany(items []*models.Edv) (err error) {
 		Set("parameter1 = EXCLUDED.parameter1").
 		Set("parameter2 = EXCLUDED.parameter2").
 		Set("parameter3 = EXCLUDED.parameter3").
+		Set("file_info_id = EXCLUDED.file_info_id").
 		Model(&items).
 		Exec(r.ctx)
 	return err

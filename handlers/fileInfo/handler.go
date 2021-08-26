@@ -15,5 +15,6 @@ func (h *Handler) Download(c *gin.Context) {
 	}
 	fullPath := h.filesService.GetFullPath(&item.FileSystemPath)
 	c.Header("Content-Description", "File Transfer")
-	c.FileAttachment(*fullPath, item.OriginalName)
+	c.Header("Download-File-Name", item.OriginalName)
+	c.File(*fullPath)
 }

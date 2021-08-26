@@ -39,10 +39,12 @@ func (s *Service) UpsertMany(items []*models.Document) error {
 	if err != nil {
 		return err
 	}
-	err = fileInfoForDocument.CreateService(s.repository.getDB()).UpsertMany(models.GetFileInfoToDocument(items))
+	fileInfoForDocumentService := fileInfoForDocument.CreateService(s.repository.getDB())
+	err = fileInfoForDocumentService.UpsertMany(models.GetFileInfoToDocument(items))
 	if err != nil {
 		return err
 	}
+	err = fileInfoForDocumentService.DeleteMany(models.GetFileInfoToDocumentForDelete(items))
 	return nil
 }
 

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"path/filepath"
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -26,15 +26,14 @@ func (item *Disability) SetIdForChildren() {
 	}
 }
 
-func (item *Disability) SetFilePath(fileCategory *string, path *string) {
+func (item *Disability) SetFilePath(fileId *string) *string {
 	for i := range item.Edvs {
-		fileId := item.Edvs[i].FileInfo.ID.String()
-		if fileId == *fileCategory {
-			newPath := filepath.Join(*path, item.ID.String(), fileId)
-			path = &newPath
-			item.Edvs[i].FileInfo.FileSystemPath = newPath
+		if item.Edvs[i].FileInfo.ID.String() == *fileId {
+			item.Edvs[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileId)
+			return &item.Edvs[i].FileInfo.FileSystemPath
 		}
 	}
+	return nil
 }
 
 func GetEdvs(disabilities []*Disability) []*Edv {

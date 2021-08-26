@@ -1,7 +1,6 @@
 package models
 
 import (
-	"path/filepath"
 	"time"
 
 	"github.com/google/uuid"
@@ -32,19 +31,20 @@ type Patient struct {
 	RegisterPropertySetToPatientForDelete []string                        `bun:"-" json:"registerPropertySetToPatientForDelete"`
 }
 
-func (item *Patient) SetFilePath(parentId *string) *string {
-	newPath := filepath.Join(item.Human.ID.String())
-
+func (item *Patient) SetFilePath(fileId *string) *string {
 	for i := range item.Human.Documents {
-		path := item.Human.Documents[i].SetFilePath(parentId, &newPath)
-		if path != "" {
-			newPath = filepath.Join(newPath, path)
+		path := item.Human.Documents[i].SetFilePath(fileId)
+		if path != nil {
+			return path
 		}
 	}
 	for i := range item.Disabilities {
-		item.Disabilities[i].SetFilePath(parentId, &newPath)
+		path := item.Disabilities[i].SetFilePath(fileId)
+		if path != nil {
+			return path
+		}
 	}
-	return &newPath
+	return nil
 }
 
 func (item *Patient) SetIdForChildren() {

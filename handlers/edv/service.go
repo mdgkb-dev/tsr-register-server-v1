@@ -1,6 +1,7 @@
 package edv
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileInfo"
 	"mdgkb/tsr-tegister-server-v1/handlers/period"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -37,6 +38,7 @@ func (s *Service) UpsertMany(items []*models.Edv) error {
 		return err
 	}
 	models.SetFileInfoIDToEdv(items)
+	fmt.Println(items[0].FileInfoID.UUID)
 	return s.repository.upsertMany(items)
 }
 
