@@ -1,3 +1,5 @@
+CREATE TYPE document_type_field_type_enum AS ENUM ('string', 'number', 'date');
+
 create table document_type_fields
 (
     id uuid default uuid_generate_v4() not null
@@ -5,7 +7,7 @@ create table document_type_fields
         primary key,
     name varchar not null,
     "order" integer,
-    type varchar not null,
+    type document_type_field_type_enum not null,
     document_type_id uuid
         constraint "FK_040777158438fdb7a2ca0d9a3bd"
         references document_types
