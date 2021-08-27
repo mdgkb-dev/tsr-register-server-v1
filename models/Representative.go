@@ -16,6 +16,14 @@ type Representative struct {
 	RepresentativeToPatientForDelete []string                   `bun:"-" json:"representativeToPatientForDelete"`
 }
 
+func (item *Representative) SetFilePath(fileId *string) *string {
+	path := item.Human.SetFilePath(fileId)
+	if path != nil {
+		return path
+	}
+	return nil
+}
+
 func (item *Representative) SetIdForChildren() {
 	if len(item.RepresentativeToPatient) > 0 {
 		for i := range item.RepresentativeToPatient {

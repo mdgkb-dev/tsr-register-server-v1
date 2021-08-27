@@ -64,14 +64,16 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Representative
-	form, _ := c.MultipartForm()
-	err := json.Unmarshal([]byte(form.Value["form"][0]), &item)
+	files, err := httpHelper.GetForm(c, &item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+
+	err = h.filesService.Upload(c, &item, files)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+
 	err = h.service.Update(&item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return

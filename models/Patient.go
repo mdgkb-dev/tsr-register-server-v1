@@ -32,11 +32,9 @@ type Patient struct {
 }
 
 func (item *Patient) SetFilePath(fileId *string) *string {
-	for i := range item.Human.Documents {
-		path := item.Human.Documents[i].SetFilePath(fileId)
-		if path != nil {
-			return path
-		}
+	path := item.Human.SetFilePath(fileId)
+	if path != nil {
+		return path
 	}
 	for i := range item.Disabilities {
 		path := item.Disabilities[i].SetFilePath(fileId)

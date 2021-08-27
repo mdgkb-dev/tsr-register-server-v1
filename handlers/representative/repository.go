@@ -19,7 +19,9 @@ func (r *Repository) create(item *models.Representative) (err error) {
 func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.Representative, err error) {
 	err = r.db.NewSelect().
 		Model(&items).
-		Relation("Human").
+		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Contact").
 		Relation("RepresentativeToPatient.Patient.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Offset(*pagination.Offset).
@@ -43,7 +45,11 @@ func (r *Repository) getOnlyNames() (items []*models.Representative, err error) 
 func (r *Repository) get(id *string) (*models.Representative, error) {
 	item := models.Representative{}
 	err := r.db.NewSelect().Model(&item).
-		Relation("Human").
+		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
+		Relation("Human.Contact").
+		Relation("Human.Photo").
 		Relation("RepresentativeToPatient.Patient.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Where("representative.id = ?", *id).Scan(r.ctx)

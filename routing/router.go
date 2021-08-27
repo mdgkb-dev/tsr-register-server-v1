@@ -37,6 +37,6 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	register.Init(api.Group("/registers"), db)
 	patient.Init(api.Group("/patients"), db, localUploader)
 	meta.Init(api.Group("/meta"), db)
-	representative.Init(api.Group("/representatives"), db)
+	representative.Init(api.Group("/representatives"), db, localUploader)
 	fileInfo.Init(api.Group("/files-info"), db, localUploader)
 }

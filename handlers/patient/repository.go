@@ -50,6 +50,7 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
 		Relation("Human.Contact").
+		Relation("Human.Photo").
 		Relation("RepresentativeToPatient.Representative.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbGroup").

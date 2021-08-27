@@ -1,6 +1,7 @@
 package fileInfo
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -26,6 +27,7 @@ func (s *Service) Upsert(item *models.FileInfo) error {
 	if item == nil {
 		return nil
 	}
+	fmt.Println(item, item)
 	return s.repository.upsert(item)
 }
 
