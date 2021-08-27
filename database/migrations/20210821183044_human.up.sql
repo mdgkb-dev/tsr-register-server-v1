@@ -13,6 +13,10 @@ create table human
     contact_id uuid
         constraint human_contact_id_fk
         references contact
+        on update cascade on delete cascade,
+    photo_id uuid
+        constraint human_files_id_fk
+        references file_infos
         on update cascade on delete cascade
 );
 
