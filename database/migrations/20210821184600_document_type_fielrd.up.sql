@@ -1,4 +1,9 @@
-CREATE TYPE document_type_field_type_enum AS ENUM ('string', 'number', 'date');
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'document_type_field_type_enum') THEN
+    CREATE TYPE document_type_field_type_enum AS ENUM ('string', 'number', 'date');
+END IF;
+END$$;
 
 create table document_type_fields
 (
