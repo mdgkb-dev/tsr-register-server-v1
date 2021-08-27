@@ -11,6 +11,8 @@ create table drug_regimens
         constraint drug_regimen_drugs_id_fk
         references drugs
         on update cascade
+        on delete cascade,
+    name varchar not null
 );
 
 create unique index drug_regimen_id_uindex

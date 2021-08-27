@@ -102,7 +102,7 @@ type RegisterPropertySetToPatient struct {
 	RegisterPropertySet   *RegisterPropertySet `bun:"rel:belongs-to" json:"registerPropertySet"`
 	RegisterPropertySetID uuid.UUID            `bun:"type:uuid" json:"registerPropertySetId"`
 	Patient               *Patient             `bun:"rel:has-one" json:"patient"`
-	PatientID             uuid.UUID            `bun:"type:uuid" json:"PatientId"`
+	PatientID             uuid.UUID            `bun:"type:uuid" json:"patientId"`
 }
 
 type RegisterToPatient struct {
@@ -111,7 +111,7 @@ type RegisterToPatient struct {
 	Register      *Register `bun:"rel:belongs-to" json:"register"`
 	RegisterID    uuid.UUID `bun:"type:uuid" json:"registerId"`
 	Patient       *Patient  `bun:"rel:belongs-to" json:"patient"`
-	PatientID     uuid.UUID `bun:"type:uuid" json:"PatientId"`
+	PatientID     uuid.UUID `bun:"type:uuid" json:"patientId"`
 }
 
 type RegisterPropertyToPatient struct {
@@ -129,5 +129,5 @@ type RegisterPropertyToPatient struct {
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
 	Patient            *Patient          `bun:"rel:has-one" json:"patient"`
-	PatientID          uuid.UUID         `bun:"type:uuid" json:"PatientId"`
+	PatientID          uuid.UUID         `bun:"type:uuid" json:"patientId"`
 }

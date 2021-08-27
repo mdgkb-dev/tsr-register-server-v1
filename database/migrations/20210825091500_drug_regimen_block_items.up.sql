@@ -5,8 +5,10 @@ create table drug_regimen_block_items
         primary key,
     drug_regimen_block_id uuid
         constraint drug_regimen_block_items_drug_regimen_block_id_fk
-        references drug_regimen_blocks,
-    days_count integer
+        references drug_regimen_blocks
+        on delete cascade,
+    days_count integer,
+    order_item integer
 );
 
 create unique index regimen_item_id_uindex

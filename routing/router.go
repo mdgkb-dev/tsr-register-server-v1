@@ -5,6 +5,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 	"mdgkb/tsr-tegister-server-v1/routing/auth"
 	"mdgkb/tsr-tegister-server-v1/routing/documentTypes"
+	"mdgkb/tsr-tegister-server-v1/routing/drug"
 	"mdgkb/tsr-tegister-server-v1/routing/fileInfo"
 	"mdgkb/tsr-tegister-server-v1/routing/insuranceCompany"
 	"mdgkb/tsr-tegister-server-v1/routing/meta"
@@ -29,6 +30,7 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 
 	auth.Init(api.Group("/auth"), db, redisClient)
 	documentTypes.Init(api.Group("/document-types"), db)
+	drug.Init(api.Group("/drugs"), db)
 	representativeTypes.Init(api.Group("/representative-types"), db)
 	insuranceCompany.Init(api.Group("/insurance-companies"), db)
 	mkb.Init(api.Group("/mkb"), db)
