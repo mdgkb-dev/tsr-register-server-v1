@@ -27,6 +27,7 @@ func (r *Repository) upsertMany(items []*models.DrugRegimenBlockItem) (err error
 	_, err = r.db.NewInsert().On("conflict (id) do update").
 		Set("drug_regimen_block_id = EXCLUDED.drug_regimen_block_id").
 		Set("days_count = EXCLUDED.days_count").
+		Set("times_per_day = EXCLUDED.times_per_day").
 		Set("order_item = EXCLUDED.order_item").
 		Model(&items).
 		Exec(r.ctx)

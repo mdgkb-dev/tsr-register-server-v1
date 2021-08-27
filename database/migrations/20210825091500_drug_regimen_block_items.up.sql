@@ -8,6 +8,7 @@ create table drug_regimen_block_items
         references drug_regimen_blocks
         on delete cascade,
     days_count integer,
+    times_per_day integer,
     order_item integer
 );
 
