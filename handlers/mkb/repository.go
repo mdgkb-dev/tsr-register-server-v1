@@ -86,24 +86,27 @@ func (r *Repository) getSubDiagnosisByDiagnosisId(diagnosisId *string) (items []
 	return items, err
 }
 
-func (r *Repository) getGroupsByRange(search *string) (items []*models.MkbGroup, err error) {
+func (r *Repository) getGroupsByRange(search *string) ( []*models.MkbGroup, error) {
+	items := make([]*models.MkbGroup, 0)
 	lenOfSearch := len([]rune(*search))
-	err = r.db.NewSelect().Model(&items).
+	err:= r.db.NewSelect().Model(&items).
 		Where("lower(left(mkb_group.range_start, ?)) <= lower(?)", lenOfSearch, *search).
 		Where("lower(left(mkb_group.range_end, ?)) >= lower(?)", lenOfSearch, *search).
 		Scan(r.ctx)
 	return items, err
 }
 
-func (r *Repository) getGroupBySearch(search *string) (items []*models.MkbGroup, err error) {
-	err = r.db.NewSelect().Model(&items).
+func (r *Repository) getGroupBySearch(search *string) ([]*models.MkbGroup, error) {
+	items := make([]*models.MkbGroup, 0)
+	err := r.db.NewSelect().Model(&items).
 		Where("lower(regexp_replace(mkb_group.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
 		Scan(r.ctx)
 	return items, err
 }
 
-func (r *Repository) getDiagnosisBySearch(search *string) (items []*models.MkbDiagnosis, err error) {
-	err = r.db.NewSelect().Model(&items).
+func (r *Repository) getDiagnosisBySearch(search *string) ([]*models.MkbDiagnosis, error) {
+	items := make([]*models.MkbDiagnosis, 0)
+	err := r.db.NewSelect().Model(&items).
 		Relation("MkbGroup").
 		Where("lower(regexp_replace(mkb_diagnosis.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
 		WhereOr("lower(regexp_replace(mkb_diagnosis.code, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").

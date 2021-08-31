@@ -11,11 +11,10 @@ import (
 
 // Init func
 func Init(r *gin.RouterGroup, db *bun.DB, uploader uploadHelper.Uploader) {
-	var h = handler.NewHandler(handler.NewRepository(db), uploader)
+	var h = handler.CreateHandler(db)
 	r.GET("/", h.GetAll)
 	r.GET("/:id", h.Get)
 	r.POST("/", h.Create)
 	r.DELETE("/:id", h.Delete)
 	r.PUT("/:id", h.Update)
-	r.PUT("/:id/status", h.UpdateStatus)
 }

@@ -47,5 +47,5 @@ type RegisterDiagnosis struct {
 	MkbDiagnosis      *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbDiagnosis"`
 	MkbDiagnosisID    uuid.UUID     `bun:"type:uuid" json:"mkbDiagnosisId"`
 	MkbSubDiagnosis   *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
-	MkbSubDiagnosisID uuid.UUID     `bun:"type:uuid" json:"mkbSubDiagnosisId"`
+	MkbSubDiagnosisID uuid.NullUUID `bun:"type:uuid" json:"mkbSubDiagnosisId"`
 }
