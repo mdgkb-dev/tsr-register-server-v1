@@ -15,3 +15,7 @@ func (h *Handler) GetCount(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, items)
 }
+
+func (h *Handler) GetSchema(c *gin.Context) {
+	c.JSON(http.StatusOK, h.service.GetSchema())
+}
