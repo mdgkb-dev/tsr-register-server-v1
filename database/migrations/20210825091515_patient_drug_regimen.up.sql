@@ -5,10 +5,13 @@ create table patient_drug_regimens
         primary key,
     patient_id uuid
         constraint patient_drug_regimen_patients_id_fk
-        references patient,
+        references patient
+        on delete cascade,
     drug_regimen_id uuid
         constraint patient_drug_regimen_drug_regimen_id_fk
         references drug_regimens
+        on delete cascade,
+    date date not null
 );
 
 create unique index patient_drug_regimen_id_uindex

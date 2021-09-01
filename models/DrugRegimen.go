@@ -11,7 +11,7 @@ type DrugRegimen struct {
 	Name          string    `json:"name"`
 	DrugID        uuid.UUID `bun:"type:uuid" json:"drugId"`
 
-	Drug                       *Drug               `bun:"rel:has-one" json:"drug"`
+	Drug                       *Drug               `bun:"rel:belongs-to" json:"drug"`
 	DrugRegimenBlocks          []*DrugRegimenBlock `bun:"rel:has-many" json:"drugRegimenBlocks"`
 	DrugRegimenBlocksForDelete []string            `bun:"-" json:"drugRegimenBlocksForDelete"`
 }

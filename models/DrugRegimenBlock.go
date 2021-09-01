@@ -7,12 +7,12 @@ import (
 
 type DrugRegimenBlock struct {
 	bun.BaseModel `bun:"drug_regimen_blocks,alias:drug_regimen_blocks"`
-	ID            uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Infinitely    bool          `json:"infinitely"`
-	OrderItem     int           `bun:"type:integer" json:"orderItem"`
+	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Infinitely    bool      `json:"infinitely"`
+	OrderItem     int       `bun:"type:integer" json:"orderItem"`
 	DrugRegimenID uuid.UUID `bun:"type:uuid" json:"drugRegimenId"`
 
-	DrugRegimen                    *DrugRegimen            `bun:"rel:has-one" json:"drugRegimen"`
+	DrugRegimen                    *DrugRegimen            `bun:"rel:belongs-to" json:"drugRegimen"`
 	DrugRegimenBlockItems          []*DrugRegimenBlockItem `bun:"rel:has-many" json:"drugRegimenBlockItems"`
 	DrugRegimenBlockItemsForDelete []string                `bun:"-" json:"drugRegimenBlockItemsForDelete"`
 }

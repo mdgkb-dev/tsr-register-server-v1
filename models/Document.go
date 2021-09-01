@@ -1,9 +1,10 @@
 package models
 
 import (
+	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 )
 
 type Document struct {

@@ -5,7 +5,8 @@ create table patient_drug_regimen_items
         primary key,
     patient_drug_regimen_id uuid
         constraint patient_drug_regimen_item_patient_drug_regimen_id_fk
-        references patient_drug_regimens,
+        references patient_drug_regimens
+        on delete cascade,
     date date,
     getting_date date
 );
