@@ -20,6 +20,7 @@ func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.
 	err = r.db.NewSelect().
 		Model(&items).
 		Relation("HeightWeight").
+		Relation("PatientDrugRegimen").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Period").
 		Relation("Human.Documents.DocumentType").
@@ -60,6 +61,8 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("RegisterToPatient.Register").
 		Relation("RegisterPropertyToPatient.RegisterProperty").
 		Relation("RegisterPropertySetToPatient.RegisterPropertySet").
+		Relation("PatientDrugRegimen.DrugRegimen.Drug").
+		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
 		Where("patient.id = ?", *id).Scan(r.ctx)
 
 	return &item, err

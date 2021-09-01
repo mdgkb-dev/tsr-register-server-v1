@@ -9,8 +9,9 @@ type DrugRegimenBlockItem struct {
 	bun.BaseModel      `bun:"drug_regimen_block_items,alias:drug_regimen_block_items"`
 	ID                 uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	DaysCount          int       `bun:"type:integer" json:"daysCount"`
+	OrderItem          int       `bun:"type:integer" json:"orderItem"`
 	TimesPerDay        int       `bun:"type:integer" json:"timesPerDay"`
 	DrugRegimenBlockID uuid.UUID `bun:"type:uuid" json:"drugRegimenBlockId"`
 
-	DrugRegimenBlock *DrugRegimenBlock `bun:"rel:has-one" json:"drugRegimenBlock"`
+	DrugRegimenBlock *DrugRegimenBlock `bun:"rel:belongs-to" json:"drugRegimenBlock"`
 }

@@ -18,11 +18,12 @@ func (r *Repository) create(item *models.Drug) (err error) {
 func (r *Repository) getAll() ([]*models.Drug, error) {
 	items := make([]*models.Drug, 0)
 	err := r.db.NewSelect().Model(&items).
-		// Relation("DrugRegimens").
-		// Relation("DrugRegimens.DrugRegimenBlocks").
-		// Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems").
-		// Order("DrugRegimens.DrugRegimenBlocks.OrderItem").
-		// Order("DrugRegimens.DrugRegimenBlockItems.OrderItem").
+		Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("drug_regimen_block_items.order_item")
+		}).
+		Relation("DrugRegimens.DrugRegimenBlocks", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("drug_regimen_blocks.order_item")
+		}).
 		Scan(r.ctx)
 	return items, err
 }
@@ -30,15 +31,12 @@ func (r *Repository) getAll() ([]*models.Drug, error) {
 func (r *Repository) get(id *string) (*models.Drug, error) {
 	item := models.Drug{}
 	err := r.db.NewSelect().Model(&item).
-		// Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems").
 		Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_block_items.order_item")
 		}).
 		Relation("DrugRegimens.DrugRegimenBlocks", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_blocks.order_item")
 		}).
-// Order("drug_regimens.drug_regimen_blocks.order_item").
-		// Order("DrugRegimens.DrugRegimenBlockItems.OrderItem").
 		Where("id = ?", *id).Scan(r.ctx)
 	return &item, err
 }

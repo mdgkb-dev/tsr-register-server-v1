@@ -5,6 +5,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/heightWeight"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientDrugRegimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertySetToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
@@ -38,6 +39,10 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = patientDiagnosis.CreateService(s.repository.getDB()).CreateMany(item.PatientDiagnosis)
+	if err != nil {
+		return err
+	}
+	err = patientDrugRegimen.CreateService(s.repository.getDB()).CreateMany(item.PatientDrugRegimen)
 	if err != nil {
 		return err
 	}
@@ -109,6 +114,15 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 	err = patientDiagnosisService.DeleteMany(item.PatientDiagnosisForDelete)
+	if err != nil {
+		return err
+	}
+	patientDrugRegimenService := patientDrugRegimen.CreateService(s.repository.getDB())
+	err = patientDrugRegimenService.UpsertMany(item.PatientDrugRegimen)
+	if err != nil {
+		return err
+	}
+	err = patientDrugRegimenService.DeleteMany(item.PatientDrugRegimenForDelete)
 	if err != nil {
 		return err
 	}
