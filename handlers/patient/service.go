@@ -53,9 +53,9 @@ func (s *Service) Create(item *models.Patient) error {
 	return err
 }
 
-func (s *Service) GetAll(pagination *httpHelper.Pagination) ([]*models.Patient, error) {
-	if pagination != nil {
-		return s.repository.getAll(pagination)
+func (s *Service) GetAll(queryFilter *httpHelper.QueryFilter) ([]*models.Patient, error) {
+	if queryFilter != nil {
+		return s.repository.getAll(queryFilter)
 	}
 	return s.repository.getOnlyNames()
 }

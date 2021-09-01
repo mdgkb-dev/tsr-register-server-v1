@@ -11,4 +11,5 @@ import (
 func Init(r *gin.RouterGroup, db *bun.DB) {
 	var h = handler.CreateHandler(db)
 	r.GET("/count/:table", h.GetCount)
+	r.GET("/schema", h.GetSchema)
 }

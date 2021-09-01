@@ -42,11 +42,11 @@ func (h *Handler) GetAll(c *gin.Context) {
 		c.JSON(http.StatusOK, items)
 		return
 	}
-	pagination, err := httpHelper.CreatePagination(c)
+	queryFilter, err := httpHelper.CreateQueryFilter(c)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	items, err := h.service.GetAll(pagination)
+	items, err := h.service.GetAll(queryFilter)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
