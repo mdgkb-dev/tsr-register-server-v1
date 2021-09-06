@@ -1,0 +1,2 @@
+UPDATE patient set created_by_id = '66f6fe6b-4cbf-4bfa-96de-cdaadb4febbd' WHERE id != '00000000-0000-0000-0000-000000000000';
+UPDATE patient set updated_by_id = '66f6fe6b-4cbf-4bfa-96de-cdaadb4febbd' WHERE id != '00000000-0000-0000-0000-000000000000';
