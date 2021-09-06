@@ -9,9 +9,10 @@ import (
 
 type Patient struct {
 	bun.BaseModel `bun:"patient,alias:patient"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Human         *Human    `bun:"rel:belongs-to" json:"human"`
-	HumanID       uuid.UUID `bun:"type:uuid" json:"humanId"`
+	ModelInfo
+	ID      uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Human   *Human    `bun:"rel:belongs-to" json:"human"`
+	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
 
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
 	RepresentativeToPatientForDelete []string                   `bun:"-" json:"representativeToPatientForDelete"`
@@ -32,6 +33,13 @@ type Patient struct {
 	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
 	RegisterPropertySetToPatient          []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
 	RegisterPropertySetToPatientForDelete []string                        `bun:"-" json:"registerPropertySetToPatientForDelete"`
+}
+
+type Patients []*Patient
+
+type PatientsWithCount struct {
+	Patients Patients `json:"patients"`
+	Count    int      `json:"count"`
 }
 
 func (item *Patient) SetFilePath(fileId *string) *string {

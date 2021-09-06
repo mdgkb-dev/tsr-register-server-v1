@@ -19,8 +19,8 @@ type FilterModel struct {
 	Date1      time.Time `json:"date1,omitempty"`
 	Date2      time.Time `json:"date2,omitempty"`
 
-	Value1 string
-	Value2 string
+	Value1 string `json:"value1,omitempty"`
+	Value2 string `json:"value2,omitempty"`
 }
 
 func (f *FilterModel) DatesToString() {
@@ -31,12 +31,27 @@ func (f *FilterModel) DatesToString() {
 	return
 }
 
+func (f *FilterModel) LikeToString() {
+	//likeOperators := map[string]string{
+	//	"contains":    "%%%s%%",
+	//	"notContains": "%%%s%%",
+	//	"startsWith":  "%s%%",
+	//	"endsWith":    "%%%s",
+	//}
+	f.Value1 = fmt.Sprintf("%%%s%%", f.Value1)
+	return
+}
+
 func (f *FilterModel) GetTableAndCol() string {
 	return fmt.Sprintf("%s.%s", *f.Table, *f.Col)
 }
 
 func (f *FilterModel) IsUnary() bool {
-	return *f.Operator == Eq || *f.Operator == Gt || *f.Operator == Ge
+	return *f.Operator == Eq || *f.Operator == Gt || *f.Operator == Ge || *f.Operator == Like
+}
+
+func (f *FilterModel) IsLike() bool {
+	return *f.Operator == Like
 }
 
 func (f *FilterModel) IsBetween() bool {
@@ -49,10 +64,11 @@ type FilterModels []*FilterModel
 type Operator string
 
 const (
-	Eq  Operator = "="
-	Gt           = ">"
-	Ge           = "<"
-	Btw          = "between"
+	Eq   Operator = "="
+	Gt            = ">"
+	Ge            = "<"
+	Btw           = "between"
+	Like          = "like"
 )
 
 type DataType string

@@ -9,7 +9,7 @@ import (
 )
 
 type Human struct {
-	bun.BaseModel       `bun:"human,alias:human"`
+	bun.BaseModel       `bun:"human,select:humans_view,alias:human"`
 	ID                  uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                string        `json:"name"`
 	Surname             string        `json:"surname"`

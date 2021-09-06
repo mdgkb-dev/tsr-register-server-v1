@@ -1,7 +1,6 @@
 package patient
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -17,10 +16,9 @@ func (r *Repository) create(item *models.Patient) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items []*models.Patient, err error) {
-	fmt.Println(1)
+func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.PatientsWithCount, err error) {
 	query := r.db.NewSelect().
-		Model(&items).
+		Model(&items.Patients).
 		Relation("HeightWeight").
 		Relation("PatientDrugRegimen").
 		Relation("Disabilities.Edvs.Period").
@@ -33,13 +31,14 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items []*model
 		Relation("PatientDiagnosis.MkbDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
+		Relation("CreatedBy").
+		Relation("UpdatedBy").
 		Order("human.surname").
 		Order("human.name").
 		Offset(*queryFilter.Pagination.Offset).
 		Limit(*queryFilter.Pagination.Limit)
 	httpHelper.CreateFilter(query, queryFilter.FilterModels)
-	fmt.Println(2)
-	err = query.Scan(r.ctx)
+	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
 

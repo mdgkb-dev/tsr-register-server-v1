@@ -3,9 +3,9 @@ package models
 import (
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -40,6 +40,19 @@ func (u *User) CompareWithHashPassword(password *string) bool {
 
 func (u *User) CreateToken() (*TokenDetails, error) {
 	return CreateToken(u.ID.String())
+}
+
+func GetUserID(c *gin.Context) (*uuid.UUID, error) {
+	metaData, err := ExtractTokenMetadata(c.Request)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(metaData.UserId)
+	userId, err := uuid.Parse(metaData.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &userId, err
 }
 
 func CreateToken(userid string) (*TokenDetails, error) {
@@ -129,11 +142,13 @@ func ExtractTokenMetadata(r *http.Request) (*AccessDetails, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
 		accessUuid, ok := claims["access_uuid"].(string)
+		userId, ok := claims["user_id"].(string)
 		if !ok {
 			return nil, err
 		}
 		return &AccessDetails{
 			AccessUuid: accessUuid,
+			UserId:     userId,
 		}, nil
 	}
 	return nil, err
@@ -145,7 +160,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(os.Getenv("ACCESS_SECRET")), nil
+		return []byte("jdnfksdmfksd"), nil
 	})
 	if err != nil {
 		return nil, err
@@ -154,10 +169,10 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 }
 
 func ExtractToken(r *http.Request) string {
-	bearToken := r.Header.Get("Authorization")
-	strArr := strings.Split(bearToken, " ")
-	if len(strArr) == 2 {
-		return strArr[1]
-	}
-	return ""
+	bearToken := r.Header.Get("token")
+	//strArr := strings.Split(bearToken, " ")
+	//if len(strArr) == 2 {
+	//	return strArr[1]
+	//}
+	return bearToken
 }

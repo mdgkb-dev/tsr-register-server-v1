@@ -7,7 +7,7 @@ type TokensWithUser struct {
 
 type AccessDetails struct {
 	AccessUuid string
-	UserId     int64
+	UserId     string
 }
 
 type TokenDetails struct {

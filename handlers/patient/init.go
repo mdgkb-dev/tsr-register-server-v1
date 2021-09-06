@@ -20,7 +20,8 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll(filter *httpHelper.QueryFilter) ([]*models.Patient, error)
+	GetAll(filter *httpHelper.QueryFilter) (models.PatientsWithCount, error)
+	GetOnlyNames() ([]*models.Patient, error)
 	Get(*string) (*models.Patient, error)
 	Create(*models.Patient) error
 	Update(*models.Patient) error
@@ -33,7 +34,7 @@ type IService interface {
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Patient) error
-	getAll(*httpHelper.QueryFilter) ([]*models.Patient, error)
+	getAll(*httpHelper.QueryFilter) (models.PatientsWithCount, error)
 	get(*string) (*models.Patient, error)
 	update(*models.Patient) error
 	delete(*string) error

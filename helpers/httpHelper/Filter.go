@@ -34,7 +34,7 @@ func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 		return
 	}
 	for _, filter := range filterModels {
-
+		fmt.Println(filter)
 		switch *filter.Type {
 		//case "set":
 		//	if len(*filter.Values) > 0 {
@@ -54,6 +54,11 @@ func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 		//	}
 		case DateType:
 			filter.DatesToString()
+			constructWhere(query, filter)
+		case StringType:
+			if filter.IsLike() {
+				filter.LikeToString()
+			}
 			constructWhere(query, filter)
 		//case "number":
 		//	tbl = constructNumberWhere(tbl, field, filter)
