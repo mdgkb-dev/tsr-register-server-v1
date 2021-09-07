@@ -4,8 +4,7 @@ import "testing"
 
 func TestGenerateHashPassword(t *testing.T) {
 	// Arrange
-	// var password string = "Aa1029!@#$%^&*()-=_+"
-	var password string = "A"
+	var password string = "Aa1029!@#$%^&*()-=_+"
 	var user *User = new(User)
 	user.Password = password
 
