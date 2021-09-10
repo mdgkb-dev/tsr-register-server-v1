@@ -129,7 +129,7 @@ func DeleteAuth(givenUuid string, client *redis.Client) (int64, error) {
 
 func DeleteTokens(authD *AccessDetails, client *redis.Client) error {
 	//get the refresh uuid
-	refreshUuid := fmt.Sprintf("%s++%d", authD.AccessUuid, authD.UserId)
+	refreshUuid := fmt.Sprintf("%s++%s", authD.AccessUuid, authD.UserId)
 	//delete access token
 	deletedAt, err := client.Del(authD.AccessUuid).Result()
 	if err != nil {
