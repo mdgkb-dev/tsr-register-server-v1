@@ -14,7 +14,8 @@ type Register struct {
 	RegisterDiagnosis                []*RegisterDiagnosis       `bun:"rel:has-many" json:"registerDiagnosis"`
 	RegisterDiagnosisForDelete       []string                   `bun:"-" json:"registerDiagnosisForDelete"`
 
-	RegisterToPatient []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
+	RegisterToPatient      []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
+	RegisterToPatientCount int                  `bun:"-" json:"registerToPatientCount"`
 }
 
 func (item *Register) SetIdForChildren() {

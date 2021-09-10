@@ -36,22 +36,11 @@ func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 	for _, filter := range filterModels {
 		fmt.Println(filter)
 		switch *filter.Type {
-		//case "set":
-		//	if len(*filter.Values) > 0 {
-		//		// проверка на наличие в set null значения
-		//		var nullExistInSet = false
-		//		for _, val := range *filter.Values {
-		//			if val == "" {
-		//				nullExistInSet = true
-		//				break
-		//			}
-		//		}
-		//		if nullExistInSet { // если null есть - то добавляем условие OR _ IS NULL
-		//			tbl = tbl.Where(fmt.Sprintf("%s in (?) OR %s IS NULL", field, field), *filter.Values)
-		//		} else {
-		//			tbl = tbl.Where(fmt.Sprintf("%s in (?)", field), *filter.Values)
-		//		}
-		//	}
+		case SetType:
+			if len(filter.Set) == 0 {
+				break
+			}
+			constructWhereIn(query, filter)
 		case DateType:
 			filter.DatesToString()
 			constructWhere(query, filter)
@@ -85,6 +74,15 @@ func constructWhere(query *bun.SelectQuery, filter *FilterModel) {
 		q = fmt.Sprintf("%s %s '%s' and '%s'", filter.GetTableAndCol(), *filter.Operator, filter.Value1, filter.Value2)
 	}
 	query = query.Where(q)
+}
+
+func constructWhereIn(query *bun.SelectQuery, filter *FilterModel) {
+	if *filter.JoinTable == "" {
+		query = query.Where(fmt.Sprintf("%s %s (?)", filter.GetTableAndCol(), *filter.Operator), bun.In(filter.Set))
+		return
+	}
+	q := fmt.Sprintf("EXISTS (SELECT NULL from patient_diagnosis where %s and %s in (?))", filter.GetJoinCondition(), filter.GetTableAndCol())
+	query = query.Where(q, bun.In(filter.Set))
 }
 
 //

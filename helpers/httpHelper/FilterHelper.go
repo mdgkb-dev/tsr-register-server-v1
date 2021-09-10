@@ -1,13 +1,13 @@
 package httpHelper
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 type QueryFilter struct {
+	ID           *string
 	FilterModels FilterModels
 	Pagination   *Pagination
 }
@@ -19,7 +19,6 @@ type Pagination struct {
 
 func CreateQueryFilter(c *gin.Context) (*QueryFilter, error) {
 	filterModels, err := CreateFilterModels(c)
-	fmt.Println(filterModels)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +26,8 @@ func CreateQueryFilter(c *gin.Context) (*QueryFilter, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &QueryFilter{FilterModels: filterModels, Pagination: pagination}, nil
+	id := c.Param("id")
+	return &QueryFilter{ID: &id, FilterModels: filterModels, Pagination: pagination}, nil
 }
 
 func CreateFilterModels(c *gin.Context) (FilterModels, error) {

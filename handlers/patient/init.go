@@ -28,7 +28,7 @@ type IService interface {
 	Delete(*string) error
 
 	GetBySearch(*string) ([]*models.Patient, error)
-	GetDisabilities() ([]*models.Patient, error)
+	GetDisabilities() (models.PatientsWithCount, error)
 }
 
 type IRepository interface {
@@ -41,7 +41,7 @@ type IRepository interface {
 
 	getOnlyNames() ([]*models.Patient, error)
 	getBySearch(*string) ([]*models.Patient, error)
-	getDisabilities() ([]*models.Patient, error)
+	getDisabilities() (models.PatientsWithCount, error)
 }
 
 type IFilesService interface {

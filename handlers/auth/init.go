@@ -12,6 +12,7 @@ import (
 type IHandler interface {
 	Register(c *gin.Context) error
 	Login(c *gin.Context) error
+	Me(c *gin.Context) error
 	//Refresh(c *gin.Context) error
 	//Logout(c *gin.Context) error
 }
@@ -19,10 +20,12 @@ type IHandler interface {
 type IService interface {
 	Register(*models.User) (*models.TokensWithUser, error)
 	Login(*models.User) (*models.TokensWithUser, error)
+	GetUserByID(*string) (*models.User, error)
 }
 
 type IRepository interface {
 	getByLogin(*string) (*models.User, error)
+	getByID(*string) (*models.User, error)
 	create(*models.User) error
 }
 

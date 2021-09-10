@@ -29,10 +29,9 @@ func (h *Handler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-//
 func (h *Handler) Get(c *gin.Context) {
-	id := c.Param("id")
-	item, err := h.service.Get(&id)
+	queryFilter, err := httpHelper.CreateQueryFilter(c)
+	item, err := h.service.Get(queryFilter)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

@@ -105,16 +105,16 @@ func (r *Repository) getBySearch(search *string) ([]*models.Patient, error) {
 	return items, err
 }
 
-func (r *Repository) getDisabilities() ([]*models.Patient, error) {
-	items := make([]*models.Patient, 0)
-	err := r.db.NewSelect().
-		Model(&items).
+func (r *Repository) getDisabilities() (item models.PatientsWithCount, err error) {
+	item.Patients = make([]*models.Patient, 0)
+	item.Count, err = r.db.NewSelect().
+		Model(&item.Patients).
 		Join("JOIN disability ON disability.patient_id = patient.id").
 		Relation("Human").
 		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
-		Group("patient.id", "human.id").
-		Scan(r.ctx)
-	return items, err
+		Group("patient.id", "human.id", "human.name", "human.surname", "human.patronymic", "human.is_male", "human.date_birth", "human.address_registration", "human.address_residential", "human.contact_id", "human.photo_id").
+		ScanAndCount(r.ctx)
+	return item, err
 }

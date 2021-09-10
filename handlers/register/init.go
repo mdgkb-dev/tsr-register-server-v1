@@ -2,6 +2,7 @@ package register
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,7 @@ type IHandler interface {
 
 type IService interface {
 	GetAll() ([]*models.Register, error)
-	Get(*string) (*models.Register, error)
+	Get(*httpHelper.QueryFilter) (*models.Register, error)
 	Create(*models.Register) error
 	Update(*models.Register) error
 	Delete(*string) error
@@ -28,7 +29,7 @@ type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Register) error
 	getAll() ([]*models.Register, error)
-	get(*string) (*models.Register, error)
+	get(*httpHelper.QueryFilter) (*models.Register, error)
 	update(*models.Register) error
 	delete(*string) error
 }

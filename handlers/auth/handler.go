@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
@@ -12,7 +11,6 @@ import (
 func (h *Handler) Register(c *gin.Context) {
 	var user *models.User
 	err := c.Bind(&user)
-	fmt.Println(user)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -30,6 +28,19 @@ func (h *Handler) Login(c *gin.Context) {
 		return
 	}
 	res, err := h.service.Login(&user)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+func (h *Handler) Me(c *gin.Context) {
+	userIdUUID, err := models.GetUserID(c)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	userId := userIdUUID.String()
+	res, err := h.service.GetUserByID(&userId)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

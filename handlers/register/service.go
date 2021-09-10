@@ -3,6 +3,7 @@ package register
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerGroupToRegister"
+	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -31,8 +32,8 @@ func (s *Service) GetAll() ([]*models.Register, error) {
 	return items, nil
 }
 
-func (s *Service) Get(id *string) (*models.Register, error) {
-	item, err := s.repository.get(id)
+func (s *Service) Get(queryFilter *httpHelper.QueryFilter) (*models.Register, error) {
+	item, err := s.repository.get(queryFilter)
 	if err != nil {
 		return nil, err
 	}

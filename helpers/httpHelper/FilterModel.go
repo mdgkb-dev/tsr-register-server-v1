@@ -21,6 +21,12 @@ type FilterModel struct {
 
 	Value1 string `json:"value1,omitempty"`
 	Value2 string `json:"value2,omitempty"`
+
+	Set []string `json:"set"`
+
+	JoinTable   *string `json:"joinTable"`
+	JoinTableFK *string `json:"joinTableFK"`
+	JoinTablePK *string `json:"joinTablePK"`
 }
 
 func (f *FilterModel) DatesToString() {
@@ -46,6 +52,10 @@ func (f *FilterModel) GetTableAndCol() string {
 	return fmt.Sprintf("%s.%s", *f.Table, *f.Col)
 }
 
+func (f *FilterModel) GetJoinCondition() string {
+	return fmt.Sprintf("%s.%s = %s.%s", *f.Table, *f.JoinTableFK, *f.JoinTable, *f.JoinTablePK)
+}
+
 func (f *FilterModel) IsUnary() bool {
 	return *f.Operator == Eq || *f.Operator == Gt || *f.Operator == Ge || *f.Operator == Like
 }
@@ -56,6 +66,10 @@ func (f *FilterModel) IsLike() bool {
 
 func (f *FilterModel) IsBetween() bool {
 	return *f.Operator == Btw
+}
+
+func (f *FilterModel) IsSet() bool {
+	return *f.Operator == In
 }
 
 // FilterModels model
@@ -69,6 +83,7 @@ const (
 	Ge            = "<"
 	Btw           = "between"
 	Like          = "like"
+	In            = "in"
 )
 
 type DataType string
@@ -77,6 +92,7 @@ const (
 	DateType   DataType = "date"
 	NumberType          = "number"
 	StringType          = "string"
+	SetType             = "set"
 )
 
 // ParseJSONToFilterModel constructor

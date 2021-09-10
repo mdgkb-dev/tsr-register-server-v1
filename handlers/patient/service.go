@@ -167,10 +167,10 @@ func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
 	return items, nil
 }
 
-func (s *Service) GetDisabilities() ([]*models.Patient, error) {
+func (s *Service) GetDisabilities() (models.PatientsWithCount, error) {
 	items, err := s.repository.getDisabilities()
 	if err != nil {
-		return nil, err
+		return items, err
 	}
 	return items, nil
 }

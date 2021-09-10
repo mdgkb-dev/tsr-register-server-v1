@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -27,7 +26,6 @@ func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("findedUser.ID", findedUser.ID)
 	if !findedUser.CompareWithHashPassword(&user.Password) {
 		return nil, errors.New("wrong password")
 	}
@@ -37,4 +35,8 @@ func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
 	}
 	res := models.TokensWithUser{Token: token, User: findedUser}
 	return &res, nil
+}
+
+func (s *Service) GetUserByID(id *string) (*models.User, error) {
+	return s.repository.getByID(id)
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 	"net/http"
 	"os"
 	"time"
@@ -15,10 +16,22 @@ import (
 )
 
 type User struct {
-	ID       uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Login    string    `json:"login"`
-	Password string    `json:"password"`
+	ID                     uuid.UUID                `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Login                  string                   `json:"login"`
+	Password               string                   `json:"password"`
+	RegisterPropertyToUser RegisterPropertiesToUser `bun:"rel:has-many" json:"registerPropertyToUser"`
 }
+
+type RegisterPropertyToUser struct {
+	bun.BaseModel      `bun:"register_property_to_user,alias:register_property_to_user"`
+	ID                 uuid.UUID         `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
+	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
+	User               *User             `bun:"rel:belongs-to" json:"user"`
+	UserID             uuid.UUID         `bun:"type:uuid" json:"userId"`
+}
+
+type RegisterPropertiesToUser []*RegisterPropertyToUser
 
 func (u *User) GenerateHashPassword() error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
@@ -57,7 +70,7 @@ func GetUserID(c *gin.Context) (*uuid.UUID, error) {
 
 func CreateToken(userid string) (*TokenDetails, error) {
 	td := &TokenDetails{}
-	td.AtExpires = time.Now().Add(time.Minute * 15).Unix()
+	td.AtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
 	td.AccessUuid = uuid.NewString()
 
 	td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
