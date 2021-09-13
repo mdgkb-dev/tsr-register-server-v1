@@ -11,6 +11,3 @@ SELECT human.id,
        human.contact_id,
        human.photo_id
 FROM human;
-
-alter table humans_view owner to mdgkb;
-

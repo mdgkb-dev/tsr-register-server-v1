@@ -1,7 +1,7 @@
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'value_type_value_relation_enum') THEN
-    CREATE TYPE value_type_value_relation_enum AS ENUM ('string', 'number', 'date');
+    CREATE TYPE value_type_value_relation_enum AS ENUM ('simple', 'oneToMany', 'manyToMany');
 END IF;
 END$$;
 
