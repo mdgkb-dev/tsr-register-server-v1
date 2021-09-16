@@ -3,11 +3,12 @@ package models
 import (
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/uptrace/bun"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v7"

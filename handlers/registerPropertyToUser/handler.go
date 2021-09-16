@@ -2,10 +2,11 @@ package registerPropertyToUser
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+
+	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 )
