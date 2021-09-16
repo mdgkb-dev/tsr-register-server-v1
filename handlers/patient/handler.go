@@ -52,7 +52,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	if queryFilter != nil {
+	if queryFilter.Pagination != nil {
 		items, err := h.service.GetAll(queryFilter)
 		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 			return

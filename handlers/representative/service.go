@@ -26,10 +26,11 @@ func (s *Service) Create(item *models.Representative) error {
 	return err
 }
 
-func (s *Service) GetAll(pagination *httpHelper.Pagination) ([]*models.Representative, error) {
-	if pagination != nil {
-		return s.repository.getAll(pagination)
-	}
+func (s *Service) GetAll(queryFilter *httpHelper.QueryFilter) (models.RepresentativesWithCount, error) {
+	return s.repository.getAll(queryFilter)
+}
+
+func (s *Service) GetOnlyNames() (models.RepresentativesWithCount, error) {
 	return s.repository.getOnlyNames()
 }
 

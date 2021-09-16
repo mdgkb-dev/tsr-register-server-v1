@@ -17,6 +17,13 @@ type Representative struct {
 	RepresentativeToPatientForDelete []string                   `bun:"-" json:"representativeToPatientForDelete"`
 }
 
+type Representatives []*Representative
+
+type RepresentativesWithCount struct {
+	Representatives Representatives `json:"representatives"`
+	Count           int             `json:"count"`
+}
+
 func (item *Representative) SetFilePath(fileId *string) *string {
 	path := item.Human.SetFilePath(fileId)
 	if path != nil {

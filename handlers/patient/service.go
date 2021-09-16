@@ -57,7 +57,7 @@ func (s *Service) GetAll(queryFilter *httpHelper.QueryFilter) (models.PatientsWi
 	return s.repository.getAll(queryFilter)
 }
 
-func (s *Service) GetOnlyNames() ([]*models.Patient, error) {
+func (s *Service) GetOnlyNames() (models.PatientsWithCount, error) {
 	return s.repository.getOnlyNames()
 }
 

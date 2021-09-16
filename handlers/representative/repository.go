@@ -16,29 +16,30 @@ func (r *Repository) create(item *models.Representative) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(pagination *httpHelper.Pagination) (items []*models.Representative, err error) {
-	err = r.db.NewSelect().
-		Model(&items).
+func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.RepresentativesWithCount, err error) {
+	query := r.db.NewSelect().
+		Model(&items.Representatives).
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
 		Relation("RepresentativeToPatient.Patient.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
-		Offset(*pagination.Offset).
-		Limit(*pagination.Limit).
-		Order("human.surname").
-		Scan(r.ctx)
+		Order("human.surname")
+
+	httpHelper.CreateFilter(query, queryFilter.FilterModels)
+	httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
+	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
 
-func (r *Repository) getOnlyNames() (items []*models.Representative, err error) {
-	err = r.db.NewSelect().
-		Model(&items).
+func (r *Repository) getOnlyNames() (items models.RepresentativesWithCount, err error) {
+	items.Count, err = r.db.NewSelect().
+		Model(&items.Representatives).
 		Relation("Human").
 		Order("human.surname").
 		Order("human.name").
 		Order("human.patronymic").
-		Scan(r.ctx)
+		ScanAndCount(r.ctx)
 	return items, err
 }
 
@@ -66,8 +67,8 @@ func (r *Repository) update(item *models.Representative) (err error) {
 	return err
 }
 
-func (r *Repository) getBySearch(search *string) ([]*models.Representative, error) {
-	items := make([]*models.Representative, 0)
+func (r *Repository) getBySearch(search *string) (models.Representatives, error) {
+	items := make(models.Representatives, 0)
 
 	err := r.db.NewSelect().
 		Model(&items).

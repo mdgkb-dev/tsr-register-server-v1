@@ -34,9 +34,9 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
 		Order("human.surname").
-		Order("human.name").
-		Offset(*queryFilter.Pagination.Offset).
-		Limit(*queryFilter.Pagination.Limit)
+		Order("human.name")
+
+	httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
 	httpHelper.CreateFilter(query, queryFilter.FilterModels)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
@@ -66,6 +66,8 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("RegisterPropertySetToPatient.RegisterPropertySet").
 		Relation("PatientDrugRegimen.DrugRegimen.Drug").
 		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
+		Relation("CreatedBy").
+		Relation("UpdatedBy").
 		Where("patient.id = ?", *id).Scan(r.ctx)
 
 	return &item, err
@@ -81,14 +83,14 @@ func (r *Repository) update(item *models.Patient) (err error) {
 	return err
 }
 
-func (r *Repository) getOnlyNames() (items []*models.Patient, err error) {
-	err = r.db.NewSelect().
-		Model(&items).
+func (r *Repository) getOnlyNames() (items models.PatientsWithCount, err error) {
+	items.Count, err = r.db.NewSelect().
+		Model(&items.Patients).
 		Relation("Human").
 		Order("human.surname").
 		Order("human.name").
 		Order("human.patronymic").
-		Scan(r.ctx)
+		ScanAndCount(r.ctx)
 	return items, err
 }
 
