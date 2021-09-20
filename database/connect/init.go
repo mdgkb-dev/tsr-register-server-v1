@@ -3,8 +3,9 @@ package connect
 import (
 	"database/sql"
 	"fmt"
-	"github.com/uptrace/bun/extra/bundebug"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun/extra/bundebug"
 
 	"github.com/go-redis/redis/v7"
 	"github.com/uptrace/bun"

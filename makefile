@@ -16,11 +16,6 @@ run:
 run_cold:
 	go run $(main)
 
-full_migrate: drop_database migrate_init migrate seed
-
-migrate_init:
-	go run $(database) -action=init
-
 migrate:
 	go run $(database) -mode=migration -action=migrate
 
@@ -35,15 +30,3 @@ seed_create:
 
 migrate_rollback:
 	go run $(migrations) rollback
-
-drop_database:
-	go run $(database) -action=dropDatabase
-
-create_model:
-	go run $(cli) -mode=model -action=create -name=${name} && goimports -w ./
-
-create_api:
-	go run $(cli) -mode=api -action=create -name=${name} && goimports -w ./
-
-create_service:
-	go run $(cli) -mode=service -action=create -name=${name} && goimports -w ./

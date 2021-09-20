@@ -9,6 +9,8 @@ type RegisterProperty struct {
 	bun.BaseModel `bun:"register_property,alias:register_property"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
+	ShortName     string    `json:"shortName"`
+	ColWidth      string    `json:"colWidth"`
 	WithOther     bool      `json:"withOther"`
 
 	ValueType   *ValueType `bun:"rel:belongs-to" json:"valueType"`

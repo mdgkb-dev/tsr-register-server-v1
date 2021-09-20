@@ -20,7 +20,8 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll(pagination *httpHelper.Pagination) ([]*models.Representative, error)
+	GetAll(filter *httpHelper.QueryFilter) (models.RepresentativesWithCount, error)
+	GetOnlyNames() (models.RepresentativesWithCount, error)
 	Get(*string) (*models.Representative, error)
 	Create(*models.Representative) error
 	Update(*models.Representative) error
@@ -32,13 +33,13 @@ type IService interface {
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Representative) error
-	getAll(pagination *httpHelper.Pagination) ([]*models.Representative, error)
+	getAll(*httpHelper.QueryFilter) (models.RepresentativesWithCount, error)
 	get(*string) (*models.Representative, error)
 	update(*models.Representative) error
 	delete(*string) error
 
-	getOnlyNames() ([]*models.Representative, error)
-	getBySearch(*string) ([]*models.Representative, error)
+	getOnlyNames() (models.RepresentativesWithCount, error)
+	getBySearch(*string) (models.Representatives, error)
 }
 
 type IFilesService interface {

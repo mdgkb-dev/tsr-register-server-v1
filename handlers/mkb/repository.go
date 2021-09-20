@@ -86,10 +86,10 @@ func (r *Repository) getSubDiagnosisByDiagnosisId(diagnosisId *string) (items []
 	return items, err
 }
 
-func (r *Repository) getGroupsByRange(search *string) ( []*models.MkbGroup, error) {
+func (r *Repository) getGroupsByRange(search *string) ([]*models.MkbGroup, error) {
 	items := make([]*models.MkbGroup, 0)
 	lenOfSearch := len([]rune(*search))
-	err:= r.db.NewSelect().Model(&items).
+	err := r.db.NewSelect().Model(&items).
 		Where("lower(left(mkb_group.range_start, ?)) <= lower(?)", lenOfSearch, *search).
 		Where("lower(left(mkb_group.range_end, ?)) >= lower(?)", lenOfSearch, *search).
 		Scan(r.ctx)

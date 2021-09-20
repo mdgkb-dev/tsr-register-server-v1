@@ -11,6 +11,7 @@ import (
 
 type IHandler interface {
 	Register(c *gin.Context) error
+	Update(c *gin.Context) error
 	Login(c *gin.Context) error
 	Me(c *gin.Context) error
 	//Refresh(c *gin.Context) error

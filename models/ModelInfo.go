@@ -1,10 +1,10 @@
 package models
 
 import (
-	"fmt"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"time"
 )
 
 type ModelInfo struct {
@@ -23,7 +23,6 @@ func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(userId)
 	m.UpdatedByID = *userId
 	return nil
 }

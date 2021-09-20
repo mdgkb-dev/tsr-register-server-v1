@@ -14,6 +14,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/routing/register"
 	"mdgkb/tsr-tegister-server-v1/routing/registerGroup"
 	"mdgkb/tsr-tegister-server-v1/routing/registerProperty"
+	"mdgkb/tsr-tegister-server-v1/routing/registerPropertyToUser"
 	"mdgkb/tsr-tegister-server-v1/routing/representative"
 	"mdgkb/tsr-tegister-server-v1/routing/representativeTypes"
 
@@ -41,4 +42,5 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	registerProperty.Init(api.Group("/register-properties"), db)
 	representative.Init(api.Group("/representatives"), db, localUploader)
 	representativeTypes.Init(api.Group("/representative-types"), db)
+	registerPropertyToUser.Init(api.Group("/register-properties-to-user"), db)
 }
