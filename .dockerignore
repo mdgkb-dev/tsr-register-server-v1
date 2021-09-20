@@ -1,0 +1,6 @@
+.git
+.husky
+.pem
+.vscode
+Dockerfile
+node_modules

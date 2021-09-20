@@ -9,7 +9,7 @@ type Config struct {
 
 	DbDb       string `mapstructure:"DB_DB"`
 	DbUser     string `mapstructure:"DB_USER"`
-	DbPassword string `mapstructure:"DB_PASSWORD"`
+	DbPassword string `mapstructure:"POSTGRES_PASSWORD"`
 	DbHost     string `mapstructure:"DB_HOST"`
 	DbPort     string `mapstructure:"DB_PORT"`
 	DbName     string `mapstructure:"DB_NAME"`
