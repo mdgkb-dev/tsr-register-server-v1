@@ -32,12 +32,11 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
 		Relation("CreatedBy").
-		Relation("UpdatedBy").
-		Order("human.surname").
-		Order("human.name")
+		Relation("UpdatedBy")
 
 	httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
 	httpHelper.CreateFilter(query, queryFilter.FilterModels)
+	httpHelper.CreateOrder(query, queryFilter.SortModels, []string{"human.surname", "human.name"})
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }

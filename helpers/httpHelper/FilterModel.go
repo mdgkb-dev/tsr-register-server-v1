@@ -6,9 +6,6 @@ import (
 	"time"
 )
 
-// SortModel model
-type SortModel []map[string]string
-
 // FilterModel model
 type FilterModel struct {
 	Table      *string   `json:"table"`

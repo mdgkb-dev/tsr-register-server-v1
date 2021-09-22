@@ -7,27 +7,18 @@ import (
 )
 
 //
-//// CreateOrder func
-//func CreateOrder(tbl *bun.SelectQuery, args ...string) *bun.SelectQuery {
-//	var sortModel SortModel
-//	err := json.Unmarshal([]byte(args[0]), &sortModel)
-//	if err != nil {
-//		return tbl
-//	}
-//	prefix := ""
-//	if args[1] != "" {
-//		prefix = fmt.Sprintf("%s.", args[1])
-//	}
-//	for _, sort := range sortModel {
-//		if strings.Contains(sort["colId"], ".") {
-//			tbl = tbl.Order(fmt.Sprintf("%s %s", sort["colId"], sort["sort"]))
-//		} else {
-//			tbl = tbl.Order(fmt.Sprintf("%s%s %s", prefix, sort["colId"], sort["sort"]))
-//		}
-//	}
-//	return tbl
-//}
-//
+// CreateOrder func
+func CreateOrder(query *bun.SelectQuery, sortModels SortModels, defaultSort []string) {
+	if len(sortModels) != 0 {
+		for _, sort := range sortModels {
+			query = query.Order(fmt.Sprintf("%s %s", sort.GetTableAndCol(), *sort.Order))
+		}
+		return
+	}
+	for _, sort := range defaultSort {
+		query = query.Order(sort)
+	}
+}
 
 // CreateFilter func
 func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {

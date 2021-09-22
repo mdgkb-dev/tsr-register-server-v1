@@ -9,6 +9,7 @@ import (
 type QueryFilter struct {
 	ID           *string
 	FilterModels FilterModels
+	SortModels   SortModels
 	Pagination   *Pagination
 }
 
@@ -22,12 +23,32 @@ func CreateQueryFilter(c *gin.Context) (*QueryFilter, error) {
 	if err != nil {
 		return nil, err
 	}
+	sortModels, err := CreateSortModels(c)
+	if err != nil {
+		return nil, err
+	}
 	pagination, err := CreatePagination(c)
 	if err != nil {
 		return nil, err
 	}
 	id := c.Param("id")
-	return &QueryFilter{ID: &id, FilterModels: filterModels, Pagination: pagination}, nil
+	return &QueryFilter{ID: &id, FilterModels: filterModels, SortModels: sortModels, Pagination: pagination}, nil
+}
+
+func CreateSortModels(c *gin.Context) (SortModels, error) {
+	sortModels := make(SortModels, 0)
+	if c.Query("sortModel") == "" {
+		return nil, nil
+	}
+	for _, arg := range c.QueryArray("sortModel") {
+		sortModel, err := ParseJSONToSortModel(arg)
+		if err != nil {
+			return nil, err
+		}
+		sortModels = append(sortModels, &sortModel)
+	}
+
+	return sortModels, nil
 }
 
 func CreateFilterModels(c *gin.Context) (FilterModels, error) {
