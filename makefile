@@ -30,3 +30,11 @@ seed_create:
 
 migrate_rollback:
 	go run $(migrations) rollback
+
+full_migrate: drop_database migrate_init migrate seed
+
+drop_database:
+	go run database/*.go -action=dropDatabase
+
+migrate_init:
+	go run database/*.go -action=init
