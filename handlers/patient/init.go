@@ -17,6 +17,7 @@ type IHandler interface {
 	Create(c *gin.Context) error
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
+	GetAllHistory(c *gin.Context) error
 }
 
 type IService interface {
@@ -48,9 +49,30 @@ type IFilesService interface {
 	Upload(*gin.Context, *models.Patient, map[string][]*multipart.FileHeader) error
 }
 
+type IHistoryRepository interface {
+	getDB() *bun.DB
+	create(*models.PatientHistory) error
+	getAll(*string) ([]*models.PatientHistory, error)
+}
+
+type IHistoryService interface {
+	Create(*models.Patient, models.RequestType) error
+	GetAll(*string) ([]*models.PatientHistory, error)
+}
+
+type HistoryService struct {
+	repository IHistoryRepository
+}
+
+type HistoryRepository struct {
+	db  *bun.DB
+	ctx context.Context
+}
+
 type Handler struct {
-	service      IService
-	filesService IFilesService
+	service        IService
+	historyService IHistoryService
+	filesService   IFilesService
 }
 
 type Service struct {
@@ -69,13 +91,14 @@ type FilesService struct {
 func CreateHandler(db *bun.DB, uploader *uploadHelper.Uploader) *Handler {
 	repo := NewRepository(db)
 	service := NewService(repo)
+	repoHistory := NewHistoryRepository(db)
+	historyService := NewHistoryService(repoHistory)
 	filesService := NewFilesService(uploader)
-	return NewHandler(service, filesService)
+	return NewHandler(service, filesService, historyService)
 }
 
-// NewHandler constructor
-func NewHandler(service IService, filesService IFilesService) *Handler {
-	return &Handler{service: service, filesService: filesService}
+func NewHandler(service IService, filesService IFilesService, historyService IHistoryService) *Handler {
+	return &Handler{service: service, filesService: filesService, historyService: historyService}
 }
 
 func NewService(repository IRepository) *Service {
@@ -88,4 +111,12 @@ func NewRepository(db *bun.DB) *Repository {
 
 func NewFilesService(uploader *uploadHelper.Uploader) *FilesService {
 	return &FilesService{uploader: *uploader}
+}
+
+func NewHistoryService(repository IHistoryRepository) *HistoryService {
+	return &HistoryService{repository: repository}
+}
+
+func NewHistoryRepository(db *bun.DB) *HistoryRepository {
+	return &HistoryRepository{db: db, ctx: context.Background()}
 }

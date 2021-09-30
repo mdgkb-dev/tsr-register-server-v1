@@ -26,6 +26,10 @@ func (h *Handler) Create(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+	err = h.historyService.Create(&item, models.RequestTypeInsert)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	c.JSON(http.StatusOK, item)
 }
 
@@ -104,4 +108,13 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
+}
+
+func (h *Handler) GetAllHistory(c *gin.Context) {
+	id := c.Param("id")
+	items, err := h.historyService.GetAll(&id)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
 }
