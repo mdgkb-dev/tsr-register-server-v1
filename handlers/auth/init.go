@@ -14,6 +14,7 @@ type IHandler interface {
 	Update(c *gin.Context) error
 	Login(c *gin.Context) error
 	Me(c *gin.Context) error
+	DoesLoginExist(c *gin.Context) error
 	//Refresh(c *gin.Context) error
 	//Logout(c *gin.Context) error
 }
@@ -22,6 +23,7 @@ type IService interface {
 	Register(*models.User) (*models.TokensWithUser, error)
 	Login(*models.User) (*models.TokensWithUser, error)
 	GetUserByID(*string) (*models.User, error)
+	DoesLoginExist(*string) (bool, error)
 }
 
 type IRepository interface {
@@ -42,6 +44,10 @@ type Service struct {
 type Repository struct {
 	db  *bun.DB
 	ctx context.Context
+}
+
+type DoesLoginExist struct {
+	DoesLoginExist bool
 }
 
 func CreateHandler(db *bun.DB, redisClient *redis.Client) *Handler {

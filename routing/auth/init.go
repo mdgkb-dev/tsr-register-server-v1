@@ -14,10 +14,11 @@ import (
 func Init(r *gin.RouterGroup, db *bun.DB, redisClient *redis.Client) {
 	var h = handler.CreateHandler(db, redisClient)
 	r.POST("/login", h.Login)
-	r.GET("/me", h.Me)
-	r.POST("/register", h.Register)
-	//r.POST("/refresh", h.Refresh)
 	r.POST("/logout", h.Logout)
+	r.POST("/register", h.Register)
+	r.GET("/does-login-exist/:login", h.DoesLoginExist)
+	r.GET("/me", h.Me)
+	//r.POST("/refresh", h.Refresh)
 	//r.POST("/check-email", handler.CheckEmail)
 	//r.GET("/logout", handler.Logout)
 }

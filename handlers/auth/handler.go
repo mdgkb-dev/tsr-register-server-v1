@@ -60,6 +60,12 @@ func (h *Handler) Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, "Successfully logged out")
 }
 
+func (h *Handler) DoesLoginExist(c *gin.Context) {
+	login := c.Param("login")
+	doesLoginExist, _ := h.service.DoesLoginExist(&login)
+	c.JSON(http.StatusOK, &DoesLoginExist{doesLoginExist})
+}
+
 //
 //// Parse, validate, and return a token.
 //// keyFunc will receive the parsed token and should return the key for validating.

@@ -40,3 +40,17 @@ func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
 func (s *Service) GetUserByID(id *string) (*models.User, error) {
 	return s.repository.getByID(id)
 }
+
+func (s *Service) DoesLoginExist(login *string) (bool, error) {
+	foundUser, err := s.repository.getByLogin(login)
+
+	if err != nil {
+		return false, err
+	}
+
+	if foundUser == nil {
+		return false, nil
+	}
+
+	return true, nil
+}
