@@ -15,7 +15,7 @@ type Human struct {
 	Surname             string        `json:"surname"`
 	Patronymic          string        `json:"patronymic"`
 	IsMale              bool          `json:"isMale"`
-	DateBirth           time.Time     `json:"dateBirth"`
+	DateBirth           *time.Time    `json:"dateBirth"`
 	AddressRegistration string        `json:"addressRegistration"`
 	AddressResidential  string        `json:"addressResidential"`
 	Contact             *Contact      `bun:"rel:belongs-to" json:"contact"`
