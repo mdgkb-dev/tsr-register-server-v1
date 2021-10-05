@@ -13,7 +13,8 @@ import (
 func Init(r *gin.RouterGroup, db *bun.DB, uploader uploadHelper.Uploader) {
 	var h = handler.CreateHandler(db, &uploader)
 	r.GET("/", h.GetAll)
-	r.GET("/history/:id", h.GetAllHistory)
+	r.GET("/histories/:id", h.GetAllHistory)
+	r.GET("/history/:id", h.GetHistory)
 	r.GET("/:id", h.Get)
 	r.POST("/", h.Create)
 	r.DELETE("/:id", h.Delete)

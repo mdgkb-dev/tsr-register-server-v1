@@ -26,6 +26,7 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
+		Relation("Human.InsuranceCompanyToHuman").
 		Relation("RepresentativeToPatient.Representative.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Relation("PatientDiagnosis.MkbDiagnosis").
@@ -34,6 +35,7 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
 
+	httpHelper.CreateWithDeletedQuery(query, queryFilter.WithDeleted)
 	httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
 	httpHelper.CreateFilter(query, queryFilter.FilterModels)
 	httpHelper.CreateOrder(query, queryFilter.SortModels, []string{"human.surname", "human.name"})
@@ -41,9 +43,9 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 	return items, err
 }
 
-func (r *Repository) get(id *string) (*models.Patient, error) {
+func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) {
 	item := models.Patient{}
-	err := r.db.NewSelect().Model(&item).
+	query := r.db.NewSelect().Model(&item).
 		Relation("HeightWeight").
 		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
@@ -67,13 +69,16 @@ func (r *Repository) get(id *string) (*models.Patient, error) {
 		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
-		Where("patient.id = ?", *id).Scan(r.ctx)
-
+		Where("patient.id = ?", *id)
+	if withDeleted {
+		query = query.WhereAllWithDeleted()
+	}
+	err := query.Scan(r.ctx)
 	return &item, err
 }
 
 func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Exec(r.ctx)
+	_, err = r.db.NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Returning("*").Exec(r.ctx)
 	return err
 }
 

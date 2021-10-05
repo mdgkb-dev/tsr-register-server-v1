@@ -73,7 +73,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	item, err := h.service.Get(&id)
+	item, err := h.service.Get(&id, true)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -83,6 +83,14 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	err := h.service.Delete(&id)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	item, err := h.service.Get(&id, true)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.historyService.Create(item, models.RequestTypeDelete)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -107,12 +115,25 @@ func (h *Handler) Update(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+	err = h.historyService.Create(&item, models.RequestTypeUpdate)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	c.JSON(http.StatusOK, item)
 }
 
 func (h *Handler) GetAllHistory(c *gin.Context) {
 	id := c.Param("id")
 	items, err := h.historyService.GetAll(&id)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func(h *Handler) GetHistory(c *gin.Context) {
+	id := c.Param("id")
+	items, err := h.historyService.Get(&id)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

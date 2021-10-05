@@ -15,11 +15,21 @@ func (r *HistoryRepository) create(item *models.PatientHistory) (err error) {
 }
 
 func (r *HistoryRepository) getAll(id *string) (items []*models.PatientHistory, err error) {
-	err = r.db.NewSelect().Model(&items).
-	Relation("History").
-	Relation("Human", func (q *bun.SelectQuery) *bun.SelectQuery {
-		return q.ModelTableExpr("human_histories")
-	}).
-	Where("patient_histories.id = ?", *id).Scan(r.ctx)
+	err = r.db.NewSelect().
+		Model(&items).
+		Relation("History").
+		Relation("HumanHistory").
+		Relation("UpdatedBy").
+		Where("patient_histories.id = ?", *id).WhereAllWithDeleted().Scan(r.ctx)
 	return items, err
+}
+
+func (r *HistoryRepository) get(id *string) (*models.PatientHistory, error) {
+	item := models.PatientHistory{}
+	err := r.db.NewSelect().
+		Model(&item).
+		Relation("History").
+		Relation("HumanHistory").
+		Where("patient_histories.patient_history_id = ?", *id).WhereAllWithDeleted().Scan(r.ctx)
+	return &item, err
 }

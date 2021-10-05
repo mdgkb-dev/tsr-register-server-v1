@@ -18,12 +18,14 @@ type IHandler interface {
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
 	GetAllHistory(c *gin.Context) error
+	GetHistory(c *gin.Context) error
+	GetAllWithDeleted(c *gin.Context) error
 }
 
 type IService interface {
 	GetAll(filter *httpHelper.QueryFilter) (models.PatientsWithCount, error)
 	GetOnlyNames() (models.PatientsWithCount, error)
-	Get(*string) (*models.Patient, error)
+	Get(*string, bool) (*models.Patient, error)
 	Create(*models.Patient) error
 	Update(*models.Patient) error
 	Delete(*string) error
@@ -36,7 +38,7 @@ type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Patient) error
 	getAll(*httpHelper.QueryFilter) (models.PatientsWithCount, error)
-	get(*string) (*models.Patient, error)
+	get(*string, bool) (*models.Patient, error)
 	update(*models.Patient) error
 	delete(*string) error
 
@@ -53,11 +55,13 @@ type IHistoryRepository interface {
 	getDB() *bun.DB
 	create(*models.PatientHistory) error
 	getAll(*string) ([]*models.PatientHistory, error)
+	get(*string) (*models.PatientHistory, error)
 }
 
 type IHistoryService interface {
 	Create(*models.Patient, models.RequestType) error
 	GetAll(*string) ([]*models.PatientHistory, error)
+	Get(*string) (*models.PatientHistory, error)
 }
 
 type HistoryService struct {

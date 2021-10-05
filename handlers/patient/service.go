@@ -61,8 +61,8 @@ func (s *Service) GetOnlyNames() (models.PatientsWithCount, error) {
 	return s.repository.getOnlyNames()
 }
 
-func (s *Service) Get(id *string) (*models.Patient, error) {
-	item, err := s.repository.get(id)
+func (s *Service) Get(id *string, withDeleted bool) (*models.Patient, error) {
+	item, err := s.repository.get(id, withDeleted)
 	if err != nil {
 		return nil, err
 	}

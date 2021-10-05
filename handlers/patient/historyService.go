@@ -12,13 +12,13 @@ func (s *HistoryService) Create(item *models.Patient, requestType models.Request
 	if err != nil {
 		return err
 	}
-	patientHistory := models.PatientHistory{Patient: *item, HistoryID: historyItem.ID}
-	err = s.repository.create(&patientHistory)
+	humanHistory := models.HumanHistory{Human: *item.Human}
+	err = human.CreateHistoryService(s.repository.getDB()).Create(&humanHistory)
 	if err != nil {
 		return err
 	}
-	humanHistory := models.HumanHistory{Human: *item.Human, HistoryID: historyItem.ID}
-	err = human.CreateHistoryService(s.repository.getDB()).Create(&humanHistory)
+	patientHistory := models.PatientHistory{Patient: *item, HistoryID: historyItem.ID, HumanHistoryID: humanHistory.HumanHistoryID}
+	err = s.repository.create(&patientHistory)
 	if err != nil {
 		return err
 	}
@@ -32,3 +32,12 @@ func (s *HistoryService) GetAll(id *string) ([]*models.PatientHistory, error) {
 	}
 	return items, nil
 }
+
+func (s *HistoryService) Get(id *string) (*models.PatientHistory, error) {
+	item, err := s.repository.get(id)
+	if err != nil {
+		return nil, err
+	}
+	return item, nil
+}
+

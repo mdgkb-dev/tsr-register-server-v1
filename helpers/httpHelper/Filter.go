@@ -20,6 +20,12 @@ func CreateOrder(query *bun.SelectQuery, sortModels SortModels, defaultSort []st
 	}
 }
 
+func CreateWithDeletedQuery(query *bun.SelectQuery, withDeleted bool) {
+	if withDeleted {
+		query.WhereAllWithDeleted()
+	}
+}
+
 // CreateFilter func
 func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 	if len(filterModels) == 0 {

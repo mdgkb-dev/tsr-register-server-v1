@@ -17,7 +17,7 @@ type History struct {
 type RequestType string
 
 const (
-	RequestTypeInsert RequestType = "insert"
-	RequestTypeUpdate RequestType = "update"
-	RequestTypeDelete RequestType = "delete"
+	RequestTypeInsert RequestType = "Создание"
+	RequestTypeUpdate RequestType = "Обновление"
+	RequestTypeDelete RequestType = "Удаление"
 )
