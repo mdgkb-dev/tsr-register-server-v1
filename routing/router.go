@@ -26,7 +26,7 @@ import (
 
 func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Config) {
 	localUploader := uploadHelper.NewLocalUploader(&config.UploadPath)
-	r.Static("/static", "./static/")
+	r.Static("/static", "../static/")
 	api := r.Group("/api/v1")
 
 	auth.Init(api.Group("/auth"), db, redisClient)
