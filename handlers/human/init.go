@@ -20,6 +20,7 @@ type IRepository interface {
 
 type Handler struct {
 	service IService
+	historyService IHistoryService
 }
 
 type Service struct {
@@ -27,6 +28,24 @@ type Service struct {
 }
 
 type Repository struct {
+	db  *bun.DB
+	ctx context.Context
+}
+
+type IHistoryRepository interface {
+	getDB() *bun.DB
+	create(*models.HumanHistory) error
+}
+
+type IHistoryService interface {
+	Create(*models.HumanHistory) error
+}
+
+type HistoryService struct {
+	repository IHistoryRepository
+}
+
+type HistoryRepository struct {
 	db  *bun.DB
 	ctx context.Context
 }
@@ -42,4 +61,17 @@ func NewService(repository IRepository) *Service {
 
 func NewRepository(db *bun.DB) *Repository {
 	return &Repository{db: db, ctx: context.Background()}
+}
+
+func CreateHistoryService(db *bun.DB) *HistoryService {
+	repo := NewHistoryRepository(db)
+	return NewHistoryService(repo)
+}
+
+func NewHistoryService(repository IHistoryRepository) *HistoryService {
+	return &HistoryService{repository: repository}
+}
+
+func NewHistoryRepository(db *bun.DB) *HistoryRepository {
+	return &HistoryRepository{db: db, ctx: context.Background()}
 }

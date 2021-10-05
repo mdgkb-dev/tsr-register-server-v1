@@ -11,6 +11,7 @@ type QueryFilter struct {
 	FilterModels FilterModels
 	SortModels   SortModels
 	Pagination   *Pagination
+	WithDeleted  bool
 }
 
 type Pagination struct {
@@ -31,8 +32,12 @@ func CreateQueryFilter(c *gin.Context) (*QueryFilter, error) {
 	if err != nil {
 		return nil, err
 	}
+	withDeleted, err := CreateWithDeleted(c)
+	if err != nil {
+		return nil, err
+	}
 	id := c.Param("id")
-	return &QueryFilter{ID: &id, FilterModels: filterModels, SortModels: sortModels, Pagination: pagination}, nil
+	return &QueryFilter{ID: &id, FilterModels: filterModels, SortModels: sortModels, Pagination: pagination, WithDeleted: withDeleted}, nil
 }
 
 func CreateSortModels(c *gin.Context) (SortModels, error) {
@@ -79,4 +84,12 @@ func CreatePagination(c *gin.Context) (*Pagination, error) {
 	offsetNumber = offsetNumber * 25
 	limit := 25
 	return &Pagination{Offset: &offsetNumber, Limit: &limit}, nil
+}
+
+func CreateWithDeleted(c *gin.Context) (bool, error) {
+	withDeleted := c.Query("withDeleted")
+	if withDeleted == "true" {
+		return true, nil
+	}
+	return false, nil
 }

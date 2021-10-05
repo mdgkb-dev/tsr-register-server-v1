@@ -14,8 +14,9 @@ type ModelInfo struct {
 	CreatedByID uuid.UUID `json:"createdById"`
 	UpdatedByID uuid.UUID `json:"updatedById"`
 
-	CreatedBy *User `bun:"rel:belongs-to" json:"createdBy"`
-	UpdatedBy *User `bun:"rel:belongs-to" json:"updatedBy"`
+	CreatedBy *User     `bun:"rel:belongs-to" json:"createdBy"`
+	UpdatedBy *User     `bun:"rel:belongs-to" json:"updatedBy"`
+	DeletedAt time.Time `bun:",soft_delete"`
 }
 
 func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context) error {

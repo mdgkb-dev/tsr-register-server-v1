@@ -19,7 +19,7 @@ type Human struct {
 	AddressRegistration string        `json:"addressRegistration"`
 	AddressResidential  string        `json:"addressResidential"`
 	Contact             *Contact      `bun:"rel:belongs-to" json:"contact"`
-	ContactID           uuid.UUID     `bun:"type:uuid" json:"contactId"`
+	ContactID           uuid.NullUUID `bun:"type:uuid" json:"contactId"`
 	Photo               *FileInfo     `bun:"rel:belongs-to" json:"photo"`
 	PhotoId             uuid.NullUUID `bun:"type:uuid" json:"photoId"`
 
