@@ -37,7 +37,7 @@ func (item *Human) SetFilePath(fileId *string) *string {
 			return path
 		}
 	}
-	if item.Photo.ID.String() == *fileId {
+	if item.Photo != nil && item.Photo.ID.String() == *fileId {
 		item.Photo.FileSystemPath = uploadHelper.BuildPath(fileId)
 		return &item.Photo.FileSystemPath
 	}
