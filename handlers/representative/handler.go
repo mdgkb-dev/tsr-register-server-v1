@@ -1,7 +1,6 @@
 package representative
 
 import (
-	"encoding/json"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
@@ -11,8 +10,15 @@ import (
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Representative
-	form, _ := c.MultipartForm()
-	err := json.Unmarshal([]byte(form.Value["form"][0]), &item)
+	files, err := httpHelper.GetForm(c, &item)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = item.FillModelInfoCreate(c)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.filesService.Upload(c, &item, files)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -76,7 +82,10 @@ func (h *Handler) Update(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-
+	err = item.FillModelInfoUpdate(c)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	err = h.filesService.Upload(c, &item, files)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
