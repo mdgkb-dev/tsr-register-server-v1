@@ -25,6 +25,7 @@ func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context) error {
 		return err
 	}
 	m.UpdatedByID = *userId
+	m.UpdatedAt = time.Now()
 	return nil
 }
 
