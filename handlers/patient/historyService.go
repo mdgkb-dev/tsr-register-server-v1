@@ -40,4 +40,3 @@ func (s *HistoryService) Get(id *string) (*models.PatientHistory, error) {
 	}
 	return item, nil
 }
-

@@ -43,4 +43,3 @@ func NewService(repository IRepository) *Service {
 func NewRepository(db *bun.DB) *Repository {
 	return &Repository{db: db, ctx: context.Background()}
 }
-

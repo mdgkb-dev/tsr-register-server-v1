@@ -66,6 +66,8 @@ func CreateFilterModels(c *gin.Context) (FilterModels, error) {
 		if err != nil {
 			return nil, err
 		}
+		filterModel.SetTableAndCol()
+		filterModel.Modify()
 		filterModels = append(filterModels, &filterModel)
 	}
 

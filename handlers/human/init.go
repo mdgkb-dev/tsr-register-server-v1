@@ -19,7 +19,7 @@ type IRepository interface {
 }
 
 type Handler struct {
-	service IService
+	service        IService
 	historyService IHistoryService
 }
 
