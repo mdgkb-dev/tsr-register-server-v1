@@ -47,9 +47,13 @@ type Repository struct {
 }
 
 func CreateHandler(db *bun.DB) *Handler {
-	repo := NewRepository(db)
-	service := NewService(repo)
+	service := CreateService(db)
 	return NewHandler(service)
+}
+
+func CreateService(db *bun.DB) *Service {
+	repo := NewRepository(db)
+	return NewService(repo)
 }
 
 func NewHandler(s IService) *Handler {
