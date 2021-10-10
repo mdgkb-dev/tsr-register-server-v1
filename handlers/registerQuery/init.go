@@ -18,7 +18,7 @@ type IHandler interface {
 
 type IService interface {
 	Create(*models.RegisterQuery) error
-	GetAll() ([]*models.RegisterQuery, error)
+	GetAll() (models.RegisterQueries, error)
 	Get(*string) (*models.RegisterQuery, error)
 	Update(*models.RegisterQuery) error
 	Delete(*string) error
@@ -27,7 +27,7 @@ type IService interface {
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.RegisterQuery) error
-	getAll() ([]*models.RegisterQuery, error)
+	getAll() (models.RegisterQueries, error)
 	get(*string) (*models.RegisterQuery, error)
 	update(*models.RegisterQuery) error
 	delete(*string) error

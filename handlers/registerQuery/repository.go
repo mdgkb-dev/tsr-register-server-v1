@@ -15,7 +15,7 @@ func (r *Repository) create(query *models.RegisterQuery) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() (queries []*models.RegisterQuery, err error) {
+func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
 	err = r.db.NewSelect().Model(&queries).Scan(r.ctx)
 	return queries, err
 }

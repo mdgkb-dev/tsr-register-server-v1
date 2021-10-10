@@ -17,7 +17,7 @@ func (s *Service) Create(query *models.RegisterQuery) error {
 	return err
 }
 
-func (s *Service) GetAll() ([]*models.RegisterQuery, error) {
+func (s *Service) GetAll() (models.RegisterQueries, error) {
 	queries, err := s.repository.getAll()
 
 	if err != nil {
