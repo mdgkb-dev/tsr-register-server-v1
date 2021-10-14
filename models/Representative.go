@@ -14,7 +14,7 @@ type Representative struct {
 	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
 
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
-	RepresentativeToPatientForDelete []string                   `bun:"-" json:"representativeToPatientForDelete"`
+	RepresentativeToPatientForDelete []uuid.UUID                   `bun:"-" json:"representativeToPatientForDelete"`
 }
 
 type Representatives []*Representative

@@ -3,6 +3,8 @@ package patientDrugRegimen
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDrugRegimenItem"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) CreateMany(items []*models.PatientDrugRegimen) error {
@@ -35,7 +37,7 @@ func (s *Service) UpsertMany(items []*models.PatientDrugRegimen) error {
 	return nil
 }
 
-func (s *Service) DeleteMany(idPool []string) error {
+func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 	if len(idPool) == 0 {
 		return nil
 	}

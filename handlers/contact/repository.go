@@ -2,6 +2,8 @@ package contact
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (r *Repository) create(item *models.Contact) (err error) {
@@ -20,6 +22,11 @@ func (r *Repository) upsert(item *models.Contact) (err error) {
 		Set("email = EXCLUDED.email").
 		Model(item).
 		Exec(r.ctx)
+	return err
+}
+
+func (r *Repository) delete(id uuid.NullUUID) (err error) {
+	_, err = r.db.NewDelete().Model(&models.Contact{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 

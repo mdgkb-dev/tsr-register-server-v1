@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -14,7 +15,7 @@ type IService interface {
 type IRepository interface {
 	createMany([]*models.HeightWeight) error
 	upsertMany([]*models.HeightWeight) error
-	deleteMany([]string) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Handler struct {

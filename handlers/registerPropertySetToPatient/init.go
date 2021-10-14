@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -15,7 +16,7 @@ type IRepository interface {
 	getDB() *bun.DB
 	createMany([]*models.RegisterPropertySetToPatient) error
 	upsertMany([]*models.RegisterPropertySetToPatient) error
-	deleteMany([]string) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Handler struct {

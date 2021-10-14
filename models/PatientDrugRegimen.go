@@ -13,6 +13,7 @@ type PatientDrugRegimen struct {
 	Date          time.Time `json:"date"`
 	PatientID     uuid.UUID `bun:"type:uuid" json:"patientId"`
 	DrugRegimenID uuid.UUID `bun:"type:uuid" json:"drugRegimenId"`
+	DeletedAt     time.Time `bun:",soft_delete" json:"deletedAt"`
 
 	Patient     *Patient     `bun:"rel:belongs-to" json:"patient"`
 	DrugRegimen *DrugRegimen `bun:"rel:belongs-to" json:"drugRegimen"`

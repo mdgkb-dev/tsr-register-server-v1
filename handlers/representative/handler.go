@@ -22,6 +22,10 @@ func (h *Handler) Create(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+	err = item.FillModelInfoCreate(c)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	err = h.service.Create(&item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return

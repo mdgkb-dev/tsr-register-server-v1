@@ -3,6 +3,7 @@ package fileInfoForDocument
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -15,7 +16,7 @@ func (r *Repository) createMany(items []*models.FileInfoToDocument) (err error) 
 	return err
 }
 
-func (r *Repository) deleteMany(idPool []string) (err error) {
+func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
 	_, err = r.db.NewDelete().
 		Model((*models.FileInfoToDocument)(nil)).
 		Where("id IN (?)", bun.In(idPool)).
