@@ -16,6 +16,10 @@ func (h *Handler) Create(c *gin.Context) {
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+	err = item.FillModelInfoCreate(c)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	err = h.service.Create(&item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -77,6 +81,10 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 
+	err = item.FillModelInfoUpdate(c)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	err = h.filesService.Upload(c, &item, files)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return

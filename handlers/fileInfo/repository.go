@@ -2,6 +2,8 @@ package fileInfo
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (r *Repository) create(item *models.FileInfo) (err error) {
@@ -41,5 +43,10 @@ func (r *Repository) upsertMany(items []*models.FileInfo) (err error) {
 		Set("file_system_path = EXCLUDED.file_system_path").
 		Model(&items).
 		Exec(r.ctx)
+	return err
+}
+
+func (r *Repository) delete(id uuid.NullUUID) (err error) {
+	_, err = r.db.NewDelete().Model(&models.Contact{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }

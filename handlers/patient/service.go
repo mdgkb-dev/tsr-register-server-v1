@@ -155,7 +155,52 @@ func (s *Service) Update(item *models.Patient) error {
 }
 
 func (s *Service) Delete(id *string) error {
-	return s.repository.delete(id)
+	patient, err := s.repository.get(id, false)
+	if err != nil {
+		return err
+	}
+	patient.SetDeleteIdForChildren()
+	err = human.CreateService(s.repository.getDB()).Delete(patient.HumanID)
+	if err != nil {
+		return err
+	}
+	err = representativeToPatient.CreateService(s.repository.getDB()).DeleteMany(patient.RepresentativeToPatientForDelete)
+	if err != nil {
+		return err
+	}
+	err = heightWeight.CreateService(s.repository.getDB()).DeleteMany(patient.HeightWeightForDelete)
+	if err != nil {
+		return err
+	}
+	err = disability.CreateService(s.repository.getDB()).DeleteMany(patient.DisabilitiesForDelete)
+	if err != nil {
+		return err
+	}
+	err = patientDiagnosis.CreateService(s.repository.getDB()).DeleteMany(patient.PatientDiagnosisForDelete)
+	if err != nil {
+		return err
+	}
+	err = patientDrugRegimen.CreateService(s.repository.getDB()).DeleteMany(patient.PatientDrugRegimenForDelete)
+	if err != nil {
+		return err
+	}
+	err = registerToPatient.CreateService(s.repository.getDB()).DeleteMany(patient.RegisterToPatientForDelete)
+	if err != nil {
+		return err
+	}
+	err = registerPropertyToPatient.CreateService(s.repository.getDB()).DeleteMany(patient.RegisterPropertyToPatientForDelete)
+	if err != nil {
+		return err
+	}
+	err = registerPropertySetToPatient.CreateService(s.repository.getDB()).DeleteMany(patient.RegisterPropertySetToPatientForDelete)
+	if err != nil {
+		return err
+	}
+	err = s.repository.delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {

@@ -2,6 +2,8 @@ package contact
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) Create(item *models.Contact) error {
@@ -23,6 +25,10 @@ func (s *Service) Upsert(item *models.Contact) error {
 		return nil
 	}
 	return s.repository.upsert(item)
+}
+
+func (s *Service) Delete(id uuid.NullUUID) error {
+	return s.repository.delete(id)
 }
 
 func (s *Service) CreateMany(items []*models.Contact) error {

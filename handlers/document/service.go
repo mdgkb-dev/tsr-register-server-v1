@@ -4,6 +4,8 @@ import (
 	documentFieldValues "mdgkb/tsr-tegister-server-v1/handlers/documentFieldValue"
 	fileInfoForDocument "mdgkb/tsr-tegister-server-v1/handlers/fileInfoToDocument"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) CreateMany(items []*models.Document) error {
@@ -45,10 +47,13 @@ func (s *Service) UpsertMany(items []*models.Document) error {
 		return err
 	}
 	err = fileInfoForDocumentService.DeleteMany(models.GetFileInfoToDocumentForDelete(items))
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (s *Service) DeleteMany(idPool []string) error {
+func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 	if len(idPool) == 0 {
 		return nil
 	}

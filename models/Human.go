@@ -22,12 +22,13 @@ type Human struct {
 	ContactID           uuid.NullUUID `bun:"type:uuid" json:"contactId"`
 	Photo               *FileInfo     `bun:"rel:belongs-to" json:"photo"`
 	PhotoId             uuid.NullUUID `bun:"type:uuid" json:"photoId"`
+	DeletedAt           time.Time     `bun:",soft_delete" json:"deletedAt"`
 
 	Documents          []*Document `bun:"rel:has-many" json:"documents"`
-	DocumentsForDelete []string    `bun:"-" json:"documentsForDelete"`
+	DocumentsForDelete []uuid.UUID `bun:"-" json:"documentsForDelete"`
 
 	InsuranceCompanyToHuman          []*InsuranceCompanyToHuman `bun:"rel:has-many" json:"insuranceCompanyToHuman"`
-	InsuranceCompanyToHumanForDelete []string                   `bun:"-" json:"insuranceCompanyToHumanForDelete"`
+	InsuranceCompanyToHumanForDelete []uuid.UUID                `bun:"-" json:"insuranceCompanyToHumanForDelete"`
 }
 
 func (item *Human) SetFilePath(fileId *string) *string {
@@ -57,6 +58,15 @@ func (item *Human) SetIdForChildren() {
 	}
 }
 
+func (item *Human) SetDeleteIdForChildren() {
+	for i := range item.Documents {
+		item.DocumentsForDelete = append(item.DocumentsForDelete, item.Documents[i].ID)
+	}
+	for i := range item.InsuranceCompanyToHuman {
+		item.InsuranceCompanyToHumanForDelete = append(item.InsuranceCompanyToHumanForDelete, item.InsuranceCompanyToHuman[i].ID)
+	}
+}
+
 type InsuranceCompanyToHuman struct {
 	bun.BaseModel      `bun:"insurance_company_to_human,alias:insurance_company_to_human"`
 	ID                 uuid.UUID         `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
@@ -65,4 +75,5 @@ type InsuranceCompanyToHuman struct {
 	InsuranceCompanyID uuid.UUID         `bun:"type:uuid" json:"insuranceCompanyId"`
 	Human              *Human            `bun:"rel:belongs-to" json:"human"`
 	HumanID            uuid.UUID         `bun:"type:uuid" json:"humanId"`
+	DeletedAt          time.Time         `bun:",soft_delete" json:"deletedAt"`
 }

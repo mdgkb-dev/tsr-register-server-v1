@@ -3,6 +3,8 @@ package fileInfo
 import (
 	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) Create(item *models.FileInfo) error {
@@ -43,4 +45,8 @@ func (s *Service) UpsertMany(items []*models.FileInfo) error {
 		return nil
 	}
 	return s.repository.upsertMany(items)
+}
+
+func (s *Service) Delete(id uuid.NullUUID) error {
+	return s.repository.delete(id)
 }

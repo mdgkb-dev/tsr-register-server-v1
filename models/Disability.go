@@ -2,6 +2,7 @@ package models
 
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -16,6 +17,7 @@ type Disability struct {
 	EdvsForDelete []string  `bun:"-" json:"edvsForDelete"`
 	Period        *Period   `bun:"rel:belongs-to" json:"period"`
 	PeriodID      uuid.UUID `bun:"type:uuid" json:"periodId"`
+	DeletedAt     time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
 func (item *Disability) SetIdForChildren() {

@@ -4,19 +4,20 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
 type IService interface {
 	CreateMany([]*models.RepresentativeToPatient) error
 	UpsertMany([]*models.RepresentativeToPatient) error
-	DeleteMany([]string) error
+	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
 	createMany([]*models.RepresentativeToPatient) error
 	upsertMany([]*models.RepresentativeToPatient) error
-	deleteMany([]string) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Service struct {

@@ -3,6 +3,7 @@ package registerPropertySetToPatient
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -15,7 +16,7 @@ func (r *Repository) createMany(items []*models.RegisterPropertySetToPatient) (e
 	return err
 }
 
-func (r *Repository) deleteMany(idPool []string) (err error) {
+func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
 	_, err = r.db.NewDelete().
 		Model((*models.RegisterPropertySetToPatient)(nil)).
 		Where("id IN (?)", bun.In(idPool)).

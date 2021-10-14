@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -15,6 +17,7 @@ type PatientDiagnosis struct {
 	MkbSubDiagnosis   *MkbSubDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
 	MkbSubDiagnosisID uuid.NullUUID    `bun:"type:uuid,nullzero" json:"mkbSubDiagnosisId"`
 	Primary           bool             `json:"primary"`
+	DeletedAt         time.Time        `bun:",soft_delete" json:"deletedAt"`
 
 	PatientDiagnosisAnamnesis          []*PatientDiagnosisAnamnesis `bun:"rel:has-many" json:"patientDiagnosisAnamnesis"`
 	PatientDiagnosisAnamnesisForDelete []string                     `bun:"-" json:"patientDiagnosisAnamnesisForDelete"`

@@ -78,7 +78,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 }
 
 func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Returning("*").Exec(r.ctx)
+	_, err = r.db.NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
 
