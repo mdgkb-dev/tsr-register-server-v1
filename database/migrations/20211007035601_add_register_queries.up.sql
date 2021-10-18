@@ -23,6 +23,6 @@ create table register_query_to_register_property
    "order" integer,
    is_aggregate boolean default false not null,
 
-   foreign key (register_query_id) references register_queries (id),
-   foreign key (register_property_id) references register_property (id)
+   foreign key (register_query_id) references register_queries (id) on update cascade on delete cascade,
+   foreign key (register_property_id) references register_property (id) on update cascade on delete cascade
 );
