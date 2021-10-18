@@ -10,6 +10,7 @@ type RegisterQuery struct {
 	ID                                       uuid.UUID                          `bun:"type:uuid,default:uuid_generate_v4()" json:"id"`
 	Name                                     string                             `json:"name"`
 	Type                                     string                             `bun:"type:register_query_type_enum" json:"type"`
+	Register                                 *Register                          `bun:"rel:belongs-to" json:"register"`
 	RegisterID                               uuid.UUID                          `bun:"type:uuid" json:"registerId"`
 	RegisterQueryToRegisterProperty          []*RegisterQueryToRegisterProperty `bun:"rel:has-many" json:"registerQueryToRegisterProperty"`
 	RegisterQueryToRegisterPropertyForDelete []string                           `bun:"-" json:"registerQueryToRegisterPropertyForDelete"`

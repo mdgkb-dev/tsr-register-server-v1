@@ -7,9 +7,15 @@ func (r *Repository) create(item *models.RegisterProperty) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() ([]*models.RegisterProperty, error) {
+func (r *Repository) getAll(registerId *string) ([]*models.RegisterProperty, error) {
 	items := []*models.RegisterProperty{}
-	err := r.db.NewSelect().Model(&items).Scan(r.ctx)
+	query := r.db.NewSelect().Model(&items)
+
+	if *registerId != "" {
+		query.Where(existsRegisterPropertyWithGroupId, *registerId)
+	}
+
+	err := query.Scan(r.ctx)
 	return items, err
 }
 
@@ -39,3 +45,22 @@ func (r *Repository) getValueTypes() ([]*models.ValueType, error) {
 		Scan(r.ctx)
 	return items, err
 }
+
+var existsRegisterPropertyWithGroupId string = `
+exists
+(
+	select *
+	from
+		register_property_to_register_group as rptrg
+	where
+		rptrg.register_property_id = register_property.id
+		and exists
+		(
+			select *
+			from
+				register_group_to_register as rgtr
+			where
+				rgtr.register_group_id = rptrg.register_group_id
+				and rgtr.register_id = ?
+		)
+)`

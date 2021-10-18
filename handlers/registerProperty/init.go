@@ -18,7 +18,7 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.RegisterProperty, error)
+	GetAll(*string) ([]*models.RegisterProperty, error)
 	Get(*string) (*models.RegisterProperty, error)
 	Create(*models.RegisterProperty) error
 	Update(*models.RegisterProperty) error
@@ -28,7 +28,7 @@ type IService interface {
 
 type IRepository interface {
 	create(*models.RegisterProperty) error
-	getAll() ([]*models.RegisterProperty, error)
+	getAll(*string) ([]*models.RegisterProperty, error)
 	get(*string) (*models.RegisterProperty, error)
 	update(*models.RegisterProperty) error
 	delete(*string) error

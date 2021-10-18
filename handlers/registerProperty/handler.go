@@ -11,21 +11,28 @@ import (
 func (h *Handler) Create(c *gin.Context) {
 	var item models.RegisterProperty
 	err := c.Bind(&item)
+
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+
 	err = h.service.Create(&item)
+
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+
 	c.JSON(http.StatusOK, item)
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	items, err := h.service.GetAll()
+	registerId := c.Query("registerId")
+	items, err := h.service.GetAll(&registerId)
+
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
+
 	c.JSON(http.StatusOK, items)
 }
 

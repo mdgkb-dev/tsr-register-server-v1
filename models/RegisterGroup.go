@@ -11,6 +11,7 @@ type RegisterGroup struct {
 	Name                                     string                             `json:"name"`
 	RegisterPropertyToRegisterGroup          []*RegisterPropertyToRegisterGroup `bun:"rel:has-many" json:"registerPropertyToRegisterGroup"`
 	RegisterPropertyToRegisterGroupForDelete []string                           `bun:"-" json:"registerPropertyToRegisterGroupForDelete"`
+	RegisterGroupToRegister                  []*RegisterGroupToRegister         `bun:"rel:has-many" json:"registerGroupToRegister"`
 }
 
 func (item *RegisterGroup) SetIdForChildren() {

@@ -6,8 +6,8 @@ func (s *Service) Create(item *models.RegisterProperty) error {
 	return s.repository.create(item)
 }
 
-func (s *Service) GetAll() ([]*models.RegisterProperty, error) {
-	items, err := s.repository.getAll()
+func (s *Service) GetAll(registerId *string) ([]*models.RegisterProperty, error) {
+	items, err := s.repository.getAll(registerId)
 	if err != nil {
 		return nil, err
 	}

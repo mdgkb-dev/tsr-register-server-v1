@@ -21,4 +21,6 @@ type RegisterProperty struct {
 
 	RegisterPropertySet          []*RegisterPropertySet `bun:"rel:has-many" json:"registerPropertySet"`
 	RegisterPropertySetForDelete []string               `bun:"-" json:"registerPropertySetForDelete"`
+
+	RegisterPropertyToRegisterGroup []*RegisterPropertyToRegisterGroup `bun:"rel:has-many" json:"registerPropertyToRegisterGroup"`
 }
