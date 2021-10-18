@@ -18,6 +18,10 @@ type Patient struct {
 	HeightWeightForDelete            []uuid.UUID                `bun:"-" json:"heightWeightForDelete"`
 	Disabilities                     []*Disability              `bun:"rel:has-many" json:"disabilities"`
 	DisabilitiesForDelete            []uuid.UUID                `bun:"-" json:"disabilitiesForDelete"`
+	ChestCircumference               []*ChestCircumference      `bun:"rel:has-many" json:"chestCircumference"`
+	ChestCircumferenceForDelete      []uuid.UUID                `bun:"-" json:"chestCircumferenceForDelete"`
+	HeadCircumference                []*HeadCircumference       `bun:"rel:has-many" json:"headCircumference"`
+	HeadCircumferenceForDelete       []uuid.UUID                `bun:"-" json:"headCircumferenceForDelete"`
 
 	PatientDiagnosis          []*PatientDiagnosis `bun:"rel:has-many" json:"patientDiagnosis"`
 	PatientDiagnosisForDelete []uuid.UUID         `bun:"-" json:"patientDiagnosisForDelete"`
@@ -66,6 +70,16 @@ func (item *Patient) SetIdForChildren() {
 			item.HeightWeight[i].PatientID = item.ID
 		}
 	}
+	if len(item.ChestCircumference) > 0 {
+		for i := range item.ChestCircumference {
+			item.ChestCircumference[i].PatientID = item.ID
+		}
+	}
+	if len(item.HeadCircumference) > 0 {
+		for i := range item.HeadCircumference {
+			item.HeadCircumference[i].PatientID = item.ID
+		}
+	}
 	if len(item.Disabilities) > 0 {
 		for i := range item.Disabilities {
 			item.Disabilities[i].PatientID = item.ID
@@ -104,6 +118,12 @@ func (item *Patient) SetDeleteIdForChildren() {
 	}
 	for i := range item.HeightWeight {
 		item.HeightWeightForDelete = append(item.HeightWeightForDelete, item.HeightWeight[i].ID)
+	}
+	for i := range item.ChestCircumference {
+		item.ChestCircumferenceForDelete = append(item.ChestCircumferenceForDelete, item.ChestCircumference[i].ID)
+	}
+	for i := range item.HeadCircumference {
+		item.HeadCircumferenceForDelete = append(item.HeadCircumferenceForDelete, item.HeadCircumference[i].ID)
 	}
 	for i := range item.Disabilities {
 		item.DisabilitiesForDelete = append(item.DisabilitiesForDelete, item.Disabilities[i].ID)
