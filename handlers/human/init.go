@@ -4,22 +4,26 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
 type IService interface {
 	Create(*models.Human) error
 	Update(*models.Human) error
+	Delete(uuid.UUID) error
 }
 
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Human) error
 	update(*models.Human) error
+	delete(uuid.UUID) error
+	get(uuid.UUID) (*models.Human, error)
 }
 
 type Handler struct {
-	service IService
+	service        IService
 	historyService IHistoryService
 }
 

@@ -131,7 +131,7 @@ func (h *Handler) GetAllHistory(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-func(h *Handler) GetHistory(c *gin.Context) {
+func (h *Handler) GetHistory(c *gin.Context) {
 	id := c.Param("id")
 	items, err := h.historyService.Get(&id)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {

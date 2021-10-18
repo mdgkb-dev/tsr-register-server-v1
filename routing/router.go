@@ -3,6 +3,7 @@ package routing
 import (
 	"mdgkb/tsr-tegister-server-v1/config"
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
 	"mdgkb/tsr-tegister-server-v1/routing/auth"
 	"mdgkb/tsr-tegister-server-v1/routing/documentTypes"
 	"mdgkb/tsr-tegister-server-v1/routing/drug"
@@ -18,6 +19,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/routing/registerQuery"
 	"mdgkb/tsr-tegister-server-v1/routing/representative"
 	"mdgkb/tsr-tegister-server-v1/routing/representativeTypes"
+	"mdgkb/tsr-tegister-server-v1/routing/xlsx"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
@@ -27,6 +29,7 @@ import (
 
 func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Config) {
 	localUploader := uploadHelper.NewLocalUploader(&config.UploadPath)
+	createdXlsxHelper := xlsxHelper.CreateXlsxHelper()
 	r.Static("/static", "../static/")
 	api := r.Group("/api/v1")
 
@@ -45,4 +48,5 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	representative.Init(api.Group("/representatives"), db, localUploader)
 	representativeTypes.Init(api.Group("/representative-types"), db)
 	registerPropertyToUser.Init(api.Group("/register-properties-to-user"), db)
+	xlsx.Init(api.Group("xlsx"), db, createdXlsxHelper)
 }

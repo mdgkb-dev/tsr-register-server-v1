@@ -2,6 +2,7 @@ package models
 
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -14,10 +15,12 @@ type Document struct {
 	DocumentTypeID uuid.UUID     `bun:"type:uuid" json:"documentTypeId"`
 	Human          *Human        `bun:"rel:has-one" json:"human"`
 	HumanID        uuid.UUID     `bun:"type:uuid" json:"humanId"`
+	DeletedAt      time.Time     `bun:",soft_delete" json:"deletedAt"`
 
-	DocumentFieldValues         []*DocumentFieldValue `bun:"rel:has-many" json:"documentFieldValues"`
-	FileInfoToDocument          []*FileInfoToDocument `bun:"rel:has-many" json:"fileInfoToDocument"`
-	FileInfoToDocumentForDelete []string              `bun:"-" json:"fileInfoToDocumentForDelete"`
+	DocumentFieldValues          []*DocumentFieldValue `bun:"rel:has-many" json:"documentFieldValues"`
+	DocumentFieldValuesForDelete []uuid.UUID              `bun:"-" json:"documentFieldValuesForDelete"`
+	FileInfoToDocument           []*FileInfoToDocument `bun:"rel:has-many" json:"fileInfoToDocument"`
+	FileInfoToDocumentForDelete  []uuid.UUID              `bun:"-" json:"fileInfoToDocumentForDelete"`
 }
 
 func (item *Document) SetFilePath(fileId *string) *string {
@@ -42,8 +45,8 @@ func GetFileInfoToDocument(items []*Document) []*FileInfoToDocument {
 	return itemsForGet
 }
 
-func GetFileInfoToDocumentForDelete(items []*Document) []string {
-	itemsForGet := make([]string, 0)
+func GetFileInfoToDocumentForDelete(items []*Document) []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
 	if len(items) == 0 {
 		return itemsForGet
 	}
@@ -54,55 +57,11 @@ func GetFileInfoToDocumentForDelete(items []*Document) []string {
 	return itemsForGet
 }
 
-type FileInfoToDocument struct {
-	bun.BaseModel `bun:"file_info_to_document,alias:file_info_to_document"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	FileInfo      *FileInfo `bun:"rel:belongs-to" json:"fileInfo"`
-	FileInfoID    uuid.UUID `bun:"type:uuid" json:"fileInfoId"`
-	Document      *Document `bun:"rel:belongs-to" json:"document"`
-	DocumentID    uuid.UUID `bun:"type:uuid" json:"documentId"`
-}
-
-func GetFileInfoFileInfoToDocument(items []*FileInfoToDocument) []*FileInfo {
-	itemsForGet := make([]*FileInfo, 0)
-	if len(items) == 0 {
-		return itemsForGet
+func (item *Document) SetDeleteIdForChildren() {
+	for i := range item.DocumentFieldValues {
+		item.DocumentFieldValuesForDelete = append(item.DocumentFieldValuesForDelete, item.DocumentFieldValues[i].ID)
 	}
-	for i := range items {
-		itemsForGet = append(itemsForGet, items[i].FileInfo)
+	for i := range item.FileInfoToDocument {
+		item.FileInfoToDocumentForDelete = append(item.FileInfoToDocumentForDelete, item.FileInfoToDocument[i].ID)
 	}
-	return itemsForGet
-}
-
-func (item *Document) SetIdForChildren() {
-	if len(item.DocumentFieldValues) > 0 {
-		for i := range item.DocumentFieldValues {
-			item.DocumentFieldValues[i].DocumentID = item.ID
-		}
-	}
-}
-
-func GetDocumentsFiledValues(docs []*Document) []*DocumentFieldValue {
-	items := make([]*DocumentFieldValue, 0)
-	if len(docs) == 0 {
-		return items
-	}
-	for i := range docs {
-		docs[i].SetIdForChildren()
-		items = append(items, docs[i].DocumentFieldValues...)
-	}
-	return items
-}
-
-func GetFileInfosFromDocuments(items []*Document) []*FileInfo {
-	itemsForGet := make([]*FileInfo, 0)
-	if len(items) == 0 {
-		return itemsForGet
-	}
-	for i := range items {
-		for j := range items[i].FileInfoToDocument {
-			itemsForGet = append(itemsForGet, items[i].FileInfoToDocument[j].FileInfo)
-		}
-	}
-	return itemsForGet
 }

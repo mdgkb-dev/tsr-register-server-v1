@@ -2,6 +2,8 @@ package representativeToPatient
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) CreateMany(items []*models.RepresentativeToPatient) error {
@@ -18,9 +20,9 @@ func (s *Service) UpsertMany(items []*models.RepresentativeToPatient) error {
 	return s.repository.upsertMany(items)
 }
 
-func (s *Service) DeleteMany(idPool []string) error {
+func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 	if len(idPool) == 0 {
 		return nil
 	}
-	return s.repository.deleteMany(idPool)
+return s.repository.deleteMany(idPool)
 }

@@ -6,6 +6,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/fileInfo"
 	"mdgkb/tsr-tegister-server-v1/handlers/insuranceCompanyToHuman"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) Create(item *models.Human) error {
@@ -82,6 +84,35 @@ func (s *Service) Update(item *models.Human) error {
 		return err
 	}
 	err = documentService.DeleteMany(item.DocumentsForDelete)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Service) Delete(id uuid.UUID) error {
+	human, err := s.repository.get(id)
+	if err != nil {
+		return err
+	}
+	human.SetDeleteIdForChildren()
+	err = contact.CreateService(s.repository.getDB()).Delete(human.ContactID)
+	if err != nil {
+		return err
+	}
+	err = fileInfo.CreateService(s.repository.getDB()).Delete(human.PhotoId)
+	if err != nil {
+		return err
+	}
+	err = insuranceCompanyToHuman.CreateService(s.repository.getDB()).DeleteMany(human.InsuranceCompanyToHumanForDelete)
+	if err != nil {
+		return err
+	}
+	err = document.CreateService(s.repository.getDB()).DeleteMany(human.DocumentsForDelete)
+	if err != nil {
+		return err
+	}
+	err = s.repository.delete(id)
 	if err != nil {
 		return err
 	}

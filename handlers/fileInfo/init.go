@@ -6,6 +6,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -18,6 +19,7 @@ type IService interface {
 	Get(*string) (*models.FileInfo, error)
 	Update(*models.FileInfo) error
 	Upsert(*models.FileInfo) error
+	Delete(uuid.NullUUID) error
 
 	CreateMany([]*models.FileInfo) error
 	UpsertMany([]*models.FileInfo) error
@@ -28,6 +30,7 @@ type IRepository interface {
 	get(*string) (*models.FileInfo, error)
 	update(*models.FileInfo) error
 	upsert(*models.FileInfo) error
+	delete(uuid.NullUUID) error
 
 	createMany([]*models.FileInfo) error
 	upsertMany([]*models.FileInfo) error

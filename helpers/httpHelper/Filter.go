@@ -32,7 +32,6 @@ func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 		return
 	}
 	for _, filter := range filterModels {
-		fmt.Println(filter)
 		switch *filter.Type {
 		case SetType:
 			if len(filter.Set) == 0 {
@@ -40,12 +39,8 @@ func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 			}
 			constructWhereIn(query, filter)
 		case DateType:
-			filter.DatesToString()
 			constructWhere(query, filter)
 		case StringType:
-			if filter.IsLike() {
-				filter.LikeToString()
-			}
 			constructWhere(query, filter)
 		//case "number":
 		//	tbl = constructNumberWhere(tbl, field, filter)
@@ -66,20 +61,20 @@ func CreateFilter(query *bun.SelectQuery, filterModels FilterModels) {
 func constructWhere(query *bun.SelectQuery, filter *FilterModel) {
 	q := ""
 	if filter.IsUnary() {
-		q = fmt.Sprintf("%s %s '%s'", filter.GetTableAndCol(), *filter.Operator, filter.Value1)
+		q = fmt.Sprintf("%s %s %s", filter.TableCol, *filter.Operator, filter.Value1)
 	}
 	if filter.IsBetween() {
-		q = fmt.Sprintf("%s %s '%s' and '%s'", filter.GetTableAndCol(), *filter.Operator, filter.Value1, filter.Value2)
+		q = fmt.Sprintf("%s %s %s and %s", filter.TableCol, *filter.Operator, filter.Value1, filter.Value2)
 	}
 	query = query.Where(q)
 }
 
 func constructWhereIn(query *bun.SelectQuery, filter *FilterModel) {
 	if *filter.JoinTable == "" {
-		query = query.Where(fmt.Sprintf("%s %s (?)", filter.GetTableAndCol(), *filter.Operator), bun.In(filter.Set))
+		query = query.Where(fmt.Sprintf("%s %s (?)", filter.TableCol, *filter.Operator), bun.In(filter.Set))
 		return
 	}
-	q := fmt.Sprintf("EXISTS (SELECT NULL from patient_diagnosis where %s and %s in (?))", filter.GetJoinCondition(), filter.GetTableAndCol())
+	q := fmt.Sprintf("EXISTS (SELECT NULL from patient_diagnosis where %s and %s in (?))", filter.GetJoinCondition(), filter.TableCol)
 	query = query.Where(q, bun.In(filter.Set))
 }
 

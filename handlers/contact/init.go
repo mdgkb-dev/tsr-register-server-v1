@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -11,6 +12,7 @@ type IService interface {
 	Create(*models.Contact) error
 	Update(*models.Contact) error
 	Upsert(*models.Contact) error
+	Delete(uuid.NullUUID) error
 
 	CreateMany([]*models.Contact) error
 	UpsertMany([]*models.Contact) error
@@ -20,6 +22,7 @@ type IRepository interface {
 	create(*models.Contact) error
 	update(*models.Contact) error
 	upsert(*models.Contact) error
+	delete(uuid.NullUUID) error
 
 	createMany([]*models.Contact) error
 	upsertMany([]*models.Contact) error

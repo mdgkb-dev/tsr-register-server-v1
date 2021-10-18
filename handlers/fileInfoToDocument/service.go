@@ -3,6 +3,8 @@ package fileInfoForDocument
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/fileInfo"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) CreateMany(items []*models.FileInfoToDocument) error {
@@ -37,7 +39,7 @@ func (s *Service) UpsertMany(items []*models.FileInfoToDocument) error {
 	return s.repository.upsertMany(items)
 }
 
-func (s *Service) DeleteMany(idPool []string) error {
+func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 	if len(idPool) == 0 {
 		return nil
 	}
