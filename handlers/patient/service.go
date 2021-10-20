@@ -1,7 +1,9 @@
 package patient
 
 import (
+	"mdgkb/tsr-tegister-server-v1/handlers/chestCircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
+	"mdgkb/tsr-tegister-server-v1/handlers/headCircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/heightWeight"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
@@ -31,6 +33,14 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = heightWeight.CreateService(s.repository.getDB()).CreateMany(item.HeightWeight)
+	if err != nil {
+		return err
+	}
+	err = chestCircumference.CreateService(s.repository.getDB()).CreateMany(item.ChestCircumference)
+	if err != nil {
+		return err
+	}
+	err = headCircumference.CreateService(s.repository.getDB()).CreateMany(item.HeadCircumference)
 	if err != nil {
 		return err
 	}
@@ -96,6 +106,24 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 	err = heightWeightService.DeleteMany(item.HeightWeightForDelete)
+	if err != nil {
+		return err
+	}
+	chestCircumferenceService := chestCircumference.CreateService(s.repository.getDB())
+	err = chestCircumferenceService.UpsertMany(item.ChestCircumference)
+	if err != nil {
+		return err
+	}
+	err = chestCircumferenceService.DeleteMany(item.ChestCircumferenceForDelete)
+	if err != nil {
+		return err
+	}
+	headCircumferenceService := headCircumference.CreateService(s.repository.getDB())
+	err = headCircumferenceService.UpsertMany(item.HeadCircumference)
+	if err != nil {
+		return err
+	}
+	err = headCircumferenceService.DeleteMany(item.HeadCircumferenceForDelete)
 	if err != nil {
 		return err
 	}
@@ -169,6 +197,14 @@ func (s *Service) Delete(id *string) error {
 		return err
 	}
 	err = heightWeight.CreateService(s.repository.getDB()).DeleteMany(patient.HeightWeightForDelete)
+	if err != nil {
+		return err
+	}
+	err = chestCircumference.CreateService(s.repository.getDB()).DeleteMany(patient.ChestCircumferenceForDelete)
+	if err != nil {
+		return err
+	}
+	err = headCircumference.CreateService(s.repository.getDB()).DeleteMany(patient.HeadCircumferenceForDelete)
 	if err != nil {
 		return err
 	}

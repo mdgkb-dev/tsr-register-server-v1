@@ -20,6 +20,8 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 	query := r.db.NewSelect().
 		Model(&items.Patients).
 		Relation("HeightWeight").
+		Relation("ChestCircumference").
+		Relation("HeadCircumference").
 		Relation("PatientDrugRegimen").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Period").
@@ -47,6 +49,8 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 	item := models.Patient{}
 	query := r.db.NewSelect().Model(&item).
 		Relation("HeightWeight").
+		Relation("ChestCircumference").
+		Relation("HeadCircumference").
 		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
