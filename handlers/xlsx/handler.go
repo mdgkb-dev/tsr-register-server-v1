@@ -1,10 +1,11 @@
 package xlsx
 
 import (
-	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) RegisterQuery(c *gin.Context) {

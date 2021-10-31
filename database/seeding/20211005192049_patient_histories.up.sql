@@ -1,4 +1,4 @@
-INSERT INTO human_histories (id, name, surname, patronymic, is_male, date_birth, address_registration, address_residential, contact_id, photo_id)
+INSERT INTO human_histories (id, name, surname, patronymic, is_male, date_birth, address_registration, address_residential, contact_id, photo_id, deleted_at)
 SELECT h.* FROM patient p JOIN human h ON h.id = p.human_id;
 
 alter table patient_histories drop constraint patient_history_history_id_fk;

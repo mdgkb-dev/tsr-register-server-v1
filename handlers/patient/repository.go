@@ -124,7 +124,7 @@ func (r *Repository) getDisabilities() (item models.PatientsWithCount, err error
 		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
-		Group("patient.id", "human.id", "human.name", "human.surname", "human.patronymic", "human.is_male", "human.date_birth", "human.address_registration", "human.address_residential", "human.contact_id", "human.photo_id").
+		Group("patient.id", "human.id", "human.name", "human.surname", "human.patronymic", "human.is_male", "human.date_birth", "human.address_registration", "human.address_residential", "human.contact_id", "human.photo_id", "human.deleted_at").
 		ScanAndCount(r.ctx)
 	return item, err
 }
