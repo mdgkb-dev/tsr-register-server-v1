@@ -1,4 +1,4 @@
-package registerGroupToRegister
+package registerPropertyOthersToPatient
 
 import (
 	"context"
@@ -7,14 +7,18 @@ import (
 	"github.com/uptrace/bun"
 )
 
+type IHandler interface {
+
+}
+
 type IService interface {
-	CreateMany([]*models.RegisterGroupToRegister) error
+	UpsertMany(models.RegisterPropertyOthersToPatient) error
 }
 
 type IRepository interface {
-	createMany([]*models.RegisterGroupToRegister) error
-	upsertMany([]*models.RegisterGroupToRegister) error
-	deleteMany([]string) error
+	getDB() *bun.DB
+
+	upsertMany(models.RegisterPropertyOthersToPatient) error
 }
 
 type Handler struct {
@@ -30,9 +34,21 @@ type Repository struct {
 	ctx context.Context
 }
 
+func CreateHandler(db *bun.DB) *Handler {
+	repo := NewRepository(db)
+	service := NewService(repo)
+	return NewHandler(service)
+}
+
 func CreateService(db *bun.DB) *Service {
 	repo := NewRepository(db)
 	return NewService(repo)
+}
+
+
+// NewHandler constructor
+func NewHandler(s IService) *Handler {
+	return &Handler{service: s}
 }
 
 func NewService(repository IRepository) *Service {

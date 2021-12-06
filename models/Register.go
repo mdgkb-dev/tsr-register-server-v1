@@ -9,8 +9,8 @@ type Register struct {
 	bun.BaseModel                    `bun:"register,alias:register"`
 	ID                               uuid.UUID                  `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                             string                     `json:"name"`
-	RegisterGroupToRegister          []*RegisterGroupToRegister `bun:"rel:has-many" json:"registerGroupToRegister"`
-	RegisterGroupToRegisterForDelete []string                   `bun:"-" json:"registerGroupToRegisterForDelete"`
+	RegisterGroups          RegisterGroups `bun:"rel:has-many" json:"registerGroups"`
+	RegisterGroupsForDelete []uuid.UUID                   `bun:"-" json:"registerGroupsForDelete"`
 	RegisterDiagnosis                []*RegisterDiagnosis       `bun:"rel:has-many" json:"registerDiagnosis"`
 	RegisterDiagnosisForDelete       []string                   `bun:"-" json:"registerDiagnosisForDelete"`
 
@@ -19,9 +19,9 @@ type Register struct {
 }
 
 func (item *Register) SetIdForChildren() {
-	if len(item.RegisterGroupToRegister) > 0 {
-		for i := range item.RegisterGroupToRegister {
-			item.RegisterGroupToRegister[i].RegisterID = item.ID
+	if len(item.RegisterGroups) > 0 {
+		for i := range item.RegisterGroups {
+			item.RegisterGroups[i].RegisterID = item.ID
 		}
 	}
 	if len(item.RegisterDiagnosis) > 0 {
@@ -29,15 +29,6 @@ func (item *Register) SetIdForChildren() {
 			item.RegisterDiagnosis[i].RegisterID = item.ID
 		}
 	}
-}
-
-type RegisterGroupToRegister struct {
-	bun.BaseModel   `bun:"register_group_to_register,alias:register_group_to_register"`
-	ID              uuid.UUID      `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Register        *Register      `bun:"rel:belongs-to" json:"register"`
-	RegisterID      uuid.UUID      `bun:"type:uuid" json:"registerId"`
-	RegisterGroup   *RegisterGroup `bun:"rel:belongs-to" json:"registerGroup"`
-	RegisterGroupID uuid.UUID      `bun:"type:uuid" json:"registerGroupId"`
 }
 
 type RegisterDiagnosis struct {

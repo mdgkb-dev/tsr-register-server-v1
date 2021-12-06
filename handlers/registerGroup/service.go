@@ -1,7 +1,8 @@
 package registerGroup
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyToRegisterGroup"
+	"github.com/google/uuid"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerProperty"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -11,7 +12,6 @@ func (s *Service) Create(item *models.RegisterGroup) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = registerPropertyToRegisterGroup.CreateService(s.repository.getDB()).CreateMany(item.RegisterPropertyToRegisterGroup)
 	return err
 }
 
@@ -38,15 +38,44 @@ func (s *Service) Update(item *models.RegisterGroup) error {
 	}
 	item.SetIdForChildren()
 
-	registerPropertyToRegisterGroupService := registerPropertyToRegisterGroup.CreateService(s.repository.getDB())
-	err = registerPropertyToRegisterGroupService.UpsertMany(item.RegisterPropertyToRegisterGroup)
-	if err != nil {
-		return err
-	}
-	err = registerPropertyToRegisterGroupService.DeleteMany(item.RegisterPropertyToRegisterGroupForDelete)
+	//registerPropertyToRegisterGroupService := registerPropertyToRegisterGroup.CreateService(s.repository.getDB())
+	//err = registerPropertyToRegisterGroupService.UpsertMany(item.RegisterPropertyToRegisterGroup)
+	//if err != nil {
+	//	return err
+	//}
+	//err = registerPropertyToRegisterGroupService.DeleteMany(item.RegisterPropertyToRegisterGroupForDelete)
 	return err
 }
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
 }
+
+func (s *Service) UpsertMany(items models.RegisterGroups) error {
+	if len(items) == 0 {
+		return nil
+	}
+	err := s.repository.upsertMany(items)
+	if err != nil {
+		return err
+	}
+	items.SetIdForChildren()
+	registerPropertyService := registerProperty.CreateService(s.repository.getDB())
+	err = registerPropertyService.UpsertMany(items.GetRegisterProperties())
+	if err != nil {
+		return err
+	}
+	err = registerPropertyService.DeleteMany(items.GetRegisterPropertiesForDelete())
+	if err != nil {
+		return err
+	}
+return nil
+}
+
+func (s *Service) DeleteMany(idPool []uuid.UUID) error {
+	if len(idPool) == 0 {
+		return nil
+	}
+	return s.repository.deleteMany(idPool)
+}
+

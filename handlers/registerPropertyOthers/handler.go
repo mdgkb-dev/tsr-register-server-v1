@@ -1,4 +1,4 @@
-package register
+package registerPropertyOthers
 
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.Register
+	var item models.RegisterPropertyOther
 	err := c.Bind(&item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -29,9 +29,10 @@ func (h *Handler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
+//
 func (h *Handler) Get(c *gin.Context) {
-	queryFilter, err := httpHelper.CreateQueryFilter(c)
-	item, err := h.service.Get(queryFilter)
+	id := c.Param("id")
+	item, err := h.service.Get(&id)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -48,7 +49,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.Register
+	var item models.RegisterPropertyOther
 	err := c.Bind(&item)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -58,12 +59,4 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
-}
-
-func (h *Handler) GetValueTypes(c *gin.Context) {
-	items, err := h.service.GetValueTypes()
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.JSON(http.StatusOK, items)
 }

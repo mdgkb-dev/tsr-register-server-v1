@@ -15,6 +15,8 @@ type IHandler interface {
 	Create(c *gin.Context) error
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
+
+	GetValueTypes(c *gin.Context) error
 }
 
 type IService interface {
@@ -23,6 +25,8 @@ type IService interface {
 	Create(*models.Register) error
 	Update(*models.Register) error
 	Delete(*string) error
+
+	GetValueTypes() (models.ValueTypes, error)
 }
 
 type IRepository interface {
@@ -32,6 +36,8 @@ type IRepository interface {
 	get(*httpHelper.QueryFilter) (*models.Register, error)
 	update(*models.Register) error
 	delete(*string) error
+
+	getValueTypes() (models.ValueTypes, error)
 }
 
 type Handler struct {

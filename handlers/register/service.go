@@ -2,7 +2,7 @@ package register
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerDiagnosis"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerGroupToRegister"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerGroup"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
@@ -13,7 +13,7 @@ func (s *Service) Create(item *models.Register) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = registerGroupToRegister.CreateService(s.repository.getDB()).CreateMany(item.RegisterGroupToRegister)
+	err = registerGroup.CreateService(s.repository.getDB()).UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
 	}
@@ -47,12 +47,12 @@ func (s *Service) Update(item *models.Register) error {
 	}
 	item.SetIdForChildren()
 
-	registerPropertyToRegisterGroupService := registerGroupToRegister.CreateService(s.repository.getDB())
-	err = registerPropertyToRegisterGroupService.UpsertMany(item.RegisterGroupToRegister)
+	registerGroupService := registerGroup.CreateService(s.repository.getDB())
+	err = registerGroupService.UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
 	}
-	err = registerPropertyToRegisterGroupService.DeleteMany(item.RegisterGroupToRegisterForDelete)
+	err = registerGroupService.DeleteMany(item.RegisterGroupsForDelete)
 	if err != nil {
 		return err
 	}
@@ -71,4 +71,12 @@ func (s *Service) Update(item *models.Register) error {
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
+}
+
+func (s *Service) GetValueTypes() (models.ValueTypes, error) {
+	items, err := s.repository.getValueTypes()
+	if err != nil {
+		return nil, err
+	}
+	return items, nil
 }

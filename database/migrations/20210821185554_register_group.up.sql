@@ -1,7 +1,7 @@
 create table register_group
 (
-    id uuid default uuid_generate_v4() not null
-        constraint "PK_e75c0bdfe758028ce3d014966bc"
-        primary key,
-    name varchar not null
+    id uuid default uuid_generate_v4() not null primary key,
+    name varchar not null,
+    register_id uuid references register on delete cascade,
+    register_group_order int
 );

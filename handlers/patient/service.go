@@ -8,6 +8,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDrugRegimen"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyOthersToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertySetToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
@@ -177,6 +178,12 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 
+	}
+
+	registerPropertyOthersToPatientService := registerPropertyOthersToPatient.CreateService(s.repository.getDB())
+	err = registerPropertyOthersToPatientService.UpsertMany(item.RegisterPropertyOthersPatient)
+	if err != nil {
+		return err
 	}
 
 	return nil

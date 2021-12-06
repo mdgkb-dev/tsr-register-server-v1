@@ -71,6 +71,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("RegisterPropertySetToPatient.RegisterPropertySet").
 		Relation("PatientDrugRegimen.DrugRegimen.Drug").
 		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
+		Relation("RegisterPropertyOthersPatient").
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
 		Where("patient.id = ?", *id)

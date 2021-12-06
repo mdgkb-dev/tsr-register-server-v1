@@ -2,6 +2,7 @@ package registerPropertySet
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -22,14 +23,21 @@ type IService interface {
 	Create(*models.RegisterPropertySet) error
 	Update(*models.RegisterPropertySet) error
 	Delete(*string) error
+
+	UpsertMany(models.RegisterPropertySets) error
+	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
+	getDB() *bun.DB
 	create(*models.RegisterPropertySet) error
 	getAll() ([]*models.RegisterPropertySet, error)
 	get(*string) (*models.RegisterPropertySet, error)
 	update(*models.RegisterPropertySet) error
 	delete(*string) error
+
+	upsertMany(models.RegisterPropertySets) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Handler struct {
@@ -50,6 +58,12 @@ func CreateHandler(db *bun.DB) *Handler {
 	service := NewService(repo)
 	return NewHandler(service)
 }
+
+func CreateService(db *bun.DB) *Service {
+	repo := NewRepository(db)
+	return NewService(repo)
+}
+
 
 // NewHandler constructor
 func NewHandler(s IService) *Handler {

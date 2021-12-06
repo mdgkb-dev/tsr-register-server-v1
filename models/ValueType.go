@@ -11,3 +11,5 @@ type ValueType struct {
 	Name          string    `json:"name"`
 	ValueRelation string    `bun:"type:value_type_value_relation_enum" json:"valueRelation"`
 }
+
+type ValueTypes []*ValueType

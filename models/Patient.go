@@ -33,6 +33,7 @@ type Patient struct {
 	RegisterToPatientForDelete []uuid.UUID          `bun:"-" json:"registerToPatientForDelete"`
 
 	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
+	RegisterPropertyOthersPatient             RegisterPropertyOthersToPatient    `bun:"rel:has-many" json:"registerPropertyOthersToPatient"`
 	RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"RegisterPropertyToPatientForDelete"`
 	RegisterPropertySetToPatient          []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
 	RegisterPropertySetToPatientForDelete []uuid.UUID                     `bun:"-" json:"registerPropertySetToPatientForDelete"`
@@ -108,6 +109,11 @@ func (item *Patient) SetIdForChildren() {
 	if len(item.RegisterPropertySetToPatient) > 0 {
 		for i := range item.RegisterPropertySetToPatient {
 			item.RegisterPropertySetToPatient[i].PatientID = item.ID
+		}
+	}
+	if len(item.RegisterPropertyOthersPatient) > 0 {
+		for i := range item.RegisterPropertyOthersPatient {
+			item.RegisterPropertyOthersPatient[i].PatientID = item.ID
 		}
 	}
 }

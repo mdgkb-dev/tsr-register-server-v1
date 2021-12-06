@@ -1,6 +1,14 @@
 package registerPropertyRadio
 
-import "mdgkb/tsr-tegister-server-v1/models"
+import (
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
+	"mdgkb/tsr-tegister-server-v1/models"
+)
+
+func (r *Repository) getDB() *bun.DB {
+	return r.db
+}
 
 func (r *Repository) create(item *models.RegisterPropertyRadio) (err error) {
 	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
@@ -25,5 +33,22 @@ func (r *Repository) delete(id *string) (err error) {
 
 func (r *Repository) update(item *models.RegisterPropertyRadio) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+	return err
+}
+
+func (r *Repository) upsertMany(items models.RegisterPropertyRadios) (err error) {
+	_, err = r.db.NewInsert().On("conflict (id) do update").
+		Model(&items).
+		Set(`name = EXCLUDED.name`).
+		Set(`register_property_id = EXCLUDED.register_property_id`).
+		Exec(r.ctx)
+	return err
+}
+
+func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
+	_, err = r.db.NewDelete().
+		Model((*models.RegisterPropertyRadio)(nil)).
+		Where("id IN (?)", bun.In(idPool)).
+		Exec(r.ctx)
 	return err
 }

@@ -1,6 +1,12 @@
 package registerProperty
 
-import "mdgkb/tsr-tegister-server-v1/models"
+import (
+	"fmt"
+	"github.com/google/uuid"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyRadio"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertySet"
+	"mdgkb/tsr-tegister-server-v1/models"
+)
 
 func (s *Service) Create(item *models.RegisterProperty) error {
 	return s.repository.create(item)
@@ -36,4 +42,45 @@ func (s *Service) GetValueTypes() ([]*models.ValueType, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+
+func (s *Service) UpsertMany(items models.RegisterProperties) error {
+	if len(items) == 0 {
+		return nil
+	}
+
+	err := s.repository.upsertMany(items)
+	if err != nil {
+		return err
+	}
+	items.SetIdForChildren()
+	registerPropertyRadioService := registerPropertyRadio.CreateService(s.repository.getDB())
+	err = registerPropertyRadioService.UpsertMany(items.GetRegisterPropertyRadios())
+	if err != nil {
+		return err
+	}
+	fmt.Println(items.GetRegisterPropertyRadioForDelete())
+	err = registerPropertyRadioService.DeleteMany(items.GetRegisterPropertyRadioForDelete())
+	if err != nil {
+		return err
+	}
+	registerPropertySetService := registerPropertySet.CreateService(s.repository.getDB())
+	err = registerPropertySetService.UpsertMany(items.GetRegisterPropertySets())
+	if err != nil {
+		return err
+	}
+	err = registerPropertySetService.DeleteMany(items.GetRegisterPropertySetForDelete())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
+func (s *Service) DeleteMany(idPool []uuid.UUID) error {
+	if len(idPool) == 0 {
+		return nil
+	}
+	return s.repository.deleteMany(idPool)
 }

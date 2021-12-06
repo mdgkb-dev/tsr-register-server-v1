@@ -2,6 +2,7 @@ package registerGroup
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -22,6 +23,9 @@ type IService interface {
 	Create(*models.RegisterGroup) error
 	Update(*models.RegisterGroup) error
 	Delete(*string) error
+
+	UpsertMany(models.RegisterGroups) error
+	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
@@ -31,6 +35,9 @@ type IRepository interface {
 	get(*string) (*models.RegisterGroup, error)
 	update(*models.RegisterGroup) error
 	delete(*string) error
+
+	upsertMany(models.RegisterGroups) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Handler struct {
@@ -51,6 +58,12 @@ func CreateHandler(db *bun.DB) *Handler {
 	service := NewService(repo)
 	return NewHandler(service)
 }
+
+func CreateService(db *bun.DB) *Service {
+	repo := NewRepository(db)
+	return NewService(repo)
+}
+
 
 // NewHandler constructor
 func NewHandler(s IService) *Handler {

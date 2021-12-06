@@ -3,7 +3,6 @@ package connect
 import (
 	"database/sql"
 	"fmt"
-	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun/extra/bundebug"
 
@@ -22,14 +21,9 @@ func InitDB(conf *config.Config) *bun.DB {
 	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	_, _ = db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
 
-	recognizeModels(db)
 	return db
 }
 
-func recognizeModels(db *bun.DB) {
-	db.RegisterModel((*models.RegisterGroupToRegister)(nil))
-	db.RegisterModel((*models.RegisterPropertyToRegisterGroup)(nil))
-}
 
 var client *redis.Client
 

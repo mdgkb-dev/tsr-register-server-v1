@@ -1,6 +1,14 @@
 package registerProperty
 
-import "mdgkb/tsr-tegister-server-v1/models"
+import (
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
+	"mdgkb/tsr-tegister-server-v1/models"
+)
+
+func (r *Repository) getDB() *bun.DB {
+	return r.db
+}
 
 func (r *Repository) create(item *models.RegisterProperty) (err error) {
 	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
@@ -64,3 +72,26 @@ exists
 				and rgtr.register_id = ?
 		)
 )`
+
+
+func (r *Repository) upsertMany(items models.RegisterProperties) (err error) {
+	_, err = r.db.NewInsert().On("conflict (id) do update").
+		Model(&items).
+		Set(`name = EXCLUDED.name`).
+		Set(`short_name = EXCLUDED.short_name`).
+		Set(`with_other = EXCLUDED.with_other`).
+		Set(`register_property_order = EXCLUDED.register_property_order`).
+		Set(`value_type_id = EXCLUDED.value_type_id`).
+		Set(`register_group_id = EXCLUDED.register_group_id`).
+		Set(`tag = EXCLUDED.tag`).
+		Exec(r.ctx)
+	return err
+}
+
+func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
+	_, err = r.db.NewDelete().
+		Model((*models.RegisterProperty)(nil)).
+		Where("id IN (?)", bun.In(idPool)).
+		Exec(r.ctx)
+	return err
+}

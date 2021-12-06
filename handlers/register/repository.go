@@ -25,13 +25,18 @@ func (r *Repository) get(queryFilter *httpHelper.QueryFilter) (*models.Register,
 	item := models.Register{}
 	err := r.db.NewSelect().
 		Model(&item).
-		Relation("RegisterGroupToRegister.RegisterGroup").
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("RegisterDiagnosis.MkbSubDiagnosis").
-		Relation("RegisterGroupToRegister.RegisterGroup.RegisterPropertyToRegisterGroup.RegisterProperty.ValueType").
-		Relation("RegisterGroupToRegister.RegisterGroup.RegisterPropertyToRegisterGroup.RegisterProperty.RegisterPropertySet").
-		Relation("RegisterGroupToRegister.RegisterGroup.RegisterPropertyToRegisterGroup.RegisterProperty.RegisterPropertyRadio").
+		Relation("RegisterGroups", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("register_group.register_group_order")
+		}).
+		Relation("RegisterGroups.RegisterProperties", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("register_property.register_property_order")
+		}).
+		Relation("RegisterGroups.RegisterProperties.ValueType").
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets.RegisterPropertyOthers").
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios.RegisterPropertyOthers").
 		Relation("RegisterToPatient.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic").Offset(*queryFilter.Pagination.Offset).
 				Limit(*queryFilter.Pagination.Limit)
@@ -55,4 +60,13 @@ func (r *Repository) delete(id *string) (err error) {
 func (r *Repository) update(item *models.Register) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+
+func (r *Repository) getValueTypes() (models.ValueTypes, error) {
+	items := make(models.ValueTypes, 0)
+	err := r.db.NewSelect().
+		Model(&items).
+		Scan(r.ctx)
+	return items, err
 }

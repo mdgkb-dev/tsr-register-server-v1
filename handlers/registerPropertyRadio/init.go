@@ -2,6 +2,7 @@ package registerPropertyRadio
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -22,14 +23,21 @@ type IService interface {
 	Create(*models.RegisterPropertyRadio) error
 	Update(*models.RegisterPropertyRadio) error
 	Delete(*string) error
+
+	UpsertMany(models.RegisterPropertyRadios) error
+	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
+	getDB() *bun.DB
 	create(*models.RegisterPropertyRadio) error
 	getAll() ([]*models.RegisterPropertyRadio, error)
 	get(*string) (*models.RegisterPropertyRadio, error)
 	update(*models.RegisterPropertyRadio) error
 	delete(*string) error
+
+	upsertMany(radios models.RegisterPropertyRadios) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Handler struct {
@@ -50,6 +58,13 @@ func CreateHandler(db *bun.DB) *Handler {
 	service := NewService(repo)
 	return NewHandler(service)
 }
+
+func CreateService(db *bun.DB) *Service {
+	repo := NewRepository(db)
+	return NewService(repo)
+}
+
+
 
 // NewHandler constructor
 func NewHandler(s IService) *Handler {

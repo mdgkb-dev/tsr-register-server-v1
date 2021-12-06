@@ -1,4 +1,4 @@
-package registerProperty
+package registerPropertyOthers
 
 import (
 	"context"
@@ -15,31 +15,28 @@ type IHandler interface {
 	Create(c *gin.Context) error
 	Update(c *gin.Context) error
 	Delete(c *gin.Context) error
-	GetValueTypes(c *gin.Context) error
 }
 
 type IService interface {
-	GetAll(*string) ([]*models.RegisterProperty, error)
-	Get(*string) (*models.RegisterProperty, error)
-	Create(*models.RegisterProperty) error
-	Update(*models.RegisterProperty) error
+	GetAll() (models.RegisterPropertyOthers, error)
+	Get(*string) (*models.RegisterPropertyOther, error)
+	Create(*models.RegisterPropertyOther) error
+	Update(*models.RegisterPropertyOther) error
 	Delete(*string) error
-	GetValueTypes() ([]*models.ValueType, error)
 
-	UpsertMany(models.RegisterProperties) error
+	UpsertMany(models.RegisterPropertyOthers) error
 	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
 	getDB() *bun.DB
-	create(*models.RegisterProperty) error
-	getAll(*string) ([]*models.RegisterProperty, error)
-	get(*string) (*models.RegisterProperty, error)
-	update(*models.RegisterProperty) error
+	create(*models.RegisterPropertyOther) error
+	getAll() ([]*models.RegisterPropertyOther, error)
+	get(*string) (*models.RegisterPropertyOther, error)
+	update(*models.RegisterPropertyOther) error
 	delete(*string) error
-	getValueTypes() ([]*models.ValueType, error)
 
-	upsertMany(models.RegisterProperties) error
+	upsertMany(models.RegisterPropertyOthers) error
 	deleteMany([]uuid.UUID) error
 }
 
