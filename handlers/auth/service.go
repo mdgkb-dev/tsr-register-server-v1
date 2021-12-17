@@ -26,7 +26,7 @@ func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
 	if err != nil {
 		return nil, err
 	}
-	if !findedUser.CompareWithHashPassword(&user.Password) {
+	if !findedUser.CompareWithHashPassword(user.Password) {
 		return nil, errors.New("wrong password")
 	}
 	token, err := findedUser.CreateToken()

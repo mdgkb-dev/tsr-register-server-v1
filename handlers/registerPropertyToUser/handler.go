@@ -1,7 +1,6 @@
 package registerPropertyToUser
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
@@ -28,7 +27,6 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	var registerProperty models.RegisterPropertyToUser
-	fmt.Println(c.Param("id"))
 	propertyID, err := uuid.Parse(c.Param("id"))
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return

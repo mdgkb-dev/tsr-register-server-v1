@@ -1,0 +1,17 @@
+insert into public.register_property_set_to_patient (id, register_property_set_id, patient_id, deleted_at)
+values  ('569b9104-2224-48ec-8fda-f7f21413baed', '9ffca611-8870-4d9d-bb41-3e372a1f38c7', 'fda8bccf-5d3c-40b9-805d-c89105c24a5a', null),
+        ('73d164f4-ae03-425f-9a5d-8820823fe4f3', '9ffca611-8870-4d9d-bb41-3e372a1f38c7', '951e9dca-e66b-453c-acb9-96d2e1ef5b32', null),
+        ('bb368288-0102-4a4b-8667-62f99e9c61b5', '61519861-0bb6-48f3-8a4c-c28fa798f246', '951e9dca-e66b-453c-acb9-96d2e1ef5b32', null),
+        ('4b77ee47-bf7f-4af9-9938-33690dc370ec', '0ddd823e-83ac-4a31-9524-170255c027eb', '951e9dca-e66b-453c-acb9-96d2e1ef5b32', null),
+        ('cb36be68-57a1-4e26-b1de-124f1d77eec8', '0f1cd5ab-f6d1-46d9-ad68-4a36ccc35bda', '951e9dca-e66b-453c-acb9-96d2e1ef5b32', null),
+        ('c2c02d79-520f-45e2-acc1-35f58a6b6283', '230ccd57-56f7-4fdb-8cbc-38b9545c1706', '951e9dca-e66b-453c-acb9-96d2e1ef5b32', null),
+        ('ba6d1c55-a569-426c-a19e-548492c85d88', 'ff52db09-ce07-4ed5-a791-3db441fd61f6', '951e9dca-e66b-453c-acb9-96d2e1ef5b32', null),
+        ('50c01aa5-74a8-44a5-867a-e8921cc3ec68', '9ffca611-8870-4d9d-bb41-3e372a1f38c7', '3120801b-f55d-4ca6-ac62-42e882abc7e2', null),
+        ('a2817a95-3217-4a93-8d74-619f3c84d480', '2f6bc7db-120a-490b-a118-bfd8a6600cab', '3120801b-f55d-4ca6-ac62-42e882abc7e2', null),
+        ('46961bde-ff25-483a-9937-f21994e7174d', '0ddd823e-83ac-4a31-9524-170255c027eb', '3120801b-f55d-4ca6-ac62-42e882abc7e2', null),
+        ('79321890-cb0b-4be6-a7c9-516a219602e8', '9ffca611-8870-4d9d-bb41-3e372a1f38c7', '14a32f2a-896c-4f69-b4d5-b7f63a5290b5', null),
+        ('d9338998-6350-47a8-8386-81b24f6fe581', '0ddd823e-83ac-4a31-9524-170255c027eb', '14a32f2a-896c-4f69-b4d5-b7f63a5290b5', null),
+        ('506dc4e1-f721-4e3b-a63a-1a1ac3c3616d', '3d438a3f-a713-4c9b-9bea-65d5af577a85', '14a32f2a-896c-4f69-b4d5-b7f63a5290b5', null),
+        ('399fb881-08ac-42e2-bbc7-4e2ff673ed07', 'ff52db09-ce07-4ed5-a791-3db441fd61f6', '14a32f2a-896c-4f69-b4d5-b7f63a5290b5', null),
+        ('d1c0ec64-190a-4ed5-a471-b64dcf9a9596', '9ffca611-8870-4d9d-bb41-3e372a1f38c7', '1cc53239-6cbf-4025-b02c-c94fb92c4bde', null),
+        ('68e459bf-a509-42af-9c37-1ddd6522cbad', 'ff52db09-ce07-4ed5-a791-3db441fd61f6', '1cc53239-6cbf-4025-b02c-c94fb92c4bde', null);

@@ -1,6 +1,7 @@
 package register
 
 import (
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerGroup"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
@@ -24,8 +25,8 @@ func (s *Service) Create(item *models.Register) error {
 	return err
 }
 
-func (s *Service) GetAll() ([]*models.Register, error) {
-	items, err := s.repository.getAll()
+func (s *Service) GetAll(userID uuid.UUID) ([]*models.Register, error) {
+	items, err := s.repository.getAll(userID)
 	if err != nil {
 		return nil, err
 	}

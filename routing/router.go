@@ -19,6 +19,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/routing/registerQuery"
 	"mdgkb/tsr-tegister-server-v1/routing/representative"
 	"mdgkb/tsr-tegister-server-v1/routing/representativeTypes"
+	"mdgkb/tsr-tegister-server-v1/routing/users"
 	"mdgkb/tsr-tegister-server-v1/routing/xlsx"
 
 	"github.com/gin-gonic/gin"
@@ -49,4 +50,5 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	representativeTypes.Init(api.Group("/representative-types"), db)
 	registerPropertyToUser.Init(api.Group("/register-properties-to-user"), db)
 	xlsx.Init(api.Group("xlsx"), db, createdXlsxHelper)
+	users.Init(api.Group("/users"), db, localUploader)
 }

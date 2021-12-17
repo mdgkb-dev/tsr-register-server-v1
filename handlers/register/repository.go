@@ -1,6 +1,7 @@
 package register
 
 import (
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -16,8 +17,12 @@ func (r *Repository) create(item *models.Register) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() (items []*models.Register, err error) {
-	err = r.db.NewSelect().Model(&items).Relation("RegisterDiagnosis").Scan(r.ctx)
+func (r *Repository) getAll(userID uuid.UUID) (items []*models.Register, err error) {
+	err = r.db.NewSelect().
+		Model(&items).
+		Join("JOIN registers_users ON registers_users.user_id = ? and register.id = registers_users.register_id", userID).
+		Relation("RegisterDiagnosis").
+		Scan(r.ctx)
 	return items, err
 }
 

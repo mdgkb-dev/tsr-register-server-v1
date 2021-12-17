@@ -17,11 +17,25 @@ import (
 )
 
 type User struct {
+	bun.BaseModel `bun:"users,alias:users"`
 	ID                     uuid.UUID                `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Login                  string                   `json:"login"`
 	Password               string                   `json:"password"`
 	RegisterPropertyToUser RegisterPropertiesToUser `bun:"rel:has-many" json:"registerPropertyToUser"`
+	//
+	RegistersUsers RegistersUsers `bun:"rel:has-many" json:"registersUsers"`
+	RegistersUsersForDelete []uuid.UUID `bun:"-" json:"registersUsersForDelete"`
 }
+
+type Users []*User
+
+
+func (item *User) SetIdForChildren() {
+	for i := range item.RegistersUsers {
+		item.RegistersUsers[i].UserID = item.ID
+	}
+}
+
 
 type RegisterPropertyToUser struct {
 	bun.BaseModel      `bun:"register_property_to_user,alias:register_property_to_user"`
@@ -34,22 +48,17 @@ type RegisterPropertyToUser struct {
 
 type RegisterPropertiesToUser []*RegisterPropertyToUser
 
-func (u *User) GenerateHashPassword() error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+func (i *User) GenerateHashPassword() error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(i.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	pass := string(hash)
-	u.Password = pass
+	i.Password = string(hash)
 	return nil
 }
 
-func (u *User) CompareWithHashPassword(password *string) bool {
-	p, err := bcrypt.GenerateFromPassword([]byte(*password), bcrypt.DefaultCost)
-	if err != nil {
-		return false
-	}
-	return bcrypt.CompareHashAndPassword(p, []byte(*password)) == nil
+func (i *User) CompareWithHashPassword(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(i.Password), []byte(password)) == nil
 }
 
 func (u *User) CreateToken() (*TokenDetails, error) {
@@ -61,7 +70,6 @@ func GetUserID(c *gin.Context) (*uuid.UUID, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(metaData.UserId)
 	userId, err := uuid.Parse(metaData.UserId)
 	if err != nil {
 		return nil, err
