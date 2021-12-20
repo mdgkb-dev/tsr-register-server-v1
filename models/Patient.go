@@ -6,11 +6,14 @@ import (
 )
 
 type Patient struct {
-	bun.BaseModel `bun:"patient,alias:patient"`
+	bun.BaseModel `bun:"patients,alias:patients"`
 	ModelInfo
 	ID      uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Human   *Human    `bun:"rel:belongs-to" json:"human"`
 	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
+
+	Region   *Region    `bun:"rel:belongs-to" json:"region"`
+	RegionID uuid.UUID `bun:"type:uuid" json:"regionId"`
 
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
 	RepresentativeToPatientForDelete []uuid.UUID                `bun:"-" json:"representativeToPatientForDelete"`

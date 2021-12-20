@@ -1,4 +1,4 @@
-create table patient
+    create table patients
 (
     id uuid default uuid_generate_v4() not null
         constraint "PK_8dfa510bb29ad31ab2139fbfb99"
@@ -12,5 +12,5 @@ create table patient
 
 
 create index "IDX_87dd24bef72cee958bbdd799d5"
-    on patient (human_id);
+    on patients (human_id);
 

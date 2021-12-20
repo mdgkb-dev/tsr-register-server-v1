@@ -8,7 +8,7 @@ create table register_to_patient
         references register,
     patient_id uuid not null
         constraint "FK_b192a657a48ce5e370b8bedd93c"
-        references patient
+        references patients
 );
 
 create index "IDX_869a2523a06d431f82897e1ce2"

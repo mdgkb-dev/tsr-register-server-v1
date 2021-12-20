@@ -1,6 +1,7 @@
-package patient
+package patients
 
 import (
+	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/handlers/chestCircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/headCircumference"
@@ -13,8 +14,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
-	"mdgkb/tsr-tegister-server-v1/helpers/utilHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -64,8 +64,8 @@ func (s *Service) Create(item *models.Patient) error {
 	return err
 }
 
-func (s *Service) GetAll(queryFilter *httpHelper.QueryFilter) (models.PatientsWithCount, error) {
-	return s.repository.getAll(queryFilter)
+func (s *Service) GetAll() (models.PatientsWithCount, error) {
+	return s.repository.getAll()
 }
 
 func (s *Service) GetOnlyNames() (models.PatientsWithCount, error) {
@@ -247,7 +247,7 @@ func (s *Service) Delete(id *string) error {
 }
 
 func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
-	queryRu := utilHelper.TranslitToRu(*query)
+	queryRu := helpers.TranslitToRu(*query)
 	items, err := s.repository.getBySearch(&queryRu)
 	if err != nil {
 		return nil, err
@@ -261,4 +261,9 @@ func (s *Service) GetDisabilities() (models.PatientsWithCount, error) {
 		return items, err
 	}
 	return items, nil
+}
+
+func (s *Service) setQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.setQueryFilter(c)
+	return err
 }

@@ -1,14 +1,22 @@
-package patient
+package patients
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
-	"mdgkb/tsr-tegister-server-v1/models"
-
+	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
+	"mdgkb/tsr-tegister-server-v1/models"
 )
 
 func (r *Repository) getDB() *bun.DB {
 	return r.db
+}
+
+
+func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
+	r.queryFilter, err = r.helper.HTTP.CreateQueryFilter(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *Repository) create(item *models.Patient) (err error) {
@@ -16,7 +24,7 @@ func (r *Repository) create(item *models.Patient) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.PatientsWithCount, err error) {
+func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 	query := r.db.NewSelect().
 		Model(&items.Patients).
 		Relation("HeightWeight").
@@ -35,12 +43,13 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.P
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
 		Relation("CreatedBy").
-		Relation("UpdatedBy")
+		Relation("UpdatedBy").
+		Join("JOIN regions_users ON patients.region_id = regions_users.region_id AND regions_users.user_id = ?", r.queryFilter.UserID)
 
-	httpHelper.CreateWithDeletedQuery(query, queryFilter.WithDeleted)
-	httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
-	httpHelper.CreateFilter(query, queryFilter.FilterModels)
-	httpHelper.CreateOrder(query, queryFilter.SortModels, []string{"human.surname", "human.name"})
+	r.helper.HTTP.CreateWithDeletedQuery(query, r.queryFilter.WithDeleted)
+	r.helper.HTTP.CreatePaginationQuery(query, r.queryFilter.Pagination)
+	r.helper.HTTP.CreateFilter(query, r.queryFilter.FilterModels)
+	r.helper.HTTP.CreateOrder(query, r.queryFilter.SortModels, []string{"human.surname", "human.name"})
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
@@ -74,7 +83,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("RegisterPropertyOthersPatient").
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
-		Where("patient.id = ?", *id)
+		Where("patients.id = ?", *id)
 	if withDeleted {
 		query = query.WhereAllWithDeleted()
 	}
@@ -120,12 +129,12 @@ func (r *Repository) getDisabilities() (item models.PatientsWithCount, err error
 	item.Patients = make([]*models.Patient, 0)
 	item.Count, err = r.db.NewSelect().
 		Model(&item.Patients).
-		Join("JOIN disability ON disability.patient_id = patient.id").
+		Join("JOIN disability ON disability.patient_id = patients.id").
 		Relation("Human").
 		Relation("Disabilities.Period").
 		Relation("Disabilities.Edvs.Period").
 		Relation("Disabilities.Edvs.FileInfo").
-		Group("patient.id", "human.id", "human.name", "human.surname", "human.patronymic", "human.is_male", "human.date_birth", "human.address_registration", "human.address_residential", "human.contact_id", "human.photo_id", "human.deleted_at").
+		Group("patients.id", "human.id", "human.name", "human.surname", "human.patronymic", "human.is_male", "human.date_birth", "human.address_registration", "human.address_residential", "human.contact_id", "human.photo_id", "human.deleted_at").
 		ScanAndCount(r.ctx)
 	return item, err
 }

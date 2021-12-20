@@ -1,4 +1,4 @@
-package patient
+package patients
 
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
@@ -34,6 +34,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	err := h.service.setQueryFilter(c)
 	withDisabilities := c.Query("withDisabilities")
 	if withDisabilities != "" {
 		items, err := h.service.GetDisabilities()
@@ -52,22 +53,19 @@ func (h *Handler) GetAll(c *gin.Context) {
 		c.JSON(http.StatusOK, items)
 		return
 	}
-	queryFilter, err := httpHelper.CreateQueryFilter(c)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	if queryFilter.Pagination != nil {
-		items, err := h.service.GetAll(queryFilter)
+	onlyNames := c.Query("only-names")
+	if onlyNames != "" {
+		items, err := h.service.GetOnlyNames()
 		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
 		c.JSON(http.StatusOK, items)
 		return
 	}
-	items, err := h.service.GetOnlyNames()
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
+		items, err := h.service.GetAll()
+		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
 	c.JSON(http.StatusOK, items)
 }
 

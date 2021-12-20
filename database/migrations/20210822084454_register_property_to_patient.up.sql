@@ -15,7 +15,7 @@ create table register_property_to_patient
         references register_property,
     patient_id uuid not null
         constraint "FK_607312bf055d7e060c75b151b6f"
-        references patient
+        references patients
         on update cascade
 );
 

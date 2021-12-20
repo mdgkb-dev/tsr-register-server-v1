@@ -13,6 +13,6 @@ type HeadCircumference struct {
 	Value         int           `json:"value"`
 	Date          time.Time     `json:"date"`
 	DeletedAt     time.Time     `bun:",soft_delete" json:"deletedAt"`
-	Patient       *Patient      `bun:"rel:belongs-to" json:"patient"`
+	Patient       *Patient      `bun:"rel:belongs-to" json:"patients"`
 	PatientID     uuid.UUID     `bun:"type:uuid" json:"patientId"`
 }

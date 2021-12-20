@@ -25,7 +25,7 @@ func createHumanSchema() map[string]string {
 
 func createPatientSchema() map[string]string {
 	return map[string]string{
-		"tableName": "patient",
+		"tableName": "patients",
 		"createdAt": "created_at",
 		"updatedAt": "updated_at",
 	}
@@ -34,7 +34,7 @@ func createPatientSchema() map[string]string {
 func createPatientDiagnosisSchema() map[string]string {
 	return map[string]string{
 		"tableName":   "patient_diagnosis",
-		"joinTable":   "patient",
+		"joinTable":   "patients",
 		"joinTableFk": "patient_id",
 		"joinTablePk": "id",
 

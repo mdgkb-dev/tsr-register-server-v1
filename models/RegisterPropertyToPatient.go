@@ -21,7 +21,7 @@ type RegisterPropertyToPatient struct {
 
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
-	Patient            *Patient          `bun:"rel:has-one" json:"patient"`
+	Patient            *Patient          `bun:"rel:has-one" json:"patients"`
 	PatientID          uuid.UUID         `bun:"type:uuid" json:"patientId"`
 	DeletedAt          time.Time         `bun:",soft_delete" json:"deletedAt"`
 }

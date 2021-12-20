@@ -3,7 +3,7 @@ package httpHelper
 import (
 	"encoding/json"
 	"fmt"
-	"mdgkb/tsr-tegister-server-v1/helpers/utilHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers"
 	"strings"
 	"time"
 )
@@ -75,8 +75,8 @@ func (f *FilterModel) isNotBoolStringValues() bool {
 }
 
 func (f *FilterModel) Translit() {
-	f.Value1 = utilHelper.TranslitToRu(strings.ToLower(f.Value1))
-	f.Value2 = utilHelper.TranslitToRu(strings.ToLower(f.Value2))
+	f.Value1 = helpers.TranslitToRu(strings.ToLower(f.Value1))
+	f.Value2 = helpers.TranslitToRu(strings.ToLower(f.Value2))
 }
 
 func (f *FilterModel) SetSmallCase() {

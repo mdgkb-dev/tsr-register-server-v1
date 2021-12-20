@@ -3,5 +3,5 @@ create table height_weight (
   height integer not null,
   weight integer not null,
   date date not null,
-  patient_id uuid not null references patient on delete cascade
+  patient_id uuid not null references patients on delete cascade
 );

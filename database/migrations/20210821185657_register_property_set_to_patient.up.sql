@@ -8,7 +8,7 @@ create table register_property_set_to_patient
         references register_property_set,
     patient_id uuid not null
         constraint "FK_312cd0a936e61b0870b9bd8428a"
-        references patient
+        references patients
         on delete cascade
 );
 

@@ -5,7 +5,7 @@ create table disability
         primary key,
     patient_id uuid not null
         constraint "FK_41eae0e7955f29a8c3bf635497c"
-        references patient
+        references patients
         on delete cascade,
     period_id uuid not null
 );

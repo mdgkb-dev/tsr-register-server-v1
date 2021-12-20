@@ -9,7 +9,7 @@ create table representative_to_patient
         on update cascade on delete cascade,
     patient_id uuid not null
         constraint "FK_e6a11936ba24e187c82910aea36"
-        references patient
+        references patients
         on update cascade on delete cascade,
     representative_id uuid not null
         constraint "FK_8ae4fe72ff71cdee5b07ff9f4ff"

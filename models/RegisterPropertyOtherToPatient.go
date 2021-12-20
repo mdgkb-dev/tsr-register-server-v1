@@ -12,7 +12,7 @@ type RegisterPropertyOtherToPatient struct {
 	Value string    `json:"value"`
 	RegisterPropertyOther   *RegisterPropertyOther `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyOtherID uuid.UUID         `bun:"type:uuid" json:"registerPropertyOtherId"`
-	Patient            *Patient          `bun:"rel:has-one" json:"patient"`
+	Patient            *Patient          `bun:"rel:has-one" json:"patients"`
 	PatientID          uuid.UUID         `bun:"type:uuid" json:"patientId"`
 }
 

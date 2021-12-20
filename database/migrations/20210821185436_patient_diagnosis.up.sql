@@ -12,7 +12,7 @@ create table patient_diagnosis
         references mkb_sub_diagnosis,
     patient_id uuid
         constraint "FK_2d6181c875a32b2ec25356689e5"
-        references patient
+        references patients
         on delete cascade
 );
 

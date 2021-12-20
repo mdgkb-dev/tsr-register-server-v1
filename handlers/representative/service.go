@@ -3,8 +3,8 @@ package representative
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
+	"mdgkb/tsr-tegister-server-v1/helpers"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
-	"mdgkb/tsr-tegister-server-v1/helpers/utilHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -71,7 +71,7 @@ func (s *Service) Delete(id *string) error {
 }
 
 func (s *Service) GetBySearch(query *string) ([]*models.Representative, error) {
-	queryRu := utilHelper.TranslitToRu(*query)
+	queryRu := helpers.TranslitToRu(*query)
 	items, err := s.repository.getBySearch(&queryRu)
 	if err != nil {
 		return nil, err

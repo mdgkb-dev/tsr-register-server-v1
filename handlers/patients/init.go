@@ -1,9 +1,9 @@
-package patient
+package patients
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers"
+	httpHelper2 "mdgkb/tsr-tegister-server-v1/helpers/httpHelperV2"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
 
@@ -12,18 +12,19 @@ import (
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context) error
-	Get(c *gin.Context) error
-	Create(c *gin.Context) error
-	Update(c *gin.Context) error
-	Delete(c *gin.Context) error
-	GetAllHistory(c *gin.Context) error
-	GetHistory(c *gin.Context) error
-	GetAllWithDeleted(c *gin.Context) error
+	GetAll(c *gin.Context)
+	Get(c *gin.Context)
+	Create(c *gin.Context)
+	Update(c *gin.Context)
+	Delete(c *gin.Context)
+	GetAllHistory(c *gin.Context)
+	GetHistory(c *gin.Context)
 }
 
 type IService interface {
-	GetAll(filter *httpHelper.QueryFilter) (models.PatientsWithCount, error)
+	setQueryFilter(*gin.Context) error
+
+	GetAll() (models.PatientsWithCount, error)
 	GetOnlyNames() (models.PatientsWithCount, error)
 	Get(*string, bool) (*models.Patient, error)
 	Create(*models.Patient) error
@@ -35,9 +36,10 @@ type IService interface {
 }
 
 type IRepository interface {
+	setQueryFilter(*gin.Context) error
 	getDB() *bun.DB
 	create(*models.Patient) error
-	getAll(*httpHelper.QueryFilter) (models.PatientsWithCount, error)
+	getAll() (models.PatientsWithCount, error)
 	get(*string, bool) (*models.Patient, error)
 	update(*models.Patient) error
 	delete(*string) error
@@ -74,48 +76,54 @@ type HistoryRepository struct {
 }
 
 type Handler struct {
-	service        IService
+	service      IService
+	filesService IFilesService
+	helper       *helpers.Helper
 	historyService IHistoryService
-	filesService   IFilesService
 }
 
 type Service struct {
 	repository IRepository
+	helper     *helpers.Helper
 }
 
 type Repository struct {
-	db  *bun.DB
-	ctx context.Context
+	db     *bun.DB
+	ctx    context.Context
+	helper *helpers.Helper
+	queryFilter *httpHelper2.QueryFilter
 }
 
 type FilesService struct {
-	uploader uploadHelper.Uploader
+	helper *helpers.Helper
 }
 
-func CreateHandler(db *bun.DB, uploader *uploadHelper.Uploader) *Handler {
-	repo := NewRepository(db)
-	service := NewService(repo)
+func CreateHandler(db *bun.DB, helper *helpers.Helper) *Handler {
+	repo := NewRepository(db, helper)
+	service := NewService(repo, helper)
+	filesService := NewFilesService(helper)
 	repoHistory := NewHistoryRepository(db)
 	historyService := NewHistoryService(repoHistory)
-	filesService := NewFilesService(uploader)
-	return NewHandler(service, filesService, historyService)
+	return NewHandler(service, filesService, historyService, helper)
 }
 
-func NewHandler(service IService, filesService IFilesService, historyService IHistoryService) *Handler {
-	return &Handler{service: service, filesService: filesService, historyService: historyService}
+// NewHandler constructor
+func NewHandler(s IService, filesService IFilesService,historyService IHistoryService , helper *helpers.Helper) *Handler {
+	return &Handler{service: s, filesService: filesService, helper: helper, historyService: historyService}
 }
 
-func NewService(repository IRepository) *Service {
-	return &Service{repository: repository}
+func NewService(repository IRepository, helper *helpers.Helper) *Service {
+	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB) *Repository {
-	return &Repository{db: db, ctx: context.Background()}
+func NewRepository(db *bun.DB, helper *helpers.Helper) *Repository {
+	return &Repository{db: db, ctx: context.Background(), helper: helper}
 }
 
-func NewFilesService(uploader *uploadHelper.Uploader) *FilesService {
-	return &FilesService{uploader: *uploader}
+func NewFilesService(helper *helpers.Helper) *FilesService {
+	return &FilesService{helper: helper}
 }
+
 
 func NewHistoryService(repository IHistoryRepository) *HistoryService {
 	return &HistoryService{repository: repository}

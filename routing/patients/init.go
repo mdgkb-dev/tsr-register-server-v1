@@ -1,17 +1,13 @@
-package patient
+package patients
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/patient"
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
-	"github.com/uptrace/bun"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/patients"
 )
 
 // Init func
-func Init(r *gin.RouterGroup, db *bun.DB, uploader uploadHelper.Uploader) {
-	var h = handler.CreateHandler(db, &uploader)
+func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.GET("/", h.GetAll)
 	r.GET("/histories/:id", h.GetAllHistory)
 	r.GET("/history/:id", h.GetHistory)

@@ -15,7 +15,7 @@ type PatientDrugRegimen struct {
 	DrugRegimenID uuid.UUID `bun:"type:uuid" json:"drugRegimenId"`
 	DeletedAt     time.Time `bun:",soft_delete" json:"deletedAt"`
 
-	Patient     *Patient     `bun:"rel:belongs-to" json:"patient"`
+	Patient     *Patient     `bun:"rel:belongs-to" json:"patients"`
 	DrugRegimen *DrugRegimen `bun:"rel:belongs-to" json:"drugRegimen"`
 
 	PatientDrugRegimenItems []*PatientDrugRegimenItem `bun:"rel:has-many" json:"patientDrugRegimenItems"`

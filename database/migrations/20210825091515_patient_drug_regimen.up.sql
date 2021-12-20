@@ -5,7 +5,7 @@ create table patient_drug_regimens
         primary key,
     patient_id uuid
         constraint patient_drug_regimen_patients_id_fk
-        references patient
+        references patients
         on delete cascade,
     drug_regimen_id uuid
         constraint patient_drug_regimen_drug_regimen_id_fk

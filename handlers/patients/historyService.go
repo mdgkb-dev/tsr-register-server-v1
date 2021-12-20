@@ -1,4 +1,4 @@
-package patient
+package patients
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/history"

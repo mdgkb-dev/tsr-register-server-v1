@@ -2,6 +2,10 @@ package routing
 
 import (
 	"mdgkb/tsr-tegister-server-v1/config"
+	"mdgkb/tsr-tegister-server-v1/handlers/patients"
+	"mdgkb/tsr-tegister-server-v1/handlers/regions"
+	"mdgkb/tsr-tegister-server-v1/handlers/users"
+	"mdgkb/tsr-tegister-server-v1/helpers"
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
 	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
 	"mdgkb/tsr-tegister-server-v1/routing/auth"
@@ -11,7 +15,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/routing/insuranceCompany"
 	"mdgkb/tsr-tegister-server-v1/routing/meta"
 	"mdgkb/tsr-tegister-server-v1/routing/mkb"
-	"mdgkb/tsr-tegister-server-v1/routing/patient"
+	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
+	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	"mdgkb/tsr-tegister-server-v1/routing/register"
 	"mdgkb/tsr-tegister-server-v1/routing/registerGroup"
 	"mdgkb/tsr-tegister-server-v1/routing/registerProperty"
@@ -19,7 +24,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/routing/registerQuery"
 	"mdgkb/tsr-tegister-server-v1/routing/representative"
 	"mdgkb/tsr-tegister-server-v1/routing/representativeTypes"
-	"mdgkb/tsr-tegister-server-v1/routing/users"
+	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
 	"mdgkb/tsr-tegister-server-v1/routing/xlsx"
 
 	"github.com/gin-gonic/gin"
@@ -31,6 +36,7 @@ import (
 func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Config) {
 	localUploader := uploadHelper.NewLocalUploader(&config.UploadPath)
 	createdXlsxHelper := xlsxHelper.CreateXlsxHelper()
+	helper := helpers.NewHelper(config)
 	r.Static("/static", "../static/")
 	api := r.Group("/api/v1")
 
@@ -41,7 +47,7 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	insuranceCompany.Init(api.Group("/insurance-companies"), db)
 	meta.Init(api.Group("/meta"), db)
 	mkb.Init(api.Group("/mkb"), db)
-	patient.Init(api.Group("/patients"), db, localUploader)
+	patientsRouter.Init(api.Group("/patients"), patients.CreateHandler(db, helper))
 	register.Init(api.Group("/registers"), db)
 	registerGroup.Init(api.Group("/register-groups"), db)
 	registerQuery.Init(api.Group("/register-queries"), db)
@@ -50,5 +56,6 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, config config.Co
 	representativeTypes.Init(api.Group("/representative-types"), db)
 	registerPropertyToUser.Init(api.Group("/register-properties-to-user"), db)
 	xlsx.Init(api.Group("xlsx"), db, createdXlsxHelper)
-	users.Init(api.Group("/users"), db, localUploader)
+	usersRouter.Init(api.Group("/users"), users.CreateHandler(db, helper))
+	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(db, helper))
 }
