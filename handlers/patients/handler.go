@@ -35,6 +35,9 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) GetAll(c *gin.Context) {
 	err := h.service.setQueryFilter(c)
+	if httpHelper.HandleError(c, err, http.StatusUnauthorized) {
+		return
+	}
 	withDisabilities := c.Query("withDisabilities")
 	if withDisabilities != "" {
 		items, err := h.service.GetDisabilities()
@@ -62,10 +65,10 @@ func (h *Handler) GetAll(c *gin.Context) {
 		c.JSON(http.StatusOK, items)
 		return
 	}
-		items, err := h.service.GetAll()
-		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
-			return
-		}
+	items, err := h.service.GetAll()
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	c.JSON(http.StatusOK, items)
 }
 

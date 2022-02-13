@@ -34,10 +34,10 @@ type TokenDetails struct {
 
 func (h *TokenHelper) CreateToken(userID string) (*TokenDetails, error) {
 	td := &TokenDetails{}
-	td.AtExpires = time.Now().Add(time.Hour * 24).Unix()
+	td.AtExpires = time.Now().Add(time.Hour * 24 * 365).Unix()
 	td.AccessUuid = uuid.NewString()
 
-	td.RtExpires = time.Now().Add(time.Hour * 24 * 7).Unix()
+	td.RtExpires = time.Now().Add(time.Hour * 24 * 365).Unix()
 	td.RefreshUuid = td.AccessUuid + "++" + userID
 
 	var err error
