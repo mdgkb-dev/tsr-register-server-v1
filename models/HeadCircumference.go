@@ -10,9 +10,9 @@ import (
 type HeadCircumference struct {
 	bun.BaseModel `bun:"head_circumference,alias:head_circumference"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Value         int           `json:"value"`
-	Date          time.Time     `json:"date"`
-	DeletedAt     time.Time     `bun:",soft_delete" json:"deletedAt"`
-	Patient       *Patient      `bun:"rel:belongs-to" json:"patients"`
-	PatientID     uuid.UUID     `bun:"type:uuid" json:"patientId"`
+	Value         int       `json:"value"`
+	Date          time.Time `json:"date"`
+	DeletedAt     time.Time `bun:",soft_delete" json:"deletedAt"`
+	Patient       *Patient  `bun:"rel:belongs-to" json:"patient"`
+	PatientID     uuid.UUID `bun:"type:uuid" json:"patientId"`
 }
