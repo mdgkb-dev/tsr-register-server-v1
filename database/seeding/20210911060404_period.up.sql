@@ -1,5 +1,5 @@
-INSERT INTO public.period (id, date_start, date_end)
-VALUES  ('f4c9aadc-7e57-468f-99d2-ab331beefbf3', '2008-01-10', '2023-07-30'),
+insert into public.period (id, date_start, date_end)
+values  ('f4c9aadc-7e57-468f-99d2-ab331beefbf3', '2008-01-10', '2023-07-30'),
         ('ed4b0476-4a13-4a62-aa7c-400f5bf5179b', '2018-02-14', '2032-09-23'),
         ('fb6d324f-9f2c-44ae-9ebb-0e59c96a2441', '2018-08-09', '2035-03-22'),
         ('9c54dbf5-de5f-4c6e-bcdf-00d0e20e749d', '2009-09-28', '2026-05-28'),
