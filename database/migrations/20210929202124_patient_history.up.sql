@@ -4,6 +4,7 @@ create table patient_histories (
   human_history_id uuid constraint patient_history_human_history_id_fk references human_histories,
   id uuid,
   human_id uuid,
+  region_id uuid,
   created_at timestamp default current_timestamp not null,
   created_by_id uuid,
   updated_at timestamp default current_timestamp,
