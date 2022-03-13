@@ -6,6 +6,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/helpers/sqlHelper"
 	"mdgkb/tsr-tegister-server-v1/helpers/tokenHelper"
 	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
 
 	"mdgkb/tsr-tegister-server-v1/helpers/pdfHelper"
 )
@@ -16,6 +17,7 @@ type Helper struct {
 	Uploader uploadHelper.Uploader
 	SQL      *sqlHelper.SQLHelper
 	Token    *tokenHelper.TokenHelper
+	XLSX     *xlsxHelper.XlsxHelper
 }
 
 func NewHelper(config config.Config) *Helper {
@@ -24,5 +26,6 @@ func NewHelper(config config.Config) *Helper {
 	sql := sqlHelper.NewSQLHelper()
 	uploader := uploadHelper.NewLocalUploader(&config.UploadPath)
 	token := tokenHelper.NewTokenHelper()
-	return &Helper{HTTP: http, Uploader: uploader, PDF: pdf, SQL: sql, Token: token}
+	xlsx := xlsxHelper.NewXlsxHelper()
+	return &Helper{HTTP: http, Uploader: uploader, PDF: pdf, SQL: sql, Token: token, XLSX: xlsx}
 }

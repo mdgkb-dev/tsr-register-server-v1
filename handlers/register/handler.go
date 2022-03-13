@@ -1,11 +1,10 @@
 package register
 
 import (
+	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Create(c *gin.Context) {
@@ -70,4 +69,24 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) GetFlatXlsx(c *gin.Context) {
+	//var item models.Register
+	//err := c.Bind(&item)
+	//if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
+	//err = h.service.Update(&item)
+	//if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
+	//excelDoc, err := h.helper.XLSX.CreateFile()
+	//if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
+	//downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
+	//c.Header("Content-Description", "File Transfer")
+	//c.Header("Content-Disposition", "attachment; filename="+downloadName)
+	//c.Data(http.StatusOK, "application/octet-stream", excelDoc)
 }

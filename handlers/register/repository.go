@@ -41,7 +41,12 @@ func (r *Repository) get(queryFilter *httpHelper.QueryFilter) (*models.Register,
 		}).
 		Relation("RegisterGroups.RegisterProperties.ValueType").
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets.RegisterPropertyOthers").
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios.RegisterPropertyOthers").
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("register_property_radio.register_property_radio_order")
+		}).
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios.RegisterPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("register_property_others.register_property_others_order")
+		}).
 		Relation("RegisterToPatient.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic").Offset(*queryFilter.Pagination.Offset).
 				Limit(*queryFilter.Pagination.Limit)
@@ -61,12 +66,10 @@ func (r *Repository) delete(id *string) (err error) {
 	_, err = r.db.NewDelete().Model(&models.Register{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
-
 func (r *Repository) update(item *models.Register) (err error) {
 	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
-
 
 func (r *Repository) getValueTypes() (models.ValueTypes, error) {
 	items := make(models.ValueTypes, 0)

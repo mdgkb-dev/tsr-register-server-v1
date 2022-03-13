@@ -4,6 +4,7 @@ create table register_property_radio
         constraint "PK_fc6c89a69e6669f3b60f4809bcd"
         primary key,
     name varchar not null,
+    register_property_radio_order int,
     register_property_id uuid
         constraint "FK_4d4a161c891e6e45b3590c8a9d9"
         references register_property on delete cascade

@@ -3,21 +3,25 @@ package register
 import (
 	"context"
 	"github.com/google/uuid"
+	"mdgkb/tsr-tegister-server-v1/helpers"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+	httpHelper2 "mdgkb/tsr-tegister-server-v1/helpers/httpHelperV2"
 	"mdgkb/tsr-tegister-server-v1/models"
+	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context) error
-	Get(c *gin.Context) error
-	Create(c *gin.Context) error
-	Update(c *gin.Context) error
-	Delete(c *gin.Context) error
+	GetAll(c *gin.Context)
+	Get(c *gin.Context)
+	Create(c *gin.Context)
+	Update(c *gin.Context)
+	Delete(c *gin.Context)
 
-	GetValueTypes(c *gin.Context) error
+	GetValueTypes(c *gin.Context)
+	GetFlatXlsx(c *gin.Context)
 }
 
 type IService interface {
@@ -41,34 +45,52 @@ type IRepository interface {
 	getValueTypes() (models.ValueTypes, error)
 }
 
+type IFilesService interface {
+	Upload(*gin.Context, *models.Register, map[string][]*multipart.FileHeader) error
+}
+
 type Handler struct {
-	service IService
+	service      IService
+	helper       *helpers.Helper
+	filesService IFilesService
 }
 
 type Service struct {
 	repository IRepository
+	helper     *helpers.Helper
 }
 
 type Repository struct {
-	db  *bun.DB
-	ctx context.Context
+	db          *bun.DB
+	ctx         context.Context
+	helper      *helpers.Helper
+	queryFilter *httpHelper2.QueryFilter
 }
 
-func CreateHandler(db *bun.DB) *Handler {
-	repo := NewRepository(db)
-	service := NewService(repo)
-	return NewHandler(service)
+type FilesService struct {
+	helper *helpers.Helper
+}
+
+func CreateHandler(db *bun.DB, helper *helpers.Helper) *Handler {
+	repo := NewRepository(db, helper)
+	service := NewService(repo, helper)
+	filesService := NewFilesService(helper)
+	return NewHandler(service, filesService, helper)
 }
 
 // NewHandler constructor
-func NewHandler(s IService) *Handler {
-	return &Handler{service: s}
+func NewHandler(s IService, filesService IFilesService, helper *helpers.Helper) *Handler {
+	return &Handler{service: s, filesService: filesService, helper: helper}
 }
 
-func NewService(repository IRepository) *Service {
-	return &Service{repository: repository}
+func NewService(repository IRepository, helper *helpers.Helper) *Service {
+	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB) *Repository {
-	return &Repository{db: db, ctx: context.Background()}
+func NewRepository(db *bun.DB, helper *helpers.Helper) *Repository {
+	return &Repository{db: db, ctx: context.Background(), helper: helper}
+}
+
+func NewFilesService(helper *helpers.Helper) *FilesService {
+	return &FilesService{helper: helper}
 }

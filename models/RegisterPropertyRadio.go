@@ -6,17 +6,16 @@ import (
 )
 
 type RegisterPropertyRadio struct {
-	bun.BaseModel      `bun:"register_property_radio,alias:register_property_radio"`
-	ID                 uuid.NullUUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name               string    `json:"name"`
-	RegisterPropertyID uuid.UUID `bun:"type:uuid" json:"registerPropertyID"`
-
+	bun.BaseModel                   `bun:"register_property_radio,alias:register_property_radio"`
+	ID                              uuid.NullUUID          `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name                            string                 `json:"name"`
+	RegisterPropertyID              uuid.UUID              `bun:"type:uuid" json:"registerPropertyID"`
+	Order                           int                    `bun:"register_property_radio_order" json:"order"`
 	RegisterPropertyOthers          RegisterPropertyOthers `bun:"rel:has-many" json:"registerPropertyOthers"`
-	RegisterPropertyOthersForDelete []uuid.UUID                 `bun:"-" json:"registerPropertyOthersForDelete"`
+	RegisterPropertyOthersForDelete []uuid.UUID            `bun:"-" json:"registerPropertyOthersForDelete"`
 }
 
 type RegisterPropertyRadios []*RegisterPropertyRadio
-
 
 func (item *RegisterPropertyRadio) SetIdForChildren() {
 	if len(item.RegisterPropertyOthers) == 0 {
@@ -36,7 +35,7 @@ func (items RegisterPropertyRadios) SetIdForChildren() {
 	}
 }
 
-func (items RegisterPropertyRadios) GetRegisterPropertyOthers()RegisterPropertyOthers {
+func (items RegisterPropertyRadios) GetRegisterPropertyOthers() RegisterPropertyOthers {
 	itemsForGet := make(RegisterPropertyOthers, 0)
 	for i := range items {
 		itemsForGet = append(itemsForGet, items[i].RegisterPropertyOthers...)
@@ -44,13 +43,10 @@ func (items RegisterPropertyRadios) GetRegisterPropertyOthers()RegisterPropertyO
 	return itemsForGet
 }
 
-
-func (items RegisterPropertyRadios) GetRegisterPropertyOthersForDelete()[]uuid.UUID {
+func (items RegisterPropertyRadios) GetRegisterPropertyOthersForDelete() []uuid.UUID {
 	itemsForGet := make([]uuid.UUID, 0)
 	for i := range items {
 		itemsForGet = append(itemsForGet, items[i].RegisterPropertyOthersForDelete...)
 	}
 	return itemsForGet
 }
-
-

@@ -13,14 +13,14 @@ type RegisterPropertyOther struct {
 	//ColWidth      string    `json:"colWidth"`
 
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
-	RegisterPropertyID uuid.NullUUID  `bun:"type:uuid" json:"registerPropertyId"`
+	RegisterPropertyID uuid.NullUUID     `bun:"type:uuid" json:"registerPropertyId"`
 
 	RegisterPropertyRadio   *RegisterPropertyRadio `bun:"rel:belongs-to" json:"registerPropertyRadio"`
-	RegisterPropertyRadioID uuid.NullUUID  `bun:"type:uuid" json:"registerPropertyRadioId"`
+	RegisterPropertyRadioID uuid.NullUUID          `bun:"type:uuid" json:"registerPropertyRadioId"`
 
 	RegisterPropertySet   *RegisterPropertyRadio `bun:"rel:belongs-to" json:"registerPropertySet"`
-	RegisterPropertySetID uuid.NullUUID  `bun:"type:uuid" json:"registerPropertySetId"`
-
+	RegisterPropertySetID uuid.NullUUID          `bun:"type:uuid" json:"registerPropertySetId"`
+	Order                 int                    `bun:"register_property_others_order" json:"order"`
 	//RegisterPropertyRadio          []*RegisterPropertyRadio `bun:"rel:has-many" json:"registerPropertyRadio"`
 	//RegisterPropertyRadioForDelete []string                 `bun:"-" json:"registerPropertyRadioForDelete"`
 	//

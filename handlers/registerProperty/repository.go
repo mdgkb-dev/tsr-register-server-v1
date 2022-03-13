@@ -20,7 +20,9 @@ func (r *Repository) getAll(registerId *string) ([]*models.RegisterProperty, err
 	query := r.db.NewSelect().Model(&items)
 
 	if *registerId != "" {
-		query.Where(existsRegisterPropertyWithGroupId, *registerId)
+		query.
+			Join("join register_group on register_group.id = ?TableName.register_group_id ").
+			Where("register_group.register_id = ? ", *registerId)
 	}
 
 	err := query.Scan(r.ctx)
@@ -72,7 +74,6 @@ exists
 				and rgtr.register_id = ?
 		)
 )`
-
 
 func (r *Repository) upsertMany(items models.RegisterProperties) (err error) {
 	_, err = r.db.NewInsert().On("conflict (id) do update").

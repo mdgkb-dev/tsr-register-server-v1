@@ -10,7 +10,6 @@ func (r *Repository) getDB() *bun.DB {
 	return r.db
 }
 
-
 func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 	r.queryFilter, err = r.helper.HTTP.CreateQueryFilter(c)
 	if err != nil {
@@ -37,7 +36,7 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
 		Relation("Human.InsuranceCompanyToHuman").
-		Relation("RepresentativeToPatient.Representative.Human").
+		Relation("RepresentativeToPatient.Representative.Human.Contact").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Relation("PatientDiagnosis.MkbDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
@@ -69,7 +68,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
 		Relation("Human.Contact").
 		Relation("Human.Photo").
-		Relation("RepresentativeToPatient.Representative.Human").
+		Relation("RepresentativeToPatient.Representative.Human.Contact").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbSubDiagnosis").

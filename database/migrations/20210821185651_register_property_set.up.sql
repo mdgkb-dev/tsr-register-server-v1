@@ -6,7 +6,8 @@ create table register_property_set
     name varchar not null,
     register_property_id uuid
         constraint "FK_8f6019b4369c0bc9eef2c65d5a1"
-        references register_property on delete cascade
+        references register_property on delete cascade,
+    register_property_set_order int
 );
 
 create index "IDX_8f6019b4369c0bc9eef2c65d5a"
