@@ -77,7 +77,7 @@ func (r *Repository) execute(registerQuery *models.RegisterQuery) ([]map[string]
 	valuesString := strings.Join(values, "  ")
 
 	query := fmt.Sprintf(`SELECT *
-		FROM   crosstab(
+		FROM   public.crosstab(
 	    $$
   select
                      case
