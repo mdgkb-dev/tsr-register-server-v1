@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/xuri/excelize/v2"
+	"sort"
 )
 
 type IXlsxHelper interface {
@@ -11,7 +12,9 @@ type IXlsxHelper interface {
 	//GetFile() (*bytes.Reader, error)
 }
 
-type XlsxHelper struct{}
+type XlsxHelper struct {
+	HeaderCells []string
+}
 
 func NewXlsxHelper() *XlsxHelper {
 	return &XlsxHelper{}
@@ -22,29 +25,32 @@ func (x *XlsxHelper) writeData(file *excelize.File, data []map[string]interface{
 	if len(data) == 0 {
 		return nil
 	}
-	keys := make([]int, 0, len(data[0]))
-	for k := range data {
-		keys = append(keys, k)
-	}
-
-	err := file.SetSheetRow("Sheet1", "A1", &keys)
-	if err != nil {
-		return err
-	}
-
 	for i, mapa := range data {
-		if i == 0 {
-			continue
+		keys := make([]string, 0)
+		for k, _ := range mapa {
+			keys = append(keys, k)
 		}
+		sort.Strings(keys)
+		for _, k := range keys {
+			fmt.Println(k, mapa[k])
+		}
+
 		values := make([]interface{}, 0)
-		for _, value := range mapa {
-			values = append(values, value)
-			err := file.SetCellValue("Sheet1", "A1", value)
-			if err != nil {
-				return err
+		for _, k := range keys {
+			if i == 0 {
+				err := file.SetSheetRow("Sheet1", "A1", &keys)
+				if err != nil {
+					return err
+				}
+				continue
 			}
+			values = append(values, mapa[k])
+			//err := file.SetCellValue("Sheet1", "A1", value)
+			//if err != nil {
+			//	return err
+			//}
 		}
-		row := fmt.Sprintf("A%d", i)
+		row := fmt.Sprintf("A%d", i+1)
 		err := file.SetSheetRow("Sheet1", row, &values)
 		if err != nil {
 			return err
