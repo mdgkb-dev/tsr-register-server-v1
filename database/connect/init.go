@@ -20,10 +20,10 @@ func InitDB(conf *config.Config) *bun.DB {
 	db := bun.NewDB(conn, sqlitedialect.New())
 	db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	_, _ = db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
+	_, _ = db.Exec(`CREATE EXTENSION IF NOT EXISTS tablefunc;`)
 
 	return db
 }
-
 
 var client *redis.Client
 
