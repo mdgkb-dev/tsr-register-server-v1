@@ -1,7 +1,6 @@
 package registerQuery
 
 import (
-	"encoding/json"
 	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"strings"
@@ -26,12 +25,12 @@ func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
 	return queries, err
 }
 
-func (r *Repository) get(id *string) (*models.RegisterQuery, error) {
+func (r *Repository) get(id string) (*models.RegisterQuery, error) {
 	query := models.RegisterQuery{}
 	err := r.db.NewSelect().
 		Model(&query).
 		Relation("RegisterQueryToRegisterProperty.RegisterProperty.ValueType").
-		Where("register_queries.id = ?", *id).Scan(r.ctx)
+		Where("register_queries.id = ?", id).Scan(r.ctx)
 	return &query, err
 }
 
@@ -40,14 +39,12 @@ func (r *Repository) update(query *models.RegisterQuery) (err error) {
 	return err
 }
 
-func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.RegisterQuery{}).Where("id = ?", *id).Exec(r.ctx)
+func (r *Repository) delete(id string) (err error) {
+	_, err = r.db.NewDelete().Model(&models.RegisterQuery{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) execute(registerQuery *models.RegisterQuery) ([]map[string]interface{}, error) {
-	result := make([]map[string]interface{}, 0)
-
+func (r *Repository) execute(registerQuery *models.RegisterQuery) error {
 	cols := make([]string, 0)
 	values := make([]string, 0)
 	for i, regQueryToRegProp := range registerQuery.RegisterQueryToRegisterProperty {
@@ -81,12 +78,10 @@ func (r *Repository) execute(registerQuery *models.RegisterQuery) ([]map[string]
 	    $$
   select
                      case
-             when vt.name::varchar = 'set' then concat_ws(' '::text, h.surname, h.name, h.patronymic)
+             when vt.name::varchar = 'set' then concat_ws(' '::text, h1.surname, h1.name, h1.patronymic)
              else
               concat_ws(' '::text, h.surname, h.name, h.patronymic)
---              concat_ws(' '::text, h1.surname, h1.name, h1.patronymic)
                  end,
--- concat_ws(' '::text, h.surname, h.name, h.patronymic),
               rp.short_name,
   CASE
   WHEN vt.name::varchar = 'string' then rptp.value_string
@@ -102,8 +97,8 @@ func (r *Repository) execute(registerQuery *models.RegisterQuery) ([]map[string]
             join register_property rp on rqtrp.register_property_id = rp.id
             join value_type vt on vt.id = rp.value_type_id 
             left join register_property_to_patient rptp on rp.id = rptp.register_property_id
-            join patients p on p.id = rptp.patient_id
-            join human h on h.id = p.human_id
+            left join patients p on p.id = rptp.patient_id
+            left join human h on h.id = p.human_id
             left join register_property_radio rpr on rpr.id = rptp.register_property_radio_id
             left join register_property_set rps on rps.register_property_id = rp.id
             left join register_property_set_to_patient rpstp on rpstp.register_property_set_id = rps.id
@@ -113,15 +108,11 @@ func (r *Repository) execute(registerQuery *models.RegisterQuery) ([]map[string]
             order by 1, 2
             ;
 		$$, $$values %s $$
-	) AS ct ("ФИО" varchar, %s);
-`, valuesString, colsString)
+	) AS ct ("%s" varchar, %s);
+`, valuesString, registerQuery.Key, colsString)
 
-	res, err := r.db.QueryContext(r.ctx, query, result)
-	err = r.db.ScanRows(r.ctx, res, &result)
-	b, err := json.MarshalIndent(result, "", "  ")
-	if err != nil {
-		fmt.Println("error:", err)
-	}
-	fmt.Print(string(b))
-	return result, err
+	res, err := r.db.QueryContext(r.ctx, query, &registerQuery.Data)
+	err = r.db.ScanRows(r.ctx, res, &registerQuery.Data)
+
+	return err
 }

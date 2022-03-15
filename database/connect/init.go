@@ -31,9 +31,9 @@ func InitRedis(conf *config.Config) (client *redis.Client) {
 	client = redis.NewClient(&redis.Options{
 		Addr: fmt.Sprintf("%s:%s", conf.RedisHost, conf.RedisPort), //redis port
 	})
-	_, err := client.Ping().Result()
-	if err != nil {
-		panic(err)
-	}
+	_, _ = client.Ping().Result()
+	//if err != nil {
+	//	panic(err)
+	//}
 	return client
 }

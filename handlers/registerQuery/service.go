@@ -27,7 +27,7 @@ func (s *Service) GetAll() (models.RegisterQueries, error) {
 	return queries, nil
 }
 
-func (s *Service) Get(id *string) (*models.RegisterQuery, error) {
+func (s *Service) Get(id string) (*models.RegisterQuery, error) {
 	query, err := s.repository.get(id)
 	if err != nil {
 		return nil, err
@@ -54,19 +54,14 @@ func (s *Service) Update(query *models.RegisterQuery) error {
 	return err
 }
 
-func (s *Service) Delete(id *string) error {
+func (s *Service) Delete(id string) error {
 	return s.repository.delete(id)
 }
 
-func (s *Service) Execute(id string) ([]map[string]interface{}, error) {
-	registerQuery, err := s.repository.get(&id)
+func (s *Service) Execute(registerQuery *models.RegisterQuery) error {
+	err := s.repository.execute(registerQuery)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	res, err := s.repository.execute(registerQuery)
-	if err != nil {
-		return nil, err
-	}
-	return res, nil
+	return nil
 }

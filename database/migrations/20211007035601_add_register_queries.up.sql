@@ -11,6 +11,7 @@ create table register_queries
    name varchar not null,
    type register_queries_type_enum not null,
    register_id uuid,
+   key varchar,
 
    foreign key (register_id) references register (id)
 );

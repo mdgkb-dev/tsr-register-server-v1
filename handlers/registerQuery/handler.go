@@ -37,7 +37,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	query, err := h.service.Get(&id)
+	query, err := h.service.Get(id)
 
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -48,12 +48,10 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := h.service.Delete(&id)
-
+	err := h.service.Delete(id)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-
 	c.JSON(http.StatusOK, gin.H{})
 }
 
@@ -76,11 +74,16 @@ func (h *Handler) Update(c *gin.Context) {
 
 func (h *Handler) Execute(c *gin.Context) {
 	id := c.Param("id")
-	result, err := h.service.Execute(id)
+	registerQuery, err := h.service.Get(id)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	file, err := h.helper.XLSX.CreateFile(result)
+	err = h.service.Execute(registerQuery)
+	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	registerQuery.SortKeys()
+	file, err := h.helper.XLSX.CreateFile(registerQuery.Keys, registerQuery.Data)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

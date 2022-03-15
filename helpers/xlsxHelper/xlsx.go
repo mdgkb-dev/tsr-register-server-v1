@@ -4,54 +4,86 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/xuri/excelize/v2"
-	"sort"
 )
 
 type IXlsxHelper interface {
 	CreateFile() ([]byte, error)
-	//GetFile() (*bytes.Reader, error)
 }
 
 type XlsxHelper struct {
+	file        *excelize.File
+	keys        []string
+	data        []map[string]interface{}
 	HeaderCells []string
+
+	style *DefaultStyle
+}
+
+func (x *XlsxHelper) CreateFile(keys []string, data []map[string]interface{}) ([]byte, error) {
+	x.file = excelize.NewFile()
+	x.initXlsxData(keys, data)
+	err := x.writeHeader()
+	if err != nil {
+		return nil, err
+	}
+	err = x.writeData()
+	if err != nil {
+		return nil, err
+	}
+	return x.writeFile()
+}
+
+func (x *XlsxHelper) initXlsxData(keys []string, data []map[string]interface{}) {
+	x.keys = keys
+	x.data = data
 }
 
 func NewXlsxHelper() *XlsxHelper {
 	return &XlsxHelper{}
 }
 
-// Write func
-func (x *XlsxHelper) writeData(file *excelize.File, data []map[string]interface{}) error {
-	if len(data) == 0 {
+func (x *XlsxHelper) stylingHeader() error {
+	style, err := x.file.NewStyle(&excelize.Style{
+		Fill: excelize.Fill{Type: "pattern", Color: []string{"#D0D0D0"}, Pattern: 1},
+	})
+	if err != nil {
+		return err
+	}
+	err = x.file.SetColWidth("Sheet1", "A", "BA", 30)
+	if err != nil {
+		return err
+	}
+	err = x.file.SetCellStyle("Sheet1", "A1", "BA1", style)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func (x *XlsxHelper) writeHeader() error {
+	err := x.file.SetSheetRow("Sheet1", "A1", &x.keys)
+	if err != nil {
+		return err
+	}
+	err = x.stylingHeader()
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func (x *XlsxHelper) writeData() error {
+	if len(x.data) == 0 {
 		return nil
 	}
-	for i, mapa := range data {
-		keys := make([]string, 0)
-		for k, _ := range mapa {
-			keys = append(keys, k)
-		}
-		sort.Strings(keys)
-		for _, k := range keys {
-			fmt.Println(k, mapa[k])
-		}
-
+	for i, mapa := range x.data {
 		values := make([]interface{}, 0)
-		for _, k := range keys {
-			if i == 0 {
-				err := file.SetSheetRow("Sheet1", "A1", &keys)
-				if err != nil {
-					return err
-				}
-				continue
-			}
+		for _, k := range x.keys {
 			values = append(values, mapa[k])
-			//err := file.SetCellValue("Sheet1", "A1", value)
-			//if err != nil {
-			//	return err
-			//}
 		}
-		row := fmt.Sprintf("A%d", i+1)
-		err := file.SetSheetRow("Sheet1", row, &values)
+		row := fmt.Sprintf("A%d", i+2)
+		//fmt.Println(row)
+		err := x.file.SetSheetRow("Sheet1", row, &values)
 		if err != nil {
 			return err
 		}
@@ -59,19 +91,10 @@ func (x *XlsxHelper) writeData(file *excelize.File, data []map[string]interface{
 	return nil
 }
 
-func (x *XlsxHelper) CreateFile(data []map[string]interface{}) ([]byte, error) {
-	f := excelize.NewFile()
-	err := x.writeData(f, data)
-	if err != nil {
-		return nil, err
-	}
-	return x.write(f)
-}
-
 // Write func
-func (x *XlsxHelper) write(file *excelize.File) ([]byte, error) {
+func (x *XlsxHelper) writeFile() ([]byte, error) {
 	var b bytes.Buffer
-	err := file.Write(&b)
+	err := x.file.Write(&b)
 	if err != nil {
 		return nil, err
 	}
