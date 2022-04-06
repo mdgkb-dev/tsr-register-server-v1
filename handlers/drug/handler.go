@@ -1,9 +1,12 @@
 package drug
 
 import (
+	"fmt"
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +25,16 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	items, err := h.service.GetAll()
+	var diagnosisIds []uuid.UUID
+	diagnosis := c.QueryArray("diagnosis")
+	if len(diagnosis) > 0 {
+		for _, d := range strings.Split(diagnosis[0], ",") {
+			fmt.Println(d)
+			diagnosisIds = append(diagnosisIds, uuid.MustParse(d))
+		}
+	}
+
+	items, err := h.service.GetAll(diagnosisIds)
 	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

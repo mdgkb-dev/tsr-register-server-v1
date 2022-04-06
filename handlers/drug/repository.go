@@ -1,6 +1,7 @@
 package drug
 
 import (
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -15,16 +16,24 @@ func (r *Repository) create(item *models.Drug) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() ([]*models.Drug, error) {
+func (r *Repository) getAll(diagnosisIds []uuid.UUID) ([]*models.Drug, error) {
 	items := make([]*models.Drug, 0)
-	err := r.db.NewSelect().Model(&items).
+	q := r.db.NewSelect().Model(&items).
 		Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_block_items.order_item")
 		}).
 		Relation("DrugRegimens.DrugRegimenBlocks", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_blocks.order_item")
 		}).
-		Scan(r.ctx)
+		Relation("DrugsDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
+		Relation("DrugsDiagnosis.MkbDiagnosis.MkbGroup").
+		Relation("DrugsDiagnosis.MkbSubDiagnosis")
+
+	if len(diagnosisIds) > 0 {
+		q.Join("JOIN drugs_diagnosis ON drugs_diagnosis.drug_id = drugs.id").
+			Where("drugs_diagnosis.mkb_diagnosis_id in (?)", bun.In(diagnosisIds))
+	}
+	err := q.Scan(r.ctx)
 	return items, err
 }
 
@@ -37,6 +46,9 @@ func (r *Repository) get(id *string) (*models.Drug, error) {
 		Relation("DrugRegimens.DrugRegimenBlocks", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_blocks.order_item")
 		}).
+		Relation("DrugsDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
+		Relation("DrugsDiagnosis.MkbDiagnosis.MkbGroup").
+		Relation("DrugsDiagnosis.MkbSubDiagnosis").
 		Where("id = ?", *id).Scan(r.ctx)
 	return &item, err
 }

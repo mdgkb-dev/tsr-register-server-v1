@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/spf13/viper"
 )
 
@@ -17,7 +18,7 @@ type Config struct {
 	RedisHost string `mapstructure:"REDIS_HOST"`
 	RedisPort string `mapstructure:"REDIS_PORT"`
 
-	UploadPath string `mapstructure:"UPLOAD_PATH"`
+	UploadPath    string `mapstructure:"UPLOAD_PATH"`
 	TemplatesPath string `mapstructure:"TEMPLATES_PATH"`
 }
 
@@ -34,5 +35,6 @@ func LoadConfig() (config *Config, err error) {
 	}
 
 	err = viper.Unmarshal(&config)
+	fmt.Println(config.DbName)
 	return config, err
 }

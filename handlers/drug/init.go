@@ -2,6 +2,7 @@ package drug
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -17,7 +18,7 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.Drug, error)
+	GetAll([]uuid.UUID) ([]*models.Drug, error)
 	Get(*string) (*models.Drug, error)
 	Create(*models.Drug) error
 	Update(*models.Drug) error
@@ -27,7 +28,7 @@ type IService interface {
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Drug) error
-	getAll() ([]*models.Drug, error)
+	getAll([]uuid.UUID) ([]*models.Drug, error)
 	get(*string) (*models.Drug, error)
 	update(*models.Drug) error
 	delete(*string) error
