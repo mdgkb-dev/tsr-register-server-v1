@@ -6,6 +6,7 @@ create table register_property_set_to_patient
     register_property_set_id uuid not null
         constraint "FK_8281318758557dfc2a1fd67f090"
         references register_property_set,
+    prop_with_date_id uuid,
     patient_id uuid not null
         constraint "FK_312cd0a936e61b0870b9bd8428a"
         references patients

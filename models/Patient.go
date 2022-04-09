@@ -12,7 +12,7 @@ type Patient struct {
 	Human   *Human    `bun:"rel:belongs-to" json:"human"`
 	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
 
-	Region   *Region    `bun:"rel:belongs-to" json:"region"`
+	Region   *Region   `bun:"rel:belongs-to" json:"region"`
 	RegionID uuid.UUID `bun:"type:uuid" json:"regionId"`
 
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
@@ -36,8 +36,8 @@ type Patient struct {
 	RegisterToPatientForDelete []uuid.UUID          `bun:"-" json:"registerToPatientForDelete"`
 
 	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
-	RegisterPropertyOthersPatient             RegisterPropertyOthersToPatient    `bun:"rel:has-many" json:"registerPropertyOthersToPatient"`
-	RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"RegisterPropertyToPatientForDelete"`
+	RegisterPropertyOthersPatient         RegisterPropertyOthersToPatient `bun:"rel:has-many" json:"registerPropertyOthersToPatient"`
+	RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"registerPropertyToPatientForDelete"`
 	RegisterPropertySetToPatient          []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
 	RegisterPropertySetToPatientForDelete []uuid.UUID                     `bun:"-" json:"registerPropertySetToPatientForDelete"`
 }

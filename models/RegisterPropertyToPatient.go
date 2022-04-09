@@ -11,7 +11,7 @@ type RegisterPropertyToPatient struct {
 	bun.BaseModel `bun:"register_property_to_patient,alias:register_property_to_patient"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 
-	ValueString string       `json:"valueString"`
+	ValueString string    `json:"valueString"`
 	ValueNumber int       `json:"valueNumber"`
 	ValueDate   time.Time `json:"valueDate"`
 	ValueOther  string    `json:"valueOther"`
@@ -23,5 +23,5 @@ type RegisterPropertyToPatient struct {
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
 	Patient            *Patient          `bun:"rel:has-one" json:"patients"`
 	PatientID          uuid.UUID         `bun:"type:uuid" json:"patientId"`
-	DeletedAt          time.Time         `bun:",soft_delete" json:"deletedAt"`
+	//DeletedAt          time.Time         `bun:",soft_delete" json:"deletedAt"`
 }

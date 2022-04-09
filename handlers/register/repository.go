@@ -39,7 +39,11 @@ func (r *Repository) get(queryFilter *httpHelper.QueryFilter) (*models.Register,
 		Relation("RegisterGroups.RegisterProperties", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property.register_property_order")
 		}).
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertyExamples").
 		Relation("RegisterGroups.RegisterProperties.ValueType").
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("register_property_set.register_property_set_order")
+		}).
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets.RegisterPropertyOthers").
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_radio.register_property_radio_order")

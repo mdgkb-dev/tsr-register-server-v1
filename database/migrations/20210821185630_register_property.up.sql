@@ -7,6 +7,7 @@ create table register_property
     value_type_id uuid
         references value_type,
     with_other boolean default false,
+    with_dates boolean default false,
     register_group_id uuid references register_group on delete cascade,
     tag varchar
 );

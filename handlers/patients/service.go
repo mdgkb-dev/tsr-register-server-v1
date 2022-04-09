@@ -165,7 +165,12 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	err = registerPropertyToPatient.CreateService(s.repository.getDB()).UpsertMany(item.RegisterPropertyToPatient)
+	registerPropertyToPatientService := registerPropertyToPatient.CreateService(s.repository.getDB())
+	err = registerPropertyToPatientService.UpsertMany(item.RegisterPropertyToPatient)
+	if err != nil {
+		return err
+	}
+	err = registerPropertyToPatientService.DeleteMany(item.RegisterPropertyToPatientForDelete)
 	if err != nil {
 		return err
 	}

@@ -27,6 +27,7 @@ func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
 func (r *Repository) upsertMany(items []*models.RegisterPropertySetToPatient) (err error) {
 	_, err = r.db.NewInsert().On("conflict (id) do update").
 		Set("register_property_set_id = EXCLUDED.register_property_set_id").
+		Set("prop_with_date_id = EXCLUDED.prop_with_date_id").
 		Model(&items).
 		Exec(r.ctx)
 	return err
