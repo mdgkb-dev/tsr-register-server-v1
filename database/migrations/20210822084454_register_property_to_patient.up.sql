@@ -9,10 +9,14 @@ create table register_property_to_patient
     value_date date,
     register_property_radio_id uuid
         constraint "FK_7e029f3d1c51de39d4a6fa79825"
-        references register_property_radio,
+        references register_property_radio
+        on delete cascade
+            on update cascade,
     register_property_id uuid not null
         constraint "FK_94ad51b950a805160948c8540ef"
-        references register_property,
+        references register_property
+    on delete cascade
+        on update cascade,
     patient_id uuid not null
         constraint "FK_607312bf055d7e060c75b151b6f"
         references patients
