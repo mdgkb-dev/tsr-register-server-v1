@@ -41,6 +41,7 @@ func (r *Repository) upsertMany(items models.RegisterPropertySets) (err error) {
 		Model(&items).
 		Set(`name = EXCLUDED.name`).
 		Set(`register_property_id = EXCLUDED.register_property_id`).
+		Set(`register_property_set_order = EXCLUDED.register_property_set_order`).
 		Exec(r.ctx)
 	return err
 }

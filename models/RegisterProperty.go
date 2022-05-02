@@ -10,7 +10,7 @@ type RegisterProperty struct {
 	ID              uuid.UUID      `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name            string         `json:"name"`
 	ShortName       string         `json:"shortName"`
-	ColWidth        string         `json:"colWidth"`
+	ColWidth        int            `json:"colWidth"`
 	WithOther       bool           `json:"withOther"`
 	WithDates       bool           `json:"withDates"`
 	Tag             string         `json:"tag"`

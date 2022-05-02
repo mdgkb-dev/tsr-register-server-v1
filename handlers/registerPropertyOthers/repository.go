@@ -43,6 +43,7 @@ func (r *Repository) upsertMany(items models.RegisterPropertyOthers) (err error)
 		Set(`register_property_id = EXCLUDED.register_property_id`).
 		Set(`register_property_radio_id = EXCLUDED.register_property_radio_id`).
 		Set(`register_property_set_id = EXCLUDED.register_property_set_id`).
+		Set(`register_property_others_order = EXCLUDED.register_property_others_order`).
 		Exec(r.ctx)
 	return err
 }

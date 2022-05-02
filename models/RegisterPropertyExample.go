@@ -11,6 +11,7 @@ type RegisterPropertyExample struct {
 	Name               string            `json:"name"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
+	Order              int               `bun:"register_property_example_order" json:"order"`
 }
 
 type RegisterPropertyExamples []*RegisterPropertyExample
