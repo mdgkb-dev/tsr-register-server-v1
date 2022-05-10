@@ -3,13 +3,19 @@ package models
 import (
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
+	"time"
 )
 
 type Drug struct {
 	bun.BaseModel `bun:"drugs,alias:drugs"`
 	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
-
+	NameMNN       string    `bun:"name_mnn" json:"nameMNN"`
+	//ReportName            string         `json:"reportName"`
+	Form                  string         `json:"form"`
+	Doze                  string         `json:"doze"`
+	Registered            bool           `json:"registered"`
+	DateRegistration      time.Time      `json:"dateRegistration"`
 	DrugRegimens          []*DrugRegimen `bun:"rel:has-many" json:"drugRegimens"`
 	DrugRegimensForDelete []string       `bun:"-" json:"drugRegimensForDelete"`
 
