@@ -33,7 +33,7 @@ func (r *Repository) getAll(diagnosisIds []uuid.UUID) ([]*models.Drug, error) {
 		q.Join("JOIN drugs_diagnosis ON drugs_diagnosis.drug_id = drugs.id").
 			Where("drugs_diagnosis.mkb_diagnosis_id in (?)", bun.In(diagnosisIds))
 	}
-	err := q.Scan(r.ctx)
+	err := q.Order("drugs.name").Scan(r.ctx)
 	return items, err
 }
 

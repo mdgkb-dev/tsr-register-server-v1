@@ -10,10 +10,10 @@ else
 	main := cmd/server/main.go
 endif
 
-run:
+run: migrate
 	reflex -r '\.go' -s -- sh -c "go run $(main)"
 
-run_cold:
+run_cold: migrate
 	go run $(main)
 
 migrate:
@@ -38,3 +38,26 @@ drop_database:
 
 migrate_init:
 	go run database/*.go -action=init
+
+
+#####
+#GIT#
+#####
+
+git_push: git_commit
+	git push -u origin HEAD
+
+git_commit:
+	git pull origin develop
+	git add .
+	git commit -m "$m"
+
+git_merge: git_push
+	git checkout develop
+	git pull
+	git merge @{-1}
+	git push
+
+# example: make git_feature n=1
+git_feature:
+	git flow feature start PORTAL-$n
