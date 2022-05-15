@@ -43,7 +43,7 @@ func (s *Service) UpsertMany(items models.RegisterPropertySets) error {
 		return err
 	}
 	items.SetIdForChildren()
-	registerPropertyOthersService := registerPropertyOthers.CreateService(s.repository.getDB())
+	registerPropertyOthersService := registerPropertyOthers.CreateService(s.repository.getDB(), s.helper)
 	err = registerPropertyOthersService.UpsertMany(items.GetRegisterPropertyOthers())
 	if err != nil {
 		return err

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"github.com/pro-assistance/pro-assister/uploadHelper"
 	"time"
 
 	"github.com/google/uuid"

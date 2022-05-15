@@ -2,6 +2,7 @@ package xlsx
 
 import (
 	"context"
+	"github.com/pro-assistance/pro-assister/helper"
 	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type IHandler interface {
-	RegisterQuery(c *gin.Context) error
+	RegisterQuery(c *gin.Context)
 }
 
 type IXlsxService interface {
@@ -18,7 +19,7 @@ type IXlsxService interface {
 }
 
 type IService interface {
-	GetRegisterQuery(id *string) (*models.RegisterQuery, error)
+	GetRegisterQuery(id string) (*models.RegisterQuery, error)
 }
 
 type IRepository interface {
@@ -28,15 +29,18 @@ type IRepository interface {
 type Handler struct {
 	service     IService
 	xlsxService IXlsxService
+	helper      *helper.Helper
 }
 
 type Service struct {
 	repository IRepository
+	helper     *helper.Helper
 }
 
 type Repository struct {
-	db  *bun.DB
-	ctx context.Context
+	db     *bun.DB
+	ctx    context.Context
+	helper *helper.Helper
 }
 
 type XlsxService struct {

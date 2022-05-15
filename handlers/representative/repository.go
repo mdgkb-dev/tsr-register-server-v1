@@ -1,7 +1,6 @@
 package representative
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -16,7 +15,7 @@ func (r *Repository) create(item *models.Representative) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.RepresentativesWithCount, err error) {
+func (r *Repository) getAll() (items models.RepresentativesWithCount, err error) {
 	query := r.db.NewSelect().
 		Model(&items.Representatives).
 		Relation("Human.Documents.DocumentType").
@@ -26,8 +25,8 @@ func (r *Repository) getAll(queryFilter *httpHelper.QueryFilter) (items models.R
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Order("human.surname")
 
-	httpHelper.CreateFilter(query, queryFilter.FilterModels)
-	httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
+	//httpHelper.CreateFilter(query, queryFilter.FilterModels)
+	//httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }

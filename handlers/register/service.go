@@ -4,7 +4,7 @@ import (
 	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerGroup"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -14,11 +14,11 @@ func (s *Service) Create(item *models.Register) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = registerGroup.CreateService(s.repository.getDB()).UpsertMany(item.RegisterGroups)
+	err = registerGroup.CreateService(s.repository.getDB(), s.helper).UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
 	}
-	err = registerDiagnosis.CreateService(s.repository.getDB()).CreateMany(item.RegisterDiagnosis)
+	err = registerDiagnosis.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RegisterDiagnosis)
 	if err != nil {
 		return err
 	}
@@ -33,8 +33,8 @@ func (s *Service) GetAll(userID uuid.UUID) ([]*models.Register, error) {
 	return items, nil
 }
 
-func (s *Service) Get(queryFilter *httpHelper.QueryFilter) (*models.Register, error) {
-	item, err := s.repository.get(queryFilter)
+func (s *Service) Get(id string) (*models.Register, error) {
+	item, err := s.repository.get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (s *Service) Update(item *models.Register) error {
 	}
 	item.SetIdForChildren()
 
-	registerGroupService := registerGroup.CreateService(s.repository.getDB())
+	registerGroupService := registerGroup.CreateService(s.repository.getDB(), s.helper)
 	err = registerGroupService.UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func (s *Service) Update(item *models.Register) error {
 		return err
 	}
 
-	registerDiagnosisService := registerDiagnosis.CreateService(s.repository.getDB())
+	registerDiagnosisService := registerDiagnosis.CreateService(s.repository.getDB(), s.helper)
 	err = registerDiagnosisService.UpsertMany(item.RegisterDiagnosis)
 	if err != nil {
 		return err

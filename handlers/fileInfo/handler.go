@@ -1,7 +1,6 @@
 package fileInfo
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +9,7 @@ import (
 func (h *Handler) Download(c *gin.Context) {
 	id := c.Param("id")
 	item, err := h.service.Get(&id)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	fullPath := h.filesService.GetFullPath(&item.FileSystemPath)

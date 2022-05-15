@@ -2,7 +2,6 @@ package mkb
 
 import (
 	"fmt"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +9,7 @@ import (
 
 func (h *Handler) GetAllClasses(c *gin.Context) {
 	items, err := h.service.GetAllClasses()
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -27,17 +26,17 @@ func (h *Handler) Update(c *gin.Context) {
 		}
 		nameName := Name{}
 		err := c.Bind(&nameName)
-		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
 		fmt.Println(nameName.Name)
 		err = h.service.UpdateName(&id, &nameName.Name, &mkbType)
-		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
 	} else {
 		err := h.service.UpdateRelevant(&id, &mkbType)
-		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
 	}
@@ -47,7 +46,7 @@ func (h *Handler) Update(c *gin.Context) {
 func (h *Handler) GetGroupByClassId(c *gin.Context) {
 	classId := c.Param("classId")
 	items, err := h.service.GetGroupByClassId(&classId)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -56,7 +55,7 @@ func (h *Handler) GetGroupByClassId(c *gin.Context) {
 func (h *Handler) GetGroupChildrens(c *gin.Context) {
 	groupId := c.Param("groupId")
 	items, err := h.service.GetGroupChildrens(&groupId)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -65,7 +64,7 @@ func (h *Handler) GetGroupChildrens(c *gin.Context) {
 func (h *Handler) GetSubGroupChildrens(c *gin.Context) {
 	subGroupId := c.Param("subGroupId")
 	items, err := h.service.GetGroupByClassId(&subGroupId)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -77,7 +76,7 @@ func (h *Handler) GetGroupsBySearch(c *gin.Context) {
 		c.JSON(http.StatusOK, nil)
 	}
 	items, err := h.service.GetGroupsBySearch(&query)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -89,7 +88,7 @@ func (h *Handler) GetDiagnosisBySearch(c *gin.Context) {
 		c.JSON(http.StatusOK, nil)
 	}
 	items, err := h.service.GetDiagnosisBySearch(&query)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -98,7 +97,7 @@ func (h *Handler) GetDiagnosisBySearch(c *gin.Context) {
 func (h *Handler) GetDiagnosisByGroupId(c *gin.Context) {
 	groupId := c.Param("groupId")
 	items, err := h.service.GetDiagnosisByGroupId(&groupId)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -107,7 +106,7 @@ func (h *Handler) GetDiagnosisByGroupId(c *gin.Context) {
 func (h *Handler) GetSubDiagnosisByDiagnosisId(c *gin.Context) {
 	diagnosisId := c.Param("diagnosisId")
 	items, err := h.service.GetSubDiagnosisByDiagnosisId(&diagnosisId)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)

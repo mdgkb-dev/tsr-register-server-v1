@@ -4,17 +4,12 @@ import (
 	handler "mdgkb/tsr-tegister-server-v1/handlers/auth"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v7"
-	"github.com/uptrace/bun"
-
 	_ "github.com/go-pg/pg/v10/orm"
 )
 
 // Init func
-func Init(r *gin.RouterGroup, db *bun.DB, redisClient *redis.Client) {
-	var h = handler.CreateHandler(db, redisClient)
+func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.POST("/login", h.Login)
-	r.POST("/logout", h.Logout)
 	r.POST("/register", h.Register)
 	r.GET("/does-login-exist/:login", h.DoesLoginExist)
 	r.GET("/me", h.Me)

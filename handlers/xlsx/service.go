@@ -5,6 +5,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
-func (s *Service) GetRegisterQuery(id *string) (*models.RegisterQuery, error) {
-	return registerQuery.CreateService(s.repository.getDB()).Get(id)
+func (s *Service) GetRegisterQuery(id string) (*models.RegisterQuery, error) {
+	return registerQuery.CreateService(s.repository.getDB(), s.helper).Get(id)
 }

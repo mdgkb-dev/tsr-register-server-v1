@@ -2,7 +2,7 @@ package register
 
 import (
 	"github.com/google/uuid"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -26,7 +26,7 @@ func (r *Repository) getAll(userID uuid.UUID) (items []*models.Register, err err
 	return items, err
 }
 
-func (r *Repository) get(queryFilter *httpHelper.QueryFilter) (*models.Register, error) {
+func (r *Repository) get(id string) (*models.Register, error) {
 	item := models.Register{}
 	err := r.db.NewSelect().
 		Model(&item).
@@ -52,17 +52,18 @@ func (r *Repository) get(queryFilter *httpHelper.QueryFilter) (*models.Register,
 			return q.Order("register_property_others.register_property_others_order")
 		}).
 		Relation("RegisterToPatient.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic").Offset(*queryFilter.Pagination.Offset).
-				Limit(*queryFilter.Pagination.Limit)
+			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic")
+			//Offset(*queryFilter.Pagination.Offset).
+			//Limit(*queryFilter.Pagination.Limit)
 		}).
 		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
 		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
 		Relation("RegisterToPatient.Patient.RegisterPropertySetToPatient.RegisterPropertySet").
-		Where("register.id = ?", *queryFilter.ID).Scan(r.ctx)
+		Where("register.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err
 	}
-	item.RegisterToPatientCount, err = r.db.NewSelect().Model((*models.RegisterToPatient)(nil)).Where("register_id = ?", *queryFilter.ID).Count(r.ctx)
+	item.RegisterToPatientCount, err = r.db.NewSelect().Model((*models.RegisterToPatient)(nil)).Where("register_id = ?", id).Count(r.ctx)
 	return &item, err
 }
 

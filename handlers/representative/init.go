@@ -2,8 +2,7 @@ package representative
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"github.com/pro-assistance/pro-assister/helper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
 
@@ -12,15 +11,15 @@ import (
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context) error
-	Get(c *gin.Context) error
-	Create(c *gin.Context) error
-	Update(c *gin.Context) error
-	Delete(c *gin.Context) error
+	GetAll(c *gin.Context)
+	Get(c *gin.Context)
+	Create(c *gin.Context)
+	Update(c *gin.Context)
+	Delete(c *gin.Context)
 }
 
 type IService interface {
-	GetAll(filter *httpHelper.QueryFilter) (models.RepresentativesWithCount, error)
+	GetAll() (models.RepresentativesWithCount, error)
 	GetOnlyNames() (models.RepresentativesWithCount, error)
 	Get(*string) (*models.Representative, error)
 	Create(*models.Representative) error
@@ -33,7 +32,7 @@ type IService interface {
 type IRepository interface {
 	getDB() *bun.DB
 	create(*models.Representative) error
-	getAll(*httpHelper.QueryFilter) (models.RepresentativesWithCount, error)
+	getAll() (models.RepresentativesWithCount, error)
 	get(*string) (*models.Representative, error)
 	update(*models.Representative) error
 	delete(*string) error
@@ -48,42 +47,45 @@ type IFilesService interface {
 
 type Handler struct {
 	service      IService
+	helper       *helper.Helper
 	filesService IFilesService
 }
 
 type Service struct {
 	repository IRepository
+	helper     *helper.Helper
 }
 
 type Repository struct {
-	db  *bun.DB
-	ctx context.Context
+	db     *bun.DB
+	ctx    context.Context
+	helper *helper.Helper
 }
 
 type FilesService struct {
-	uploader uploadHelper.Uploader
+	helper *helper.Helper
 }
 
-func CreateHandler(db *bun.DB, uploader *uploadHelper.Uploader) *Handler {
-	repo := NewRepository(db)
-	service := NewService(repo)
-	filesService := NewFilesService(uploader)
-	return NewHandler(service, filesService)
+func CreateHandler(db *bun.DB, helper *helper.Helper) *Handler {
+	repo := NewRepository(db, helper)
+	service := NewService(repo, helper)
+	filesService := NewFilesService(helper)
+	return NewHandler(service, filesService, helper)
 }
 
 // NewHandler constructor
-func NewHandler(service IService, filesService IFilesService) *Handler {
-	return &Handler{service: service, filesService: filesService}
+func NewHandler(s IService, filesService IFilesService, helper *helper.Helper) *Handler {
+	return &Handler{service: s, filesService: filesService, helper: helper}
 }
 
-func NewService(repository IRepository) *Service {
-	return &Service{repository: repository}
+func NewService(repository IRepository, helper *helper.Helper) *Service {
+	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB) *Repository {
-	return &Repository{db: db, ctx: context.Background()}
+func NewRepository(db *bun.DB, helper *helper.Helper) *Repository {
+	return &Repository{db: db, ctx: context.Background(), helper: helper}
 }
 
-func NewFilesService(uploader *uploadHelper.Uploader) *FilesService {
-	return &FilesService{uploader: *uploader}
+func NewFilesService(helper *helper.Helper) *FilesService {
+	return &FilesService{helper: helper}
 }

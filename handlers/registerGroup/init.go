@@ -3,6 +3,7 @@ package registerGroup
 import (
 	"context"
 	"github.com/google/uuid"
+	"github.com/pro-assistance/pro-assister/helper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -10,11 +11,11 @@ import (
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context) error
-	Get(c *gin.Context) error
-	Create(c *gin.Context) error
-	Update(c *gin.Context) error
-	Delete(c *gin.Context) error
+	GetAll(c *gin.Context)
+	Get(c *gin.Context)
+	Create(c *gin.Context)
+	Update(c *gin.Context)
+	Delete(c *gin.Context)
 }
 
 type IService interface {
@@ -42,38 +43,39 @@ type IRepository interface {
 
 type Handler struct {
 	service IService
+	helper  *helper.Helper
 }
-
 type Service struct {
 	repository IRepository
+	helper     *helper.Helper
 }
 
 type Repository struct {
-	db  *bun.DB
-	ctx context.Context
+	db     *bun.DB
+	ctx    context.Context
+	helper *helper.Helper
 }
 
-func CreateHandler(db *bun.DB) *Handler {
-	repo := NewRepository(db)
-	service := NewService(repo)
-	return NewHandler(service)
+func CreateHandler(db *bun.DB, helper *helper.Helper) *Handler {
+	repo := NewRepository(db, helper)
+	service := NewService(repo, helper)
+	return NewHandler(service, helper)
 }
-
-func CreateService(db *bun.DB) *Service {
-	repo := NewRepository(db)
-	return NewService(repo)
-}
-
 
 // NewHandler constructor
-func NewHandler(s IService) *Handler {
-	return &Handler{service: s}
+func NewHandler(s IService, helper *helper.Helper) *Handler {
+	return &Handler{service: s, helper: helper}
 }
 
-func NewService(repository IRepository) *Service {
-	return &Service{repository: repository}
+func CreateService(db *bun.DB, helper *helper.Helper) *Service {
+	repo := NewRepository(db, helper)
+	return NewService(repo, helper)
 }
 
-func NewRepository(db *bun.DB) *Repository {
-	return &Repository{db: db, ctx: context.Background()}
+func NewService(repository IRepository, helper *helper.Helper) *Service {
+	return &Service{repository: repository, helper: helper}
+}
+
+func NewRepository(db *bun.DB, helper *helper.Helper) *Repository {
+	return &Repository{db: db, ctx: context.Background(), helper: helper}
 }

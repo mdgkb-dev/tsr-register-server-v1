@@ -1,7 +1,7 @@
 package models
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/uploadHelper"
+	"github.com/pro-assistance/pro-assister/uploadHelper"
 	"time"
 
 	"github.com/google/uuid"
@@ -18,9 +18,9 @@ type Document struct {
 	DeletedAt      time.Time     `bun:",soft_delete" json:"deletedAt"`
 
 	DocumentFieldValues          []*DocumentFieldValue `bun:"rel:has-many" json:"documentFieldValues"`
-	DocumentFieldValuesForDelete []uuid.UUID              `bun:"-" json:"documentFieldValuesForDelete"`
+	DocumentFieldValuesForDelete []uuid.UUID           `bun:"-" json:"documentFieldValuesForDelete"`
 	FileInfoToDocument           []*FileInfoToDocument `bun:"rel:has-many" json:"fileInfoToDocument"`
-	FileInfoToDocumentForDelete  []uuid.UUID              `bun:"-" json:"fileInfoToDocumentForDelete"`
+	FileInfoToDocumentForDelete  []uuid.UUID           `bun:"-" json:"fileInfoToDocumentForDelete"`
 }
 
 func (item *Document) SetFilePath(fileId *string) *string {

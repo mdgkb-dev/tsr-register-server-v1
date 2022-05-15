@@ -2,7 +2,7 @@ package register
 
 import (
 	"github.com/gin-gonic/gin"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 )
@@ -10,11 +10,11 @@ import (
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Register
 	err := c.Bind(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = h.service.Create(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
@@ -22,20 +22,21 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) GetAll(c *gin.Context) {
 	userId, err := models.GetUserID(c)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	items, err := h.service.GetAll(*userId)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
 }
 
 func (h *Handler) Get(c *gin.Context) {
-	queryFilter, err := httpHelper.CreateQueryFilter(c)
-	item, err := h.service.Get(queryFilter)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	id := c.Param("id")
+
+	item, err := h.service.Get(id)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
@@ -44,7 +45,7 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	err := h.service.Delete(&id)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{})
@@ -53,11 +54,11 @@ func (h *Handler) Delete(c *gin.Context) {
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Register
 	err := c.Bind(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = h.service.Update(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
@@ -65,7 +66,7 @@ func (h *Handler) Update(c *gin.Context) {
 
 func (h *Handler) GetValueTypes(c *gin.Context) {
 	items, err := h.service.GetValueTypes()
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
@@ -74,15 +75,15 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 func (h *Handler) GetFlatXlsx(c *gin.Context) {
 	//var item models.Register
 	//err := c.Bind(&item)
-	//if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 	//	return
 	//}
 	//err = h.service.Update(&item)
-	//if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 	//	return
 	//}
 	//excelDoc, err := h.helper.XLSX.CreateFile()
-	//if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 	//	return
 	//}
 	//downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")

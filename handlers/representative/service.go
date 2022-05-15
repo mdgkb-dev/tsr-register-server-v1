@@ -3,13 +3,11 @@ package representative
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
-	"mdgkb/tsr-tegister-server-v1/helpers"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
 func (s *Service) Create(item *models.Representative) error {
-	err := human.CreateService(s.repository.getDB()).Create(item.Human)
+	err := human.CreateService(s.repository.getDB(), s.helper).Create(item.Human)
 	if err != nil {
 		return err
 	}
@@ -19,15 +17,15 @@ func (s *Service) Create(item *models.Representative) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = representativeToPatient.CreateService(s.repository.getDB()).CreateMany(item.RepresentativeToPatient)
+	err = representativeToPatient.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
 	}
 	return err
 }
 
-func (s *Service) GetAll(queryFilter *httpHelper.QueryFilter) (models.RepresentativesWithCount, error) {
-	return s.repository.getAll(queryFilter)
+func (s *Service) GetAll() (models.RepresentativesWithCount, error) {
+	return s.repository.getAll()
 }
 
 func (s *Service) GetOnlyNames() (models.RepresentativesWithCount, error) {
@@ -43,7 +41,7 @@ func (s *Service) Get(id *string) (*models.Representative, error) {
 }
 
 func (s *Service) Update(item *models.Representative) error {
-	err := human.CreateService(s.repository.getDB()).Update(item.Human)
+	err := human.CreateService(s.repository.getDB(), s.helper).Update(item.Human)
 	if err != nil {
 		return err
 	}
@@ -54,7 +52,7 @@ func (s *Service) Update(item *models.Representative) error {
 	}
 	item.SetIdForChildren()
 
-	representativeToPatientService := representativeToPatient.CreateService(s.repository.getDB())
+	representativeToPatientService := representativeToPatient.CreateService(s.repository.getDB(), s.helper)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
@@ -71,7 +69,7 @@ func (s *Service) Delete(id *string) error {
 }
 
 func (s *Service) GetBySearch(query *string) ([]*models.Representative, error) {
-	queryRu := helpers.TranslitToRu(*query)
+	queryRu := s.helper.Util.TranslitToRu(*query)
 	items, err := s.repository.getBySearch(&queryRu)
 	if err != nil {
 		return nil, err

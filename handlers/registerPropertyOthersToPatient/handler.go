@@ -1,7 +1,6 @@
 package registerPropertyOthersToPatient
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
@@ -11,7 +10,7 @@ import (
 func (h *Handler) Create(c *gin.Context) {
 	var item models.RegisterPropertyOthersToPatient
 	err := c.Bind(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)

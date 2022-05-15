@@ -1,16 +1,12 @@
 package xlsx
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/xlsx"
-	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
-	"github.com/uptrace/bun"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/xlsx"
 )
 
 // Init func
-func Init(r *gin.RouterGroup, db *bun.DB, xlsxHelper xlsxHelper.IXlsxHelper) {
-	var h = handler.CreateHandler(db, xlsxHelper)
+func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.GET("/register-query/:id", h.RegisterQuery)
 }

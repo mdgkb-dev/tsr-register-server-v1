@@ -2,7 +2,8 @@ package registerQuery
 
 import (
 	"github.com/gin-gonic/gin"
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
+
+	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 	"time"
@@ -12,13 +13,13 @@ func (h *Handler) Create(c *gin.Context) {
 	var query models.RegisterQuery
 	err := c.Bind(&query)
 
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
 	err = h.service.Create(&query)
 
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
@@ -28,7 +29,7 @@ func (h *Handler) Create(c *gin.Context) {
 func (h *Handler) GetAll(c *gin.Context) {
 	queries, err := h.service.GetAll()
 
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
@@ -39,7 +40,7 @@ func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
 	query, err := h.service.Get(id)
 
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
@@ -49,7 +50,7 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	err := h.service.Delete(id)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{})
@@ -59,13 +60,13 @@ func (h *Handler) Update(c *gin.Context) {
 	var query models.RegisterQuery
 	err := c.Bind(&query)
 
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
 	err = h.service.Update(&query)
 
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
@@ -75,16 +76,16 @@ func (h *Handler) Update(c *gin.Context) {
 func (h *Handler) Execute(c *gin.Context) {
 	id := c.Param("id")
 	registerQuery, err := h.service.Get(id)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = h.service.Execute(registerQuery)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	registerQuery.SortKeys()
-	file, err := h.helper.XLSX.CreateFile(registerQuery.Keys, registerQuery.Data)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	file, err := xlsxHelper.NewXlsxHelper().CreateFile(registerQuery.Keys, registerQuery.Data)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")

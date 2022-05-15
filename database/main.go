@@ -4,8 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/pro-assistance/pro-assister/config"
 	"log"
-	"mdgkb/tsr-tegister-server-v1/config"
+
 	"mdgkb/tsr-tegister-server-v1/database/connect"
 	"mdgkb/tsr-tegister-server-v1/database/migrations"
 	"mdgkb/tsr-tegister-server-v1/database/seeding"
@@ -60,5 +61,5 @@ func getDb() *bun.DB {
 		log.Fatal("cannot load config:", err)
 	}
 
-	return connect.InitDB(conf)
+	return connect.InitDB(conf.DB)
 }

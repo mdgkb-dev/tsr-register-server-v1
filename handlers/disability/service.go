@@ -12,7 +12,7 @@ func (s *Service) CreateMany(items []*models.Disability) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := period.CreateService(s.repository.getDB()).CreateMany(models.GetPeriodsFromDisability(items))
+	err := period.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetPeriodsFromDisability(items))
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func (s *Service) CreateMany(items []*models.Disability) error {
 	if err != nil {
 		return err
 	}
-	err = edv.CreateService(s.repository.getDB()).CreateMany(models.GetEdvs(items))
+	err = edv.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetEdvs(items))
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func (s *Service) UpsertMany(items []*models.Disability) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := period.CreateService(s.repository.getDB()).UpsertMany(models.GetPeriodsFromDisability(items))
+	err := period.CreateService(s.repository.getDB(), s.helper).UpsertMany(models.GetPeriodsFromDisability(items))
 	if err != nil {
 		return err
 	}
@@ -41,7 +41,7 @@ func (s *Service) UpsertMany(items []*models.Disability) error {
 	if err != nil {
 		return err
 	}
-	edvService := edv.CreateService(s.repository.getDB())
+	edvService := edv.CreateService(s.repository.getDB(), s.helper)
 	err = edvService.UpsertMany(models.GetEdvs(items))
 	if err != nil {
 		return err

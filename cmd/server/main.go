@@ -5,30 +5,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	_ "github.com/go-pg/pg/v10/orm"
+	"github.com/pro-assistance/pro-assister/config"
+	helperPack "github.com/pro-assistance/pro-assister/helper"
 	"log"
-	"mdgkb/tsr-tegister-server-v1/config"
 	"mdgkb/tsr-tegister-server-v1/database/connect"
 	"mdgkb/tsr-tegister-server-v1/routing"
 	"net/http"
-
-	_ "github.com/go-pg/pg/v10/orm"
 )
-
-func CORSMiddleware() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		//c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		//c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	}
-}
 
 func main() {
 	conf, err := config.LoadConfig()
@@ -37,15 +21,15 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(CORSMiddleware())
 
-	db := connect.InitDB(conf)
+	db := connect.InitDB(conf.DB)
 	defer db.Close()
 	redis := connect.InitRedis(conf)
-	routing.Init(router, db, redis, *conf)
+	helper := helperPack.NewHelper(*conf)
+	routing.Init(router, db, redis, helper)
 
 	err = http.ListenAndServe(fmt.Sprintf(":%s", conf.ServerPort), router)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 }

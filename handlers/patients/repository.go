@@ -11,7 +11,7 @@ func (r *Repository) getDB() *bun.DB {
 }
 
 func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.HTTP.CreateQueryFilter(c)
+	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}
@@ -42,13 +42,9 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterToPatient.Register").
 		Relation("CreatedBy").
-		Relation("UpdatedBy").
-		Join("JOIN regions_users ON patients.region_id = regions_users.region_id AND regions_users.user_id = ?", r.queryFilter.UserID)
-
-	r.helper.HTTP.CreateWithDeletedQuery(query, r.queryFilter.WithDeleted)
-	r.helper.HTTP.CreatePaginationQuery(query, r.queryFilter.Pagination)
-	r.helper.HTTP.CreateFilter(query, r.queryFilter.FilterModels)
-	r.helper.HTTP.CreateOrder(query, r.queryFilter.SortModels, []string{"human.surname", "human.name"})
+		Relation("UpdatedBy")
+	//Join("JOIN regions_users ON patients.region_id = regions_users.region_id AND regions_users.user_id = ?")
+	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }

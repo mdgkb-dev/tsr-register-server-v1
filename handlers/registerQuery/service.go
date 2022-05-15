@@ -13,7 +13,7 @@ func (s *Service) Create(query *models.RegisterQuery) error {
 	}
 
 	query.SetIdForChildren()
-	err = registerQueryToRegisterProperty.CreateService(s.repository.getDB()).CreateMany(query.RegisterQueryToRegisterProperty)
+	err = registerQueryToRegisterProperty.CreateService(s.repository.getDB(), s.helper).CreateMany(query.RegisterQueryToRegisterProperty)
 	return err
 }
 
@@ -43,7 +43,7 @@ func (s *Service) Update(query *models.RegisterQuery) error {
 	}
 
 	query.SetIdForChildren()
-	registerQueryToRegisterPropertyService := registerQueryToRegisterProperty.CreateService(s.repository.getDB())
+	registerQueryToRegisterPropertyService := registerQueryToRegisterProperty.CreateService(s.repository.getDB(), s.helper)
 	err = registerQueryToRegisterPropertyService.UpsertMany(query.RegisterQueryToRegisterProperty)
 
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 
 func (s *HistoryService) Create(item *models.Patient, requestType models.RequestType) error {
 	historyItem := models.History{RequestType: &requestType}
-	err := history.CreateService(s.repository.getDB()).Create(&historyItem)
+	err := history.CreateService(s.repository.getDB(), s.helper).Create(&historyItem)
 	if err != nil {
 		return err
 	}

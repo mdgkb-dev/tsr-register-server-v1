@@ -1,7 +1,6 @@
 package xlsx
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"net/http"
 	"time"
 
@@ -11,7 +10,7 @@ import (
 func (h *Handler) RegisterQuery(c *gin.Context) {
 	//query, err := h.service.GetRegisterQuery(httpHelper.GetID(c))
 	excelDoc, err := h.xlsxService.GetFile()
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")

@@ -11,7 +11,7 @@ func (s *Service) Create(item *models.User) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = registersUsers.CreateService(s.repository.getDB()).CreateMany(item.RegistersUsers)
+	err = registersUsers.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RegistersUsers)
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (s *Service) Update(item *models.User) error {
 	}
 	item.SetIdForChildren()
 
-	registersUsersService := registersUsers.CreateService(s.repository.getDB())
+	registersUsersService := registersUsers.CreateService(s.repository.getDB(), s.helper)
 	err = registersUsersService.UpsertMany(item.RegistersUsers)
 	if err != nil {
 		return err

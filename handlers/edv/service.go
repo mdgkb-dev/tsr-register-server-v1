@@ -10,12 +10,12 @@ func (s *Service) CreateMany(items []*models.Edv) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := period.CreateService(s.repository.getDB()).CreateMany(models.GetPeriodsFromEdv(items))
+	err := period.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetPeriodsFromEdv(items))
 	if err != nil {
 		return err
 	}
 	models.SetPeriodIDToEdv(items)
-	err = fileInfo.CreateService(s.repository.getDB()).CreateMany(models.GetFilesFromEdv(items))
+	err = fileInfo.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetFilesFromEdv(items))
 	if err != nil {
 		return err
 	}
@@ -27,12 +27,12 @@ func (s *Service) UpsertMany(items []*models.Edv) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := period.CreateService(s.repository.getDB()).UpsertMany(models.GetPeriodsFromEdv(items))
+	err := period.CreateService(s.repository.getDB(), s.helper).UpsertMany(models.GetPeriodsFromEdv(items))
 	if err != nil {
 		return err
 	}
 	models.SetPeriodIDToEdv(items)
-	err = fileInfo.CreateService(s.repository.getDB()).UpsertMany(models.GetFilesFromEdv(items))
+	err = fileInfo.CreateService(s.repository.getDB(), s.helper).UpsertMany(models.GetFilesFromEdv(items))
 	if err != nil {
 		return err
 	}

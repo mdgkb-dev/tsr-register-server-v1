@@ -2,6 +2,7 @@ package human
 
 import (
 	"context"
+	"github.com/pro-assistance/pro-assister/helper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
@@ -29,11 +30,13 @@ type Handler struct {
 
 type Service struct {
 	repository IRepository
+	helper     *helper.Helper
 }
 
 type Repository struct {
-	db  *bun.DB
-	ctx context.Context
+	db     *bun.DB
+	ctx    context.Context
+	helper *helper.Helper
 }
 
 type IHistoryRepository interface {
@@ -54,17 +57,17 @@ type HistoryRepository struct {
 	ctx context.Context
 }
 
-func CreateService(db *bun.DB) *Service {
-	repo := NewRepository(db)
-	return NewService(repo)
+func CreateService(db *bun.DB, helper *helper.Helper) *Service {
+	repo := NewRepository(db, helper)
+	return NewService(repo, helper)
 }
 
-func NewService(repository IRepository) *Service {
-	return &Service{repository: repository}
+func NewService(repository IRepository, helper *helper.Helper) *Service {
+	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB) *Repository {
-	return &Repository{db: db, ctx: context.Background()}
+func NewRepository(db *bun.DB, helper *helper.Helper) *Repository {
+	return &Repository{db: db, ctx: context.Background(), helper: helper}
 }
 
 func CreateHistoryService(db *bun.DB) *HistoryService {

@@ -16,12 +16,12 @@ func (s *Service) CreateMany(items []*models.Document) error {
 	if err != nil {
 		return err
 	}
-	err = documentFieldValues.CreateService(s.repository.getDB()).CreateMany(models.GetDocumentsFiledValues(items))
+	err = documentFieldValues.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetDocumentsFiledValues(items))
 	if err != nil {
 		return err
 	}
 
-	err = fileInfoForDocument.CreateService(s.repository.getDB()).CreateMany(models.GetFileInfoToDocument(items))
+	err = fileInfoForDocument.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetFileInfoToDocument(items))
 	if err != nil {
 		return err
 	}
@@ -37,11 +37,11 @@ func (s *Service) UpsertMany(items []*models.Document) error {
 	if err != nil {
 		return err
 	}
-	err = documentFieldValues.CreateService(s.repository.getDB()).UpsertMany(models.GetDocumentsFiledValues(items))
+	err = documentFieldValues.CreateService(s.repository.getDB(), s.helper).UpsertMany(models.GetDocumentsFiledValues(items))
 	if err != nil {
 		return err
 	}
-	fileInfoForDocumentService := fileInfoForDocument.CreateService(s.repository.getDB())
+	fileInfoForDocumentService := fileInfoForDocument.CreateService(s.repository.getDB(), s.helper)
 	err = fileInfoForDocumentService.UpsertMany(models.GetFileInfoToDocument(items))
 	if err != nil {
 		return err

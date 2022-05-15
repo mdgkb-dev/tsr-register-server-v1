@@ -11,7 +11,7 @@ func (s *Service) CreateMany(items []*models.FileInfoToDocument) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := fileInfo.CreateService(s.repository.getDB()).CreateMany(models.GetFileInfoFileInfoToDocument(items))
+	err := fileInfo.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetFileInfoFileInfoToDocument(items))
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (s *Service) UpsertMany(items []*models.FileInfoToDocument) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := fileInfo.CreateService(s.repository.getDB()).UpsertMany(models.GetFileInfoFileInfoToDocument(items))
+	err := fileInfo.CreateService(s.repository.getDB(), s.helper).UpsertMany(models.GetFileInfoFileInfoToDocument(items))
 	if err != nil {
 		return err
 	}

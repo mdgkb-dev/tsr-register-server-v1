@@ -15,7 +15,7 @@ func (s *Service) CreateMany(items []*models.PatientDiagnosis) error {
 	if err != nil {
 		return err
 	}
-	err = patientDiagnosisAnamnesis.CreateService(s.repository.getDB()).CreateMany(models.GetPatientDiagnosisAnamnesis(items))
+	err = patientDiagnosisAnamnesis.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetPatientDiagnosisAnamnesis(items))
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func (s *Service) UpsertMany(items []*models.PatientDiagnosis) error {
 	if err != nil {
 		return err
 	}
-	patientDiagnosisAnamnesisService := patientDiagnosisAnamnesis.CreateService(s.repository.getDB())
+	patientDiagnosisAnamnesisService := patientDiagnosisAnamnesis.CreateService(s.repository.getDB(), s.helper)
 	err = patientDiagnosisAnamnesisService.UpsertMany(models.GetPatientDiagnosisAnamnesis(items))
 	if err != nil {
 		return err

@@ -1,7 +1,6 @@
 package representative
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/httpHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
@@ -10,24 +9,24 @@ import (
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Representative
-	files, err := httpHelper.GetForm(c, &item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	files, err := h.helper.HTTP.GetForm(c, &item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = item.FillModelInfoCreate(c)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = h.filesService.Upload(c, &item, files)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = item.FillModelInfoCreate(c)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = h.service.Create(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
@@ -37,35 +36,30 @@ func (h *Handler) GetAll(c *gin.Context) {
 	query := c.Query("query")
 	if query != "" {
 		items, err := h.service.GetBySearch(&query)
-		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
 		c.JSON(http.StatusOK, items)
 		return
 	}
-	queryFilter, err := httpHelper.CreateQueryFilter(c)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	if queryFilter.Pagination != nil {
-		items, err := h.service.GetAll(queryFilter)
-		if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
-			return
-		}
-		c.JSON(http.StatusOK, items)
-		return
-	}
-	items, err := h.service.GetOnlyNames()
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	//queryFilter, err := h.helper.SQL.CreateQueryFilter(c)
+	//if queryFilter.Pagination != nil {
+	items, err := h.service.GetAll()
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
+
+	//items, err := h.service.GetOnlyNames()
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
 }
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
 	item, err := h.service.Get(&id)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
@@ -74,7 +68,7 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	err := h.service.Delete(&id)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{})
@@ -82,21 +76,21 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Representative
-	files, err := httpHelper.GetForm(c, &item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	files, err := h.helper.HTTP.GetForm(c, &item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = item.FillModelInfoUpdate(c)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	err = h.filesService.Upload(c, &item, files)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 
 	err = h.service.Update(&item)
-	if httpHelper.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
