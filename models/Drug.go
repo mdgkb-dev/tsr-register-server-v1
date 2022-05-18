@@ -8,7 +8,7 @@ import (
 
 type Drug struct {
 	bun.BaseModel `bun:"drugs,alias:drugs"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
 	NameMNN       string    `bun:"name_mnn" json:"nameMNN"`
 	//ReportName            string         `json:"reportName"`

@@ -6,9 +6,9 @@ import (
 )
 
 type Patient struct {
-	bun.BaseModel `bun:"patients,alias:patients"`
+	bun.BaseModel `bun:"patients,select:patients_view,alias:patients_view"`
 	ModelInfo
-	ID      uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID      uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Human   *Human    `bun:"rel:belongs-to" json:"human"`
 	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
 

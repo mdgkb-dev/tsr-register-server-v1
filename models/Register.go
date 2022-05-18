@@ -6,13 +6,13 @@ import (
 )
 
 type Register struct {
-	bun.BaseModel                    `bun:"register,alias:register"`
-	ID                               uuid.UUID                  `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name                             string                     `json:"name"`
-	RegisterGroups          RegisterGroups `bun:"rel:has-many" json:"registerGroups"`
-	RegisterGroupsForDelete []uuid.UUID                   `bun:"-" json:"registerGroupsForDelete"`
-	RegisterDiagnosis                []*RegisterDiagnosis       `bun:"rel:has-many" json:"registerDiagnosis"`
-	RegisterDiagnosisForDelete       []string                   `bun:"-" json:"registerDiagnosisForDelete"`
+	bun.BaseModel              `bun:"register,alias:register"`
+	ID                         uuid.UUID            `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name                       string               `json:"name"`
+	RegisterGroups             RegisterGroups       `bun:"rel:has-many" json:"registerGroups"`
+	RegisterGroupsForDelete    []uuid.UUID          `bun:"-" json:"registerGroupsForDelete"`
+	RegisterDiagnosis          []*RegisterDiagnosis `bun:"rel:has-many" json:"registerDiagnosis"`
+	RegisterDiagnosisForDelete []string             `bun:"-" json:"registerDiagnosisForDelete"`
 
 	RegisterToPatient      []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
 	RegisterToPatientCount int                  `bun:"-" json:"registerToPatientCount"`
@@ -33,7 +33,7 @@ func (item *Register) SetIdForChildren() {
 
 type RegisterDiagnosis struct {
 	bun.BaseModel     `bun:"register_diagnosis,alias:register_diagnosis"`
-	ID                uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Register          *Register     `bun:"rel:belongs-to" json:"register"`
 	RegisterID        uuid.UUID     `bun:"type:uuid" json:"registerId"`
 	MkbDiagnosis      *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbDiagnosis"`

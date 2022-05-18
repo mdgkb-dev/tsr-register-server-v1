@@ -1,23 +1,21 @@
 ifeq ($(OS),Windows_NT)
-	database := .\database
 	migrations := .\database\migrations
 	cli := .\cmd\cli
 	main := .\cmd\server\main.go
 else
-	database := database/*.go
 	migrations := database/migrations/*.go
 	cli := cmd/cli/*.go
 	main := cmd/server/main.go
 endif
 
-run: migrate
+run:
 	reflex -r '\.go' -s -- sh -c "go run $(main)"
 
-run_cold: migrate
+run_cold:
 	go run $(main)
 
 migrate:
-	go run $(database) -mode=migration -action=migrate
+	go run $(main) -mode=migration -action=migrate
 
 migrate_create:
 	go run $(database) -mode=migration -action=create -name=${name}

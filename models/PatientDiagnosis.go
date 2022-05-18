@@ -9,7 +9,7 @@ import (
 
 type PatientDiagnosis struct {
 	bun.BaseModel     `bun:"patient_diagnosis,alias:patient_diagnosis"`
-	ID                uuid.UUID        `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                uuid.UUID        `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Patient           *Patient         `bun:"rel:has-one" json:"patients"`
 	PatientID         uuid.UUID        `bun:"type:uuid" json:"PatientId"`
 	MkbDiagnosis      *MkbDiagnosis    `bun:"rel:belongs-to" json:"mkbDiagnosis"`
@@ -17,7 +17,7 @@ type PatientDiagnosis struct {
 	MkbSubDiagnosis   *MkbSubDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
 	MkbSubDiagnosisID uuid.NullUUID    `bun:"type:uuid,nullzero" json:"mkbSubDiagnosisId"`
 	Primary           bool             `json:"primary"`
-	DeletedAt         time.Time        `bun:",soft_delete" json:"deletedAt"`
+	DeletedAt         *time.Time       `bun:",soft_delete" json:"deletedAt"`
 
 	PatientDiagnosisAnamnesis          []*PatientDiagnosisAnamnesis `bun:"rel:has-many" json:"patientDiagnosisAnamnesis"`
 	PatientDiagnosisAnamnesisForDelete []string                     `bun:"-" json:"patientDiagnosisAnamnesisForDelete"`

@@ -3,7 +3,6 @@ package routing
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-pg/pg/v10/orm"
-	"github.com/go-redis/redis/v7"
 	helperPack "github.com/pro-assistance/pro-assister/helper"
 	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
@@ -21,6 +20,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerQuery"
 	"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeTypes"
+	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	"mdgkb/tsr-tegister-server-v1/middleware"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
@@ -39,10 +39,11 @@ import (
 	registerQueryRouter "mdgkb/tsr-tegister-server-v1/routing/registerQuery"
 	representativeRouter "mdgkb/tsr-tegister-server-v1/routing/representative"
 	representativeTypesRouter "mdgkb/tsr-tegister-server-v1/routing/representativeTypes"
+	searchRouter "mdgkb/tsr-tegister-server-v1/routing/search"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
 )
 
-func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, helper *helperPack.Helper) {
+func Init(r *gin.Engine, db *bun.DB, helper *helperPack.Helper) {
 	r.Static("/static", "../static/")
 	api := r.Group("/api/v1")
 	m := middleware.CreateMiddleware(helper)
@@ -64,4 +65,5 @@ func Init(r *gin.Engine, db *bun.DB, redisClient *redis.Client, helper *helperPa
 	registerPropertyToUserRouter.Init(api.Group("/register-properties-to-user"), registerPropertyToUser.CreateHandler(db, helper))
 	usersRouter.Init(api.Group("/users"), users.CreateHandler(db, helper))
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(db, helper))
+	searchRouter.Init(api.Group("/search"), search.CreateHandler(db, helper))
 }

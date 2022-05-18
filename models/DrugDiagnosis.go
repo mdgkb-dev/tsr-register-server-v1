@@ -7,7 +7,7 @@ import (
 
 type DrugDiagnosis struct {
 	bun.BaseModel     `bun:"drugs_diagnosis,alias:drugs_diagnosis"`
-	ID                uuid.UUID        `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                uuid.UUID        `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Drug              *Drug            `bun:"rel:has-one" json:"drugs"`
 	DrugID            uuid.UUID        `bun:"type:uuid" json:"drugId"`
 	MkbDiagnosis      *MkbDiagnosis    `bun:"rel:belongs-to" json:"mkbDiagnosis"`

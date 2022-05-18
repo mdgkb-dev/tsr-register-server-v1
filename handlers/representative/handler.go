@@ -33,29 +33,16 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	query := c.Query("query")
-	if query != "" {
-		items, err := h.service.GetBySearch(&query)
-		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-			return
-		}
-		c.JSON(http.StatusOK, items)
+	err := h.service.setQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	//queryFilter, err := h.helper.SQL.CreateQueryFilter(c)
-	//if queryFilter.Pagination != nil {
 	items, err := h.service.GetAll()
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
-
-	//items, err := h.service.GetOnlyNames()
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
 }
-
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
 	item, err := h.service.Get(&id)

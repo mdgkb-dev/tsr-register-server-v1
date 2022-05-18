@@ -17,18 +17,17 @@ import (
 )
 
 type User struct {
-	bun.BaseModel `bun:"users,alias:users"`
-	ID                     uuid.UUID                `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	bun.BaseModel          `bun:"users,alias:users"`
+	ID                     uuid.UUID                `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Login                  string                   `json:"login"`
 	Password               string                   `json:"password"`
 	RegisterPropertyToUser RegisterPropertiesToUser `bun:"rel:has-many" json:"registerPropertyToUser"`
 	//
-	RegistersUsers RegistersUsers `bun:"rel:has-many" json:"registersUsers"`
-	RegistersUsersForDelete []uuid.UUID `bun:"-" json:"registersUsersForDelete"`
+	RegistersUsers          RegistersUsers `bun:"rel:has-many" json:"registersUsers"`
+	RegistersUsersForDelete []uuid.UUID    `bun:"-" json:"registersUsersForDelete"`
 }
 
 type Users []*User
-
 
 func (item *User) SetIdForChildren() {
 	for i := range item.RegistersUsers {
@@ -36,10 +35,9 @@ func (item *User) SetIdForChildren() {
 	}
 }
 
-
 type RegisterPropertyToUser struct {
 	bun.BaseModel      `bun:"register_property_to_user,alias:register_property_to_user"`
-	ID                 uuid.UUID         `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                 uuid.UUID         `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
 	User               *User             `bun:"rel:belongs-to" json:"user"`

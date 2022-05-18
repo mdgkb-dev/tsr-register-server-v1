@@ -1,6 +1,7 @@
 package representative
 
 import (
+	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
@@ -8,6 +9,14 @@ import (
 
 func (r *Repository) getDB() *bun.DB {
 	return r.db
+}
+
+func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
+	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *Repository) create(item *models.Representative) (err error) {
@@ -24,7 +33,7 @@ func (r *Repository) getAll() (items models.RepresentativesWithCount, err error)
 		Relation("RepresentativeToPatient.Patient.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Order("human.surname")
-
+	r.queryFilter.HandleQuery(query)
 	//httpHelper.CreateFilter(query, queryFilter.FilterModels)
 	//httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
 	items.Count, err = query.ScanAndCount(r.ctx)
@@ -52,7 +61,7 @@ func (r *Repository) get(id *string) (*models.Representative, error) {
 		Relation("Human.Photo").
 		Relation("RepresentativeToPatient.Patient.Human").
 		Relation("RepresentativeToPatient.RepresentativeType").
-		Where("representative.id = ?", *id).Scan(r.ctx)
+		Where("?TableAlias.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }
 

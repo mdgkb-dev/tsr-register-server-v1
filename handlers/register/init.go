@@ -25,6 +25,7 @@ type IHandler interface {
 }
 
 type IService interface {
+	setQueryFilter(*gin.Context) error
 	GetAll(uuid.UUID) ([]*models.Register, error)
 	Get(string) (*models.Register, error)
 	Create(*models.Register) error
@@ -35,6 +36,7 @@ type IService interface {
 }
 
 type IRepository interface {
+	setQueryFilter(*gin.Context) error
 	getDB() *bun.DB
 	create(*models.Register) error
 	getAll(uuid.UUID) ([]*models.Register, error)

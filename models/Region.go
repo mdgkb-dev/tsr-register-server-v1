@@ -6,9 +6,9 @@ import (
 )
 
 type Region struct {
-	bun.BaseModel                            `bun:"region,alias:region"`
-	ID                                       uuid.UUID                          `bun:"type:uuid,default:uuid_generate_v4()" json:"id"`
-	Name                                     string                             `json:"name"`
+	bun.BaseModel `bun:"region,alias:region"`
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
+	Name          string    `json:"name"`
 }
 
 type Regions []*Region

@@ -7,7 +7,7 @@ import (
 
 type RegisterPropertySet struct {
 	bun.BaseModel                   `bun:"register_property_set,alias:register_property_set"`
-	ID                              uuid.NullUUID          `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                              uuid.NullUUID          `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                            string                 `json:"name"`
 	RegisterPropertyID              uuid.UUID              `bun:"type:uuid" json:"registerPropertyID"`
 	Order                           int                    `bun:"register_property_set_order" json:"order"`

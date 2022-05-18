@@ -7,7 +7,7 @@ import (
 
 type MkbDiagnosis struct {
 	bun.BaseModel    `bun:"mkb_diagnosis,alias:mkb_diagnosis"`
-	ID               uuid.UUID          `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID               uuid.UUID          `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name             string             `json:"name"`
 	Code             string             `json:"code"`
 	Comment          string             `json:"comment"`

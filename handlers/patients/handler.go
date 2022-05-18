@@ -34,34 +34,7 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) GetAll(c *gin.Context) {
 	err := h.service.setQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
-		return
-	}
-	withDisabilities := c.Query("withDisabilities")
-	if withDisabilities != "" {
-		items, err := h.service.GetDisabilities()
-		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-			return
-		}
-		c.JSON(http.StatusOK, items)
-		return
-	}
-	query := c.Query("query")
-	if query != "" {
-		items, err := h.service.GetBySearch(&query)
-		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-			return
-		}
-		c.JSON(http.StatusOK, items)
-		return
-	}
-	onlyNames := c.Query("only-names")
-	if onlyNames != "" {
-		items, err := h.service.GetOnlyNames()
-		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-			return
-		}
-		c.JSON(http.StatusOK, items)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	items, err := h.service.GetAll()

@@ -7,7 +7,7 @@ import (
 
 type DrugRegimenBlock struct {
 	bun.BaseModel `bun:"drug_regimen_blocks,alias:drug_regimen_blocks"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Infinitely    bool      `json:"infinitely"`
 	OrderItem     int       `bun:"type:integer" json:"orderItem"`
 	DrugRegimenID uuid.UUID `bun:"type:uuid" json:"drugRegimenId"`

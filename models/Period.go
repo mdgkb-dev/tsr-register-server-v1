@@ -9,7 +9,7 @@ import (
 
 type Period struct {
 	bun.BaseModel `bun:"period,alias:period"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	DateStart     time.Time `json:"dateStart"`
 	DateEnd       time.Time `json:"dateEnd"`
 }

@@ -1,6 +1,7 @@
 package register
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -10,6 +11,14 @@ import (
 
 func (r *Repository) getDB() *bun.DB {
 	return r.db
+}
+
+func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
+	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *Repository) create(item *models.Register) (err error) {
@@ -52,9 +61,8 @@ func (r *Repository) get(id string) (*models.Register, error) {
 			return q.Order("register_property_others.register_property_others_order")
 		}).
 		Relation("RegisterToPatient.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
+			//r.queryFilter.HandleQuery(q)
 			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic")
-			//Offset(*queryFilter.Pagination.Offset).
-			//Limit(*queryFilter.Pagination.Limit)
 		}).
 		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
 		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").

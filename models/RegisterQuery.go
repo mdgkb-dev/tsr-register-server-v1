@@ -9,7 +9,7 @@ import (
 
 type RegisterQuery struct {
 	bun.BaseModel                            `bun:"register_queries,alias:register_queries"`
-	ID                                       uuid.UUID                          `bun:"type:uuid,default:uuid_generate_v4()" json:"id"`
+	ID                                       uuid.UUID                          `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
 	Name                                     string                             `json:"name"`
 	Type                                     string                             `bun:"type:register_query_type_enum" json:"type"`
 	Register                                 *Register                          `bun:"rel:belongs-to" json:"register"`

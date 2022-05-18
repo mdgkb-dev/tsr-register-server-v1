@@ -7,7 +7,7 @@ import (
 
 type RegisterPropertyRadio struct {
 	bun.BaseModel                   `bun:"register_property_radio,alias:register_property_radio"`
-	ID                              uuid.NullUUID          `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                              uuid.NullUUID          `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                            string                 `json:"name"`
 	RegisterPropertyID              uuid.UUID              `bun:"type:uuid" json:"registerPropertyID"`
 	Order                           int                    `bun:"register_property_radio_order" json:"order"`

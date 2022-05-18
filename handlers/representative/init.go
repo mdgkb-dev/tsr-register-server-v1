@@ -3,6 +3,7 @@ package representative
 import (
 	"context"
 	"github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
 
@@ -19,6 +20,7 @@ type IHandler interface {
 }
 
 type IService interface {
+	setQueryFilter(*gin.Context) error
 	GetAll() (models.RepresentativesWithCount, error)
 	GetOnlyNames() (models.RepresentativesWithCount, error)
 	Get(*string) (*models.Representative, error)
@@ -30,6 +32,7 @@ type IService interface {
 }
 
 type IRepository interface {
+	setQueryFilter(*gin.Context) error
 	getDB() *bun.DB
 	create(*models.Representative) error
 	getAll() (models.RepresentativesWithCount, error)
@@ -57,9 +60,10 @@ type Service struct {
 }
 
 type Repository struct {
-	db     *bun.DB
-	ctx    context.Context
-	helper *helper.Helper
+	db          *bun.DB
+	ctx         context.Context
+	helper      *helper.Helper
+	queryFilter *sqlHelper.QueryFilter
 }
 
 type FilesService struct {

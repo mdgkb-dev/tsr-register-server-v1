@@ -7,6 +7,6 @@ import (
 
 type InsuranceCompany struct {
 	bun.BaseModel `bun:"insurance_companies,alias:insurance_companies"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
 }

@@ -10,14 +10,14 @@ import (
 
 type Disability struct {
 	bun.BaseModel `bun:"disability,alias:disability"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
-	Patient       *Patient  `bun:"rel:belongs-to" json:"patient"`
-	PatientID     uuid.UUID `bun:"type:uuid" json:"patientId"`
-	Edvs          []*Edv    `bun:"rel:has-many" json:"edvs"`
-	EdvsForDelete []string  `bun:"-" json:"edvsForDelete"`
-	Period        *Period   `bun:"rel:belongs-to" json:"period"`
-	PeriodID      uuid.UUID `bun:"type:uuid" json:"periodId"`
-	DeletedAt     time.Time `bun:",soft_delete" json:"deletedAt"`
+	ID            uuid.UUID  `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Patient       *Patient   `bun:"rel:belongs-to" json:"patient"`
+	PatientID     uuid.UUID  `bun:"type:uuid" json:"patientId"`
+	Edvs          []*Edv     `bun:"rel:has-many" json:"edvs"`
+	EdvsForDelete []string   `bun:"-" json:"edvsForDelete"`
+	Period        *Period    `bun:"rel:belongs-to" json:"period"`
+	PeriodID      uuid.UUID  `bun:"type:uuid" json:"periodId"`
+	DeletedAt     *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
 func (item *Disability) SetIdForChildren() {

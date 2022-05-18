@@ -9,7 +9,7 @@ import (
 
 type RegisterPropertyToPatient struct {
 	bun.BaseModel `bun:"register_property_to_patient,alias:register_property_to_patient"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
 	ValueString string    `json:"valueString"`
 	ValueNumber int       `json:"valueNumber"`

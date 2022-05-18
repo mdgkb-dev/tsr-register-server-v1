@@ -10,7 +10,7 @@ import (
 
 type Human struct {
 	bun.BaseModel       `bun:"human,select:humans_view,alias:human"`
-	ID                  uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                  uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                string        `json:"name"`
 	Surname             string        `json:"surname"`
 	Patronymic          string        `json:"patronymic"`
@@ -22,7 +22,7 @@ type Human struct {
 	ContactID           uuid.NullUUID `bun:"type:uuid" json:"contactId"`
 	Photo               *FileInfo     `bun:"rel:belongs-to" json:"photo"`
 	PhotoId             uuid.NullUUID `bun:"type:uuid" json:"photoId"`
-	DeletedAt           time.Time     `bun:",soft_delete" json:"deletedAt"`
+	DeletedAt           *time.Time    `bun:",soft_delete" json:"deletedAt"`
 
 	Documents          []*Document `bun:"rel:has-many" json:"documents"`
 	DocumentsForDelete []uuid.UUID `bun:"-" json:"documentsForDelete"`
@@ -69,11 +69,11 @@ func (item *Human) SetDeleteIdForChildren() {
 
 type InsuranceCompanyToHuman struct {
 	bun.BaseModel      `bun:"insurance_company_to_human,alias:insurance_company_to_human"`
-	ID                 uuid.UUID         `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                 uuid.UUID         `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Number             string            `json:"number"`
 	InsuranceCompany   *InsuranceCompany `bun:"rel:belongs-to" json:"insuranceCompany"`
 	InsuranceCompanyID uuid.UUID         `bun:"type:uuid" json:"insuranceCompanyId"`
 	Human              *Human            `bun:"rel:belongs-to" json:"human"`
 	HumanID            uuid.UUID         `bun:"type:uuid" json:"humanId"`
-	DeletedAt          time.Time         `bun:",soft_delete" json:"deletedAt"`
+	DeletedAt          *time.Time        `bun:",soft_delete" json:"deletedAt"`
 }

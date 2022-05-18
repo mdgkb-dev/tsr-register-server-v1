@@ -10,12 +10,12 @@ import (
 
 type Document struct {
 	bun.BaseModel  `bun:"document,alias:document"`
-	ID             uuid.UUID     `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID             uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	DocumentType   *DocumentType `bun:"rel:belongs-to" json:"documentType"`
 	DocumentTypeID uuid.UUID     `bun:"type:uuid" json:"documentTypeId"`
 	Human          *Human        `bun:"rel:has-one" json:"human"`
 	HumanID        uuid.UUID     `bun:"type:uuid" json:"humanId"`
-	DeletedAt      time.Time     `bun:",soft_delete" json:"deletedAt"`
+	DeletedAt      *time.Time    `bun:",soft_delete" json:"deletedAt"`
 
 	DocumentFieldValues          []*DocumentFieldValue `bun:"rel:has-many" json:"documentFieldValues"`
 	DocumentFieldValuesForDelete []uuid.UUID           `bun:"-" json:"documentFieldValuesForDelete"`

@@ -1,6 +1,7 @@
 package representative
 
 import (
+	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -75,4 +76,9 @@ func (s *Service) GetBySearch(query *string) ([]*models.Representative, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+func (s *Service) setQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.setQueryFilter(c)
+	return err
 }

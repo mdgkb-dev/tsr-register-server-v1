@@ -1,1 +1,0 @@
-UPDATE representative set created_by_id = '66f6fe6b-4cbf-4bfa-96de-cdaadb4febbd' where id is not null;

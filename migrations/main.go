@@ -1,11 +1,14 @@
-package seeding
+package migrations
 
-import "github.com/uptrace/bun/migrate"
+import (
+	"github.com/uptrace/bun/migrate"
+	"log"
+)
 
 var Migrations = migrate.NewMigrations()
 
 func init() {
 	if err := Migrations.DiscoverCaller(); err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 }

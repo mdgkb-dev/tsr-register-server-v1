@@ -7,7 +7,7 @@ import (
 
 type DocumentType struct {
 	bun.BaseModel               `bun:"document_types,alias:document_types"`
-	ID                          uuid.UUID            `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                          uuid.UUID            `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                        string               `json:"name"`
 	DocumentTypeFields          []*DocumentTypeField `bun:"rel:has-many" json:"documentTypeFields"`
 	DocumentTypeFieldsForDelete []string             `bun:"-" json:"documentTypeFieldsForDelete"`

@@ -1,6 +1,7 @@
 package register
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerGroup"
@@ -80,4 +81,9 @@ func (s *Service) GetValueTypes() (models.ValueTypes, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+func (s *Service) setQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.setQueryFilter(c)
+	return err
 }

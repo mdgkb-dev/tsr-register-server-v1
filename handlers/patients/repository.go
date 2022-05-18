@@ -78,7 +78,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("RegisterPropertyOthersPatient").
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
-		Where("patients.id = ?", *id)
+		Where("?TableAlias.id = ?", *id)
 	if withDeleted {
 		query = query.WhereAllWithDeleted()
 	}

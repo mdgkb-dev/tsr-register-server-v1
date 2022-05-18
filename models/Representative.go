@@ -6,15 +6,15 @@ import (
 )
 
 type Representative struct {
-	bun.BaseModel `bun:"representative,alias:representative"`
+	bun.BaseModel `bun:"representative,select:representatives_view,alias:representatives_view"`
 	ModelInfo
-	ID uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
 	Human   *Human    `bun:"rel:belongs-to" json:"human"`
 	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
 
 	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
-	RepresentativeToPatientForDelete []uuid.UUID                   `bun:"-" json:"representativeToPatientForDelete"`
+	RepresentativeToPatientForDelete []uuid.UUID                `bun:"-" json:"representativeToPatientForDelete"`
 }
 
 type Representatives []*Representative

@@ -7,7 +7,7 @@ import (
 
 type FileInfoToDocument struct {
 	bun.BaseModel `bun:"file_info_to_document,alias:file_info_to_document"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	FileInfo      *FileInfo `bun:"rel:belongs-to" json:"fileInfo"`
 	FileInfoID    uuid.UUID `bun:"type:uuid" json:"fileInfoId"`
 	Document      *Document `bun:"rel:belongs-to" json:"document"`

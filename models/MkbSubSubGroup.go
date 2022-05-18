@@ -7,7 +7,7 @@ import (
 
 type MkbSubSubGroup struct {
 	bun.BaseModel `bun:"mkb_class,alias:mkb_class"`
-	ID            uuid.UUID       `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID       `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string          `json:"name"`
 	RangeStart    string          `json:"rangeStart"`
 	RangeEnd      string          `json:"rangeEnd"`

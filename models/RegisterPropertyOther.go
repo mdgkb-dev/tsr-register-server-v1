@@ -7,7 +7,7 @@ import (
 
 type RegisterPropertyOther struct {
 	bun.BaseModel `bun:"register_property_others,alias:register_property_others"`
-	ID            uuid.UUID `bun:"type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
 	//ShortName     string    `json:"shortName"`
 	//ColWidth      string    `json:"colWidth"`

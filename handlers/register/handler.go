@@ -21,6 +21,10 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	err := h.service.setQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	userId, err := models.GetUserID(c)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -33,8 +37,11 @@ func (h *Handler) GetAll(c *gin.Context) {
 }
 
 func (h *Handler) Get(c *gin.Context) {
+	err := h.service.setQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	id := c.Param("id")
-
 	item, err := h.service.Get(id)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return

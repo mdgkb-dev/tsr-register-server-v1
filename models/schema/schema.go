@@ -1,16 +1,20 @@
 package schema
 
 type Schema struct {
-	PatientSchema          map[string]string `json:"patientSchema"`
-	HumanSchema            map[string]string `json:"humanSchema"`
-	PatientDiagnosisSchema map[string]string `json:"patientDiagnosisSchema"`
+	Patient          map[string]string `json:"patient"`
+	Representative   map[string]string `json:"representative"`
+	Human            map[string]string `json:"human"`
+	PatientDiagnosis map[string]string `json:"patientDiagnosis"`
+	Disability       map[string]string `json:"disability"`
 }
 
 func CreateSchema() Schema {
 	return Schema{
-		PatientSchema:          createPatientSchema(),
-		HumanSchema:            createHumanSchema(),
-		PatientDiagnosisSchema: createPatientDiagnosisSchema(),
+		Patient:          createPatientSchema(),
+		Human:            createHumanSchema(),
+		PatientDiagnosis: createPatientDiagnosisSchema(),
+		Representative:   createRepresentativeSchema(),
+		Disability:       createDisabilitiesSchema(),
 	}
 }
 
@@ -25,7 +29,19 @@ func createHumanSchema() map[string]string {
 
 func createPatientSchema() map[string]string {
 	return map[string]string{
-		"tableName": "patients",
+		"tableName": "patients_view",
+		"key":       "patient",
+		"fullName":  "full_name",
+		"createdAt": "created_at",
+		"updatedAt": "updated_at",
+	}
+}
+
+func createRepresentativeSchema() map[string]string {
+	return map[string]string{
+		"tableName": "representatives_view",
+		"key":       "representative",
+		"fullName":  "full_name",
 		"createdAt": "created_at",
 		"updatedAt": "updated_at",
 	}
@@ -33,12 +49,22 @@ func createPatientSchema() map[string]string {
 
 func createPatientDiagnosisSchema() map[string]string {
 	return map[string]string{
-		"tableName":   "patient_diagnosis",
+		"tableName":         "patient_diagnosis",
+		"joinTable":         "patients",
+		"joinTableFk":       "patient_id",
+		"joinTablePk":       "id",
+		"mkbDiagnosisId":    "mkb_diagnosis_id",
+		"mkbSubDiagnosisId": "mkb_sub_diagnosis_id",
+	}
+}
+
+func createDisabilitiesSchema() map[string]string {
+	return map[string]string{
+		"tableName":   "disability",
+		"id":          "id",
+		"patientId":   "patient_id",
 		"joinTable":   "patients",
 		"joinTableFk": "patient_id",
 		"joinTablePk": "id",
-
-		"mkbDiagnosisId":    "mkb_diagnosis_id",
-		"mkbSubDiagnosisId": "mkb_sub_diagnosis_id",
 	}
 }
