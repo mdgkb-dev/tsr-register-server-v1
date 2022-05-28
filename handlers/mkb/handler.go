@@ -17,7 +17,6 @@ func (h *Handler) GetAllClasses(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	name := c.Query("update")
-	fmt.Println(name)
 	id := c.Param("id")
 	mkbType := c.Query("mkbType")
 	if name == "name" {
@@ -29,13 +28,13 @@ func (h *Handler) Update(c *gin.Context) {
 		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
-		fmt.Println(nameName.Name)
-		err = h.service.UpdateName(&id, &nameName.Name, &mkbType)
+		fmt.Println(nameName)
+		err = h.service.UpdateName(id, nameName.Name, mkbType)
 		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
 	} else {
-		err := h.service.UpdateRelevant(&id, &mkbType)
+		err := h.service.UpdateRelevant(id, mkbType)
 		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 			return
 		}
@@ -45,7 +44,7 @@ func (h *Handler) Update(c *gin.Context) {
 
 func (h *Handler) GetGroupByClassId(c *gin.Context) {
 	classId := c.Param("classId")
-	items, err := h.service.GetGroupByClassId(&classId)
+	items, err := h.service.GetGroupByClassId(classId)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -54,7 +53,7 @@ func (h *Handler) GetGroupByClassId(c *gin.Context) {
 
 func (h *Handler) GetGroupChildrens(c *gin.Context) {
 	groupId := c.Param("groupId")
-	items, err := h.service.GetGroupChildrens(&groupId)
+	items, err := h.service.GetGroupChildrens(groupId)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -63,7 +62,7 @@ func (h *Handler) GetGroupChildrens(c *gin.Context) {
 
 func (h *Handler) GetSubGroupChildrens(c *gin.Context) {
 	subGroupId := c.Param("subGroupId")
-	items, err := h.service.GetGroupByClassId(&subGroupId)
+	items, err := h.service.GetGroupByClassId(subGroupId)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -75,7 +74,7 @@ func (h *Handler) GetGroupsBySearch(c *gin.Context) {
 	if query == "" {
 		c.JSON(http.StatusOK, nil)
 	}
-	items, err := h.service.GetGroupsBySearch(&query)
+	items, err := h.service.GetGroupsBySearch(query)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -87,7 +86,19 @@ func (h *Handler) GetDiagnosisBySearch(c *gin.Context) {
 	if query == "" {
 		c.JSON(http.StatusOK, nil)
 	}
-	items, err := h.service.GetDiagnosisBySearch(&query)
+	items, err := h.service.GetDiagnosisBySearch(query)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) GetSubDiagnosesBySearch(c *gin.Context) {
+	query := c.Query("query")
+	if query == "" {
+		c.JSON(http.StatusOK, nil)
+	}
+	items, err := h.service.GetSubDiagnosesBySearch(query)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -96,7 +107,7 @@ func (h *Handler) GetDiagnosisBySearch(c *gin.Context) {
 
 func (h *Handler) GetDiagnosisByGroupId(c *gin.Context) {
 	groupId := c.Param("groupId")
-	items, err := h.service.GetDiagnosisByGroupId(&groupId)
+	items, err := h.service.GetDiagnosisByGroupId(groupId)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -105,7 +116,28 @@ func (h *Handler) GetDiagnosisByGroupId(c *gin.Context) {
 
 func (h *Handler) GetSubDiagnosisByDiagnosisId(c *gin.Context) {
 	diagnosisId := c.Param("diagnosisId")
-	items, err := h.service.GetSubDiagnosisByDiagnosisId(&diagnosisId)
+	items, err := h.service.GetSubDiagnosisByDiagnosisId(diagnosisId)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) GetConcreteDiagnosisBySubDiagnosisId(c *gin.Context) {
+	diagnosisId := c.Param("subDiagnosisId")
+	items, err := h.service.GetSubDiagnosisByDiagnosisId(diagnosisId)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) GetConcreteDiagnosisBySearch(c *gin.Context) {
+	query := c.Query("query")
+	if query == "" {
+		c.JSON(http.StatusOK, nil)
+	}
+	items, err := h.service.GetConcreteDiagnosisBySearch(query)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

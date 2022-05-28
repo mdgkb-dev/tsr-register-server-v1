@@ -6,14 +6,16 @@ import (
 )
 
 type DrugDiagnosis struct {
-	bun.BaseModel     `bun:"drugs_diagnosis,alias:drugs_diagnosis"`
-	ID                uuid.UUID        `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Drug              *Drug            `bun:"rel:has-one" json:"drugs"`
-	DrugID            uuid.UUID        `bun:"type:uuid" json:"drugId"`
-	MkbDiagnosis      *MkbDiagnosis    `bun:"rel:belongs-to" json:"mkbDiagnosis"`
-	MkbDiagnosisID    uuid.UUID        `bun:"type:uuid" json:"mkbDiagnosisId"`
-	MkbSubDiagnosis   *MkbSubDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
-	MkbSubDiagnosisID uuid.NullUUID    `bun:"type:uuid,nullzero" json:"mkbSubDiagnosisId"`
+	bun.BaseModel          `bun:"drugs_diagnosis,alias:drugs_diagnosis"`
+	ID                     uuid.UUID             `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Drug                   *Drug                 `bun:"rel:has-one" json:"drugs"`
+	DrugID                 uuid.UUID             `bun:"type:uuid" json:"drugId"`
+	MkbDiagnosis           *MkbDiagnosis         `bun:"rel:belongs-to" json:"mkbDiagnosis"`
+	MkbDiagnosisID         uuid.UUID             `bun:"type:uuid" json:"mkbDiagnosisId"`
+	MkbSubDiagnosis        *MkbSubDiagnosis      `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
+	MkbSubDiagnosisID      uuid.NullUUID         `bun:"type:uuid,nullzero" json:"mkbSubDiagnosisId"`
+	MkbConcreteDiagnosis   *MkbConcreteDiagnosis `bun:"rel:belongs-to" json:"mkbConcreteDiagnosis"`
+	MkbConcreteDiagnosisID uuid.NullUUID         `bun:"type:uuid,nullzero" json:"mkbConcreteDiagnosisId"`
 }
 
 type DrugsDiagnosis []*DrugDiagnosis

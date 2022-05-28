@@ -1,6 +1,7 @@
 package drug
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -9,6 +10,14 @@ import (
 
 func (r *Repository) getDB() *bun.DB {
 	return r.db
+}
+
+func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
+	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *Repository) create(item *models.Drug) (err error) {
@@ -27,7 +36,8 @@ func (r *Repository) getAll(diagnosisIds []uuid.UUID) ([]*models.Drug, error) {
 		}).
 		Relation("DrugsDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("DrugsDiagnosis.MkbDiagnosis.MkbGroup").
-		Relation("DrugsDiagnosis.MkbSubDiagnosis")
+		Relation("DrugsDiagnosis.MkbSubDiagnosis").
+		Relation("DrugsDiagnosis.MkbConcreteDiagnosis")
 
 	if len(diagnosisIds) > 0 {
 		q.Join("JOIN drugs_diagnosis ON drugs_diagnosis.drug_id = drugs.id").
@@ -49,6 +59,7 @@ func (r *Repository) get(id *string) (*models.Drug, error) {
 		Relation("DrugsDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("DrugsDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("DrugsDiagnosis.MkbSubDiagnosis").
+		Relation("DrugsDiagnosis.MkbConcreteDiagnosis").
 		Where("id = ?", *id).Scan(r.ctx)
 	return &item, err
 }

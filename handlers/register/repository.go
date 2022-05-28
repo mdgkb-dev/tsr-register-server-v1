@@ -42,6 +42,7 @@ func (r *Repository) get(id string) (*models.Register, error) {
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("RegisterDiagnosis.MkbSubDiagnosis").
+		Relation("RegisterDiagnosis.MkbConcreteDiagnosis").
 		Relation("RegisterGroups", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_group.register_group_order")
 		}).

@@ -1,6 +1,7 @@
 package drug
 
 import (
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugRegimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugsDiagnosis"
@@ -71,4 +72,9 @@ func (s *Service) Update(item *models.Drug) error {
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
+}
+
+func (s *Service) setQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.setQueryFilter(c)
+	return err
 }

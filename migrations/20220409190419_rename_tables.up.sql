@@ -1,0 +1,1 @@
+ALTER TABLE mkb_group RENAME TO mkb_groups;

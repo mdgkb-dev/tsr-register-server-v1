@@ -40,6 +40,7 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("RepresentativeToPatient.RepresentativeType").
 		Relation("PatientDiagnosis.MkbDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
+		Relation("PatientDiagnosis.MkbConcreteDiagnosis").
 		Relation("RegisterToPatient.Register").
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
@@ -69,6 +70,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("PatientDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("PatientDiagnosis.MkbSubDiagnosis").
+		Relation("PatientDiagnosis.MkbConcreteDiagnosis").
 		Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
 		Relation("RegisterToPatient.Register").
 		Relation("RegisterPropertyToPatient.RegisterProperty").

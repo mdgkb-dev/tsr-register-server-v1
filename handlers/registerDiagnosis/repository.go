@@ -24,6 +24,7 @@ func (r *Repository) upsertMany(items []*models.RegisterDiagnosis) (err error) {
 		Model(&items).
 		Set(`mkb_diagnosis_id = EXCLUDED.mkb_diagnosis_id`).
 		Set(`mkb_sub_diagnosis_id = EXCLUDED.mkb_sub_diagnosis_id`).
+		Set(`mkb_concrete_diagnosis_id = EXCLUDED.mkb_concrete_diagnosis_id`).
 		Exec(r.ctx)
 	return err
 }

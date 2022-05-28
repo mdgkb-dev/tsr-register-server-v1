@@ -1,20 +1,30 @@
 package schema
 
 type Schema struct {
-	Patient          map[string]string `json:"patient"`
-	Representative   map[string]string `json:"representative"`
-	Human            map[string]string `json:"human"`
-	PatientDiagnosis map[string]string `json:"patientDiagnosis"`
-	Disability       map[string]string `json:"disability"`
+	Patient              map[string]string `json:"patient"`
+	Representative       map[string]string `json:"representative"`
+	Human                map[string]string `json:"human"`
+	PatientDiagnosis     map[string]string `json:"patientDiagnosis"`
+	Disability           map[string]string `json:"disability"`
+	MkbGroup             map[string]string `json:"mkbGroup"`
+	MkbDiagnosis         map[string]string `json:"mkbDiagnosis"`
+	MkbSubDiagnosis      map[string]string `json:"mkbSubDiagnosis"`
+	MkbConcreteDiagnosis map[string]string `json:"mkbConcreteDiagnosis"`
+	Drug                 map[string]string `json:"drug"`
 }
 
 func CreateSchema() Schema {
 	return Schema{
-		Patient:          createPatientSchema(),
-		Human:            createHumanSchema(),
-		PatientDiagnosis: createPatientDiagnosisSchema(),
-		Representative:   createRepresentativeSchema(),
-		Disability:       createDisabilitiesSchema(),
+		Patient:              createPatientSchema(),
+		Human:                createHumanSchema(),
+		PatientDiagnosis:     createPatientDiagnosisSchema(),
+		Representative:       createRepresentativeSchema(),
+		Disability:           createDisabilitiesSchema(),
+		MkbGroup:             createMkbGroupsSchema(),
+		MkbDiagnosis:         createMkbDiagnosisSchema(),
+		MkbSubDiagnosis:      createMkbSubDiagnosisSchema(),
+		MkbConcreteDiagnosis: createMkbConcreteDiagnosisSchema(),
+		Drug:                 createDrugSchema(),
 	}
 }
 
@@ -66,5 +76,45 @@ func createDisabilitiesSchema() map[string]string {
 		"joinTable":   "patients",
 		"joinTableFk": "patient_id",
 		"joinTablePk": "id",
+	}
+}
+
+func createMkbGroupsSchema() map[string]string {
+	return map[string]string{
+		"tableName": "mkb_groups",
+		"key":       "mkbGroup",
+		"name":      "name",
+	}
+}
+
+func createMkbDiagnosisSchema() map[string]string {
+	return map[string]string{
+		"tableName": "mkb_diagnosis",
+		"key":       "mkbDiagnosis",
+		"name":      "name",
+	}
+}
+
+func createMkbSubDiagnosisSchema() map[string]string {
+	return map[string]string{
+		"tableName": "mkb_sub_diagnosis",
+		"key":       "mkbSubDiagnosis",
+		"name":      "name",
+	}
+}
+
+func createMkbConcreteDiagnosisSchema() map[string]string {
+	return map[string]string{
+		"tableName": "mkb_concrete_diagnosis",
+		"key":       "mkbConcreteDiagnosis",
+		"name":      "name",
+	}
+}
+
+func createDrugSchema() map[string]string {
+	return map[string]string{
+		"tableName": "drugs",
+		"key":       "drug",
+		"name":      "name",
 	}
 }

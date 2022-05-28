@@ -12,6 +12,10 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/insuranceCompany"
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkb"
+	"mdgkb/tsr-tegister-server-v1/handlers/mkbConcreteDiagnoses"
+	"mdgkb/tsr-tegister-server-v1/handlers/mkbDiagnoses"
+	"mdgkb/tsr-tegister-server-v1/handlers/mkbGroups"
+	"mdgkb/tsr-tegister-server-v1/handlers/mkbSubDiagnoses"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/register"
@@ -30,6 +34,10 @@ import (
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insuranceCompany"
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbRouter "mdgkb/tsr-tegister-server-v1/routing/mkb"
+	mkbConcreteDiagnosesRouter "mdgkb/tsr-tegister-server-v1/routing/mkbConcreteDiagnoses"
+	mkbDiagnosesRouter "mdgkb/tsr-tegister-server-v1/routing/mkbDiagnoses"
+	mkbGroupsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbGroups"
+	mkbSubDiagnosesRouter "mdgkb/tsr-tegister-server-v1/routing/mkbSubDiagnoses"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	registerRouter "mdgkb/tsr-tegister-server-v1/routing/register"
@@ -66,4 +74,8 @@ func Init(r *gin.Engine, db *bun.DB, helper *helperPack.Helper) {
 	usersRouter.Init(api.Group("/users"), users.CreateHandler(db, helper))
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(db, helper))
 	searchRouter.Init(api.Group("/search"), search.CreateHandler(db, helper))
+	mkbGroupsRouter.Init(api.Group("/mkb-groups"), mkbGroups.CreateHandler(db, helper))
+	mkbDiagnosesRouter.Init(api.Group("/mkb-diagnoses"), mkbDiagnoses.CreateHandler(db, helper))
+	mkbSubDiagnosesRouter.Init(api.Group("/mkb-sub-diagnoses"), mkbSubDiagnoses.CreateHandler(db, helper))
+	mkbConcreteDiagnosesRouter.Init(api.Group("/mkb-concrete-diagnoses"), mkbConcreteDiagnoses.CreateHandler(db, helper))
 }

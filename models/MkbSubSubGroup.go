@@ -18,3 +18,5 @@ type MkbSubSubGroup struct {
 	MkbSubGroupID uuid.UUID       `bun:"type:uuid" json:"mkbSubGroupId"`
 	MkbDiagnosis  []*MkbDiagnosis `bun:"rel:has-many"json:"mkbDiagnosis"`
 }
+
+type MkbSubSubGroups []*MkbSubSubGroup

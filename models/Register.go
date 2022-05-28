@@ -32,12 +32,14 @@ func (item *Register) SetIdForChildren() {
 }
 
 type RegisterDiagnosis struct {
-	bun.BaseModel     `bun:"register_diagnosis,alias:register_diagnosis"`
-	ID                uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Register          *Register     `bun:"rel:belongs-to" json:"register"`
-	RegisterID        uuid.UUID     `bun:"type:uuid" json:"registerId"`
-	MkbDiagnosis      *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbDiagnosis"`
-	MkbDiagnosisID    uuid.UUID     `bun:"type:uuid" json:"mkbDiagnosisId"`
-	MkbSubDiagnosis   *MkbDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
-	MkbSubDiagnosisID uuid.NullUUID `bun:"type:uuid" json:"mkbSubDiagnosisId"`
+	bun.BaseModel          `bun:"register_diagnosis,alias:register_diagnosis"`
+	ID                     uuid.UUID             `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Register               *Register             `bun:"rel:belongs-to" json:"register"`
+	RegisterID             uuid.UUID             `bun:"type:uuid" json:"registerId"`
+	MkbDiagnosis           *MkbDiagnosis         `bun:"rel:belongs-to" json:"mkbDiagnosis"`
+	MkbDiagnosisID         uuid.UUID             `bun:"type:uuid" json:"mkbDiagnosisId"`
+	MkbSubDiagnosis        *MkbDiagnosis         `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
+	MkbSubDiagnosisID      uuid.NullUUID         `bun:"type:uuid" json:"mkbSubDiagnosisId"`
+	MkbConcreteDiagnosis   *MkbConcreteDiagnosis `bun:"rel:belongs-to" json:"mkbConcreteDiagnosis"`
+	MkbConcreteDiagnosisID uuid.NullUUID         `bun:"type:uuid,nullzero" json:"mkbConcreteDiagnosisId"`
 }

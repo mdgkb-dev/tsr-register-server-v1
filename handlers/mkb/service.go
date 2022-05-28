@@ -6,12 +6,12 @@ import (
 )
 
 type CompositionMkb struct {
-	MkbGroups    []*models.MkbGroup     `json:"mkbGroups"`
-	MkbSubGroups []*models.MkbSubGroup  `json:"mkbSubGroups"`
-	MkbDiagnosis []*models.MkbDiagnosis `json:"mkbDiagnosis"`
+	MkbGroups    models.MkbGroups    `json:"mkbGroups"`
+	MkbSubGroups models.MkbSubGroups `json:"mkbSubGroups"`
+	MkbDiagnosis models.MkbDiagnoses `json:"mkbDiagnosis"`
 }
 
-func (s *Service) GetAllClasses() ([]*models.MkbClass, error) {
+func (s *Service) GetAllClasses() (models.MkbClasses, error) {
 	classes, err := s.repository.getAllClasses()
 	if err != nil {
 		return nil, err
@@ -19,7 +19,7 @@ func (s *Service) GetAllClasses() ([]*models.MkbClass, error) {
 	return classes, nil
 }
 
-func (s *Service) GetGroupByClassId(classID *string) (*CompositionMkb, error) {
+func (s *Service) GetGroupByClassId(classID string) (*CompositionMkb, error) {
 	groups, err := s.repository.getGroupsByClassId(classID)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (s *Service) GetGroupByClassId(classID *string) (*CompositionMkb, error) {
 	return &res, nil
 }
 
-func (s *Service) GetGroupChildrens(groupId *string) (*CompositionMkb, error) {
+func (s *Service) GetGroupChildrens(groupId string) (*CompositionMkb, error) {
 	subGroups, err := s.repository.getSubGroupByGroupId(groupId)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (s *Service) GetGroupChildrens(groupId *string) (*CompositionMkb, error) {
 	return &res, nil
 }
 
-func (s *Service) GetDiagnosisByGroupId(groupId *string) ([]*models.MkbDiagnosis, error) {
+func (s *Service) GetDiagnosisByGroupId(groupId string) (models.MkbDiagnoses, error) {
 	diagnosis, err := s.repository.getDiagnosisByGroupId(groupId)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (s *Service) GetDiagnosisByGroupId(groupId *string) ([]*models.MkbDiagnosis
 	return diagnosis, nil
 }
 
-func (s *Service) GetSubGroupChildrens(groupId *string) (*CompositionMkb, error) {
+func (s *Service) GetSubGroupChildrens(groupId string) (*CompositionMkb, error) {
 	diagnosis, err := s.repository.getDiagnosisBySubGroupId(groupId)
 	if err != nil {
 		return nil, err
@@ -65,15 +65,11 @@ func (s *Service) GetSubGroupChildrens(groupId *string) (*CompositionMkb, error)
 	return &res, nil
 }
 
-func (s *Service) GetSubDiagnosisByDiagnosisId(diagnosisId *string) ([]*models.MkbSubDiagnosis, error) {
-	subDiagnosis, err := s.repository.getSubDiagnosisByDiagnosisId(diagnosisId)
-	if err != nil {
-		return nil, err
-	}
-	return subDiagnosis, nil
+func (s *Service) GetSubDiagnosisByDiagnosisId(diagnosisId string) (models.MkbSubDiagnoses, error) {
+	return s.repository.getSubDiagnosisByDiagnosisId(diagnosisId)
 }
 
-func (s *Service) GetDiagnosisBySearch(search *string) ([]*models.MkbDiagnosis, error) {
+func (s *Service) GetDiagnosisBySearch(search string) (models.MkbDiagnoses, error) {
 	diagnosis, err := s.repository.getDiagnosisBySearch(search)
 	if err != nil {
 		return nil, err
@@ -81,8 +77,16 @@ func (s *Service) GetDiagnosisBySearch(search *string) ([]*models.MkbDiagnosis, 
 	return diagnosis, nil
 }
 
-func (s *Service) GetGroupsBySearch(search *string) ([]*models.MkbGroup, error) {
-	lenOfSearch := len([]rune(*search))
+func (s *Service) GetSubDiagnosesBySearch(search string) (models.MkbSubDiagnoses, error) {
+	diagnosis, err := s.repository.getSubDiagnosesBySearch(search)
+	if err != nil {
+		return nil, err
+	}
+	return diagnosis, nil
+}
+
+func (s *Service) GetGroupsBySearch(search string) (models.MkbGroups, error) {
+	lenOfSearch := len([]rune(search))
 	if lenOfSearch < 3 {
 		groups, err := s.repository.getGroupsByRange(search)
 		if err != nil {
@@ -97,7 +101,7 @@ func (s *Service) GetGroupsBySearch(search *string) ([]*models.MkbGroup, error) 
 	return groups, nil
 }
 
-func (s *Service) UpdateRelevant(id, model *string) error {
+func (s *Service) UpdateRelevant(id, model string) error {
 	table := getTableName(model)
 	err := s.repository.updateRelevant(id, table)
 	if err != nil {
@@ -106,7 +110,7 @@ func (s *Service) UpdateRelevant(id, model *string) error {
 	return nil
 }
 
-func (s *Service) UpdateName(id, name, model *string) error {
+func (s *Service) UpdateName(id, name, model string) error {
 	table := getTableName(model)
 	err := s.repository.updateName(id, name, table)
 	if err != nil {
@@ -115,9 +119,9 @@ func (s *Service) UpdateName(id, name, model *string) error {
 	return nil
 }
 
-func getTableName(model *string) *string {
+func getTableName(model string) string {
 	tableName := ""
-	switch *model {
+	switch model {
 	case "MkbCLass":
 		tableName = "mkb_class"
 	case "MkbGroup":
@@ -131,5 +135,12 @@ func getTableName(model *string) *string {
 	case "MkbSubDiagnosis":
 		tableName = "mkb_sub_diagnosis"
 	}
-	return &tableName
+	return tableName
+}
+
+func (s *Service) GetConcreteDiagnosisBySearch(search string) (models.MkbConcreteDiagnoses, error) {
+	return s.repository.getConcreteDiagnosisBySearch(search)
+}
+func (s *Service) GetConcreteDiagnosisBySubDiagnosisId(diagnosisId string) (models.MkbConcreteDiagnoses, error) {
+	return s.repository.getConcreteDiagnosisBySubDiagnosisId(diagnosisId)
 }

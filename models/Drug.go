@@ -15,7 +15,7 @@ type Drug struct {
 	Form                  string         `json:"form"`
 	Doze                  string         `json:"doze"`
 	Registered            bool           `json:"registered"`
-	DateRegistration      time.Time      `json:"dateRegistration"`
+	DateRegistration      *time.Time     `json:"dateRegistration"`
 	DrugRegimens          []*DrugRegimen `bun:"rel:has-many" json:"drugRegimens"`
 	DrugRegimensForDelete []string       `bun:"-" json:"drugRegimensForDelete"`
 

@@ -1,8 +1,7 @@
-package drug
+package mkbSubDiagnoses
 
 import (
 	"context"
-	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -14,28 +13,18 @@ import (
 type IHandler interface {
 	GetAll(c *gin.Context)
 	Get(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
 }
 
 type IService interface {
-	setQueryFilter(*gin.Context) error
-	GetAll([]uuid.UUID) ([]*models.Drug, error)
-	Get(*string) (*models.Drug, error)
-	Create(*models.Drug) error
-	Update(*models.Drug) error
-	Delete(*string) error
+	GetAll() (models.MkbSubDiagnoses, error)
+	Get(string) (*models.MkbSubDiagnosis, error)
 }
 
 type IRepository interface {
 	setQueryFilter(*gin.Context) error
 	getDB() *bun.DB
-	create(*models.Drug) error
-	getAll([]uuid.UUID) ([]*models.Drug, error)
-	get(*string) (*models.Drug, error)
-	update(*models.Drug) error
-	delete(*string) error
+	getAll() (models.MkbSubDiagnoses, error)
+	get(string) (*models.MkbSubDiagnosis, error)
 }
 
 type Handler struct {

@@ -9,7 +9,7 @@ import (
 
 type History struct {
 	bun.BaseModel `bun:"histories,alias:histories"`
-	ID            uuid.UUID    `bun:"type:uuid,nullzero,notnull,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.UUID    `bun:"id,pk,type:uuid,nullzero,notnull,default:uuid_generate_v4()" json:"id" `
 	RequestType   *RequestType `json:"requestType"`
 	RequestDate   time.Time    `bun:",nullzero,notnull,default:current_timestamp" json:"requestDate"`
 }

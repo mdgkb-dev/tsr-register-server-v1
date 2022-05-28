@@ -3,7 +3,7 @@ package drug
 import (
 	"fmt"
 	"github.com/google/uuid"
-	
+
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 	"strings"
@@ -25,6 +25,10 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	err := h.service.setQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	var diagnosisIds []uuid.UUID
 	diagnosis := c.QueryArray("diagnosis")
 	if len(diagnosis) > 0 {

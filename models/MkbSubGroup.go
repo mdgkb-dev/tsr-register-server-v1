@@ -19,3 +19,5 @@ type MkbSubGroup struct {
 	MkbSubSubGroups []*MkbSubSubGroup `bun:"rel:has-many" json:"mkbSubSubGroups"`
 	MkbDiagnosis    []*MkbDiagnosis   `bun:"rel:has-many"json:"mkbDiagnosis"`
 }
+
+type MkbSubGroups []*MkbSubGroup

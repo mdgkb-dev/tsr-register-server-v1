@@ -1,6 +1,7 @@
 package patientDiagnosis
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosisAnamnesis"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -40,6 +41,7 @@ func (s *Service) UpsertMany(items []*models.PatientDiagnosis) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(items)
 	return s.repository.upsertMany(items)
 }
 
