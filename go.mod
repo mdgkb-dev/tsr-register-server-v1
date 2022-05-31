@@ -9,7 +9,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-redis/redis/v7 v7.4.1
 	github.com/google/uuid v1.3.0
-	github.com/pro-assistance/pro-assister v0.0.57
+	github.com/pro-assistance/pro-assister v0.0.66
 	github.com/uptrace/bun v1.1.5
 	github.com/xuri/excelize/v2 v2.4.1
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88
@@ -51,6 +51,7 @@ require (
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
+	github.com/unidoc/unidoc v2.2.0+incompatible // indirect
 	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5 // indirect
 	github.com/uptrace/bun/driver/pgdriver v1.1.5 // indirect
 	github.com/uptrace/bun/extra/bundebug v1.1.5 // indirect
@@ -59,6 +60,7 @@ require (
 	github.com/vmihailenco/tagparser v0.1.2 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xuri/efp v0.0.0-20210322160811-ab561f5b45e3 // indirect
+	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
 	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
 	golang.org/x/text v0.3.7 // indirect

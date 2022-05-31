@@ -11,6 +11,7 @@ type Schema struct {
 	MkbSubDiagnosis      map[string]string `json:"mkbSubDiagnosis"`
 	MkbConcreteDiagnosis map[string]string `json:"mkbConcreteDiagnosis"`
 	Drug                 map[string]string `json:"drug"`
+	RegisterToPatient    map[string]string `json:"registerToPatient"`
 }
 
 func CreateSchema() Schema {
@@ -25,12 +26,14 @@ func CreateSchema() Schema {
 		MkbSubDiagnosis:      createMkbSubDiagnosisSchema(),
 		MkbConcreteDiagnosis: createMkbConcreteDiagnosisSchema(),
 		Drug:                 createDrugSchema(),
+		RegisterToPatient:    createRegisterToPatientSchema(),
 	}
 }
 
 func createHumanSchema() map[string]string {
 	return map[string]string{
-		"tableName": "human",
+		"tableName": "humans_view",
+		"id":        "id",
 		"dateBirth": "date_birth",
 		"fullName":  "full_name",
 		"isMale":    "is_male",
@@ -42,6 +45,9 @@ func createPatientSchema() map[string]string {
 		"tableName": "patients_view",
 		"key":       "patient",
 		"fullName":  "full_name",
+		"humanId":   "human_id",
+		"isMale":    "is_male",
+		"dateBirth": "date_birth",
 		"createdAt": "created_at",
 		"updatedAt": "updated_at",
 	}
@@ -51,6 +57,8 @@ func createRepresentativeSchema() map[string]string {
 	return map[string]string{
 		"tableName": "representatives_view",
 		"key":       "representative",
+		"isMale":    "is_male",
+		"dateBirth": "date_birth",
 		"fullName":  "full_name",
 		"createdAt": "created_at",
 		"updatedAt": "updated_at",
@@ -60,6 +68,7 @@ func createRepresentativeSchema() map[string]string {
 func createPatientDiagnosisSchema() map[string]string {
 	return map[string]string{
 		"tableName":         "patient_diagnosis",
+		"isMale":            "is_male",
 		"joinTable":         "patients",
 		"joinTableFk":       "patient_id",
 		"joinTablePk":       "id",
@@ -116,5 +125,14 @@ func createDrugSchema() map[string]string {
 		"tableName": "drugs",
 		"key":       "drug",
 		"name":      "name",
+	}
+}
+
+func createRegisterToPatientSchema() map[string]string {
+	return map[string]string{
+		"tableName":  "register_to_patient",
+		"key":        "registerToPatient",
+		"registerId": "register_id",
+		"patientId":  "patient_id",
 	}
 }
