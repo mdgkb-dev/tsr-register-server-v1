@@ -25,7 +25,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeTypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documentTypes"
 	drugRouter "mdgkb/tsr-tegister-server-v1/routing/drug"
@@ -52,9 +51,8 @@ import (
 
 func Init(r *gin.Engine, helper *helperPack.Helper) {
 	r.Static("/static", "../static/")
+	r.Use(helper.HTTP.CORSMiddleware())
 	api := r.Group("/api/v1")
-	m := middleware.CreateMiddleware(helper)
-	r.Use(m.CORSMiddleware())
 	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documentTypes.CreateHandler(helper))
 	drugRouter.Init(api.Group("/drugs"), drug.CreateHandler(helper))
