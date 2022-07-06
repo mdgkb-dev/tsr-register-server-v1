@@ -6,5 +6,5 @@ import (
 )
 
 func (s *Service) GetRegisterQuery(id string) (*models.RegisterQuery, error) {
-	return registerQuery.CreateService(s.repository.getDB(), s.helper).Get(id)
+	return registerQuery.CreateService(s.helper).Get(id)
 }

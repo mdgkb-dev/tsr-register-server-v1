@@ -15,7 +15,7 @@ type IService interface {
 }
 
 type IRepository interface {
-	getDB() *bun.DB
+	db() *bun.DB
 	createMany(models.DrugsDiagnosis) error
 	upsertMany(models.DrugsDiagnosis) error
 	deleteMany([]uuid.UUID) error
@@ -31,13 +31,12 @@ type Service struct {
 }
 
 type Repository struct {
-	db     *bun.DB
 	ctx    context.Context
 	helper *helper.Helper
 }
 
-func CreateService(db *bun.DB, helper *helper.Helper) *Service {
-	repo := NewRepository(db, helper)
+func CreateService(helper *helper.Helper) *Service {
+	repo := NewRepository(helper)
 	return NewService(repo, helper)
 }
 
@@ -45,6 +44,6 @@ func NewService(repository IRepository, helper *helper.Helper) *Service {
 	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB, helper *helper.Helper) *Repository {
-	return &Repository{db: db, ctx: context.Background(), helper: helper}
+func NewRepository(helper *helper.Helper) *Repository {
+	return &Repository{ctx: context.Background(), helper: helper}
 }

@@ -1,9 +1,9 @@
 ifeq ($(OS),Windows_NT)
-	migrations := .\database\migrations
+	migrates := .\database\migrates
 	cli := .\cmd\cli
 	main := .\cmd\server\main.go
 else
-	migrations := database/migrations/*.go
+	migrates := database/migrates/*.go
 	cli := cmd/cli/*.go
 	main := cmd/server/main.go
 endif
@@ -15,10 +15,10 @@ run_cold:
 	go run $(main)
 
 migrate:
-	go run $(main) -mode=migration -action=migrate
+	go run $(main) -mode=migrate -action=migrate
 
 migrate_create:
-	go run $(database) -mode=migration -action=create -name=${name}
+	go run $(main) -mode=migrate -action=create -name=${name}
 
 seed:
 	go run $(database) -mode=seed -action=migrate
@@ -27,7 +27,7 @@ seed_create:
 	go run $(database) -mode=seed -action=create -name=${name}
 
 migrate_rollback:
-	go run $(migrations) rollback
+	go run $(migrates) rollback
 
 full_migrate: drop_database migrate_init migrate seed
 

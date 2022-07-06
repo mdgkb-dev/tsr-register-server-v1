@@ -8,17 +8,17 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) getDB() *bun.DB {
-	return r.db
+func (r *Repository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *Repository) create(query *models.RegisterQuery) (err error) {
-	_, err = r.db.NewInsert().Model(query).Exec(r.ctx)
+	_, err = r.db().NewInsert().Model(query).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
-	err = r.db.NewSelect().
+	err = r.db().NewSelect().
 		Model(&queries).
 		Relation("Register").
 		Scan(r.ctx)
@@ -27,7 +27,7 @@ func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
 
 func (r *Repository) get(id string) (*models.RegisterQuery, error) {
 	query := models.RegisterQuery{}
-	err := r.db.NewSelect().
+	err := r.db().NewSelect().
 		Model(&query).
 		Relation("RegisterQueryToRegisterProperty.RegisterProperty.ValueType").
 		Where("register_queries.id = ?", id).Scan(r.ctx)
@@ -35,12 +35,12 @@ func (r *Repository) get(id string) (*models.RegisterQuery, error) {
 }
 
 func (r *Repository) update(query *models.RegisterQuery) (err error) {
-	_, err = r.db.NewUpdate().Model(query).Where("id = ?", query.ID).Exec(r.ctx)
+	_, err = r.db().NewUpdate().Model(query).Where("id = ?", query.ID).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) delete(id string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.RegisterQuery{}).Where("id = ?", id).Exec(r.ctx)
+	_, err = r.db().NewDelete().Model(&models.RegisterQuery{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
@@ -111,8 +111,8 @@ func (r *Repository) execute(registerQuery *models.RegisterQuery) error {
 	) AS ct ("%s" varchar, %s);
 `, valuesString, registerQuery.Key, colsString)
 
-	res, err := r.db.QueryContext(r.ctx, query, &registerQuery.Data)
-	err = r.db.ScanRows(r.ctx, res, &registerQuery.Data)
+	res, err := r.db().QueryContext(r.ctx, query, &registerQuery.Data)
+	err = r.db().ScanRows(r.ctx, res, &registerQuery.Data)
 
 	return err
 }

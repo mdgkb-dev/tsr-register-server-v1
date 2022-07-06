@@ -9,8 +9,8 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) getDB() *bun.DB {
-	return r.db
+func (r *Repository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
@@ -22,12 +22,12 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 }
 
 func (r *Repository) create(item *models.Register) (err error) {
-	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
+	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) getAll(userID uuid.UUID) (items []*models.Register, err error) {
-	err = r.db.NewSelect().
+	err = r.db().NewSelect().
 		Model(&items).
 		Join("JOIN registers_users ON registers_users.user_id = ? and register.id = registers_users.register_id", userID).
 		Relation("RegisterDiagnosis").
@@ -37,7 +37,7 @@ func (r *Repository) getAll(userID uuid.UUID) (items []*models.Register, err err
 
 func (r *Repository) get(id string) (*models.Register, error) {
 	item := models.Register{}
-	err := r.db.NewSelect().
+	err := r.db().NewSelect().
 		Model(&item).
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbGroup").
@@ -72,22 +72,22 @@ func (r *Repository) get(id string) (*models.Register, error) {
 	if err != nil {
 		return nil, err
 	}
-	item.RegisterToPatientCount, err = r.db.NewSelect().Model((*models.RegisterToPatient)(nil)).Where("register_id = ?", id).Count(r.ctx)
+	item.RegisterToPatientCount, err = r.db().NewSelect().Model((*models.RegisterToPatient)(nil)).Where("register_id = ?", id).Count(r.ctx)
 	return &item, err
 }
 
 func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.Register{}).Where("id = ?", *id).Exec(r.ctx)
+	_, err = r.db().NewDelete().Model(&models.Register{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
 func (r *Repository) update(item *models.Register) (err error) {
-	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) getValueTypes() (models.ValueTypes, error) {
 	items := make(models.ValueTypes, 0)
-	err := r.db.NewSelect().
+	err := r.db().NewSelect().
 		Model(&items).
 		Scan(r.ctx)
 	return items, err

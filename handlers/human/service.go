@@ -14,13 +14,13 @@ func (s *Service) Create(item *models.Human) error {
 	if item == nil {
 		return nil
 	}
-	err := contact.CreateService(s.repository.getDB(), s.helper).Create(item.Contact)
+	err := contact.CreateService(s.helper).Create(item.Contact)
 	if err != nil {
 		return err
 	}
 	item.ContactID = item.Contact.ID
 
-	err = fileInfo.CreateService(s.repository.getDB(), s.helper).Create(item.Photo)
+	err = fileInfo.CreateService(s.helper).Create(item.Photo)
 	if err != nil {
 		return err
 	}
@@ -34,11 +34,11 @@ func (s *Service) Create(item *models.Human) error {
 	}
 	item.SetIdForChildren()
 
-	err = insuranceCompanyToHuman.CreateService(s.repository.getDB(), s.helper).CreateMany(item.InsuranceCompanyToHuman)
+	err = insuranceCompanyToHuman.CreateService(s.helper).CreateMany(item.InsuranceCompanyToHuman)
 	if err != nil {
 		return err
 	}
-	err = document.CreateService(s.repository.getDB(), s.helper).CreateMany(item.Documents)
+	err = document.CreateService(s.helper).CreateMany(item.Documents)
 	if err != nil {
 		return err
 	}
@@ -49,13 +49,13 @@ func (s *Service) Update(item *models.Human) error {
 	if item == nil {
 		return nil
 	}
-	err := contact.CreateService(s.repository.getDB(), s.helper).Upsert(item.Contact)
+	err := contact.CreateService(s.helper).Upsert(item.Contact)
 	if err != nil {
 		return err
 	}
 	item.ContactID = item.Contact.ID
 
-	err = fileInfo.CreateService(s.repository.getDB(), s.helper).Upsert(item.Photo)
+	err = fileInfo.CreateService(s.helper).Upsert(item.Photo)
 	if err != nil {
 		return err
 	}
@@ -69,7 +69,7 @@ func (s *Service) Update(item *models.Human) error {
 	}
 	item.SetIdForChildren()
 
-	insuranceCompanyToHumanService := insuranceCompanyToHuman.CreateService(s.repository.getDB(), s.helper)
+	insuranceCompanyToHumanService := insuranceCompanyToHuman.CreateService(s.helper)
 	err = insuranceCompanyToHumanService.UpsertMany(item.InsuranceCompanyToHuman)
 	if err != nil {
 		return err
@@ -78,7 +78,7 @@ func (s *Service) Update(item *models.Human) error {
 	if err != nil {
 		return err
 	}
-	documentService := document.CreateService(s.repository.getDB(), s.helper)
+	documentService := document.CreateService(s.helper)
 	err = documentService.UpsertMany(item.Documents)
 	if err != nil {
 		return err
@@ -96,19 +96,19 @@ func (s *Service) Delete(id uuid.UUID) error {
 		return err
 	}
 	human.SetDeleteIdForChildren()
-	err = contact.CreateService(s.repository.getDB(), s.helper).Delete(human.ContactID)
+	err = contact.CreateService(s.helper).Delete(human.ContactID)
 	if err != nil {
 		return err
 	}
-	err = fileInfo.CreateService(s.repository.getDB(), s.helper).Delete(human.PhotoId)
+	err = fileInfo.CreateService(s.helper).Delete(human.PhotoId)
 	if err != nil {
 		return err
 	}
-	err = insuranceCompanyToHuman.CreateService(s.repository.getDB(), s.helper).DeleteMany(human.InsuranceCompanyToHumanForDelete)
+	err = insuranceCompanyToHuman.CreateService(s.helper).DeleteMany(human.InsuranceCompanyToHumanForDelete)
 	if err != nil {
 		return err
 	}
-	err = document.CreateService(s.repository.getDB(), s.helper).DeleteMany(human.DocumentsForDelete)
+	err = document.CreateService(s.helper).DeleteMany(human.DocumentsForDelete)
 	if err != nil {
 		return err
 	}

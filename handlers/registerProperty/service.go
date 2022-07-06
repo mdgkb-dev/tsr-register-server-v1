@@ -54,7 +54,7 @@ func (s *Service) UpsertMany(items models.RegisterProperties) error {
 		return err
 	}
 	items.SetIdForChildren()
-	registerPropertyRadioService := registerPropertyRadio.CreateService(s.repository.getDB(), s.helper)
+	registerPropertyRadioService := registerPropertyRadio.CreateService(s.helper)
 	err = registerPropertyRadioService.UpsertMany(items.GetRegisterPropertyRadios())
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (s *Service) UpsertMany(items models.RegisterProperties) error {
 	if err != nil {
 		return err
 	}
-	registerPropertySetService := registerPropertySet.CreateService(s.repository.getDB(), s.helper)
+	registerPropertySetService := registerPropertySet.CreateService(s.helper)
 	err = registerPropertySetService.UpsertMany(items.GetRegisterPropertySets())
 	if err != nil {
 		return err
@@ -73,7 +73,7 @@ func (s *Service) UpsertMany(items models.RegisterProperties) error {
 		return err
 	}
 
-	registerPropertyExamplesService := registerPropertyExamples.CreateService(s.repository.getDB(), s.helper)
+	registerPropertyExamplesService := registerPropertyExamples.CreateService(s.helper)
 	err = registerPropertyExamplesService.UpsertMany(items.GetRegisterPropertyExamples())
 	if err != nil {
 		return err

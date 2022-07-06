@@ -6,17 +6,17 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *HistoryRepository) getDB() *bun.DB {
-	return r.db
+func (r *HistoryRepository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *HistoryRepository) create(item *models.PatientHistory) (err error) {
-	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
+	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
 func (r *HistoryRepository) getAll(id *string) (items []*models.PatientHistory, err error) {
-	err = r.db.NewSelect().
+	err = r.db().NewSelect().
 		Model(&items).
 		Relation("History").
 		Relation("HumanHistory").
@@ -27,7 +27,7 @@ func (r *HistoryRepository) getAll(id *string) (items []*models.PatientHistory, 
 
 func (r *HistoryRepository) get(id *string) (*models.PatientHistory, error) {
 	item := models.PatientHistory{}
-	err := r.db.NewSelect().
+	err := r.db().NewSelect().
 		Model(&item).
 		Relation("History").
 		Relation("HumanHistory").

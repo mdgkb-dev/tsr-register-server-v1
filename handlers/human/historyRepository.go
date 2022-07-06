@@ -6,11 +6,11 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *HistoryRepository) getDB() *bun.DB {
-	return r.db
+func (r *HistoryRepository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *HistoryRepository) create(item *models.HumanHistory) (err error) {
-	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
+	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }

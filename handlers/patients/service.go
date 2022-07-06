@@ -18,7 +18,7 @@ import (
 )
 
 func (s *Service) Create(item *models.Patient) error {
-	err := human.CreateService(s.repository.getDB(), s.helper).Create(item.Human)
+	err := human.CreateService(s.helper).Create(item.Human)
 	if err != nil {
 		return err
 	}
@@ -28,35 +28,35 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = representativeToPatient.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RepresentativeToPatient)
+	err = representativeToPatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
 	}
-	err = heightWeight.CreateService(s.repository.getDB(), s.helper).CreateMany(item.HeightWeight)
+	err = heightWeight.CreateService(s.helper).CreateMany(item.HeightWeight)
 	if err != nil {
 		return err
 	}
-	err = chestCircumference.CreateService(s.repository.getDB(), s.helper).CreateMany(item.ChestCircumference)
+	err = chestCircumference.CreateService(s.helper).CreateMany(item.ChestCircumference)
 	if err != nil {
 		return err
 	}
-	err = headCircumference.CreateService(s.repository.getDB(), s.helper).CreateMany(item.HeadCircumference)
+	err = headCircumference.CreateService(s.helper).CreateMany(item.HeadCircumference)
 	if err != nil {
 		return err
 	}
-	err = disability.CreateService(s.repository.getDB(), s.helper).CreateMany(item.Disabilities)
+	err = disability.CreateService(s.helper).CreateMany(item.Disabilities)
 	if err != nil {
 		return err
 	}
-	err = patientDiagnosis.CreateService(s.repository.getDB(), s.helper).CreateMany(item.PatientDiagnosis)
+	err = patientDiagnosis.CreateService(s.helper).CreateMany(item.PatientDiagnosis)
 	if err != nil {
 		return err
 	}
-	err = patientDrugRegimen.CreateService(s.repository.getDB(), s.helper).CreateMany(item.PatientDrugRegimen)
+	err = patientDrugRegimen.CreateService(s.helper).CreateMany(item.PatientDrugRegimen)
 	if err != nil {
 		return err
 	}
-	err = registerToPatient.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RegisterToPatient)
+	err = registerToPatient.CreateService(s.helper).CreateMany(item.RegisterToPatient)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (s *Service) Get(id *string, withDeleted bool) (*models.Patient, error) {
 }
 
 func (s *Service) Update(item *models.Patient) error {
-	err := human.CreateService(s.repository.getDB(), s.helper).Update(item.Human)
+	err := human.CreateService(s.helper).Update(item.Human)
 	if err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func (s *Service) Update(item *models.Patient) error {
 	}
 	item.SetIdForChildren()
 
-	representativeToPatientService := representativeToPatient.CreateService(s.repository.getDB(), s.helper)
+	representativeToPatientService := representativeToPatient.CreateService(s.helper)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
@@ -100,7 +100,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	heightWeightService := heightWeight.CreateService(s.repository.getDB(), s.helper)
+	heightWeightService := heightWeight.CreateService(s.helper)
 	err = heightWeightService.UpsertMany(item.HeightWeight)
 	if err != nil {
 		return err
@@ -109,7 +109,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	chestCircumferenceService := chestCircumference.CreateService(s.repository.getDB(), s.helper)
+	chestCircumferenceService := chestCircumference.CreateService(s.helper)
 	err = chestCircumferenceService.UpsertMany(item.ChestCircumference)
 	if err != nil {
 		return err
@@ -118,7 +118,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	headCircumferenceService := headCircumference.CreateService(s.repository.getDB(), s.helper)
+	headCircumferenceService := headCircumference.CreateService(s.helper)
 	err = headCircumferenceService.UpsertMany(item.HeadCircumference)
 	if err != nil {
 		return err
@@ -127,7 +127,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	disabilityService := disability.CreateService(s.repository.getDB(), s.helper)
+	disabilityService := disability.CreateService(s.helper)
 	err = disabilityService.UpsertMany(item.Disabilities)
 	if err != nil {
 		return err
@@ -137,7 +137,7 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 
-	patientDiagnosisService := patientDiagnosis.CreateService(s.repository.getDB(), s.helper)
+	patientDiagnosisService := patientDiagnosis.CreateService(s.helper)
 	err = patientDiagnosisService.UpsertMany(item.PatientDiagnosis)
 	if err != nil {
 		return err
@@ -146,7 +146,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	patientDrugRegimenService := patientDrugRegimen.CreateService(s.repository.getDB(), s.helper)
+	patientDrugRegimenService := patientDrugRegimen.CreateService(s.helper)
 	err = patientDrugRegimenService.UpsertMany(item.PatientDrugRegimen)
 	if err != nil {
 		return err
@@ -155,7 +155,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	registerToPatientService := registerToPatient.CreateService(s.repository.getDB(), s.helper)
+	registerToPatientService := registerToPatient.CreateService(s.helper)
 	err = registerToPatientService.UpsertMany(item.RegisterToPatient)
 	if err != nil {
 		return err
@@ -164,7 +164,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	registerPropertyToPatientService := registerPropertyToPatient.CreateService(s.repository.getDB(), s.helper)
+	registerPropertyToPatientService := registerPropertyToPatient.CreateService(s.helper)
 	err = registerPropertyToPatientService.UpsertMany(item.RegisterPropertyToPatient)
 	if err != nil {
 		return err
@@ -173,7 +173,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	registerPropertySetToPatientService := registerPropertySetToPatient.CreateService(s.repository.getDB(), s.helper)
+	registerPropertySetToPatientService := registerPropertySetToPatient.CreateService(s.helper)
 	err = registerPropertySetToPatientService.UpsertMany(item.RegisterPropertySetToPatient)
 	if err != nil {
 		return err
@@ -184,7 +184,7 @@ func (s *Service) Update(item *models.Patient) error {
 
 	}
 
-	registerPropertyOthersToPatientService := registerPropertyOthersToPatient.CreateService(s.repository.getDB(), s.helper)
+	registerPropertyOthersToPatientService := registerPropertyOthersToPatient.CreateService(s.helper)
 	err = registerPropertyOthersToPatientService.UpsertMany(item.RegisterPropertyOthersPatient)
 	if err != nil {
 		return err
@@ -199,47 +199,47 @@ func (s *Service) Delete(id *string) error {
 		return err
 	}
 	patient.SetDeleteIdForChildren()
-	err = human.CreateService(s.repository.getDB(), s.helper).Delete(patient.HumanID)
+	err = human.CreateService(s.helper).Delete(patient.HumanID)
 	if err != nil {
 		return err
 	}
-	err = representativeToPatient.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.RepresentativeToPatientForDelete)
+	err = representativeToPatient.CreateService(s.helper).DeleteMany(patient.RepresentativeToPatientForDelete)
 	if err != nil {
 		return err
 	}
-	err = heightWeight.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.HeightWeightForDelete)
+	err = heightWeight.CreateService(s.helper).DeleteMany(patient.HeightWeightForDelete)
 	if err != nil {
 		return err
 	}
-	err = chestCircumference.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
+	err = chestCircumference.CreateService(s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
 	if err != nil {
 		return err
 	}
-	err = headCircumference.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
+	err = headCircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
 	if err != nil {
 		return err
 	}
-	err = disability.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.DisabilitiesForDelete)
+	err = disability.CreateService(s.helper).DeleteMany(patient.DisabilitiesForDelete)
 	if err != nil {
 		return err
 	}
-	err = patientDiagnosis.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.PatientDiagnosisForDelete)
+	err = patientDiagnosis.CreateService(s.helper).DeleteMany(patient.PatientDiagnosisForDelete)
 	if err != nil {
 		return err
 	}
-	err = patientDrugRegimen.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
+	err = patientDrugRegimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
 	if err != nil {
 		return err
 	}
-	err = registerToPatient.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.RegisterToPatientForDelete)
+	err = registerToPatient.CreateService(s.helper).DeleteMany(patient.RegisterToPatientForDelete)
 	if err != nil {
 		return err
 	}
-	err = registerPropertyToPatient.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.RegisterPropertyToPatientForDelete)
+	err = registerPropertyToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertyToPatientForDelete)
 	if err != nil {
 		return err
 	}
-	err = registerPropertySetToPatient.CreateService(s.repository.getDB(), s.helper).DeleteMany(patient.RegisterPropertySetToPatientForDelete)
+	err = registerPropertySetToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertySetToPatientForDelete)
 	if err != nil {
 		return err
 	}

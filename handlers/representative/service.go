@@ -8,7 +8,7 @@ import (
 )
 
 func (s *Service) Create(item *models.Representative) error {
-	err := human.CreateService(s.repository.getDB(), s.helper).Create(item.Human)
+	err := human.CreateService(s.helper).Create(item.Human)
 	if err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func (s *Service) Create(item *models.Representative) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = representativeToPatient.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RepresentativeToPatient)
+	err = representativeToPatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func (s *Service) Get(id *string) (*models.Representative, error) {
 }
 
 func (s *Service) Update(item *models.Representative) error {
-	err := human.CreateService(s.repository.getDB(), s.helper).Update(item.Human)
+	err := human.CreateService(s.helper).Update(item.Human)
 	if err != nil {
 		return err
 	}
@@ -53,7 +53,7 @@ func (s *Service) Update(item *models.Representative) error {
 	}
 	item.SetIdForChildren()
 
-	representativeToPatientService := representativeToPatient.CreateService(s.repository.getDB(), s.helper)
+	representativeToPatientService := representativeToPatient.CreateService(s.helper)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err

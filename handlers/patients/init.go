@@ -38,7 +38,7 @@ type IService interface {
 
 type IRepository interface {
 	setQueryFilter(*gin.Context) error
-	getDB() *bun.DB
+	db() *bun.DB
 	create(*models.Patient) error
 	getAll() (models.PatientsWithCount, error)
 	get(*string, bool) (*models.Patient, error)
@@ -55,7 +55,7 @@ type IFilesService interface {
 }
 
 type IHistoryRepository interface {
-	getDB() *bun.DB
+	db() *bun.DB
 	create(*models.PatientHistory) error
 	getAll(*string) ([]*models.PatientHistory, error)
 	get(*string) (*models.PatientHistory, error)
@@ -73,8 +73,8 @@ type HistoryService struct {
 }
 
 type HistoryRepository struct {
-	db  *bun.DB
-	ctx context.Context
+	helper *helper.Helper
+	ctx    context.Context
 }
 
 type Handler struct {
@@ -90,7 +90,6 @@ type Service struct {
 }
 
 type Repository struct {
-	db          *bun.DB
 	ctx         context.Context
 	helper      *helper.Helper
 	queryFilter *sqlHelper.QueryFilter
@@ -100,11 +99,11 @@ type FilesService struct {
 	helper *helper.Helper
 }
 
-func CreateHandler(db *bun.DB, helper *helper.Helper) *Handler {
-	repo := NewRepository(db, helper)
+func CreateHandler(helper *helper.Helper) *Handler {
+	repo := NewRepository(helper)
 	service := NewService(repo, helper)
 	filesService := NewFilesService(helper)
-	repoHistory := NewHistoryRepository(db)
+	repoHistory := NewHistoryRepository(helper)
 	historyService := NewHistoryService(repoHistory)
 	return NewHandler(service, filesService, historyService, helper)
 }
@@ -118,8 +117,8 @@ func NewService(repository IRepository, helper *helper.Helper) *Service {
 	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB, helper *helper.Helper) *Repository {
-	return &Repository{db: db, ctx: context.Background(), helper: helper}
+func NewRepository(helper *helper.Helper) *Repository {
+	return &Repository{ctx: context.Background(), helper: helper}
 }
 
 func NewFilesService(helper *helper.Helper) *FilesService {
@@ -130,6 +129,6 @@ func NewHistoryService(repository IHistoryRepository) *HistoryService {
 	return &HistoryService{repository: repository}
 }
 
-func NewHistoryRepository(db *bun.DB) *HistoryRepository {
-	return &HistoryRepository{db: db, ctx: context.Background()}
+func NewHistoryRepository(helper *helper.Helper) *HistoryRepository {
+	return &HistoryRepository{ctx: context.Background(), helper: helper}
 }

@@ -8,12 +8,12 @@ import (
 
 func (s *HistoryService) Create(item *models.Patient, requestType models.RequestType) error {
 	historyItem := models.History{RequestType: &requestType}
-	err := history.CreateService(s.repository.getDB(), s.helper).Create(&historyItem)
+	err := history.CreateService(s.helper).Create(&historyItem)
 	if err != nil {
 		return err
 	}
 	humanHistory := models.HumanHistory{Human: *item.Human}
-	err = human.CreateHistoryService(s.repository.getDB()).Create(&humanHistory)
+	err = human.CreateHistoryService().Create(&humanHistory)
 	if err != nil {
 		return err
 	}

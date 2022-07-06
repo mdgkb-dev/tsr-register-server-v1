@@ -15,7 +15,7 @@ func (s *Service) CreateMany(items []*models.PatientDrugRegimen) error {
 	if err != nil {
 		return err
 	}
-	err = patientDrugRegimenItem.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetPatientDrugRegimenItems(items))
+	err = patientDrugRegimenItem.CreateService(s.helper).CreateMany(models.GetPatientDrugRegimenItems(items))
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func (s *Service) UpsertMany(items []*models.PatientDrugRegimen) error {
 	if err != nil {
 		return err
 	}
-	err = patientDrugRegimenItem.CreateService(s.repository.getDB(), s.helper).UpsertMany(models.GetPatientDrugRegimenItems(items))
+	err = patientDrugRegimenItem.CreateService(s.helper).UpsertMany(models.GetPatientDrugRegimenItems(items))
 	if err != nil {
 		return err
 	}

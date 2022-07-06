@@ -23,7 +23,7 @@ type IService interface {
 }
 
 type IRepository interface {
-	getDB() *bun.DB
+	db() *bun.DB
 }
 
 type Handler struct {
@@ -38,7 +38,6 @@ type Service struct {
 }
 
 type Repository struct {
-	db     *bun.DB
 	ctx    context.Context
 	helper *helper.Helper
 }
@@ -47,8 +46,8 @@ type XlsxService struct {
 	xlsxHelper xlsxHelper.IXlsxHelper
 }
 
-func CreateHandler(db *bun.DB, h xlsxHelper.IXlsxHelper) *Handler {
-	repo := NewRepository(db)
+func CreateHandler(h xlsxHelper.IXlsxHelper) *Handler {
+	repo := NewRepository()
 	service := NewService(repo)
 	xlsxService := NewXlsxService(h)
 	return NewHandler(service, xlsxService)
@@ -62,8 +61,8 @@ func NewService(repository IRepository) *Service {
 	return &Service{repository: repository}
 }
 
-func NewRepository(db *bun.DB) *Repository {
-	return &Repository{db: db, ctx: context.Background()}
+func NewRepository() *Repository {
+	return &Repository{ctx: context.Background()}
 }
 
 func NewXlsxService(h xlsxHelper.IXlsxHelper) *XlsxService {

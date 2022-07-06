@@ -6,8 +6,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
-func (r *Repository) getDB() *bun.DB {
-	return r.db
+func (r *Repository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
@@ -19,12 +19,12 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 }
 
 func (r *Repository) create(item *models.Patient) (err error) {
-	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
+	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
-	query := r.db.NewSelect().
+	query := r.db().NewSelect().
 		Model(&items.Patients).
 		Relation("HeightWeight").
 		Relation("ChestCircumference").
@@ -52,7 +52,7 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 
 func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) {
 	item := models.Patient{}
-	query := r.db.NewSelect().Model(&item).
+	query := r.db().NewSelect().Model(&item).
 		Relation("HeightWeight").
 		Relation("ChestCircumference").
 		Relation("HeadCircumference").
@@ -89,17 +89,17 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 }
 
 func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Exec(r.ctx)
+	_, err = r.db().NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) update(item *models.Patient) (err error) {
-	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) getOnlyNames() (items models.PatientsWithCount, err error) {
-	items.Count, err = r.db.NewSelect().
+	items.Count, err = r.db().NewSelect().
 		Model(&items.Patients).
 		Relation("Human").
 		Order("human.surname").
@@ -112,7 +112,7 @@ func (r *Repository) getOnlyNames() (items models.PatientsWithCount, err error) 
 func (r *Repository) getBySearch(search *string) ([]*models.Patient, error) {
 	items := make([]*models.Patient, 0)
 
-	err := r.db.NewSelect().
+	err := r.db().NewSelect().
 		Model(&items).
 		Relation("Human").
 		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
@@ -124,7 +124,7 @@ func (r *Repository) getBySearch(search *string) ([]*models.Patient, error) {
 
 func (r *Repository) getDisabilities() (item models.PatientsWithCount, err error) {
 	item.Patients = make([]*models.Patient, 0)
-	item.Count, err = r.db.NewSelect().
+	item.Count, err = r.db().NewSelect().
 		Model(&item.Patients).
 		Join("JOIN disability ON disability.patient_id = patients.id").
 		Relation("Human").

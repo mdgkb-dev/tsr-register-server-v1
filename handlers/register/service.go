@@ -15,11 +15,11 @@ func (s *Service) Create(item *models.Register) error {
 		return err
 	}
 	item.SetIdForChildren()
-	err = registerGroup.CreateService(s.repository.getDB(), s.helper).UpsertMany(item.RegisterGroups)
+	err = registerGroup.CreateService(s.helper).UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
 	}
-	err = registerDiagnosis.CreateService(s.repository.getDB(), s.helper).CreateMany(item.RegisterDiagnosis)
+	err = registerDiagnosis.CreateService(s.helper).CreateMany(item.RegisterDiagnosis)
 	if err != nil {
 		return err
 	}
@@ -49,7 +49,7 @@ func (s *Service) Update(item *models.Register) error {
 	}
 	item.SetIdForChildren()
 
-	registerGroupService := registerGroup.CreateService(s.repository.getDB(), s.helper)
+	registerGroupService := registerGroup.CreateService(s.helper)
 	err = registerGroupService.UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
@@ -59,7 +59,7 @@ func (s *Service) Update(item *models.Register) error {
 		return err
 	}
 
-	registerDiagnosisService := registerDiagnosis.CreateService(s.repository.getDB(), s.helper)
+	registerDiagnosisService := registerDiagnosis.CreateService(s.helper)
 	err = registerDiagnosisService.UpsertMany(item.RegisterDiagnosis)
 	if err != nil {
 		return err

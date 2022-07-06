@@ -8,8 +8,8 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) getDB() *bun.DB {
-	return r.db
+func (r *Repository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
@@ -21,13 +21,13 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 }
 
 func (r *Repository) create(item *models.Drug) (err error) {
-	_, err = r.db.NewInsert().Model(item).Exec(r.ctx)
+	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) getAll(diagnosisIds []uuid.UUID) ([]*models.Drug, error) {
 	items := make([]*models.Drug, 0)
-	q := r.db.NewSelect().Model(&items).
+	q := r.db().NewSelect().Model(&items).
 		Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_block_items.order_item")
 		}).
@@ -49,7 +49,7 @@ func (r *Repository) getAll(diagnosisIds []uuid.UUID) ([]*models.Drug, error) {
 
 func (r *Repository) get(id *string) (*models.Drug, error) {
 	item := models.Drug{}
-	err := r.db.NewSelect().Model(&item).
+	err := r.db().NewSelect().Model(&item).
 		Relation("DrugRegimens.DrugRegimenBlocks.DrugRegimenBlockItems", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_regimen_block_items.order_item")
 		}).
@@ -65,11 +65,11 @@ func (r *Repository) get(id *string) (*models.Drug, error) {
 }
 
 func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db.NewDelete().Model(&models.Drug{}).Where("id = ?", *id).Exec(r.ctx)
+	_, err = r.db().NewDelete().Model(&models.Drug{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) update(item *models.Drug) (err error) {
-	_, err = r.db.NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }

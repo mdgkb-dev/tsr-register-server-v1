@@ -9,7 +9,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-redis/redis/v7 v7.4.1
 	github.com/google/uuid v1.3.0
-	github.com/pro-assistance/pro-assister v0.0.66
+	github.com/pro-assistance/pro-assister v0.0.86-0.20220706105309-729fcd03490c
 	github.com/uptrace/bun v1.1.5
 	github.com/xuri/excelize/v2 v2.4.1
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88
@@ -32,6 +32,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/lukasjarosch/go-docx v0.4.4 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

@@ -38,7 +38,7 @@ func (s *Service) Update(item *models.RegisterGroup) error {
 	}
 	item.SetIdForChildren()
 
-	//registerPropertyToRegisterGroupService := registerPropertyToRegisterGroup.CreateService(s.repository.getDB(), s.helper)
+	//registerPropertyToRegisterGroupService := registerPropertyToRegisterGroup.CreateService(s.helper)
 	//err = registerPropertyToRegisterGroupService.UpsertMany(item.RegisterPropertyToRegisterGroup)
 	//if err != nil {
 	//	return err
@@ -60,7 +60,7 @@ func (s *Service) UpsertMany(items models.RegisterGroups) error {
 		return err
 	}
 	items.SetIdForChildren()
-	registerPropertyService := registerProperty.CreateService(s.repository.getDB(), s.helper)
+	registerPropertyService := registerProperty.CreateService(s.helper)
 	err = registerPropertyService.UpsertMany(items.GetRegisterProperties())
 	if err != nil {
 		return err
@@ -78,4 +78,3 @@ func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 	}
 	return s.repository.deleteMany(idPool)
 }
-

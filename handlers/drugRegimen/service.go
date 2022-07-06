@@ -13,7 +13,7 @@ func (s *Service) CreateMany(items []*models.DrugRegimen) error {
 	if err != nil {
 		return err
 	}
-	err = drugRegimenBlock.CreateService(s.repository.getDB(), s.helper).CreateMany(models.GetDrugRegimenBlocks(items))
+	err = drugRegimenBlock.CreateService(s.helper).CreateMany(models.GetDrugRegimenBlocks(items))
 	if err != nil {
 		return err
 	}
@@ -28,7 +28,7 @@ func (s *Service) UpsertMany(items []*models.DrugRegimen) error {
 	if err != nil {
 		return err
 	}
-	drugRegimenBlockService := drugRegimenBlock.CreateService(s.repository.getDB(), s.helper)
+	drugRegimenBlockService := drugRegimenBlock.CreateService(s.helper)
 	err = drugRegimenBlockService.UpsertMany(models.GetDrugRegimenBlocks(items))
 	if err != nil {
 		return err

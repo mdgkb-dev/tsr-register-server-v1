@@ -9,13 +9,13 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) getDB() *bun.DB {
-	return r.db
+func (r *Repository) db() *bun.DB {
+	return r.helper.DB.DB
 }
 
 func (r *Repository) getGroups(groupID string) (search.SearchGroups, error) {
 	items := make(search.SearchGroups, 0)
-	query := r.db.NewSelect().Model(&items).
+	query := r.db().NewSelect().Model(&items).
 		Relation("SearchGroupMetaColumns").
 		Order("search_group_order")
 
@@ -35,11 +35,11 @@ func (r *Repository) search(searchModel *search.SearchModel) error {
 	}
 	queryWhere := r.helper.SQL.WhereLikeWithLowerTranslit(searchModel.SearchGroup.SearchColumn, search)
 	query := fmt.Sprintf("%s %s %s", querySelect, queryFrom, queryWhere)
-	rows, err := r.db.QueryContext(r.ctx, query)
+	rows, err := r.db().QueryContext(r.ctx, query)
 	if err != nil {
 		return err
 	}
-	err = r.db.ScanRows(r.ctx, rows, &searchModel.SearchGroup.SearchElements)
+	err = r.db().ScanRows(r.ctx, rows, &searchModel.SearchGroup.SearchElements)
 	return err
 }
 

@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v7"
-	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
@@ -44,7 +43,6 @@ type Service struct {
 }
 
 type Repository struct {
-	db     *bun.DB
 	ctx    context.Context
 	helper *helper.Helper
 }
@@ -53,8 +51,8 @@ type DoesLoginExist struct {
 	DoesLoginExist bool
 }
 
-func CreateHandler(db *bun.DB, helper *helper.Helper) *Handler {
-	repo := NewRepository(db, helper)
+func CreateHandler(helper *helper.Helper) *Handler {
+	repo := NewRepository(helper)
 	service := NewService(repo, helper)
 	return NewHandler(service, helper)
 }
@@ -68,6 +66,6 @@ func NewService(repository IRepository, helper *helper.Helper) *Service {
 	return &Service{repository: repository, helper: helper}
 }
 
-func NewRepository(db *bun.DB, helper *helper.Helper) *Repository {
-	return &Repository{db: db, ctx: context.Background(), helper: helper}
+func NewRepository(helper *helper.Helper) *Repository {
+	return &Repository{ctx: context.Background(), helper: helper}
 }
