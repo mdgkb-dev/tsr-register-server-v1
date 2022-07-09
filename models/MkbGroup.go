@@ -6,9 +6,10 @@ import (
 )
 
 type MkbGroup struct {
-	bun.BaseModel `bun:"mkb_groups,alias:mkb_groups"`
+	bun.BaseModel `bun:"mkb_groups_view,alias:mkb_groups_view"`
 	ID            uuid.UUID    `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string       `json:"name"`
+	FullName      string       `json:"fullName"`
 	RangeStart    string       `json:"rangeStart"`
 	RangeEnd      string       `json:"rangeEnd"`
 	Comment       string       `json:"comment"`

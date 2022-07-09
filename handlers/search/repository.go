@@ -34,7 +34,8 @@ func (r *Repository) search(searchModel *search.SearchModel) error {
 		search = r.helper.Util.TranslitToRu(searchModel.Query)
 	}
 	queryWhere := r.helper.SQL.WhereLikeWithLowerTranslit(searchModel.SearchGroup.SearchColumn, search)
-	query := fmt.Sprintf("%s %s %s", querySelect, queryFrom, queryWhere)
+	queryOrder := fmt.Sprintf("ORDER BY %s", searchModel.SearchGroup.LabelColumn)
+	query := fmt.Sprintf("%s %s %s %s", querySelect, queryFrom, queryWhere, queryOrder)
 	rows, err := r.db().QueryContext(r.ctx, query)
 	if err != nil {
 		return err

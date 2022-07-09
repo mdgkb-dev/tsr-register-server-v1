@@ -19,8 +19,8 @@ func (r *Repository) getAllClasses() (items models.MkbClasses, err error) {
 func (r *Repository) getGroupsByClassId(classID string) (items models.MkbGroups, err error) {
 	items = models.MkbGroups{}
 	err = r.db().NewSelect().Model(&items).
-		Where("mkb_group.mkb_class_id = ?", classID).
-		Order("mkb_group.range_start").
+		Where("mkb_groups_view.mkb_class_id = ?", classID).
+		Order("mkb_groups_view.range_start").
 		Scan(r.ctx)
 	return items, err
 }
@@ -36,11 +36,11 @@ func (r *Repository) getSubGroupByGroupId(groupId string) (items models.MkbSubGr
 
 func (r *Repository) getDiagnosisByClassId(classId string) (items models.MkbDiagnoses, err error) {
 	err = r.db().NewSelect().Model(&items).
-		Where("mkb_diagnosis.mkb_class_id = ?", classId).
-		Where("mkb_diagnosis.mkb_group_id IS NULL").
-		Where("mkb_diagnosis.mkb_sub_group_id IS NULL").
-		Where("mkb_diagnosis.mkb_sub_sub_group_id IS NULL").
-		Order("mkb_diagnosis.code").
+		Where("mkb_diagnosis_view.mkb_class_id = ?", classId).
+		Where("mkb_diagnosis_view.mkb_group_id IS NULL").
+		Where("mkb_diagnosis_view.mkb_sub_group_id IS NULL").
+		Where("mkb_diagnosis_view.mkb_sub_sub_group_id IS NULL").
+		Order("mkb_diagnosis_view.code").
 		Scan(r.ctx)
 	return items, err
 }
@@ -51,10 +51,10 @@ func (r *Repository) getDiagnosisByGroupId(groupId string) (models.MkbDiagnoses,
 		Relation("MkbGroup").
 		Relation("MkbSubDiagnosis.MkbDiagnosis").
 		Relation("MkbSubDiagnosis.MkbConcreteDiagnosis").
-		Where("mkb_diagnosis.mkb_group_id = ?", groupId).
-		Where("mkb_diagnosis.mkb_sub_group_id IS NULL").
-		Where("mkb_diagnosis.mkb_sub_sub_group_id IS NULL").
-		Order("mkb_diagnosis.code").
+		Where("mkb_diagnosis_view.mkb_group_id = ?", groupId).
+		Where("mkb_diagnosis_view.mkb_sub_group_id IS NULL").
+		Where("mkb_diagnosis_view.mkb_sub_sub_group_id IS NULL").
+		Order("mkb_diagnosis_view.code").
 		Scan(r.ctx)
 	return items, err
 }
@@ -62,9 +62,9 @@ func (r *Repository) getDiagnosisByGroupId(groupId string) (models.MkbDiagnoses,
 func (r *Repository) getDiagnosisBySubGroupId(subGroupId string) (items models.MkbDiagnoses, err error) {
 	err = r.db().NewSelect().Model(&items).
 		Relation("MkbGroup").
-		Where("mkb_diagnosis.mkb_sub_group_id = ?", subGroupId).
-		Where("mkb_diagnosis.mkb_sub_sub_group_id IS NULL").
-		Order("mkb_diagnosis.code").
+		Where("mkb_diagnosis_view.mkb_sub_group_id = ?", subGroupId).
+		Where("mkb_diagnosis_view.mkb_sub_sub_group_id IS NULL").
+		Order("mkb_diagnosis_view.code").
 		Scan(r.ctx)
 	return items, err
 }
@@ -72,8 +72,8 @@ func (r *Repository) getDiagnosisBySubGroupId(subGroupId string) (items models.M
 func (r *Repository) getDiagnosisBySubSubGroupId(subSubGroupId string) (items models.MkbDiagnoses, err error) {
 	err = r.db().NewSelect().Model(&items).
 		Relation("MkbGroup").
-		Where("mkb_diagnosis.mkb_sub_sub_group_id = ?", subSubGroupId).
-		Order("mkb_diagnosis.code").
+		Where("mkb_diagnosis_view.mkb_sub_sub_group_id = ?", subSubGroupId).
+		Order("mkb_diagnosis_view.code").
 		Scan(r.ctx)
 	return items, err
 }
@@ -81,8 +81,8 @@ func (r *Repository) getDiagnosisBySubSubGroupId(subSubGroupId string) (items mo
 func (r *Repository) getSubDiagnosisByDiagnosisId(diagnosisId string) (items models.MkbSubDiagnoses, err error) {
 	items = models.MkbSubDiagnoses{}
 	err = r.db().NewSelect().Model(&items).
-		Where("mkb_sub_diagnosis.mkb_diagnosis_id = ?", diagnosisId).
-		Order("mkb_sub_diagnosis.sub_code").
+		Where("mkb_sub_diagnosis_view.mkb_diagnosis_id = ?", diagnosisId).
+		Order("mkb_sub_diagnosis_view.sub_code").
 		Scan(r.ctx)
 	return items, err
 }
@@ -110,8 +110,8 @@ func (r *Repository) getDiagnosisBySearch(search string) (models.MkbDiagnoses, e
 	err := r.db().NewSelect().Model(&items).
 		Relation("MkbGroup").
 		Relation("MkbSubDiagnosis.MkbConcreteDiagnosis.MkbSubDiagnosis.MkbDiagnosis.MkbGroup").
-		Where("lower(regexp_replace(mkb_diagnosis.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
-		WhereOr("lower(regexp_replace(mkb_diagnosis.code, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
+		Where("lower(regexp_replace(mkb_diagnosis_view.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
+		WhereOr("lower(regexp_replace(mkb_diagnosis_view.code, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
 		Scan(r.ctx)
 	return items, err
 }
@@ -121,7 +121,7 @@ func (r *Repository) getSubDiagnosesBySearch(search string) (models.MkbSubDiagno
 	err := r.db().NewSelect().Model(&items).
 		Relation("MkbDiagnosis.MkbGroup").
 		Relation("MkbConcreteDiagnosis").
-		Where("lower(regexp_replace(mkb_sub_diagnosis.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
+		Where("lower(regexp_replace(mkb_sub_diagnosis_view.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
 		Scan(r.ctx)
 	return items, err
 }

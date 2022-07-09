@@ -90,24 +90,27 @@ func createDisabilitiesSchema() map[string]string {
 
 func createMkbGroupsSchema() map[string]string {
 	return map[string]string{
-		"tableName": "mkb_groups",
+		"tableName": "mkb_groups_view",
 		"key":       "mkbGroup",
+		"fullName":  "full_name",
 		"name":      "name",
 	}
 }
 
 func createMkbDiagnosisSchema() map[string]string {
 	return map[string]string{
-		"tableName": "mkb_diagnosis",
+		"tableName": "mkb_diagnosis_view",
 		"key":       "mkbDiagnosis",
+		"fullName":  "full_name",
 		"name":      "name",
 	}
 }
 
 func createMkbSubDiagnosisSchema() map[string]string {
 	return map[string]string{
-		"tableName": "mkb_sub_diagnosis",
+		"tableName": "mkb_sub_diagnosis_view",
 		"key":       "mkbSubDiagnosis",
+		"fullName":  "full_name",
 		"name":      "name",
 	}
 }
