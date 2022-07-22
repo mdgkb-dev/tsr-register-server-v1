@@ -3,20 +3,20 @@ module mdgkb/tsr-tegister-server-v1
 go 1.18
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/elastic/go-elasticsearch/v8 v8.2.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-redis/redis/v7 v7.4.1
 	github.com/google/uuid v1.3.0
-	github.com/pro-assistance/pro-assister v0.0.86-0.20220706120052-be3d63f7c8a3
-	github.com/uptrace/bun v1.1.5
+	github.com/pro-assistance/pro-assister v0.0.100
+	github.com/uptrace/bun v1.1.6
 	github.com/xuri/excelize/v2 v2.4.1
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88
 )
 
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
 	github.com/elastic/elastic-transport-go/v8 v8.1.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
@@ -53,7 +53,7 @@ require (
 	github.com/tmthrgd/go-hex v0.0.0-20190904060850-447a3041c3bc // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/unidoc/unidoc v2.2.0+incompatible // indirect
-	github.com/uptrace/bun/dialect/sqlitedialect v1.1.5 // indirect
+	github.com/uptrace/bun/dialect/sqlitedialect v1.1.6 // indirect
 	github.com/uptrace/bun/driver/pgdriver v1.1.5 // indirect
 	github.com/uptrace/bun/extra/bundebug v1.1.5 // indirect
 	github.com/vmihailenco/bufpool v0.1.11 // indirect
@@ -63,7 +63,7 @@ require (
 	github.com/xuri/efp v0.0.0-20210322160811-ab561f5b45e3 // indirect
 	golang.org/x/image v0.0.0-20210220032944-ac19c3e999fb // indirect
 	golang.org/x/net v0.0.0-20220412020605-290c469a71a5 // indirect
-	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6 // indirect
+	golang.org/x/sys v0.0.0-20220708085239-5a0f0661e09d // indirect
 	golang.org/x/text v0.3.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect

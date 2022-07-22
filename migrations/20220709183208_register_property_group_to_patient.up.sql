@@ -16,8 +16,8 @@ alter table register_property_to_patient
     add column register_group_to_patient_id uuid REFERENCES register_groups_to_patients(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
-alter table register_property
-    drop column with_dates;
+--alter table register_property
+--    drop column with_dates;
 
 alter table register_group
     add column with_dates boolean;

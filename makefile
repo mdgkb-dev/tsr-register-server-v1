@@ -1,3 +1,5 @@
+include .env
+
 ifeq ($(OS),Windows_NT)
 	migrates := .\database\migrates
 	cli := .\cmd\cli
@@ -20,16 +22,13 @@ migrate:
 migrate_create:
 	go run $(main) -mode=migrate -action=create -name=${name}
 
-seed:
-	go run $(database) -mode=seed -action=migrate
-
-seed_create:
-	go run $(database) -mode=seed -action=create -name=${name}
-
 migrate_rollback:
 	go run $(migrates) rollback
 
-full_migrate: drop_database migrate_init migrate seed
+dump_from_remote: migrate
+	@./cmd/dump_pg.sh $(DB_NAME) $(DB_USER) $(DB_PASSWORD) $(DB_REMOTE_USER) $(DB_REMOTE_PASSWORD)
+
+dump: dump_from_remote migrate
 
 drop_database:
 	go run database/*.go -action=dropDatabase
