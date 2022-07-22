@@ -51,6 +51,7 @@ func (r *Repository) get(id string) (*models.Register, error) {
 		}).
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertyExamples").
 		Relation("RegisterGroups.RegisterProperties.ValueType").
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertyMeasures").
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_set.register_property_set_order")
 		}).
@@ -65,9 +66,9 @@ func (r *Repository) get(id string) (*models.Register, error) {
 			//r.queryFilter.HandleQuery(q)
 			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic")
 		}).
-		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
-		Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
-		Relation("RegisterToPatient.Patient.RegisterPropertySetToPatient.RegisterPropertySet").
+		//Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
+		//Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
+		//Relation("RegisterToPatient.Patient.RegisterPropertySetToPatient.RegisterPropertySet").
 		Where("register.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err

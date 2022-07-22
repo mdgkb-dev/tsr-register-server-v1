@@ -81,7 +81,6 @@ func (r *Repository) upsertMany(items models.RegisterProperties) (err error) {
 		Set(`name = EXCLUDED.name`).
 		Set(`short_name = EXCLUDED.short_name`).
 		Set(`with_other = EXCLUDED.with_other`).
-		Set(`with_dates = EXCLUDED.with_dates`).
 		Set(`col_width = EXCLUDED.col_width`).
 		Set(`register_property_order = EXCLUDED.register_property_order`).
 		Set(`value_type_id = EXCLUDED.value_type_id`).

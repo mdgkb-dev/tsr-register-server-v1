@@ -12,7 +12,6 @@ type RegisterProperty struct {
 	ShortName       string         `json:"shortName"`
 	ColWidth        int            `json:"colWidth"`
 	WithOther       bool           `json:"withOther"`
-	WithDates       bool           `json:"withDates"`
 	Tag             string         `json:"tag"`
 	Order           int            `bun:"register_property_order" json:"order"`
 	ValueType       *ValueType     `bun:"rel:belongs-to" json:"valueType"`
@@ -28,6 +27,9 @@ type RegisterProperty struct {
 
 	RegisterPropertyExamples          RegisterPropertyExamples `bun:"rel:has-many" json:"registerPropertyExamples"`
 	RegisterPropertyExamplesForDelete []uuid.UUID              `bun:"-" json:"registerPropertyExamplesForDelete"`
+
+	RegisterPropertyMeasures          RegisterPropertyMeasures `bun:"rel:has-many" json:"registerPropertyMeasures"`
+	RegisterPropertyMeasuresForDelete []uuid.UUID              `bun:"-" json:"registerPropertyMeasuresForDelete"`
 }
 
 type RegisterProperties []*RegisterProperty
@@ -47,6 +49,11 @@ func (item *RegisterProperty) SetIdForChildren() {
 	if len(item.RegisterPropertyExamples) > 0 {
 		for i := range item.RegisterPropertyExamples {
 			item.RegisterPropertyExamples[i].RegisterPropertyID = item.ID
+		}
+	}
+	if len(item.RegisterPropertyMeasures) > 0 {
+		for i := range item.RegisterPropertyMeasures {
+			item.RegisterPropertyMeasures[i].RegisterPropertyID = item.ID
 		}
 	}
 }
@@ -104,6 +111,22 @@ func (items RegisterProperties) GetRegisterPropertyExamplesForDelete() []uuid.UU
 	itemsForGet := make([]uuid.UUID, 0)
 	for i := range items {
 		itemsForGet = append(itemsForGet, items[i].RegisterPropertyExamplesForDelete...)
+	}
+	return itemsForGet
+}
+
+func (items RegisterProperties) GetRegisterPropertyMeasuresForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].RegisterPropertyMeasuresForDelete...)
+	}
+	return itemsForGet
+}
+
+func (items RegisterProperties) GetRegisterPropertyMeasures() RegisterPropertyMeasures {
+	itemsForGet := make(RegisterPropertyMeasures, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].RegisterPropertyMeasures...)
 	}
 	return itemsForGet
 }

@@ -73,11 +73,11 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientDiagnosis.MkbConcreteDiagnosis").
 		Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
 		Relation("RegisterToPatient.Register").
-		Relation("RegisterPropertyToPatient.RegisterProperty").
-		Relation("RegisterPropertySetToPatient.RegisterPropertySet").
+		Relation("RegisterGroupsToPatient.RegisterPropertyToPatient.RegisterProperty").
+		Relation("RegisterGroupsToPatient.RegisterPropertySetToPatient.RegisterPropertySet").
+		Relation("RegisterGroupsToPatient.RegisterPropertyOthersToPatient").
 		Relation("PatientDrugRegimen.DrugRegimen.Drug").
 		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
-		Relation("RegisterPropertyOthersPatient").
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
 		Where("?TableAlias.id = ?", *id)

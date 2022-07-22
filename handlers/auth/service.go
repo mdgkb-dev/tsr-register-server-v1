@@ -13,12 +13,11 @@ func (s *Service) Register(item *models.User) (*models.TokensWithUser, error) {
 	}
 	err = s.repository.create(item)
 
-	token, err := item.CreateToken()
+	ts, err := s.helper.Token.CreateToken(item.ID.String(), "", "")
 	if err != nil {
 		return nil, err
 	}
-	res := models.TokensWithUser{Token: token, User: item}
-	return &res, nil
+	return &models.TokensWithUser{Tokens: ts, User: *item}, nil
 }
 
 func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
@@ -29,12 +28,11 @@ func (s *Service) Login(user *models.User) (*models.TokensWithUser, error) {
 	if !findedUser.CompareWithHashPassword(user.Password) {
 		return nil, errors.New("wrong password")
 	}
-	token, err := findedUser.CreateToken()
+	ts, err := s.helper.Token.CreateToken(findedUser.ID.String(), "", "")
 	if err != nil {
 		return nil, err
 	}
-	res := models.TokensWithUser{Token: token, User: findedUser}
-	return &res, nil
+	return &models.TokensWithUser{Tokens: ts, User: *findedUser}, nil
 }
 
 func (s *Service) GetUserByID(id *string) (*models.User, error) {

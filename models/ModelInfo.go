@@ -20,21 +20,21 @@ type ModelInfo struct {
 }
 
 func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context) error {
-	userId, err := GetUserID(c)
-	if err != nil {
-		return err
-	}
-	m.UpdatedByID = *userId
+	//userId, err := GetUserID(c)
+	//if err != nil {
+	//	return err
+	//}
+	//m.UpdatedByID = *userId
 	m.UpdatedAt = time.Now()
 	return nil
 }
 
 func (m *ModelInfo) FillModelInfoCreate(c *gin.Context) error {
-	userId, err := GetUserID(c)
-	if err != nil {
-		return err
-	}
-	m.CreatedByID = *userId
-	m.UpdatedByID = *userId
+	//userId, err := GetUserID(c)
+	//if err != nil {
+	//	return err
+	//}
+	//m.CreatedByID = *userId
+	//m.UpdatedByID = *userId
 	return nil
 }

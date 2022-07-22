@@ -14,6 +14,7 @@ type RegisterGroup struct {
 	RegisterPropertiesForDelete []uuid.UUID        `bun:"-" json:"registerPropertiesForDelete"`
 	Register                    *Register          `bun:"rel:belongs-to" json:"register"`
 	RegisterID                  uuid.UUID          `bun:"type:uuid" json:"registerId"`
+	WithDates                   bool               `json:"withDates"`
 }
 
 type RegisterGroups []*RegisterGroup
@@ -51,5 +52,3 @@ func (items RegisterGroups) GetRegisterPropertiesForDelete() []uuid.UUID {
 	}
 	return itemsForGet
 }
-
-

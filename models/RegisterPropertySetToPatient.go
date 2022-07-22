@@ -11,7 +11,11 @@ type RegisterPropertySetToPatient struct {
 	RegisterPropertySet   *RegisterPropertySet `bun:"rel:belongs-to" json:"registerPropertySet"`
 	RegisterPropertySetID uuid.UUID            `bun:"type:uuid" json:"registerPropertySetId"`
 	PropWithDateID        uuid.NullUUID        `bun:"type:uuid" json:"propWithDateId"`
-	Patient               *Patient             `bun:"rel:has-one" json:"patients"`
-	PatientID             uuid.UUID            `bun:"type:uuid" json:"patientId"`
+
+	RegisterGroupToPatient   *RegisterGroupToPatient `bun:"rel:belongs-to" json:"registerGroupToPatient"`
+	RegisterGroupToPatientID uuid.UUID               `bun:"type:uuid" json:"registerGroupToPatientID"`
+
 	//DeletedAt             time.Time            `bun:",soft_delete" json:"deletedAt"`
 }
+
+type RegisterPropertySetsToPatients []*RegisterPropertySetToPatient

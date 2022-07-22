@@ -3,6 +3,7 @@ package registerProperty
 import (
 	"github.com/google/uuid"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyExamples"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyMeasures"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyRadio"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertySet"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -79,6 +80,16 @@ func (s *Service) UpsertMany(items models.RegisterProperties) error {
 		return err
 	}
 	err = registerPropertyExamplesService.DeleteMany(items.GetRegisterPropertyExamplesForDelete())
+	if err != nil {
+		return err
+	}
+
+	registerPropertyMeasuresService := registerPropertyMeasures.CreateService(s.helper)
+	err = registerPropertyMeasuresService.UpsertMany(items.GetRegisterPropertyMeasures())
+	if err != nil {
+		return err
+	}
+	err = registerPropertyMeasuresService.DeleteMany(items.GetRegisterPropertyMeasuresForDelete())
 	if err != nil {
 		return err
 	}

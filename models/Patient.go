@@ -32,14 +32,11 @@ type Patient struct {
 	PatientDrugRegimen          []*PatientDrugRegimen `bun:"rel:has-many" json:"patientDrugRegimen"`
 	PatientDrugRegimenForDelete []uuid.UUID           `bun:"-" json:"patientDrugRegimenForDelete"`
 
+	RegisterGroupsToPatient           RegisterGroupsToPatients `bun:"rel:has-many" json:"registerGroupsToPatient"`
+	RegisterGroupsToPatientsForDelete []uuid.UUID              `bun:"-" json:"registerGroupsToPatientForDelete"`
+
 	RegisterToPatient          []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
 	RegisterToPatientForDelete []uuid.UUID          `bun:"-" json:"registerToPatientForDelete"`
-
-	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
-	RegisterPropertyOthersPatient         RegisterPropertyOthersToPatient `bun:"rel:has-many" json:"registerPropertyOthersToPatient"`
-	RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"registerPropertyToPatientForDelete"`
-	RegisterPropertySetToPatient          []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
-	RegisterPropertySetToPatientForDelete []uuid.UUID                     `bun:"-" json:"registerPropertySetToPatientForDelete"`
 }
 
 type Patients []*Patient
@@ -104,19 +101,9 @@ func (item *Patient) SetIdForChildren() {
 			item.RegisterToPatient[i].PatientID = item.ID
 		}
 	}
-	if len(item.RegisterPropertyToPatient) > 0 {
-		for i := range item.RegisterPropertyToPatient {
-			item.RegisterPropertyToPatient[i].PatientID = item.ID
-		}
-	}
-	if len(item.RegisterPropertySetToPatient) > 0 {
-		for i := range item.RegisterPropertySetToPatient {
-			item.RegisterPropertySetToPatient[i].PatientID = item.ID
-		}
-	}
-	if len(item.RegisterPropertyOthersPatient) > 0 {
-		for i := range item.RegisterPropertyOthersPatient {
-			item.RegisterPropertyOthersPatient[i].PatientID = item.ID
+	if len(item.RegisterGroupsToPatient) > 0 {
+		for i := range item.RegisterGroupsToPatient {
+			item.RegisterGroupsToPatient[i].PatientID = item.ID
 		}
 	}
 }
@@ -145,11 +132,5 @@ func (item *Patient) SetDeleteIdForChildren() {
 	}
 	for i := range item.RegisterToPatient {
 		item.RegisterToPatientForDelete = append(item.RegisterToPatientForDelete, item.RegisterToPatient[i].ID)
-	}
-	for i := range item.RegisterPropertyToPatient {
-		item.RegisterPropertyToPatientForDelete = append(item.RegisterPropertyToPatientForDelete, item.RegisterPropertyToPatient[i].ID)
-	}
-	for i := range item.RegisterPropertySetToPatient {
-		item.RegisterPropertySetToPatientForDelete = append(item.RegisterPropertySetToPatientForDelete, item.RegisterPropertySetToPatient[i].ID)
 	}
 }

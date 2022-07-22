@@ -15,8 +15,8 @@ func (h *Handler) Create(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	userId, err := models.GetUserID(c)
-	registerProperty.UserID = *userId
+	userID, err := h.helper.Token.GetUserID(c)
+	registerProperty.UserID = *userID
 	err = h.service.Create(&registerProperty)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -34,8 +34,8 @@ func (h *Handler) Delete(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	userId, err := models.GetUserID(c)
-	registerProperty.UserID = *userId
+	userID, err := h.helper.Token.GetUserID(c)
+	registerProperty.UserID = *userID
 	err = h.service.Delete(&registerProperty)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return

@@ -25,11 +25,11 @@ func (h *Handler) GetAll(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	userId, err := models.GetUserID(c)
+	userID, err := h.helper.Token.GetUserID(c)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	items, err := h.service.GetAll(*userId)
+	items, err := h.service.GetAll(*userID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

@@ -9,9 +9,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientDrugRegimen"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyOthersToPatient"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertySetToPatient"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerPropertyToPatient"
+	"mdgkb/tsr-tegister-server-v1/handlers/registerGroupsToPatients"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -164,28 +162,13 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	registerPropertyToPatientService := registerPropertyToPatient.CreateService(s.helper)
-	err = registerPropertyToPatientService.UpsertMany(item.RegisterPropertyToPatient)
-	if err != nil {
-		return err
-	}
-	err = registerPropertyToPatientService.DeleteMany(item.RegisterPropertyToPatientForDelete)
-	if err != nil {
-		return err
-	}
-	registerPropertySetToPatientService := registerPropertySetToPatient.CreateService(s.helper)
-	err = registerPropertySetToPatientService.UpsertMany(item.RegisterPropertySetToPatient)
-	if err != nil {
-		return err
-	}
-	err = registerPropertySetToPatientService.DeleteMany(item.RegisterPropertySetToPatientForDelete)
-	if err != nil {
-		return err
 
+	registerGroupsToPatientsService := registerGroupsToPatients.CreateService(s.helper)
+	err = registerGroupsToPatientsService.UpsertMany(item.RegisterGroupsToPatient)
+	if err != nil {
+		return err
 	}
-
-	registerPropertyOthersToPatientService := registerPropertyOthersToPatient.CreateService(s.helper)
-	err = registerPropertyOthersToPatientService.UpsertMany(item.RegisterPropertyOthersPatient)
+	err = registerGroupsToPatientsService.DeleteMany(item.RegisterGroupsToPatientsForDelete)
 	if err != nil {
 		return err
 	}
@@ -235,14 +218,14 @@ func (s *Service) Delete(id *string) error {
 	if err != nil {
 		return err
 	}
-	err = registerPropertyToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertyToPatientForDelete)
-	if err != nil {
-		return err
-	}
-	err = registerPropertySetToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertySetToPatientForDelete)
-	if err != nil {
-		return err
-	}
+	//err = registerPropertyToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertyToPatientForDelete)
+	//if err != nil {
+	//	return err
+	//}
+	//err = registerPropertySetToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertySetToPatientForDelete)
+	//if err != nil {
+	//	return err
+	//}
 	err = s.repository.delete(id)
 	if err != nil {
 		return err

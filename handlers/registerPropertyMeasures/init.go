@@ -1,46 +1,52 @@
-package auth
+package registerPropertyMeasures
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v7"
+	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
-	Register(c *gin.Context)
-	Login(c *gin.Context)
-	RefreshToken(c *gin.Context)
-	Me(c *gin.Context)
-	DoesLoginExist(c *gin.Context)
-	CheckPathPermissions(c *gin.Context)
-	//Refresh(c *gin.Context) error
-	//Logout(c *gin.Context) error
+	GetAll(c *gin.Context) error
+	Get(c *gin.Context) error
+	Create(c *gin.Context) error
+	Update(c *gin.Context) error
+	Delete(c *gin.Context) error
 }
 
 type IService interface {
-	Register(*models.User) (*models.TokensWithUser, error)
-	Login(*models.User) (*models.TokensWithUser, error)
-	GetUserByID(*string) (*models.User, error)
-	DoesLoginExist(*string) (bool, error)
+	GetAll() ([]*models.RegisterPropertyMeasure, error)
+	Get(*string) (*models.RegisterPropertyMeasure, error)
+	Create(*models.RegisterPropertyMeasure) error
+	Update(*models.RegisterPropertyMeasure) error
+	Delete(*string) error
+
+	UpsertMany(models.RegisterPropertyMeasures) error
+	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
-	getByLogin(*string) (*models.User, error)
-	getByID(*string) (*models.User, error)
-	create(*models.User) error
+	db() *bun.DB
+	create(*models.RegisterPropertyMeasure) error
+	getAll() ([]*models.RegisterPropertyMeasure, error)
+	get(*string) (*models.RegisterPropertyMeasure, error)
+	update(*models.RegisterPropertyMeasure) error
+	delete(*string) error
+
+	upsertMany(models.RegisterPropertyMeasures) error
+	deleteMany([]uuid.UUID) error
 }
 
 type Handler struct {
 	service IService
 	helper  *helper.Helper
 }
-
 type Service struct {
 	repository IRepository
-	redis      *redis.Client
 	helper     *helper.Helper
 }
 
@@ -49,14 +55,15 @@ type Repository struct {
 	helper *helper.Helper
 }
 
-type DoesLoginExist struct {
-	DoesLoginExist bool
-}
-
 func CreateHandler(helper *helper.Helper) *Handler {
 	repo := NewRepository(helper)
 	service := NewService(repo, helper)
 	return NewHandler(service, helper)
+}
+
+func CreateService(helper *helper.Helper) *Service {
+	repo := NewRepository(helper)
+	return NewService(repo, helper)
 }
 
 // NewHandler constructor

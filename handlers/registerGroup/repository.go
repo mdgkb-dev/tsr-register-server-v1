@@ -45,6 +45,7 @@ func (r *Repository) upsertMany(items models.RegisterGroups) (err error) {
 		Model(&items).
 		Set(`name = EXCLUDED.name`).
 		Set(`register_id = EXCLUDED.register_id`).
+		Set(`with_dates = EXCLUDED.with_dates`).
 		Exec(r.ctx)
 	return err
 }

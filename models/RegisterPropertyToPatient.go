@@ -19,9 +19,14 @@ type RegisterPropertyToPatient struct {
 	RegisterPropertyRadio   *RegisterPropertyRadio `bun:"rel:belongs-to" json:"registerPropertyRadio"`
 	RegisterPropertyRadioID uuid.NullUUID          `bun:"type:uuid" json:"registerPropertyRadioId"`
 
+	RegisterPropertyMeasure   *RegisterPropertyMeasure `bun:"rel:belongs-to" json:"registerPropertyMeasure"`
+	RegisterPropertyMeasureID uuid.NullUUID            `bun:"type:uuid" json:"registerPropertyMeasureId"`
+
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
-	Patient            *Patient          `bun:"rel:has-one" json:"patients"`
-	PatientID          uuid.UUID         `bun:"type:uuid" json:"patientId"`
-	//DeletedAt          time.Time         `bun:",soft_delete" json:"deletedAt"`
+
+	RegisterGroupToPatient   *RegisterGroupToPatient `bun:"rel:belongs-to" json:"registerGroupToPatient"`
+	RegisterGroupToPatientID uuid.UUID               `bun:"type:uuid" json:"registerGroupToPatientID"`
 }
+
+type RegisterPropertiesToPatients []*RegisterPropertyToPatient
