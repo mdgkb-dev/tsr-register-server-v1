@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DEPLOY_BRANCH="master"
+BIN_FILE=./cmd/server/
 PROCESS_NAME=$1
-PROCESS_NAME=./cmd/server
 PIDFILE=${BIN_PATH}/${PROCESS_NAME}.pid
 PROCESS_FILE=${BIN_PATH}/${PROCESS_NAME}
 
