@@ -12,7 +12,7 @@ type PatientDrugRegimenItem struct {
 	ID                   uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Date                 time.Time `json:"date"`
 	GettingDate          time.Time `json:"gettingDate"`
-	PatientDrugRegimenId uuid.UUID `bun:"type:uuid" json:"patientDrugRegimenId"`
+	PatientDrugRegimenID uuid.UUID `bun:"type:uuid" json:"patientDrugRegimenId"`
 
 	PatientDrugRegimen *PatientDrugRegimen `bun:"rel:belongs-to" json:"patientDrugRegimen"`
 }

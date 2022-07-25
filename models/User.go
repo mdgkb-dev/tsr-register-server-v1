@@ -20,7 +20,7 @@ type User struct {
 
 type Users []*User
 
-func (item *User) SetIdForChildren() {
+func (item *User) SetIDForChildren() {
 	for i := range item.RegistersUsers {
 		item.RegistersUsers[i].UserID = item.ID
 	}
@@ -37,15 +37,15 @@ type RegisterPropertyToUser struct {
 
 type RegisterPropertiesToUser []*RegisterPropertyToUser
 
-func (i *User) GenerateHashPassword() error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(i.Password), bcrypt.DefaultCost)
+func (item *User) GenerateHashPassword() error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(item.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	i.Password = string(hash)
+	item.Password = string(hash)
 	return nil
 }
 
-func (i *User) CompareWithHashPassword(password string) bool {
-	return bcrypt.CompareHashAndPassword([]byte(i.Password), []byte(password)) == nil
+func (item *User) CompareWithHashPassword(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(item.Password), []byte(password)) == nil
 }

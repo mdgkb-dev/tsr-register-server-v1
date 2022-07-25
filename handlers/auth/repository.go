@@ -1,10 +1,9 @@
 package auth
 
 import (
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
 
-	_ "github.com/go-pg/pg/v10/orm"
+	"github.com/uptrace/bun"
 )
 
 func (r *Repository) db() *bun.DB {

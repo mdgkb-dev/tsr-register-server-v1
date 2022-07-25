@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/pro-assistance/pro-assister/uploadHelper"
 	"time"
+
+	"github.com/pro-assistance/pro-assister/uploadHelper"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -23,10 +24,10 @@ type Document struct {
 	FileInfoToDocumentForDelete  []uuid.UUID           `bun:"-" json:"fileInfoToDocumentForDelete"`
 }
 
-func (item *Document) SetFilePath(fileId *string) *string {
+func (item *Document) SetFilePath(fileID *string) *string {
 	for i := range item.FileInfoToDocument {
-		if item.FileInfoToDocument[i].FileInfoID.String() == *fileId {
-			item.FileInfoToDocument[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileId)
+		if item.FileInfoToDocument[i].FileInfoID.String() == *fileID {
+			item.FileInfoToDocument[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
 			return &item.FileInfoToDocument[i].FileInfo.FileSystemPath
 		}
 	}
@@ -39,7 +40,7 @@ func GetFileInfoToDocument(items []*Document) []*FileInfoToDocument {
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].FileInfoToDocument...)
 	}
 	return itemsForGet
@@ -51,13 +52,13 @@ func GetFileInfoToDocumentForDelete(items []*Document) []uuid.UUID {
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].FileInfoToDocumentForDelete...)
 	}
 	return itemsForGet
 }
 
-func (item *Document) SetDeleteIdForChildren() {
+func (item *Document) SetDeleteIDForChildren() {
 	for i := range item.DocumentFieldValues {
 		item.DocumentFieldValuesForDelete = append(item.DocumentFieldValuesForDelete, item.DocumentFieldValues[i].ID)
 	}

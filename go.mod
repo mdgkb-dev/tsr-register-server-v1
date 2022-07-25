@@ -8,7 +8,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-redis/redis/v7 v7.4.1
 	github.com/google/uuid v1.3.0
-	github.com/pro-assistance/pro-assister v0.0.100
+	github.com/pro-assistance/pro-assister v0.0.101
 	github.com/uptrace/bun v1.1.6
 	github.com/xuri/excelize/v2 v2.4.1
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	"github.com/elastic/go-elasticsearch/v8/esutil"
 	"github.com/pro-assistance/pro-assister/search"
 	"github.com/uptrace/bun"
@@ -90,6 +91,9 @@ func (r *Repository) elasticSuggester(model *search.SearchModel) error {
 		r.elasticsearch.Search.WithPretty(),
 	)
 	defer res.Body.Close()
+	if err != nil {
+		return err
+	}
 	err = json.NewDecoder(res.Body).Decode(&re)
 	if err != nil {
 		return err

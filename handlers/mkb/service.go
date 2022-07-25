@@ -19,12 +19,12 @@ func (s *Service) GetAllClasses() (models.MkbClasses, error) {
 	return classes, nil
 }
 
-func (s *Service) GetGroupByClassId(classID string) (*CompositionMkb, error) {
-	groups, err := s.repository.getGroupsByClassId(classID)
+func (s *Service) GetGroupByClassID(classID string) (*CompositionMkb, error) {
+	groups, err := s.repository.getGroupsByClassID(classID)
 	if err != nil {
 		return nil, err
 	}
-	diagnosis, err := s.repository.getDiagnosisByClassId(classID)
+	diagnosis, err := s.repository.getDiagnosisByClassID(classID)
 	if err != nil {
 		return nil, err
 	}
@@ -32,12 +32,12 @@ func (s *Service) GetGroupByClassId(classID string) (*CompositionMkb, error) {
 	return &res, nil
 }
 
-func (s *Service) GetGroupChildrens(groupId string) (*CompositionMkb, error) {
-	subGroups, err := s.repository.getSubGroupByGroupId(groupId)
+func (s *Service) GetGroupChildrens(groupID string) (*CompositionMkb, error) {
+	subGroups, err := s.repository.getSubGroupByGroupID(groupID)
 	if err != nil {
 		return nil, err
 	}
-	diagnosis, err := s.repository.getDiagnosisByGroupId(groupId)
+	diagnosis, err := s.repository.getDiagnosisByGroupID(groupID)
 	if err != nil {
 		return nil, err
 	}
@@ -48,16 +48,16 @@ func (s *Service) GetGroupChildrens(groupId string) (*CompositionMkb, error) {
 	return &res, nil
 }
 
-func (s *Service) GetDiagnosisByGroupId(groupId string) (models.MkbDiagnoses, error) {
-	diagnosis, err := s.repository.getDiagnosisByGroupId(groupId)
+func (s *Service) GetDiagnosisByGroupID(groupID string) (models.MkbDiagnoses, error) {
+	diagnosis, err := s.repository.getDiagnosisByGroupID(groupID)
 	if err != nil {
 		return nil, err
 	}
 	return diagnosis, nil
 }
 
-func (s *Service) GetSubGroupChildrens(groupId string) (*CompositionMkb, error) {
-	diagnosis, err := s.repository.getDiagnosisBySubGroupId(groupId)
+func (s *Service) GetSubGroupChildrens(groupID string) (*CompositionMkb, error) {
+	diagnosis, err := s.repository.getDiagnosisBySubGroupID(groupID)
 	if err != nil {
 		return nil, err
 	}
@@ -65,8 +65,8 @@ func (s *Service) GetSubGroupChildrens(groupId string) (*CompositionMkb, error) 
 	return &res, nil
 }
 
-func (s *Service) GetSubDiagnosisByDiagnosisId(diagnosisId string) (models.MkbSubDiagnoses, error) {
-	return s.repository.getSubDiagnosisByDiagnosisId(diagnosisId)
+func (s *Service) GetSubDiagnosisByDiagnosisID(diagnosisID string) (models.MkbSubDiagnoses, error) {
+	return s.repository.getSubDiagnosisByDiagnosisID(diagnosisID)
 }
 
 func (s *Service) GetDiagnosisBySearch(search string) (models.MkbDiagnoses, error) {
@@ -141,6 +141,6 @@ func getTableName(model string) string {
 func (s *Service) GetConcreteDiagnosisBySearch(search string) (models.MkbConcreteDiagnoses, error) {
 	return s.repository.getConcreteDiagnosisBySearch(search)
 }
-func (s *Service) GetConcreteDiagnosisBySubDiagnosisId(diagnosisId string) (models.MkbConcreteDiagnoses, error) {
-	return s.repository.getConcreteDiagnosisBySubDiagnosisId(diagnosisId)
+func (s *Service) GetConcreteDiagnosisBySubDiagnosisID(diagnosisID string) (models.MkbConcreteDiagnoses, error) {
+	return s.repository.getConcreteDiagnosisBySubDiagnosisID(diagnosisID)
 }

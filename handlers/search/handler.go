@@ -2,8 +2,9 @@ package search
 
 import (
 	"encoding/json"
-	"github.com/pro-assistance/pro-assister/search"
 	"net/http"
+
+	"github.com/pro-assistance/pro-assister/search"
 
 	"github.com/gin-gonic/gin"
 )

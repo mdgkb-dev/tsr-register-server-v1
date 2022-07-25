@@ -2,9 +2,10 @@ package search
 
 import (
 	"encoding/json"
-	"github.com/pro-assistance/pro-assister/search"
 	"os"
 	"path/filepath"
+
+	"github.com/pro-assistance/pro-assister/search"
 )
 
 func (s *Service) SearchMain(searchModel *search.SearchModel) (err error) {

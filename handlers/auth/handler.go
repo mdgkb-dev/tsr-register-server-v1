@@ -38,8 +38,8 @@ func (h *Handler) Me(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	userId := userID.String()
-	res, err := h.service.GetUserByID(&userId)
+	userStringID := userID.String()
+	res, err := h.service.GetUserByID(&userStringID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

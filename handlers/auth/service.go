@@ -12,7 +12,9 @@ func (s *Service) Register(item *models.User) (*models.TokensWithUser, error) {
 		return nil, err
 	}
 	err = s.repository.create(item)
-
+	if err != nil {
+		return nil, err
+	}
 	ts, err := s.helper.Token.CreateToken(item.ID.String(), "", "")
 	if err != nil {
 		return nil, err

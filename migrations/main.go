@@ -1,14 +1,11 @@
 package migrations
 
-import (
-	"github.com/uptrace/bun/migrate"
-	"log"
-)
+import "github.com/uptrace/bun/migrate"
 
-var Migrations = migrate.NewMigrations()
-
-func init() {
-	if err := Migrations.DiscoverCaller(); err != nil {
-		log.Fatalln(err)
+func Init() *migrate.Migrations {
+	var migrations = migrate.NewMigrations()
+	if err := migrations.DiscoverCaller(); err != nil {
+		panic(err)
 	}
+	return migrations
 }

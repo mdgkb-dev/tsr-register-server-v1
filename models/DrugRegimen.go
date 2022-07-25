@@ -16,7 +16,7 @@ type DrugRegimen struct {
 	DrugRegimenBlocksForDelete []string            `bun:"-" json:"drugRegimenBlocksForDelete"`
 }
 
-func (item *DrugRegimen) SetIdForChildren() {
+func (item *DrugRegimen) SetIDForChildren() {
 	if len(item.DrugRegimenBlocks) > 0 {
 		for i := range item.DrugRegimenBlocks {
 			item.DrugRegimenBlocks[i].DrugRegimenID = item.ID
@@ -30,7 +30,7 @@ func GetDrugRegimenBlocks(items []*DrugRegimen) []*DrugRegimenBlock {
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].DrugRegimenBlocks...)
 	}
 	return itemsForGet
@@ -42,7 +42,7 @@ func GetDrugRegimenBlocksForDelete(items []*DrugRegimen) []string {
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].DrugRegimenBlocksForDelete...)
 	}
 	return itemsForGet

@@ -1,18 +1,19 @@
 package patients
 
 import (
-	"github.com/gin-gonic/gin"
-	"mdgkb/tsr-tegister-server-v1/handlers/chestCircumference"
+	"mdgkb/tsr-tegister-server-v1/handlers/chestcircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
-	"mdgkb/tsr-tegister-server-v1/handlers/headCircumference"
-	"mdgkb/tsr-tegister-server-v1/handlers/heightWeight"
+	"mdgkb/tsr-tegister-server-v1/handlers/headcircumference"
+	"mdgkb/tsr-tegister-server-v1/handlers/heightweight"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
-	"mdgkb/tsr-tegister-server-v1/handlers/patientDiagnosis"
-	"mdgkb/tsr-tegister-server-v1/handlers/patientDrugRegimen"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerGroupsToPatients"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerToPatient"
-	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
+	"mdgkb/tsr-tegister-server-v1/handlers/registergroupstopatients"
+	"mdgkb/tsr-tegister-server-v1/handlers/registertopatient"
+	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (s *Service) Create(item *models.Patient) error {
@@ -25,20 +26,20 @@ func (s *Service) Create(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
-	err = representativeToPatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
+	item.SetIDForChildren()
+	err = representativetopatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
 	}
-	err = heightWeight.CreateService(s.helper).CreateMany(item.HeightWeight)
+	err = heightweight.CreateService(s.helper).CreateMany(item.HeightWeight)
 	if err != nil {
 		return err
 	}
-	err = chestCircumference.CreateService(s.helper).CreateMany(item.ChestCircumference)
+	err = chestcircumference.CreateService(s.helper).CreateMany(item.ChestCircumference)
 	if err != nil {
 		return err
 	}
-	err = headCircumference.CreateService(s.helper).CreateMany(item.HeadCircumference)
+	err = headcircumference.CreateService(s.helper).CreateMany(item.HeadCircumference)
 	if err != nil {
 		return err
 	}
@@ -46,15 +47,15 @@ func (s *Service) Create(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	err = patientDiagnosis.CreateService(s.helper).CreateMany(item.PatientDiagnosis)
+	err = patientdiagnosis.CreateService(s.helper).CreateMany(item.PatientDiagnosis)
 	if err != nil {
 		return err
 	}
-	err = patientDrugRegimen.CreateService(s.helper).CreateMany(item.PatientDrugRegimen)
+	err = patientdrugregimen.CreateService(s.helper).CreateMany(item.PatientDrugRegimen)
 	if err != nil {
 		return err
 	}
-	err = registerToPatient.CreateService(s.helper).CreateMany(item.RegisterToPatient)
+	err = registertopatient.CreateService(s.helper).CreateMany(item.RegisterToPatient)
 	if err != nil {
 		return err
 	}
@@ -87,9 +88,9 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
+	item.SetIDForChildren()
 
-	representativeToPatientService := representativeToPatient.CreateService(s.helper)
+	representativeToPatientService := representativetopatient.CreateService(s.helper)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
@@ -98,7 +99,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	heightWeightService := heightWeight.CreateService(s.helper)
+	heightWeightService := heightweight.CreateService(s.helper)
 	err = heightWeightService.UpsertMany(item.HeightWeight)
 	if err != nil {
 		return err
@@ -107,7 +108,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	chestCircumferenceService := chestCircumference.CreateService(s.helper)
+	chestCircumferenceService := chestcircumference.CreateService(s.helper)
 	err = chestCircumferenceService.UpsertMany(item.ChestCircumference)
 	if err != nil {
 		return err
@@ -116,7 +117,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	headCircumferenceService := headCircumference.CreateService(s.helper)
+	headCircumferenceService := headcircumference.CreateService(s.helper)
 	err = headCircumferenceService.UpsertMany(item.HeadCircumference)
 	if err != nil {
 		return err
@@ -135,7 +136,7 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 
-	patientDiagnosisService := patientDiagnosis.CreateService(s.helper)
+	patientDiagnosisService := patientdiagnosis.CreateService(s.helper)
 	err = patientDiagnosisService.UpsertMany(item.PatientDiagnosis)
 	if err != nil {
 		return err
@@ -144,7 +145,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	patientDrugRegimenService := patientDrugRegimen.CreateService(s.helper)
+	patientDrugRegimenService := patientdrugregimen.CreateService(s.helper)
 	err = patientDrugRegimenService.UpsertMany(item.PatientDrugRegimen)
 	if err != nil {
 		return err
@@ -153,7 +154,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	registerToPatientService := registerToPatient.CreateService(s.helper)
+	registerToPatientService := registertopatient.CreateService(s.helper)
 	err = registerToPatientService.UpsertMany(item.RegisterToPatient)
 	if err != nil {
 		return err
@@ -163,7 +164,7 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 
-	registerGroupsToPatientsService := registerGroupsToPatients.CreateService(s.helper)
+	registerGroupsToPatientsService := registergroupstopatients.CreateService(s.helper)
 	err = registerGroupsToPatientsService.UpsertMany(item.RegisterGroupsToPatient)
 	if err != nil {
 		return err
@@ -181,24 +182,24 @@ func (s *Service) Delete(id *string) error {
 	if err != nil {
 		return err
 	}
-	patient.SetDeleteIdForChildren()
+	patient.SetDeleteIDForChildren()
 	err = human.CreateService(s.helper).Delete(patient.HumanID)
 	if err != nil {
 		return err
 	}
-	err = representativeToPatient.CreateService(s.helper).DeleteMany(patient.RepresentativeToPatientForDelete)
+	err = representativetopatient.CreateService(s.helper).DeleteMany(patient.RepresentativeToPatientForDelete)
 	if err != nil {
 		return err
 	}
-	err = heightWeight.CreateService(s.helper).DeleteMany(patient.HeightWeightForDelete)
+	err = heightweight.CreateService(s.helper).DeleteMany(patient.HeightWeightForDelete)
 	if err != nil {
 		return err
 	}
-	err = chestCircumference.CreateService(s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
+	err = chestcircumference.CreateService(s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
 	if err != nil {
 		return err
 	}
-	err = headCircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
+	err = headcircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
 	if err != nil {
 		return err
 	}
@@ -206,15 +207,15 @@ func (s *Service) Delete(id *string) error {
 	if err != nil {
 		return err
 	}
-	err = patientDiagnosis.CreateService(s.helper).DeleteMany(patient.PatientDiagnosisForDelete)
+	err = patientdiagnosis.CreateService(s.helper).DeleteMany(patient.PatientDiagnosisForDelete)
 	if err != nil {
 		return err
 	}
-	err = patientDrugRegimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
+	err = patientdrugregimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
 	if err != nil {
 		return err
 	}
-	err = registerToPatient.CreateService(s.helper).DeleteMany(patient.RegisterToPatientForDelete)
+	err = registertopatient.CreateService(s.helper).DeleteMany(patient.RegisterToPatientForDelete)
 	if err != nil {
 		return err
 	}

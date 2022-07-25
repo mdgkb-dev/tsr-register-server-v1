@@ -1,9 +1,10 @@
 package models
 
 import (
+	"sort"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"sort"
 )
 
 type RegisterQuery struct {
@@ -36,7 +37,7 @@ func (item *RegisterQuery) SortKeys() {
 	item.Keys = append([]string{item.Key}, item.Keys...)
 }
 
-func (item *RegisterQuery) SetIdForChildren() {
+func (item *RegisterQuery) SetIDForChildren() {
 	if len(item.RegisterQueryToRegisterProperty) == 0 {
 		return
 	}

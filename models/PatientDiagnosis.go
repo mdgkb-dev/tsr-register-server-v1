@@ -25,7 +25,7 @@ type PatientDiagnosis struct {
 	PatientDiagnosisAnamnesisForDelete []string                     `bun:"-" json:"patientDiagnosisAnamnesisForDelete"`
 }
 
-func (item *PatientDiagnosis) SetIdForChildren() {
+func (item *PatientDiagnosis) SetIDForChildren() {
 	if len(item.PatientDiagnosisAnamnesis) > 0 {
 		for i := range item.PatientDiagnosisAnamnesis {
 			item.PatientDiagnosisAnamnesis[i].PatientDiagnosisID = item.ID
@@ -39,7 +39,7 @@ func GetPatientDiagnosisAnamnesis(items []*PatientDiagnosis) []*PatientDiagnosis
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].PatientDiagnosisAnamnesis...)
 	}
 	return itemsForGet
@@ -51,7 +51,7 @@ func GetPatientDiagnosisAnamnesisForDelete(items []*PatientDiagnosis) []string {
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].PatientDiagnosisAnamnesisForDelete...)
 	}
 	return itemsForGet

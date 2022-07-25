@@ -1,8 +1,9 @@
 package meta
 
 import (
-	"github.com/gin-gonic/gin"
 	handler "mdgkb/tsr-tegister-server-v1/handlers/meta"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Init func

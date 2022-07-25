@@ -25,7 +25,7 @@ func GetFileInfoFileInfoToDocument(items []*FileInfoToDocument) []*FileInfo {
 	return itemsForGet
 }
 
-func (item *Document) SetIdForChildren() {
+func (item *Document) SetIDForChildren() {
 	if len(item.DocumentFieldValues) > 0 {
 		for i := range item.DocumentFieldValues {
 			item.DocumentFieldValues[i].DocumentID = item.ID
@@ -39,7 +39,7 @@ func GetDocumentsFiledValues(docs []*Document) []*DocumentFieldValue {
 		return items
 	}
 	for i := range docs {
-		docs[i].SetIdForChildren()
+		docs[i].SetIDForChildren()
 		items = append(items, docs[i].DocumentFieldValues...)
 	}
 	return items

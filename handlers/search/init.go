@@ -2,10 +2,11 @@ package search
 
 import (
 	"context"
+	"mime/multipart"
+
 	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/search"
-	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"

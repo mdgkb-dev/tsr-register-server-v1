@@ -13,7 +13,7 @@ type DocumentType struct {
 	DocumentTypeFieldsForDelete []string             `bun:"-" json:"documentTypeFieldsForDelete"`
 }
 
-func (item *DocumentType) SetIdForChildren() {
+func (item *DocumentType) SetIDForChildren() {
 	if len(item.DocumentTypeFields) == 0 {
 		return
 	}

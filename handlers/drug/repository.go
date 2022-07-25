@@ -1,9 +1,10 @@
 package drug
 
 import (
+	"mdgkb/tsr-tegister-server-v1/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/uptrace/bun"
 )

@@ -17,7 +17,7 @@ type RegisterPropertyRadio struct {
 
 type RegisterPropertyRadios []*RegisterPropertyRadio
 
-func (item *RegisterPropertyRadio) SetIdForChildren() {
+func (item *RegisterPropertyRadio) SetIDForChildren() {
 	if len(item.RegisterPropertyOthers) == 0 {
 		return
 	}
@@ -26,12 +26,12 @@ func (item *RegisterPropertyRadio) SetIdForChildren() {
 	}
 }
 
-func (items RegisterPropertyRadios) SetIdForChildren() {
+func (items RegisterPropertyRadios) SetIDForChildren() {
 	if len(items) == 0 {
 		return
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 	}
 }
 

@@ -24,15 +24,15 @@ type RepresentativesWithCount struct {
 	Count           int             `json:"count"`
 }
 
-func (item *Representative) SetFilePath(fileId *string) *string {
-	path := item.Human.SetFilePath(fileId)
+func (item *Representative) SetFilePath(fileID *string) *string {
+	path := item.Human.SetFilePath(fileID)
 	if path != nil {
 		return path
 	}
 	return nil
 }
 
-func (item *Representative) SetIdForChildren() {
+func (item *Representative) SetIDForChildren() {
 	if len(item.RepresentativeToPatient) > 0 {
 		for i := range item.RepresentativeToPatient {
 			item.RepresentativeToPatient[i].RepresentativeID = item.ID

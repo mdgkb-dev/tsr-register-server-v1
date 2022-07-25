@@ -1,10 +1,11 @@
 package register
 
 import (
+	"mdgkb/tsr-tegister-server-v1/handlers/registerdiagnosis"
+	"mdgkb/tsr-tegister-server-v1/handlers/registergroup"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerDiagnosis"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerGroup"
 
 	"mdgkb/tsr-tegister-server-v1/models"
 )
@@ -14,12 +15,12 @@ func (s *Service) Create(item *models.Register) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
-	err = registerGroup.CreateService(s.helper).UpsertMany(item.RegisterGroups)
+	item.SetIDForChildren()
+	err = registergroup.CreateService(s.helper).UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
 	}
-	err = registerDiagnosis.CreateService(s.helper).CreateMany(item.RegisterDiagnosis)
+	err = registerdiagnosis.CreateService(s.helper).CreateMany(item.RegisterDiagnosis)
 	if err != nil {
 		return err
 	}
@@ -47,9 +48,9 @@ func (s *Service) Update(item *models.Register) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
+	item.SetIDForChildren()
 
-	registerGroupService := registerGroup.CreateService(s.helper)
+	registerGroupService := registergroup.CreateService(s.helper)
 	err = registerGroupService.UpsertMany(item.RegisterGroups)
 	if err != nil {
 		return err
@@ -59,7 +60,7 @@ func (s *Service) Update(item *models.Register) error {
 		return err
 	}
 
-	registerDiagnosisService := registerDiagnosis.CreateService(s.helper)
+	registerDiagnosisService := registerdiagnosis.CreateService(s.helper)
 	err = registerDiagnosisService.UpsertMany(item.RegisterDiagnosis)
 	if err != nil {
 		return err

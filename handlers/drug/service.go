@@ -1,11 +1,12 @@
 package drug
 
 import (
+	"mdgkb/tsr-tegister-server-v1/handlers/drugregimen"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugsdiagnosis"
+	"mdgkb/tsr-tegister-server-v1/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"mdgkb/tsr-tegister-server-v1/handlers/drugRegimen"
-	"mdgkb/tsr-tegister-server-v1/handlers/drugsDiagnosis"
-	"mdgkb/tsr-tegister-server-v1/models"
 )
 
 func (s *Service) Create(item *models.Drug) error {
@@ -13,17 +14,16 @@ func (s *Service) Create(item *models.Drug) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
-	err = drugRegimen.CreateService(s.helper).CreateMany(item.DrugRegimens)
+	item.SetIDForChildren()
+	err = drugregimen.CreateService(s.helper).CreateMany(item.DrugRegimens)
 	if err != nil {
 		return err
 	}
-	err = drugsDiagnosis.CreateService(s.helper).CreateMany(item.DrugsDiagnosis)
+	err = drugsdiagnosis.CreateService(s.helper).CreateMany(item.DrugsDiagnosis)
 	if err != nil {
 		return err
 	}
 	return nil
-
 }
 
 func (s *Service) GetAll(diagnosis []uuid.UUID) ([]*models.Drug, error) {
@@ -47,8 +47,8 @@ func (s *Service) Update(item *models.Drug) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
-	drugRegimenService := drugRegimen.CreateService(s.helper)
+	item.SetIDForChildren()
+	drugRegimenService := drugregimen.CreateService(s.helper)
 	err = drugRegimenService.UpsertMany(item.DrugRegimens)
 	if err != nil {
 		return err
@@ -58,7 +58,7 @@ func (s *Service) Update(item *models.Drug) error {
 		return err
 	}
 
-	drugsDiagnosisService := drugsDiagnosis.CreateService(s.helper)
+	drugsDiagnosisService := drugsdiagnosis.CreateService(s.helper)
 	err = drugsDiagnosisService.UpsertMany(item.DrugsDiagnosis)
 	if err != nil {
 		return err

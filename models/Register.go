@@ -18,7 +18,7 @@ type Register struct {
 	RegisterToPatientCount int                  `bun:"-" json:"registerToPatientCount"`
 }
 
-func (item *Register) SetIdForChildren() {
+func (item *Register) SetIDForChildren() {
 	if len(item.RegisterGroups) > 0 {
 		for i := range item.RegisterGroups {
 			item.RegisterGroups[i].RegisterID = item.ID

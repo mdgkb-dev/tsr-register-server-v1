@@ -2,6 +2,7 @@ package meta
 
 import (
 	"fmt"
+
 	"github.com/uptrace/bun"
 )
 

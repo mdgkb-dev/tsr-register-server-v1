@@ -1,8 +1,8 @@
 package document
 
 import (
-	documentFieldValues "mdgkb/tsr-tegister-server-v1/handlers/documentFieldValue"
-	fileInfoForDocument "mdgkb/tsr-tegister-server-v1/handlers/fileInfoToDocument"
+	documentFieldValues "mdgkb/tsr-tegister-server-v1/handlers/documentfieldvalue"
+	fileInfoForDocument "mdgkb/tsr-tegister-server-v1/handlers/fileinfotodocument"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"

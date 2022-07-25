@@ -2,9 +2,10 @@ package xlsx
 
 import (
 	"context"
-	"github.com/pro-assistance/pro-assister/helper"
-	"mdgkb/tsr-tegister-server-v1/helpers/xlsxHelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/pro-assistance/pro-assister/helper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
@@ -42,11 +43,11 @@ type Repository struct {
 	helper *helper.Helper
 }
 
-type XlsxService struct {
-	xlsxHelper xlsxHelper.IXlsxHelper
+type ServiceXLSX struct {
+	xlsxHelper xlsxhelper.IXlsxHelper
 }
 
-func CreateHandler(h xlsxHelper.IXlsxHelper) *Handler {
+func CreateHandler(h xlsxhelper.IXlsxHelper) *Handler {
 	repo := NewRepository()
 	service := NewService(repo)
 	xlsxService := NewXlsxService(h)
@@ -65,6 +66,6 @@ func NewRepository() *Repository {
 	return &Repository{ctx: context.Background()}
 }
 
-func NewXlsxService(h xlsxHelper.IXlsxHelper) *XlsxService {
-	return &XlsxService{xlsxHelper: h}
+func NewXlsxService(h xlsxhelper.IXlsxHelper) *ServiceXLSX {
+	return &ServiceXLSX{xlsxHelper: h}
 }

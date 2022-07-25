@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/pro-assistance/pro-assister/uploadHelper"
 	"time"
+
+	"github.com/pro-assistance/pro-assister/uploadHelper"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -20,7 +21,7 @@ type Disability struct {
 	DeletedAt     *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
-func (item *Disability) SetIdForChildren() {
+func (item *Disability) SetIDForChildren() {
 	if len(item.Edvs) > 0 {
 		for i := range item.Edvs {
 			item.Edvs[i].DisabilityID = item.ID
@@ -28,10 +29,10 @@ func (item *Disability) SetIdForChildren() {
 	}
 }
 
-func (item *Disability) SetFilePath(fileId *string) *string {
+func (item *Disability) SetFilePath(fileID *string) *string {
 	for i := range item.Edvs {
-		if item.Edvs[i].FileInfo.ID.String() == *fileId {
-			item.Edvs[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileId)
+		if item.Edvs[i].FileInfo.ID.String() == *fileID {
+			item.Edvs[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
 			return &item.Edvs[i].FileInfo.FileSystemPath
 		}
 	}
@@ -44,7 +45,7 @@ func GetEdvs(disabilities []*Disability) []*Edv {
 		return items
 	}
 	for i := range disabilities {
-		disabilities[i].SetIdForChildren()
+		disabilities[i].SetIDForChildren()
 		items = append(items, disabilities[i].Edvs...)
 	}
 	return items
@@ -68,5 +69,4 @@ func SetPeriodIDToDisabilities(items []*Disability) {
 	for i := range items {
 		items[i].PeriodID = items[i].Period.ID
 	}
-	return
 }

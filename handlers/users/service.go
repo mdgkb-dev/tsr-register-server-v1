@@ -1,7 +1,7 @@
 package users
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/registersUsers"
+	"mdgkb/tsr-tegister-server-v1/handlers/registersusers"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -10,8 +10,8 @@ func (s *Service) Create(item *models.User) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
-	err = registersUsers.CreateService(s.helper).CreateMany(item.RegistersUsers)
+	item.SetIDForChildren()
+	err = registersusers.CreateService(s.helper).CreateMany(item.RegistersUsers)
 	if err != nil {
 		return err
 	}
@@ -35,9 +35,9 @@ func (s *Service) Update(item *models.User) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
+	item.SetIDForChildren()
 
-	registersUsersService := registersUsers.CreateService(s.helper)
+	registersUsersService := registersusers.CreateService(s.helper)
 	err = registersUsersService.UpsertMany(item.RegistersUsers)
 	if err != nil {
 		return err

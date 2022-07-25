@@ -1,9 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"time"
 )
 
 type RegisterGroupToPatient struct {
@@ -26,7 +27,7 @@ type RegisterGroupToPatient struct {
 
 type RegisterGroupsToPatients []*RegisterGroupToPatient
 
-func (item *RegisterGroupToPatient) SetIdForChildren() {
+func (item *RegisterGroupToPatient) SetIDForChildren() {
 	if len(item.RegisterPropertyToPatient) > 0 {
 		for i := range item.RegisterPropertyToPatient {
 			item.RegisterPropertyToPatient[i].RegisterGroupToPatientID = item.ID
@@ -44,13 +45,13 @@ func (item *RegisterGroupToPatient) SetIdForChildren() {
 	}
 }
 
-func (items RegisterGroupsToPatients) SetIdForChildren() {
+func (items RegisterGroupsToPatients) SetIDForChildren() {
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 	}
 }
 
-func (items RegisterGroupsToPatients) SetDeleteIdForChildren() {
+func (items RegisterGroupsToPatients) SetDeleteIDForChildren() {
 	//for i := range items {
 	//	items[i].RegisterPropertyToPatientForDelete = append(items[i].RegisterPropertyToPatientForDelete, item.RegisterPropertyToPatient[i].ID)
 	//}

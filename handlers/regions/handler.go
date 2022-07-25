@@ -46,7 +46,6 @@ func (h *Handler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Region
 	err := c.ShouldBind(&item)

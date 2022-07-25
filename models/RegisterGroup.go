@@ -19,7 +19,7 @@ type RegisterGroup struct {
 
 type RegisterGroups []*RegisterGroup
 
-func (item *RegisterGroup) SetIdForChildren() {
+func (item *RegisterGroup) SetIDForChildren() {
 	if len(item.RegisterProperties) == 0 {
 		return
 	}
@@ -28,12 +28,12 @@ func (item *RegisterGroup) SetIdForChildren() {
 	}
 }
 
-func (items RegisterGroups) SetIdForChildren() {
+func (items RegisterGroups) SetIDForChildren() {
 	if len(items) == 0 {
 		return
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 	}
 }
 

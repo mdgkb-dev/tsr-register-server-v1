@@ -21,10 +21,10 @@ type PatientDrugRegimen struct {
 	PatientDrugRegimenItems []*PatientDrugRegimenItem `bun:"rel:has-many" json:"patientDrugRegimenItems"`
 }
 
-func (item *PatientDrugRegimen) SetIdForChildren() {
+func (item *PatientDrugRegimen) SetIDForChildren() {
 	if len(item.PatientDrugRegimenItems) > 0 {
 		for i := range item.PatientDrugRegimenItems {
-			item.PatientDrugRegimenItems[i].PatientDrugRegimenId = item.ID
+			item.PatientDrugRegimenItems[i].PatientDrugRegimenID = item.ID
 		}
 	}
 }
@@ -35,7 +35,7 @@ func GetPatientDrugRegimenItems(items []*PatientDrugRegimen) []*PatientDrugRegim
 		return itemsForGet
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 		itemsForGet = append(itemsForGet, items[i].PatientDrugRegimenItems...)
 	}
 	return itemsForGet

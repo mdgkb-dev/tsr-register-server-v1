@@ -2,10 +2,11 @@ package drug
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/models"
+
 	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"

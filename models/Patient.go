@@ -46,13 +46,13 @@ type PatientsWithCount struct {
 	Count    int      `json:"count"`
 }
 
-func (item *Patient) SetFilePath(fileId *string) *string {
-	path := item.Human.SetFilePath(fileId)
+func (item *Patient) SetFilePath(fileID *string) *string {
+	path := item.Human.SetFilePath(fileID)
 	if path != nil {
 		return path
 	}
 	for i := range item.Disabilities {
-		path := item.Disabilities[i].SetFilePath(fileId)
+		path := item.Disabilities[i].SetFilePath(fileID)
 		if path != nil {
 			return path
 		}
@@ -60,7 +60,7 @@ func (item *Patient) SetFilePath(fileId *string) *string {
 	return nil
 }
 
-func (item *Patient) SetIdForChildren() {
+func (item *Patient) SetIDForChildren() {
 	if len(item.RepresentativeToPatient) > 0 {
 		for i := range item.RepresentativeToPatient {
 			item.RepresentativeToPatient[i].PatientID = item.ID
@@ -108,7 +108,7 @@ func (item *Patient) SetIdForChildren() {
 	}
 }
 
-func (item *Patient) SetDeleteIdForChildren() {
+func (item *Patient) SetDeleteIDForChildren() {
 	for i := range item.RepresentativeToPatient {
 		item.RepresentativeToPatientForDelete = append(item.RepresentativeToPatientForDelete, item.RepresentativeToPatient[i].ID)
 	}

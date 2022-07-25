@@ -2,6 +2,7 @@ package register
 
 import (
 	"context"
+
 	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/sqlHelper"

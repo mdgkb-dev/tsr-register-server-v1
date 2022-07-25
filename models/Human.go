@@ -1,8 +1,9 @@
 package models
 
 import (
-	"github.com/pro-assistance/pro-assister/uploadHelper"
 	"time"
+
+	"github.com/pro-assistance/pro-assister/uploadHelper"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -21,7 +22,7 @@ type Human struct {
 	Contact             *Contact      `bun:"rel:belongs-to" json:"contact"`
 	ContactID           uuid.NullUUID `bun:"type:uuid" json:"contactId"`
 	Photo               *FileInfo     `bun:"rel:belongs-to" json:"photo"`
-	PhotoId             uuid.NullUUID `bun:"type:uuid" json:"photoId"`
+	PhotoID             uuid.NullUUID `bun:"type:uuid" json:"photoId"`
 	DeletedAt           *time.Time    `bun:",soft_delete" json:"deletedAt"`
 
 	Documents          []*Document `bun:"rel:has-many" json:"documents"`
@@ -31,21 +32,21 @@ type Human struct {
 	InsuranceCompanyToHumanForDelete []uuid.UUID                `bun:"-" json:"insuranceCompanyToHumanForDelete"`
 }
 
-func (item *Human) SetFilePath(fileId *string) *string {
+func (item *Human) SetFilePath(fileID *string) *string {
 	for i := range item.Documents {
-		path := item.Documents[i].SetFilePath(fileId)
+		path := item.Documents[i].SetFilePath(fileID)
 		if path != nil {
 			return path
 		}
 	}
-	if item.Photo != nil && item.Photo.ID.String() == *fileId {
-		item.Photo.FileSystemPath = uploadHelper.BuildPath(fileId)
+	if item.Photo != nil && item.Photo.ID.String() == *fileID {
+		item.Photo.FileSystemPath = uploadHelper.BuildPath(fileID)
 		return &item.Photo.FileSystemPath
 	}
 	return nil
 }
 
-func (item *Human) SetIdForChildren() {
+func (item *Human) SetIDForChildren() {
 	if len(item.Documents) > 0 {
 		for i := range item.Documents {
 			item.Documents[i].HumanID = item.ID
@@ -58,7 +59,7 @@ func (item *Human) SetIdForChildren() {
 	}
 }
 
-func (item *Human) SetDeleteIdForChildren() {
+func (item *Human) SetDeleteIDForChildren() {
 	for i := range item.Documents {
 		item.DocumentsForDelete = append(item.DocumentsForDelete, item.Documents[i].ID)
 	}

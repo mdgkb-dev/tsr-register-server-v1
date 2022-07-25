@@ -15,7 +15,7 @@ type RegisterProperty struct {
 	Tag             string         `json:"tag"`
 	Order           int            `bun:"register_property_order" json:"order"`
 	ValueType       *ValueType     `bun:"rel:belongs-to" json:"valueType"`
-	ValueTypeId     uuid.UUID      `bun:"type:uuid" json:"valueTypeId"`
+	ValueTypeID     uuid.UUID      `bun:"type:uuid" json:"valueTypeId"`
 	RegisterGroupID uuid.UUID      `bun:"type:uuid" json:"registerGroupId"`
 	RegisterGroup   *RegisterGroup `bun:"rel:belongs-to" json:"registerGroup"`
 
@@ -34,9 +34,8 @@ type RegisterProperty struct {
 
 type RegisterProperties []*RegisterProperty
 
-func (item *RegisterProperty) SetIdForChildren() {
+func (item *RegisterProperty) SetIDForChildren() {
 	if len(item.RegisterPropertyRadios) > 0 {
-
 		for i := range item.RegisterPropertyRadios {
 			item.RegisterPropertyRadios[i].RegisterPropertyID = item.ID
 		}
@@ -58,12 +57,12 @@ func (item *RegisterProperty) SetIdForChildren() {
 	}
 }
 
-func (items RegisterProperties) SetIdForChildren() {
+func (items RegisterProperties) SetIDForChildren() {
 	if len(items) == 0 {
 		return
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 	}
 }
 

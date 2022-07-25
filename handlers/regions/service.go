@@ -28,7 +28,6 @@ func (s *Service) Get(id string) (*models.Region, error) {
 	return item, nil
 }
 
-
 func (s *Service) Update(item *models.Region) error {
 	err := s.repository.update(item)
 	if err != nil {

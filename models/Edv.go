@@ -50,7 +50,6 @@ func SetPeriodIDToEdv(items []*Edv) {
 	for i := range items {
 		items[i].PeriodID = items[i].Period.ID
 	}
-	return
 }
 func SetFileInfoIDToEdv(items []*Edv) {
 	if len(items) == 0 {
@@ -61,5 +60,4 @@ func SetFileInfoIDToEdv(items []*Edv) {
 			items[i].FileInfoID.UUID = items[i].FileInfo.ID
 		}
 	}
-	return
 }

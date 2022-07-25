@@ -42,9 +42,9 @@ func (h *Handler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
-func (h *Handler) GetGroupByClassId(c *gin.Context) {
-	classId := c.Param("classId")
-	items, err := h.service.GetGroupByClassId(classId)
+func (h *Handler) GetGroupByClassID(c *gin.Context) {
+	classID := c.Param("classId")
+	items, err := h.service.GetGroupByClassID(classID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -52,8 +52,8 @@ func (h *Handler) GetGroupByClassId(c *gin.Context) {
 }
 
 func (h *Handler) GetGroupChildrens(c *gin.Context) {
-	groupId := c.Param("groupId")
-	items, err := h.service.GetGroupChildrens(groupId)
+	groupID := c.Param("groupId")
+	items, err := h.service.GetGroupChildrens(groupID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -61,8 +61,8 @@ func (h *Handler) GetGroupChildrens(c *gin.Context) {
 }
 
 func (h *Handler) GetSubGroupChildrens(c *gin.Context) {
-	subGroupId := c.Param("subGroupId")
-	items, err := h.service.GetGroupByClassId(subGroupId)
+	subGroupID := c.Param("subGroupId")
+	items, err := h.service.GetGroupByClassID(subGroupID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -105,27 +105,27 @@ func (h *Handler) GetSubDiagnosesBySearch(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-func (h *Handler) GetDiagnosisByGroupId(c *gin.Context) {
-	groupId := c.Param("groupId")
-	items, err := h.service.GetDiagnosisByGroupId(groupId)
+func (h *Handler) GetDiagnosisByGroupID(c *gin.Context) {
+	groupID := c.Param("groupId")
+	items, err := h.service.GetDiagnosisByGroupID(groupID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
 }
 
-func (h *Handler) GetSubDiagnosisByDiagnosisId(c *gin.Context) {
-	diagnosisId := c.Param("diagnosisId")
-	items, err := h.service.GetSubDiagnosisByDiagnosisId(diagnosisId)
+func (h *Handler) GetSubDiagnosisByDiagnosisID(c *gin.Context) {
+	diagnosisID := c.Param("diagnosisId")
+	items, err := h.service.GetSubDiagnosisByDiagnosisID(diagnosisID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
 }
 
-func (h *Handler) GetConcreteDiagnosisBySubDiagnosisId(c *gin.Context) {
-	diagnosisId := c.Param("subDiagnosisId")
-	items, err := h.service.GetSubDiagnosisByDiagnosisId(diagnosisId)
+func (h *Handler) GetConcreteDiagnosisBySubDiagnosisID(c *gin.Context) {
+	diagnosisID := c.Param("subDiagnosisId")
+	items, err := h.service.GetSubDiagnosisByDiagnosisID(diagnosisID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

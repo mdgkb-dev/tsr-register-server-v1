@@ -2,8 +2,9 @@ package mkb
 
 import (
 	"context"
-	"github.com/pro-assistance/pro-assister/helper"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/pro-assistance/pro-assister/helper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
@@ -12,25 +13,25 @@ import (
 type IHandler interface {
 	GetAllClasses(c *gin.Context)
 	Update(c *gin.Context)
-	GetGroupByClassId(c *gin.Context)
+	GetGroupByClassID(c *gin.Context)
 	GetGroupChildrens(c *gin.Context)
 	GetSubGroupChildrens(c *gin.Context)
 	GetGroupsBySearch(c *gin.Context)
 	GetDiagnosisBySearch(c *gin.Context)
 	GetSubDiagnosesBySearch(c *gin.Context)
 	GetConcreteDiagnosisBySearch(c *gin.Context)
-	GetDiagnosisByGroupId(c *gin.Context)
-	GetSubDiagnosisByDiagnosisId(c *gin.Context)
-	GetConcreteDiagnosisBySubDiagnosisId(c *gin.Context)
+	GetDiagnosisByGroupID(c *gin.Context)
+	GetSubDiagnosisByDiagnosisID(c *gin.Context)
+	GetConcreteDiagnosisBySubDiagnosisID(c *gin.Context)
 }
 
 type IService interface {
 	GetAllClasses() (models.MkbClasses, error)
-	GetGroupByClassId(string) (*CompositionMkb, error)
+	GetGroupByClassID(string) (*CompositionMkb, error)
 	GetGroupChildrens(string) (*CompositionMkb, error)
-	GetDiagnosisByGroupId(string) (models.MkbDiagnoses, error)
+	GetDiagnosisByGroupID(string) (models.MkbDiagnoses, error)
 	GetSubGroupChildrens(string) (*CompositionMkb, error)
-	GetSubDiagnosisByDiagnosisId(string) (models.MkbSubDiagnoses, error)
+	GetSubDiagnosisByDiagnosisID(string) (models.MkbSubDiagnoses, error)
 	GetDiagnosisBySearch(string) (models.MkbDiagnoses, error)
 	GetGroupsBySearch(string) (models.MkbGroups, error)
 	UpdateRelevant(string, string) error
@@ -38,23 +39,23 @@ type IService interface {
 
 	GetSubDiagnosesBySearch(string) (models.MkbSubDiagnoses, error)
 	GetConcreteDiagnosisBySearch(string) (models.MkbConcreteDiagnoses, error)
-	GetConcreteDiagnosisBySubDiagnosisId(string) (models.MkbConcreteDiagnoses, error)
+	GetConcreteDiagnosisBySubDiagnosisID(string) (models.MkbConcreteDiagnoses, error)
 }
 
 type IRepository interface {
 	db() *bun.DB
 	getAllClasses() (items models.MkbClasses, err error)
-	getGroupsByClassId(string) (items models.MkbGroups, err error)
-	getSubGroupByGroupId(string) (items models.MkbSubGroups, err error)
-	getDiagnosisByClassId(string) (items models.MkbDiagnoses, err error)
-	getDiagnosisByGroupId(string) (items models.MkbDiagnoses, err error)
-	getDiagnosisBySubGroupId(string) (items models.MkbDiagnoses, err error)
-	getDiagnosisBySubSubGroupId(string) (items models.MkbDiagnoses, err error)
-	getSubDiagnosisByDiagnosisId(string) (items models.MkbSubDiagnoses, err error)
+	getGroupsByClassID(string) (items models.MkbGroups, err error)
+	getSubGroupByGroupID(string) (items models.MkbSubGroups, err error)
+	getDiagnosisByClassID(string) (items models.MkbDiagnoses, err error)
+	getDiagnosisByGroupID(string) (items models.MkbDiagnoses, err error)
+	getDiagnosisBySubGroupID(string) (items models.MkbDiagnoses, err error)
+	getDiagnosisBySubSubGroupID(string) (items models.MkbDiagnoses, err error)
+	getSubDiagnosisByDiagnosisID(string) (items models.MkbSubDiagnoses, err error)
 
 	getConcreteDiagnosisBySearch(string) (models.MkbConcreteDiagnoses, error)
 	getSubDiagnosesBySearch(string) (models.MkbSubDiagnoses, error)
-	getConcreteDiagnosisBySubDiagnosisId(string) (models.MkbConcreteDiagnoses, error)
+	getConcreteDiagnosisBySubDiagnosisID(string) (models.MkbConcreteDiagnoses, error)
 
 	getGroupsByRange(string) (items models.MkbGroups, err error)
 	getGroupBySearch(string) (items models.MkbGroups, err error)

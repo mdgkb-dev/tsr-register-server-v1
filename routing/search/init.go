@@ -1,8 +1,9 @@
 package search
 
 import (
-	"github.com/gin-gonic/gin"
 	handler "mdgkb/tsr-tegister-server-v1/handlers/search"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Init func

@@ -1,10 +1,11 @@
 package representative
 
 import (
-	"github.com/gin-gonic/gin"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
-	"mdgkb/tsr-tegister-server-v1/handlers/representativeToPatient"
+	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (s *Service) Create(item *models.Representative) error {
@@ -17,8 +18,8 @@ func (s *Service) Create(item *models.Representative) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
-	err = representativeToPatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
+	item.SetIDForChildren()
+	err = representativetopatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err
 	}
@@ -51,9 +52,9 @@ func (s *Service) Update(item *models.Representative) error {
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
+	item.SetIDForChildren()
 
-	representativeToPatientService := representativeToPatient.CreateService(s.helper)
+	representativeToPatientService := representativetopatient.CreateService(s.helper)
 	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
 	if err != nil {
 		return err

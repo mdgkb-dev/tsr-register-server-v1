@@ -3,8 +3,8 @@ package human
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/contact"
 	"mdgkb/tsr-tegister-server-v1/handlers/document"
-	"mdgkb/tsr-tegister-server-v1/handlers/fileInfo"
-	"mdgkb/tsr-tegister-server-v1/handlers/insuranceCompanyToHuman"
+	"mdgkb/tsr-tegister-server-v1/handlers/fileinfo"
+	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompanytohuman"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
@@ -20,21 +20,21 @@ func (s *Service) Create(item *models.Human) error {
 	}
 	item.ContactID = item.Contact.ID
 
-	err = fileInfo.CreateService(s.helper).Create(item.Photo)
+	err = fileinfo.CreateService(s.helper).Create(item.Photo)
 	if err != nil {
 		return err
 	}
 	if item.Photo != nil {
-		item.PhotoId.UUID = item.Photo.ID
+		item.PhotoID.UUID = item.Photo.ID
 	}
 
 	err = s.repository.create(item)
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
+	item.SetIDForChildren()
 
-	err = insuranceCompanyToHuman.CreateService(s.helper).CreateMany(item.InsuranceCompanyToHuman)
+	err = insurancecompanytohuman.CreateService(s.helper).CreateMany(item.InsuranceCompanyToHuman)
 	if err != nil {
 		return err
 	}
@@ -55,21 +55,21 @@ func (s *Service) Update(item *models.Human) error {
 	}
 	item.ContactID = item.Contact.ID
 
-	err = fileInfo.CreateService(s.helper).Upsert(item.Photo)
+	err = fileinfo.CreateService(s.helper).Upsert(item.Photo)
 	if err != nil {
 		return err
 	}
 	if item.Photo != nil {
-		item.PhotoId.UUID = item.Photo.ID
+		item.PhotoID.UUID = item.Photo.ID
 	}
 
 	err = s.repository.update(item)
 	if err != nil {
 		return err
 	}
-	item.SetIdForChildren()
+	item.SetIDForChildren()
 
-	insuranceCompanyToHumanService := insuranceCompanyToHuman.CreateService(s.helper)
+	insuranceCompanyToHumanService := insurancecompanytohuman.CreateService(s.helper)
 	err = insuranceCompanyToHumanService.UpsertMany(item.InsuranceCompanyToHuman)
 	if err != nil {
 		return err
@@ -95,16 +95,16 @@ func (s *Service) Delete(id uuid.UUID) error {
 	if err != nil {
 		return err
 	}
-	human.SetDeleteIdForChildren()
+	human.SetDeleteIDForChildren()
 	err = contact.CreateService(s.helper).Delete(human.ContactID)
 	if err != nil {
 		return err
 	}
-	err = fileInfo.CreateService(s.helper).Delete(human.PhotoId)
+	err = fileinfo.CreateService(s.helper).Delete(human.PhotoID)
 	if err != nil {
 		return err
 	}
-	err = insuranceCompanyToHuman.CreateService(s.helper).DeleteMany(human.InsuranceCompanyToHumanForDelete)
+	err = insurancecompanytohuman.CreateService(s.helper).DeleteMany(human.InsuranceCompanyToHumanForDelete)
 	if err != nil {
 		return err
 	}

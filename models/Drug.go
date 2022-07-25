@@ -1,9 +1,10 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
-	"time"
 )
 
 type Drug struct {
@@ -23,7 +24,7 @@ type Drug struct {
 	DrugsDiagnosisForDelete []uuid.UUID    `bun:"-" json:"drugsDiagnosisForDelete"`
 }
 
-func (item *Drug) SetIdForChildren() {
+func (item *Drug) SetIDForChildren() {
 	if len(item.DrugRegimens) > 0 {
 		for i := range item.DrugRegimens {
 			item.DrugRegimens[i].DrugID = item.ID

@@ -1,8 +1,9 @@
 package contact
 
 import (
-	"github.com/uptrace/bun"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 
 	"github.com/google/uuid"
 )

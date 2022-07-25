@@ -17,7 +17,7 @@ type RegisterPropertySet struct {
 
 type RegisterPropertySets []*RegisterPropertySet
 
-func (item *RegisterPropertySet) SetIdForChildren() {
+func (item *RegisterPropertySet) SetIDForChildren() {
 	if len(item.RegisterPropertyOthers) == 0 {
 		return
 	}
@@ -26,12 +26,12 @@ func (item *RegisterPropertySet) SetIdForChildren() {
 	}
 }
 
-func (items RegisterPropertySets) SetIdForChildren() {
+func (items RegisterPropertySets) SetIDForChildren() {
 	if len(items) == 0 {
 		return
 	}
 	for i := range items {
-		items[i].SetIdForChildren()
+		items[i].SetIDForChildren()
 	}
 }
 
