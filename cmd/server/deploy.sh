@@ -10,12 +10,12 @@ PROCESS_FILE=${BIN_PATH}/${PROCESS_NAME}
 #git pull --all && \
 #git checkout $branch && \
 
-go build -o $PROCESS_FILE ./cmd/server/main.go && \
+echo $PIDFILE
 if [ -f "$PIDFILE" ]; then
     echo "$FILE exists."
+    echo `cat ${PIDFILE}`
     kill -9 `cat ${PIDFILE}` && rm -f "${PIDFILE}"
 fi
-echo $PROCESS_FILE
+go build -o $PROCESS_FILE ./cmd/server/main.go
 
-nohup $PROCESS_FILE &
-exit
+nohup $PROCESS_FILE & exit
