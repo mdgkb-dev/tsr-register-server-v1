@@ -37,7 +37,7 @@ dump_from_remote:
 dump: dump_from_remote
 
 deploy:
-	./cmd/server/deploy.sh DEPLOY_PATH=$(DEPLOY_PATH) DEPLOY_BRANCH=$(DEPLOY_BRANCH)
+	./cmd/server/deploy.sh $(SERVER_NAME)
 
 lint:
 	./cmd/golangci.sh
