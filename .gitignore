@@ -41,3 +41,4 @@ sessions/
 # Local settings
 static
 data
+nohup.out
