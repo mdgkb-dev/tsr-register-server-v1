@@ -29,7 +29,7 @@ type IService interface {
 	Update(*models.Representative) error
 	Delete(*string) error
 
-	GetBySearch(*string) ([]*models.Representative, error)
+	GetBySearch(*string) (models.Representatives, error)
 }
 
 type IRepository interface {

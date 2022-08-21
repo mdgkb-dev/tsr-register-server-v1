@@ -122,10 +122,10 @@ func (s *Service) UpdateName(id, name, model string) error {
 func getTableName(model string) string {
 	tableName := ""
 	switch model {
-	case "MkbCLass":
+	case "MkbClass":
 		tableName = "mkb_class"
 	case "MkbGroup":
-		tableName = "mkb_group"
+		tableName = "mkb_groups"
 	case "MkbSubGroup":
 		tableName = "mkb_sub_groups"
 	case "MkbSubSubGroup":

@@ -1,6 +1,7 @@
 package representative
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -25,23 +26,23 @@ func (r *Repository) create(item *models.Representative) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() (items models.RepresentativesWithCount, err error) {
+func (r *Repository) getAll() (item models.RepresentativesWithCount, err error) {
+	item.Representatives = make(models.Representatives, 0)
 	query := r.db().NewSelect().
-		Model(&items.Representatives).
+		Model(&item.Representatives).
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
 		Relation("RepresentativeToPatient.Patient.Human").
-		Relation("RepresentativeToPatient.RepresentativeType").
-		Order("human.surname")
+		Relation("RepresentativeToPatient.RepresentativeType")
+	//Order("human.surname")
 	r.queryFilter.HandleQuery(query)
-	//httpHelper.CreateFilter(query, queryFilter.FilterModels)
-	//httpHelper.CreatePaginationQuery(query, queryFilter.Pagination)
-	items.Count, err = query.ScanAndCount(r.ctx)
-	return items, err
+	item.Count, err = query.ScanAndCount(r.ctx)
+	return item, err
 }
 
 func (r *Repository) getOnlyNames() (items models.RepresentativesWithCount, err error) {
+	fmt.Println()
 	items.Count, err = r.db().NewSelect().
 		Model(&items.Representatives).
 		Relation("Human").

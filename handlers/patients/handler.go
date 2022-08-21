@@ -76,7 +76,7 @@ func (h *Handler) Update(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	err = item.FillModelInfoUpdate(c)
+	err = item.FillModelInfoUpdate(c, h.helper.Token)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

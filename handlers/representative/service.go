@@ -70,7 +70,7 @@ func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
 }
 
-func (s *Service) GetBySearch(query *string) ([]*models.Representative, error) {
+func (s *Service) GetBySearch(query *string) (models.Representatives, error) {
 	queryRu := s.helper.Util.TranslitToRu(*query)
 	items, err := s.repository.getBySearch(&queryRu)
 	if err != nil {

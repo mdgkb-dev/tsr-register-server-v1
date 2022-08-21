@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/pro-assistance/pro-assister/tokenHelper"
 )
 
 type ModelInfo struct {
@@ -19,12 +20,12 @@ type ModelInfo struct {
 	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
-func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context) error {
-	//userId, err := GetUserID(c)
-	//if err != nil {
-	//	return err
-	//}
-	//m.UpdatedByID = *userId
+func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) error {
+	userID, err := tokenHelper.GetUserID(c)
+	if err != nil {
+		return err
+	}
+	m.UpdatedByID = *userID
 	m.UpdatedAt = time.Now()
 	return nil
 }
