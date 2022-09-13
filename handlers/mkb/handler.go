@@ -143,3 +143,12 @@ func (h *Handler) GetConcreteDiagnosisBySearch(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, items)
 }
+
+func (h *Handler) SelectMkbElement(c *gin.Context) {
+	id := c.Param("id")
+	class, mkbElement, err := h.service.SelectMkbElement(id)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, map[string]interface{}{"mkbClass": class, "mkbElement": mkbElement})
+}

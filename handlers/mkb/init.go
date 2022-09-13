@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ type IHandler interface {
 	GetDiagnosisByGroupID(c *gin.Context)
 	GetSubDiagnosisByDiagnosisID(c *gin.Context)
 	GetConcreteDiagnosisBySubDiagnosisID(c *gin.Context)
+	SelectMkbElement(c *gin.Context)
 }
 
 type IService interface {
@@ -40,6 +42,7 @@ type IService interface {
 	GetSubDiagnosesBySearch(string) (models.MkbSubDiagnoses, error)
 	GetConcreteDiagnosisBySearch(string) (models.MkbConcreteDiagnoses, error)
 	GetConcreteDiagnosisBySubDiagnosisID(string) (models.MkbConcreteDiagnoses, error)
+	SelectMkbElement(string) (*models.MkbClass, *models.MkbElement, error)
 }
 
 type IRepository interface {
@@ -62,6 +65,8 @@ type IRepository interface {
 	getDiagnosisBySearch(string) (items models.MkbDiagnoses, err error)
 	updateRelevant(string, string) error
 	updateName(string, string, string) error
+	selectMkbElement(string) (*models.MkbElement, error)
+	getMkbClass(id uuid.UUID) (item *models.MkbClass, err error)
 }
 
 type Handler struct {

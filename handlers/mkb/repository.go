@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
@@ -154,4 +155,32 @@ func (r *Repository) getConcreteDiagnosisBySearch(search string) (models.MkbConc
 		Where("lower(regexp_replace(mkb_concrete_diagnosis.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+search+"%").
 		Scan(r.ctx)
 	return items, err
+}
+
+func (r *Repository) selectMkbElement(id string) (*models.MkbElement, error) {
+	item := models.MkbElement{}
+	err := r.db().NewSelect().Model(&item).
+		Where("id = ?", id).
+		Scan(r.ctx)
+	return &item, err
+}
+
+func (r *Repository) getMkbClass(id uuid.UUID) (*models.MkbClass, error) {
+	item := models.MkbClass{}
+	err := r.db().NewSelect().Model(&item).
+		Relation("MkbGroups", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("mkb_groups_view.range_end")
+		}).
+		Relation("MkbGroups.MkbDiagnosis", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("mkb_diagnosis_view.code")
+		}).
+		Relation("MkbGroups.MkbDiagnosis.MkbSubDiagnosis", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("mkb_sub_diagnosis_view.sub_code")
+		}).
+		Relation("MkbGroups.MkbDiagnosis.MkbSubDiagnosis.MkbDiagnosis").
+		Relation("MkbGroups.MkbSubGroups.MkbDiagnosis.MkbSubDiagnosis.MkbConcreteDiagnosis").
+		Relation("MkbGroups.MkbSubGroups.MkbSubSubGroups.MkbDiagnosis.MkbSubDiagnosis.MkbConcreteDiagnosis").
+		Where("mkb_class.id = ?", id.String()).
+		Scan(r.ctx)
+	return &item, err
 }

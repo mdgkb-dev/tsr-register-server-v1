@@ -12,6 +12,7 @@ type Schema struct {
 	MkbConcreteDiagnosis map[string]string `json:"mkbConcreteDiagnosis"`
 	Drug                 map[string]string `json:"drug"`
 	RegisterToPatient    map[string]string `json:"registerToPatient"`
+	MkbFlat              map[string]string `json:"mkbFlat"`
 }
 
 func CreateSchema() Schema {
@@ -27,6 +28,7 @@ func CreateSchema() Schema {
 		MkbConcreteDiagnosis: createMkbConcreteDiagnosisSchema(),
 		Drug:                 createDrugSchema(),
 		RegisterToPatient:    createRegisterToPatientSchema(),
+		MkbFlat:              createMkbFlatSchema(),
 	}
 }
 
@@ -137,5 +139,14 @@ func createRegisterToPatientSchema() map[string]string {
 		"key":        "registerToPatient",
 		"registerId": "register_id",
 		"patientId":  "patient_id",
+	}
+}
+
+func createMkbFlatSchema() map[string]string {
+	return map[string]string{
+		"tableName": "mkb_flat_view",
+		"key":       "mkbFlat",
+		"fullName":  "full_name",
+		"level":     "level",
 	}
 }

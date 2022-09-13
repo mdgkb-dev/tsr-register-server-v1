@@ -20,4 +20,5 @@ func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.GET("/diagnosis/:diagnosisId", h.GetSubDiagnosisByDiagnosisID)
 	r.GET("/concrete-diagnosis/:diagnosisId", h.GetConcreteDiagnosisBySubDiagnosisID)
 	r.GET("/concrete-diagnosis", h.GetConcreteDiagnosisBySearch)
+	r.GET("/select-mkb-element/:id", h.SelectMkbElement)
 }

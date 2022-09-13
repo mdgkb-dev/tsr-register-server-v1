@@ -26,7 +26,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 		return
 	}
 	userID, err := h.helper.Token.GetUserID(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
 		return
 	}
 	items, err := h.service.GetAll(*userID)

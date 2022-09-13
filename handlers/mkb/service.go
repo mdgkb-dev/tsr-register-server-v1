@@ -144,3 +144,15 @@ func (s *Service) GetConcreteDiagnosisBySearch(search string) (models.MkbConcret
 func (s *Service) GetConcreteDiagnosisBySubDiagnosisID(diagnosisID string) (models.MkbConcreteDiagnoses, error) {
 	return s.repository.getConcreteDiagnosisBySubDiagnosisID(diagnosisID)
 }
+
+func (s *Service) SelectMkbElement(id string) (*models.MkbClass, *models.MkbElement, error) {
+	element, err := s.repository.selectMkbElement(id)
+	if err != nil {
+		return nil, nil, err
+	}
+	class, err := s.repository.getMkbClass(element.ClassID)
+	if err != nil {
+		return nil, nil, err
+	}
+	return class, element, nil
+}
