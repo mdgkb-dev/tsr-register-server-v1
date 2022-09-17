@@ -178,6 +178,7 @@ func (r *Repository) getMkbClass(id uuid.UUID) (*models.MkbClass, error) {
 			return q.Order("mkb_sub_diagnosis_view.sub_code")
 		}).
 		Relation("MkbGroups.MkbDiagnosis.MkbSubDiagnosis.MkbDiagnosis").
+		Relation("MkbGroups.MkbDiagnosis.MkbSubDiagnosis.MkbConcreteDiagnosis").
 		Relation("MkbGroups.MkbSubGroups.MkbDiagnosis.MkbSubDiagnosis.MkbConcreteDiagnosis").
 		Relation("MkbGroups.MkbSubGroups.MkbSubSubGroups.MkbDiagnosis.MkbSubDiagnosis.MkbConcreteDiagnosis").
 		Where("mkb_class.id = ?", id.String()).
