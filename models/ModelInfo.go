@@ -12,8 +12,8 @@ type ModelInfo struct {
 	CreatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
 	UpdatedAt time.Time `bun:",nullzero,notnull,default:current_timestamp" json:"updatedAt"`
 
-	CreatedByID uuid.UUID `json:"createdById"`
-	UpdatedByID uuid.UUID `json:"updatedById"`
+	CreatedByID uuid.NullUUID `json:"createdById"`
+	UpdatedByID uuid.NullUUID `json:"updatedById"`
 
 	CreatedBy *User      `bun:"rel:belongs-to" json:"createdBy"`
 	UpdatedBy *User      `bun:"rel:belongs-to" json:"updatedBy"`
@@ -21,12 +21,12 @@ type ModelInfo struct {
 }
 
 func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) error {
-	userID, err := tokenHelper.GetUserID(c)
-	if err != nil {
-		return err
-	}
-	m.UpdatedByID = *userID
-	m.UpdatedAt = time.Now()
+	//userID, err := tokenHelper.GetUserID(c)
+	//if err != nil {
+	//	return err
+	//}
+	//m.UpdatedByID = *userID
+	//m.UpdatedAt = time.Now()
 	return nil
 }
 
