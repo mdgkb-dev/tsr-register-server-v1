@@ -12,7 +12,7 @@ type MkbDiagnosis struct {
 	FullName         string          `json:"fullName"`
 	Code             string          `json:"code"`
 	Comment          string          `json:"comment"`
-	Leaf             bool            `json:"bool"`
+	Leaf             bool            `json:"leaf"`
 	Relevant         bool            `json:"relevant"`
 	MkbClass         *MkbClass       `bun:"rel:belongs-to" json:"mkbClass"`
 	MkbClassID       uuid.UUID       `bun:"type:uuid" json:"mkbClassId"`

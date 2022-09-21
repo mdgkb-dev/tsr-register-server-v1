@@ -12,7 +12,7 @@ type MkbSubSubGroup struct {
 	RangeStart    string          `json:"rangeStart"`
 	RangeEnd      string          `json:"rangeEnd"`
 	Comment       string          `json:"comment"`
-	Leaf          bool            `json:"bool"`
+	Leaf          bool            `json:"leaf"`
 	Relevant      bool            `json:"relevant"`
 	MkbSubGroup   *MkbSubGroup    `bun:"rel:belongs-to" json:"mkbSubGroup"`
 	MkbSubGroupID uuid.UUID       `bun:"type:uuid" json:"mkbSubGroupId"`

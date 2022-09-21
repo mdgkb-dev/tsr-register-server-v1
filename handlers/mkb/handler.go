@@ -125,7 +125,7 @@ func (h *Handler) GetSubDiagnosisByDiagnosisID(c *gin.Context) {
 
 func (h *Handler) GetConcreteDiagnosisBySubDiagnosisID(c *gin.Context) {
 	diagnosisID := c.Param("subDiagnosisId")
-	items, err := h.service.GetSubDiagnosisByDiagnosisID(diagnosisID)
+	items, err := h.service.GetConcreteDiagnosisBySubDiagnosisID(diagnosisID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

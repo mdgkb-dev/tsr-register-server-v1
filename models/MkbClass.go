@@ -13,7 +13,7 @@ type MkbClass struct {
 	RangeStart    string       `json:"rangeStart"`
 	RangeEnd      string       `json:"rangeEnd"`
 	Comment       string       `json:"comment"`
-	Leaf          bool         `json:"bool"`
+	Leaf          bool         `json:"leaf"`
 	Relevant      bool         `json:"relevant"`
 	MkbGroups     MkbGroups    `bun:"rel:has-many" json:"mkbGroups"`
 	MkbDiagnosis  MkbDiagnoses `bun:"rel:has-many" json:"mkbDiagnosis"`

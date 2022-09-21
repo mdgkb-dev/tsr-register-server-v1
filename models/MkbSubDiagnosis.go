@@ -12,7 +12,7 @@ type MkbSubDiagnosis struct {
 	FullName             string               `json:"fullName"`
 	SubCode              int                  `json:"subCode"`
 	Comment              string               `json:"comment"`
-	Leaf                 bool                 `json:"bool"`
+	Leaf                 bool                 `json:"leaf"`
 	Relevant             bool                 `json:"relevant"`
 	MkbDiagnosis         *MkbDiagnosis        `bun:"rel:belongs-to" json:"mkbDiagnosis"`
 	MkbDiagnosisID       uuid.UUID            `bun:"type:uuid" json:"mkbDiagnosisId"`

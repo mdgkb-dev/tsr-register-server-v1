@@ -10,7 +10,7 @@ type MkbConcreteDiagnosis struct {
 	ID                uuid.NullUUID    `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name              string           `json:"name"`
 	Comment           string           `json:"comment"`
-	Leaf              bool             `json:"bool"`
+	Leaf              bool             `json:"leaf"`
 	Relevant          bool             `json:"relevant"`
 	MkbSubDiagnosis   *MkbSubDiagnosis `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
 	MkbSubDiagnosisID uuid.NullUUID    `bun:"type:uuid" json:"mkbSubDiagnosisId"`
