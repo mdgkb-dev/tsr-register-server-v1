@@ -1,7 +1,6 @@
 package registergroupstopatients
 
 import (
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertyotherstopatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertysettopatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertytopatient"
@@ -11,13 +10,6 @@ import (
 )
 
 func (s *Service) UpsertMany(items models.RegisterGroupsToPatients) error {
-	fmt.Println("items")
-	fmt.Println("items")
-	fmt.Println("items")
-	fmt.Println("items")
-	fmt.Println("items")
-	fmt.Println("items")
-	fmt.Println(items)
 	if len(items) == 0 {
 		return nil
 	}

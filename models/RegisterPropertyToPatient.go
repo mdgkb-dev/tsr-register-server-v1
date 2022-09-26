@@ -12,7 +12,7 @@ type RegisterPropertyToPatient struct {
 	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
 	ValueString string    `json:"valueString"`
-	ValueNumber int       `json:"valueNumber"`
+	ValueNumber float32   `json:"valueNumber"`
 	ValueDate   time.Time `json:"valueDate"`
 	ValueOther  string    `json:"valueOther"`
 
@@ -24,6 +24,9 @@ type RegisterPropertyToPatient struct {
 
 	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
+
+	RegisterPropertyVariant   *RegisterPropertyVariant `bun:"rel:belongs-to" json:"registerPropertyVariant"`
+	RegisterPropertyVariantID uuid.NullUUID            `bun:"type:uuid" json:"registerPropertyVariantId"`
 
 	RegisterGroupToPatient   *RegisterGroupToPatient `bun:"rel:belongs-to" json:"registerGroupToPatient"`
 	RegisterGroupToPatientID uuid.UUID               `bun:"type:uuid" json:"registerGroupToPatientID"`

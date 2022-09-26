@@ -50,6 +50,7 @@ func (r *Repository) get(id string) (*models.Register, error) {
 			return q.Order("register_property.register_property_order")
 		}).
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertyExamples").
+		Relation("RegisterGroups.RegisterProperties.RegisterPropertyVariants").
 		Relation("RegisterGroups.RegisterProperties.ValueType").
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertyMeasures").
 		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {

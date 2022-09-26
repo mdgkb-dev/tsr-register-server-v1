@@ -88,6 +88,7 @@ func (r *Repository) upsertMany(items models.RegisterProperties) (err error) {
 		Set(`value_type_id = EXCLUDED.value_type_id`).
 		Set(`register_group_id = EXCLUDED.register_group_id`).
 		Set(`tag = EXCLUDED.tag`).
+		Set(`age_compare = EXCLUDED.age_compare`).
 		Exec(r.ctx)
 	return err
 }

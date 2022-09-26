@@ -6,21 +6,24 @@ import (
 )
 
 type RegisterProperty struct {
-	bun.BaseModel   `bun:"register_property,alias:register_property"`
-	ID              uuid.UUID      `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name            string         `json:"name"`
-	ShortName       string         `json:"shortName"`
-	ColWidth        int            `json:"colWidth"`
-	WithOther       bool           `json:"withOther"`
-	Tag             string         `json:"tag"`
-	Order           int            `bun:"register_property_order" json:"order"`
-	ValueType       *ValueType     `bun:"rel:belongs-to" json:"valueType"`
-	ValueTypeID     uuid.UUID      `bun:"type:uuid" json:"valueTypeId"`
-	RegisterGroupID uuid.UUID      `bun:"type:uuid" json:"registerGroupId"`
-	RegisterGroup   *RegisterGroup `bun:"rel:belongs-to" json:"registerGroup"`
-
+	bun.BaseModel                   `bun:"register_property,alias:register_property"`
+	ID                              uuid.UUID              `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name                            string                 `json:"name"`
+	ShortName                       string                 `json:"shortName"`
+	ColWidth                        int                    `json:"colWidth"`
+	WithOther                       bool                   `json:"withOther"`
+	Tag                             string                 `json:"tag"`
+	Order                           int                    `bun:"register_property_order" json:"order"`
+	ValueType                       *ValueType             `bun:"rel:belongs-to" json:"valueType"`
+	ValueTypeID                     uuid.UUID              `bun:"type:uuid" json:"valueTypeId"`
+	RegisterGroupID                 uuid.UUID              `bun:"type:uuid" json:"registerGroupId"`
+	RegisterGroup                   *RegisterGroup         `bun:"rel:belongs-to" json:"registerGroup"`
+	AgeCompare                      bool                   `json:"ageCompare"`
 	RegisterPropertyRadios          RegisterPropertyRadios `bun:"rel:has-many" json:"registerPropertyRadios"`
 	RegisterPropertyRadiosForDelete []uuid.UUID            `bun:"-" json:"registerPropertyRadiosForDelete"`
+
+	RegisterPropertyVariants          RegisterPropertyVariants `bun:"rel:has-many" json:"registerPropertyVariants"`
+	RegisterPropertyVariantsForDelete []uuid.UUID              `bun:"-" json:"registerPropertyVariantsForDelete"`
 
 	RegisterPropertySets          RegisterPropertySets `bun:"rel:has-many" json:"registerPropertySets"`
 	RegisterPropertySetsForDelete []uuid.UUID          `bun:"-" json:"registerPropertySetsForDelete"`
@@ -53,6 +56,11 @@ func (item *RegisterProperty) SetIDForChildren() {
 	if len(item.RegisterPropertyMeasures) > 0 {
 		for i := range item.RegisterPropertyMeasures {
 			item.RegisterPropertyMeasures[i].RegisterPropertyID = item.ID
+		}
+	}
+	if len(item.RegisterPropertyVariants) > 0 {
+		for i := range item.RegisterPropertyVariants {
+			item.RegisterPropertyVariants[i].RegisterPropertyID = item.ID
 		}
 	}
 }
@@ -126,6 +134,22 @@ func (items RegisterProperties) GetRegisterPropertyMeasures() RegisterPropertyMe
 	itemsForGet := make(RegisterPropertyMeasures, 0)
 	for i := range items {
 		itemsForGet = append(itemsForGet, items[i].RegisterPropertyMeasures...)
+	}
+	return itemsForGet
+}
+
+func (items RegisterProperties) GetRegisterPropertyVariants() RegisterPropertyVariants {
+	itemsForGet := make(RegisterPropertyVariants, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].RegisterPropertyVariants...)
+	}
+	return itemsForGet
+}
+
+func (items RegisterProperties) GetRegisterPropertyVariantsForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].RegisterPropertyVariantsForDelete...)
 	}
 	return itemsForGet
 }

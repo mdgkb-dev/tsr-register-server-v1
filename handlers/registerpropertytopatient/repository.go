@@ -33,6 +33,7 @@ func (r *Repository) upsertMany(items []*models.RegisterPropertyToPatient) (err 
 		Set("register_property_radio_id = EXCLUDED.register_property_radio_id").
 		Set("register_property_id = EXCLUDED.register_property_id").
 		Set("register_property_measure_id = EXCLUDED.register_property_measure_id").
+		Set("register_property_variant_id = EXCLUDED.register_property_variant_id").
 		Model(&items).
 		Exec(r.ctx)
 	return err
