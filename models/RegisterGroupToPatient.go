@@ -13,11 +13,10 @@ type RegisterGroupToPatient struct {
 
 	Date *time.Time `bun:"register_groups_to_patients_date" json:"date"`
 
-	RegisterGroup   *RegisterGroup `bun:"rel:belongs-to" json:"registerGroup"`
-	RegisterGroupID uuid.UUID      `bun:"type:uuid" json:"registerGroupId"`
-	Patient         *Patient       `bun:"rel:has-one" json:"patients"`
-	PatientID       uuid.UUID      `bun:"type:uuid" json:"patientId"`
-
+	RegisterGroup                         *RegisterGroup                  `bun:"rel:belongs-to" json:"registerGroup"`
+	RegisterGroupID                       uuid.UUID                       `bun:"type:uuid" json:"registerGroupId"`
+	Patient                               *Patient                        `bun:"rel:has-one" json:"patients"`
+	PatientID                             uuid.UUID                       `bun:"type:uuid" json:"patientId"`
 	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
 	RegisterPropertyOthersToPatient       RegisterPropertyOthersToPatient `bun:"rel:has-many" json:"registerPropertyOthersToPatient"`
 	RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"registerPropertyToPatientForDelete"`
@@ -26,6 +25,26 @@ type RegisterGroupToPatient struct {
 }
 
 type RegisterGroupsToPatients []*RegisterGroupToPatient
+
+func (items RegisterGroupsToPatients) SetFilePath(fileID *string) *string {
+	for i := range items {
+		path := items[i].SetFilePath(fileID)
+		if path != nil {
+			return path
+		}
+	}
+	return nil
+}
+
+func (item *RegisterGroupToPatient) SetFilePath(fileID *string) *string {
+	for i := range item.RegisterPropertyToPatient {
+		path := item.RegisterPropertyToPatient[i].SetFilePath(fileID)
+		if path != nil {
+			return path
+		}
+	}
+	return nil
+}
 
 func (item *RegisterGroupToPatient) SetIDForChildren() {
 	if len(item.RegisterPropertyToPatient) > 0 {

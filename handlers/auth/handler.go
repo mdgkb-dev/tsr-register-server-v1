@@ -35,7 +35,7 @@ func (h *Handler) Login(c *gin.Context) {
 
 func (h *Handler) Me(c *gin.Context) {
 	userID, err := h.helper.Token.GetUserID(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
 		return
 	}
 	userStringID := userID.String()

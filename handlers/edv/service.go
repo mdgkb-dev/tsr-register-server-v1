@@ -1,7 +1,7 @@
 package edv
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/fileinfo"
+	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/period"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
@@ -15,7 +15,7 @@ func (s *Service) CreateMany(items []*models.Edv) error {
 		return err
 	}
 	models.SetPeriodIDToEdv(items)
-	err = fileinfo.CreateService(s.helper).CreateMany(models.GetFilesFromEdv(items))
+	err = fileinfos.CreateService(s.helper).CreateMany(models.GetFilesFromEdv(items))
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func (s *Service) UpsertMany(items []*models.Edv) error {
 		return err
 	}
 	models.SetPeriodIDToEdv(items)
-	err = fileinfo.CreateService(s.helper).UpsertMany(models.GetFilesFromEdv(items))
+	err = fileinfos.CreateService(s.helper).UpsertMany(models.GetFilesFromEdv(items))
 	if err != nil {
 		return err
 	}

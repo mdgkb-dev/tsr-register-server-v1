@@ -75,6 +75,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
 		Relation("RegisterToPatient.Register").
 		Relation("RegisterGroupsToPatient.RegisterPropertyToPatient.RegisterProperty").
+		Relation("RegisterGroupsToPatient.RegisterPropertyToPatient.RegisterPropertiesToPatientsToFileInfos.FileInfo").
 		Relation("RegisterGroupsToPatient.RegisterPropertySetToPatient.RegisterPropertySet").
 		Relation("RegisterGroupsToPatient.RegisterPropertyOthersToPatient").
 		Relation("PatientDrugRegimen.DrugRegimen.Drug").

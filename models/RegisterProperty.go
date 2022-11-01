@@ -12,6 +12,7 @@ type RegisterProperty struct {
 	ShortName       string         `json:"shortName"`
 	ColWidth        int            `json:"colWidth"`
 	WithOther       bool           `json:"withOther"`
+	IsFilesStorage  bool           `json:"isFilesStorage"`
 	Tag             string         `json:"tag"`
 	Order           int            `bun:"register_property_order" json:"order"`
 	ValueType       *ValueType     `bun:"rel:belongs-to" json:"valueType"`

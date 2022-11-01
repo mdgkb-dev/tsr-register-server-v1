@@ -4,7 +4,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drug"
-	"mdgkb/tsr-tegister-server-v1/handlers/fileinfo"
+	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompany"
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkb"
@@ -57,7 +57,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documenttypes.CreateHandler(helper))
 	drugRouter.Init(api.Group("/drugs"), drug.CreateHandler(helper))
-	fileInfoRouter.Init(api.Group("/files-info"), fileinfo.CreateHandler(helper))
+	fileInfoRouter.Init(api.Group("/files-info"), fileinfos.CreateHandler(helper))
 	insuranceCompanyRouter.Init(api.Group("/insurance-companies"), insurancecompany.CreateHandler(helper))
 	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
 	mkbRouter.Init(api.Group("/mkb"), mkb.CreateHandler(helper))
