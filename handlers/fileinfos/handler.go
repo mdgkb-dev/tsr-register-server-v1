@@ -1,4 +1,4 @@
-package fileinfo
+package fileinfos
 
 import (
 	"net/http"

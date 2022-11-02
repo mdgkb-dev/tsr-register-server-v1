@@ -11,7 +11,7 @@ func (r *Repository) db() *bun.DB {
 	return r.helper.DB.DB
 }
 
-func (r *Repository) createMany(items []*models.RegisterPropertyToPatient) (err error) {
+func (r *Repository) createMany(items models.RegisterPropertiesToPatients) (err error) {
 	_, err = r.db().NewInsert().Model(&items).Exec(r.ctx)
 	return err
 }
@@ -24,7 +24,7 @@ func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
 	return err
 }
 
-func (r *Repository) upsertMany(items []*models.RegisterPropertyToPatient) (err error) {
+func (r *Repository) upsertMany(items models.RegisterPropertiesToPatients) (err error) {
 	_, err = r.db().NewInsert().On("conflict (id) do update").
 		Set("value_string = EXCLUDED.value_string").
 		Set("value_number = EXCLUDED.value_number").

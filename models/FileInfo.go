@@ -14,3 +14,5 @@ type FileInfo struct {
 	FileSystemPath string     `json:"fileSystemPath"`
 	DeletedAt      *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
+
+type FileInfos []*FileInfo

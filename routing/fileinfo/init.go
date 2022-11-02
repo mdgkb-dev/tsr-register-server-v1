@@ -1,7 +1,7 @@
 package fileinfo
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/fileinfo"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 
 	"github.com/gin-gonic/gin"
 )

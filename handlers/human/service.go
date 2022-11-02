@@ -3,7 +3,7 @@ package human
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/contact"
 	"mdgkb/tsr-tegister-server-v1/handlers/document"
-	"mdgkb/tsr-tegister-server-v1/handlers/fileinfo"
+	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompanytohuman"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -20,7 +20,7 @@ func (s *Service) Create(item *models.Human) error {
 	}
 	item.ContactID = item.Contact.ID
 
-	err = fileinfo.CreateService(s.helper).Create(item.Photo)
+	err = fileinfos.CreateService(s.helper).Create(item.Photo)
 	if err != nil {
 		return err
 	}
@@ -55,7 +55,7 @@ func (s *Service) Update(item *models.Human) error {
 	}
 	item.ContactID = item.Contact.ID
 
-	err = fileinfo.CreateService(s.helper).Upsert(item.Photo)
+	err = fileinfos.CreateService(s.helper).Upsert(item.Photo)
 	if err != nil {
 		return err
 	}
@@ -100,7 +100,7 @@ func (s *Service) Delete(id uuid.UUID) error {
 	if err != nil {
 		return err
 	}
-	err = fileinfo.CreateService(s.helper).Delete(human.PhotoID)
+	err = fileinfos.CreateService(s.helper).Delete(human.PhotoID)
 	if err != nil {
 		return err
 	}

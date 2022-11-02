@@ -1,7 +1,7 @@
 package fileinfofordocument
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/fileinfo"
+	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
@@ -11,7 +11,7 @@ func (s *Service) CreateMany(items []*models.FileInfoToDocument) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := fileinfo.CreateService(s.helper).CreateMany(models.GetFileInfoFileInfoToDocument(items))
+	err := fileinfos.CreateService(s.helper).CreateMany(models.GetFileInfoFileInfoToDocument(items))
 	if err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (s *Service) UpsertMany(items []*models.FileInfoToDocument) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := fileinfo.CreateService(s.helper).UpsertMany(models.GetFileInfoFileInfoToDocument(items))
+	err := fileinfos.CreateService(s.helper).UpsertMany(models.GetFileInfoFileInfoToDocument(items))
 	if err != nil {
 		return err
 	}

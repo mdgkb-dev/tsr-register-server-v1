@@ -57,6 +57,10 @@ func (item *Patient) SetFilePath(fileID *string) *string {
 			return path
 		}
 	}
+	path = item.RegisterGroupsToPatient.SetFilePath(fileID)
+	if path != nil {
+		return path
+	}
 	return nil
 }
 
