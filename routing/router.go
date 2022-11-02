@@ -51,7 +51,7 @@ import (
 )
 
 func Init(r *gin.Engine, helper *helperPack.Helper) {
-	r.Static("/static", "../static/")
+	r.Static("/api/v1/static", "./static/")
 	r.Use(helper.HTTP.CORSMiddleware())
 	api := r.Group("/api/v1")
 	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
