@@ -72,39 +72,39 @@ func (r *Repository) execute(registerQuery *models.RegisterQuery) error {
 	valuesString := strings.Join(values, "  ")
 
 	query := fmt.Sprintf(`SELECT *
-		FROM   public.crosstab(
-	    $$
-  select
-                     case
-             when vt.name::varchar = 'set' then concat_ws(' '::text, h1.surname, h1.name, h1.patronymic)
-             else
-              concat_ws(' '::text, h.surname, h.name, h.patronymic)
-                 end,
-              rp.short_name,
-  CASE
-  WHEN vt.name::varchar = 'string' then rptp.value_string
-  WHEN vt.name::varchar = 'text' then rptp.value_string
-  WHEN vt.name::varchar = 'number' then rptp.value_number::varchar
-  WHEN vt.name::varchar = 'date' then rptp.value_date::varchar
-  WHEN vt.name::varchar = 'radio' then rpr.name
-  WHEN vt.name::varchar = 'set' then rps.name
-  END
-            from
-            register_queries
-            join register_query_to_register_property rqtrp on register_queries.id = rqtrp.register_query_id
-            join register_property rp on rqtrp.register_property_id = rp.id
-            join value_type vt on vt.id = rp.value_type_id 
-            left join register_property_to_patient rptp on rp.id = rptp.register_property_id
-            left join patients p on p.id = rptp.patient_id
-            left join human h on h.id = p.human_id
-            left join register_property_radio rpr on rpr.id = rptp.register_property_radio_id
-            left join register_property_set rps on rps.register_property_id = rp.id
-            left join register_property_set_to_patient rpstp on rpstp.register_property_set_id = rps.id
+            FROM   public.crosstab(
+        $$
+   select
+                      case
+              when vt.name::varchar = 'set' then concat_ws(' '::text, h.surname, h.name, h.patronymic)
+              else
+               concat_ws(' '::text, h.surname, h.name, h.patronymic)
+                  end,
+               rp.short_name,
+   CASE
+   WHEN vt.name::varchar = 'string' then rptp.value_string
+   WHEN vt.name::varchar = 'text' then rptp.value_string
+   WHEN vt.name::varchar = 'number' then rptp.value_number::varchar
+   WHEN vt.name::varchar = 'date' then rptp.value_date::varchar
+   WHEN vt.name::varchar = 'radio' then rpr.name
+   WHEN vt.name::varchar = 'set' then rps.name
+   END
 
-             left join patients p1 on p1.id = rpstp.patient_id
-             left join human h1 on h1.id = p1.human_id
-            order by 1, 2
-            ;
+from
+             register_queries
+             join register_query_to_register_property rqtrp on register_queries.id = rqtrp.register_query_id
+             join register_property rp on rqtrp.register_property_id = rp.id
+             join value_type vt on vt.id = rp.value_type_id
+             join register_group rg on rp.register_group_id = rg.id
+             left join register_groups_to_patients rgtp on rg.id = rgtp.register_group_id
+             left join patients p on rgtp.patient_id = p.id
+             left join human h on h.id = p.human_id
+             left join register_property_to_patient rptp on rgtp.id = rptp.register_group_to_patient_id and rptp.register_property_id = rp.id
+             left join register_property_radio rpr on rpr.id = rptp.register_property_radio_id
+             left join register_property_set rps on rps.register_property_id = rp.id
+             left join register_property_set_to_patient rpstp on rpstp.register_property_set_id = rps.id
+             order by 1, 2
+             ;
 		$$, $$values %s $$
 	) AS ct ("%s" varchar, %s);
 `, valuesString, registerQuery.Key, colsString)

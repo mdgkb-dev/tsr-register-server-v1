@@ -90,6 +90,6 @@ func (h *Handler) Execute(c *gin.Context) {
 	}
 	downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
 	c.Header("Content-Description", "File Transfer")
-	c.Header("Content-Disposition", "attachment; filename="+downloadName)
+	c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
 	c.Data(http.StatusOK, "application/octet-stream", file)
 }
