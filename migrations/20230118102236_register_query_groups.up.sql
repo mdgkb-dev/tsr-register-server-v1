@@ -19,3 +19,11 @@ create table register_query_group_properties
     aggregate_type varchar,
     every_radio_set bool
 );
+
+alter table register_queries add column
+    with_age bool default true;
+
+alter table register_queries add column
+    count_average_age bool default true;
+
+
