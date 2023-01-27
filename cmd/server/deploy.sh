@@ -1,21 +1,15 @@
 #!/bin/bash
 
-DEPLOY_BRANCH="master"
-BIN_PATH=./cmd/server
-PROCESS_NAME=$1
-PIDFILE=${BIN_PATH}/${PROCESS_NAME}.pid
-PROCESS_FILE=${BIN_PATH}/${PROCESS_NAME}
+DEPLOY_PATH=$1
+PROCESS_NAME=$(basename "$(pwd)")
+PID_FILE=$DEPLOY_PATH/bundle/$PROCESS_NAME.pid
+PROCESS_FILE=$DEPLOY_PATH/bundle/$PROCESS_NAME
 
-#git reset --hard && \
-#git pull --all && \
-#git checkout $branch && \
+GOOS=linux GOARCH=amd64 go build -o "$PROCESS_FILE" ./cmd/server/*.go
 
-echo $PIDFILE
-if [ -f "$PIDFILE" ]; then
-    echo "$FILE exists."
-    echo `cat ${PIDFILE}`
-    kill -9 `cat ${PIDFILE}` && rm -f "${PIDFILE}"
+if [ -f "$PID_FILE" ]; then
+    kill -9 "$(cat "$PID_FILE")" && rm -f "$PID_FILE"
 fi
-go build -o $PROCESS_FILE ./cmd/server/main.go
 
-nohup $PROCESS_FILE & exit
+nohup "$PROCESS_FILE" > /dev/null 2>&1 & echo $! > "$PID_FILE"
+exit

@@ -9,7 +9,7 @@ import (
 // Init func
 func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.GET("/", h.GetAll)
-	r.GET("/xlsx", h.GetFlatXlsx)
+	r.GET("/xlsx", h.GetXlsx)
 	r.GET("/:id", h.Get)
 	r.POST("/", h.Create)
 	r.DELETE("/:id", h.Delete)

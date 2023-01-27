@@ -22,7 +22,7 @@ type IHandler interface {
 	Delete(c *gin.Context)
 
 	GetValueTypes(c *gin.Context)
-	GetFlatXlsx(c *gin.Context)
+	GetXlsx(c *gin.Context)
 }
 
 type IService interface {

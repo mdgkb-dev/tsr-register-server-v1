@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -84,4 +85,44 @@ func (items RegisterPropertiesToPatients) GetRegisterPropertiesToPatientsToFileI
 	}
 
 	return itemsForGet
+}
+func (item *RegisterPropertyToPatient) GetData(prop *RegisterProperty) string {
+	if prop.ValueType.IsString() || prop.ValueType.IsText() {
+		return item.ValueString
+	}
+	if prop.ValueType.IsNumber() {
+		return strconv.Itoa(int(item.ValueNumber))
+	}
+	if prop.ValueType.IsDate() {
+		return item.ValueDate.String()
+	}
+	if prop.ValueType.IsRadio() {
+		res := No
+		for _, radio := range prop.RegisterPropertyRadios {
+			if radio.ID == item.RegisterPropertyRadioID {
+				res = Yes
+				break
+			}
+		}
+		return res
+	}
+	return ""
+}
+
+func (item *RegisterPropertyToPatient) GetAggregateExistingData() bool {
+	if item.RegisterProperty.ValueType.IsString() || item.RegisterProperty.ValueType.IsText() {
+		return len(item.ValueString) > 0
+	}
+	if item.RegisterProperty.ValueType.IsNumber() {
+		return item.ValueNumber > 0
+	}
+	if item.RegisterProperty.ValueType.IsDate() {
+		return !item.ValueDate.IsZero()
+	}
+	if item.RegisterProperty.ValueType.IsRadio() {
+		if item.RegisterPropertyRadioID.Valid {
+			return true
+		}
+	}
+	return false
 }

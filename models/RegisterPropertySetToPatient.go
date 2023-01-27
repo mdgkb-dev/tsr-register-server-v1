@@ -19,3 +19,11 @@ type RegisterPropertySetToPatient struct {
 }
 
 type RegisterPropertySetsToPatients []*RegisterPropertySetToPatient
+
+func (items RegisterPropertySetsToPatients) Include(setItemID uuid.NullUUID) bool {
+	exists := false
+	for _, item := range items {
+		exists = item.RegisterPropertySetID == setItemID.UUID
+	}
+	return exists
+}

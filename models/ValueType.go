@@ -13,3 +13,27 @@ type ValueType struct {
 }
 
 type ValueTypes []*ValueType
+
+func (item *ValueType) IsString() bool {
+	return item.Name == "string"
+}
+
+func (item *ValueType) IsText() bool {
+	return item.Name == "text"
+}
+
+func (item *ValueType) IsNumber() bool {
+	return item.Name == "number"
+}
+
+func (item *ValueType) IsDate() bool {
+	return item.Name == "date"
+}
+
+func (item *ValueType) IsSet() bool {
+	return item.Name == "set"
+}
+
+func (item *ValueType) IsRadio() bool {
+	return item.Name == "radio"
+}

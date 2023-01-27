@@ -1,6 +1,8 @@
 package models
 
 import (
+	"sort"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -13,6 +15,9 @@ type RegisterPropertySet struct {
 	Order                           int                    `bun:"register_property_set_order" json:"order"`
 	RegisterPropertyOthers          RegisterPropertyOthers `bun:"rel:has-many" json:"registerPropertyOthers"`
 	RegisterPropertyOthersForDelete []uuid.UUID            `bun:"-" json:"registerPropertyOthersForDelete"`
+
+	AggregatedValues         map[string]float64       `bun:"-" json:"aggregatedValues"`
+	RegisterQueryPercentages RegisterQueryPercentages `bun:"-" `
 }
 
 type RegisterPropertySets []*RegisterPropertySet
@@ -49,4 +54,40 @@ func (items RegisterPropertySets) GetRegisterPropertyOthersForDelete() []uuid.UU
 		itemsForGet = append(itemsForGet, items[i].RegisterPropertyOthersForDelete...)
 	}
 	return itemsForGet
+}
+
+func (items RegisterPropertySets) Include(setToPatient []*RegisterPropertySetToPatient) string {
+	exists := No
+	for _, item := range items {
+		if len(setToPatient) == 0 {
+			continue
+		}
+		for _, s := range setToPatient {
+			if s.RegisterPropertySetID == item.ID.UUID {
+				exists = Yes
+				break
+			}
+		}
+	}
+	return exists
+}
+
+func (item *RegisterPropertySet) writeXlsxAggregatedValues(key string) {
+	_, ok := item.AggregatedValues[key]
+	if ok {
+		item.AggregatedValues[key]++
+	} else {
+		item.AggregatedValues[key] = 1
+	}
+}
+
+func (item *RegisterPropertySet) GetAggregatedPercentage() {
+	sum := float64(0)
+	for k, v := range item.AggregatedValues {
+		sum += v
+		item.RegisterQueryPercentages = append(item.RegisterQueryPercentages, &RegisterQueryPercentage{k, v})
+	}
+	sort.Slice(item.RegisterQueryPercentages, func(i, j int) bool {
+		return item.RegisterQueryPercentages[i].Value > item.RegisterQueryPercentages[j].Value
+	})
 }

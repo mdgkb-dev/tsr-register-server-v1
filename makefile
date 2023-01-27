@@ -42,9 +42,6 @@ deploy:
 lint:
 	./cmd/golangci.sh
 
-kill:
-	kill -9 `lsof -t -i:$(SERVER_PORT)`
-
 #####
 #GIT#
 #####
@@ -68,8 +65,15 @@ git_feature:
 	git flow feature start TSR-$n
 
 git_deploy:
-	git checkout develop
-	git pull
-	git checkout master
-	git merge --no-commit develop
+	git fetch . develop:master
 	git push
+
+########
+#DEPLOY#
+########
+
+start:
+	./cmd/server/deploy.sh $(DEPLOY_PATH)
+
+kill:
+	kill -9 `cat ./bundle/"$(shell basename "$(shell pwd)")".pid`

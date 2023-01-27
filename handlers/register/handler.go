@@ -79,7 +79,7 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-func (h *Handler) GetFlatXlsx(c *gin.Context) {
+func (h *Handler) GetXlsx(c *gin.Context) {
 	//var item models.Register
 	//err := c.Bind(&item)
 	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {

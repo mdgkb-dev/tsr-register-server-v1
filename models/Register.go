@@ -31,6 +31,15 @@ func (item *Register) SetIDForChildren() {
 	}
 }
 
+func (item *Register) GetPatientsAverageAge() int {
+	sum := 0
+	for _, p := range item.RegisterToPatient {
+		sum += p.Patient.Human.GetAge()
+	}
+	res := sum / len(item.RegisterToPatient)
+	return res
+}
+
 type RegisterDiagnosis struct {
 	bun.BaseModel          `bun:"register_diagnosis,alias:register_diagnosis"`
 	ID                     uuid.UUID             `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `

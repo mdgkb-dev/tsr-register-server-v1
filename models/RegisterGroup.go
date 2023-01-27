@@ -15,6 +15,8 @@ type RegisterGroup struct {
 	Register                    *Register          `bun:"rel:belongs-to" json:"register"`
 	RegisterID                  uuid.UUID          `bun:"type:uuid" json:"registerId"`
 	WithDates                   bool               `json:"withDates"`
+
+	RegisterGroupsToPatients RegisterGroupsToPatients `bun:"rel:has-many" json:"registerGroupsToPatients"`
 }
 
 type RegisterGroups []*RegisterGroup

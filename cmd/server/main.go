@@ -16,9 +16,10 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot load config:", err)
 	}
-	router := gin.Default()
 	helper := helperPack.NewHelper(*conf)
 
+	router := gin.New()
+	router.Use(gin.Recovery())
 	routing.Init(router, helper)
 	helper.Run(migrations.Init(), router)
 }

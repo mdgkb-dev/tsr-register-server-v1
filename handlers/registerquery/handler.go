@@ -1,12 +1,13 @@
 package registerquery
 
 import (
+	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
+	"time"
+
 	"github.com/gin-gonic/gin"
 
-	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
-	"time"
 )
 
 func (h *Handler) Create(c *gin.Context) {
@@ -79,12 +80,14 @@ func (h *Handler) Execute(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	err = h.service.Execute(registerQuery)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	registerQuery.SortKeys()
-	file, err := xlsxhelper.NewXlsxHelper().CreateFile(registerQuery.Keys, registerQuery.Data)
+	//err = h.service.Execute(registerQuery)
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
+	file, err := registerQuery.WriteXlsx(xlsxhelper.NewXlsxHelper())
+	//x :=
+	//x.WriteHeader()
+	//file, err := xlsxhelper.NewXlsxHelper().CreateFile(registerQuery.Keys, registerQuery.Data)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -92,4 +95,5 @@ func (h *Handler) Execute(c *gin.Context) {
 	c.Header("Content-Description", "File Transfer")
 	c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
 	c.Data(http.StatusOK, "application/octet-stream", file)
+	//c.JSON(http.StatusOK, registerQuery)
 }

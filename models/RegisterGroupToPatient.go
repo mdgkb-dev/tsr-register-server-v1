@@ -15,12 +15,12 @@ type RegisterGroupToPatient struct {
 
 	RegisterGroup                         *RegisterGroup                  `bun:"rel:belongs-to" json:"registerGroup"`
 	RegisterGroupID                       uuid.UUID                       `bun:"type:uuid" json:"registerGroupId"`
-	Patient                               *Patient                        `bun:"rel:has-one" json:"patients"`
+	Patient                               *Patient                        `bun:"rel:belongs-to" json:"patients"`
 	PatientID                             uuid.UUID                       `bun:"type:uuid" json:"patientId"`
 	RegisterPropertyToPatient             []*RegisterPropertyToPatient    `bun:"rel:has-many" json:"registerPropertyToPatient"`
 	RegisterPropertyOthersToPatient       RegisterPropertyOthersToPatient `bun:"rel:has-many" json:"registerPropertyOthersToPatient"`
 	RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"registerPropertyToPatientForDelete"`
-	RegisterPropertySetToPatient          []*RegisterPropertySetToPatient `bun:"rel:has-many" json:"registerPropertySetToPatient"`
+	RegisterPropertySetToPatient          RegisterPropertySetsToPatients  `bun:"rel:has-many" json:"registerPropertySetToPatient"`
 	RegisterPropertySetToPatientForDelete []uuid.UUID                     `bun:"-" json:"registerPropertySetToPatientForDelete"`
 }
 
@@ -145,3 +145,14 @@ func (items RegisterGroupsToPatients) GetRegisterPropertyOthersToPatient() Regis
 //	}
 //	return itemsForGet
 //}
+
+func (item *RegisterGroupToPatient) GetAggregateExistingData() string {
+	res := No
+	for _, prop := range item.RegisterPropertyToPatient {
+		if prop.GetAggregateExistingData() {
+			res = Yes
+			break
+		}
+	}
+	return res
+}
