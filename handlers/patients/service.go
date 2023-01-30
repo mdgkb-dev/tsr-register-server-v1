@@ -2,6 +2,7 @@ package patients
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/chestcircumference"
+	"mdgkb/tsr-tegister-server-v1/handlers/chopscaletests"
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/headcircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/heightweight"
@@ -56,6 +57,10 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = registertopatient.CreateService(s.helper).CreateMany(item.RegisterToPatient)
+	if err != nil {
+		return err
+	}
+	err = chopscaletests.CreateService(s.helper).CreateMany(item.ChopScaleTests)
 	if err != nil {
 		return err
 	}
@@ -173,7 +178,15 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-
+	chopScaleTestService := chopscaletests.CreateService(s.helper)
+	err = chopScaleTestService.UpsertMany(item.ChopScaleTests)
+	if err != nil {
+		return err
+	}
+	err = chopScaleTestService.DeleteMany(item.ChopScaleTestsForDelete)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

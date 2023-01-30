@@ -37,6 +37,9 @@ type Patient struct {
 
 	RegisterToPatient          []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
 	RegisterToPatientForDelete []uuid.UUID          `bun:"-" json:"registerToPatientForDelete"`
+
+	ChopScaleTests          ChopScaleTests `bun:"rel:has-many" json:"chopScaleTests"`
+	ChopScaleTestsForDelete []uuid.UUID    `bun:"-" json:"chopScaleTestsForDelete"`
 }
 
 type Patients []*Patient
@@ -108,6 +111,11 @@ func (item *Patient) SetIDForChildren() {
 	if len(item.RegisterGroupsToPatient) > 0 {
 		for i := range item.RegisterGroupsToPatient {
 			item.RegisterGroupsToPatient[i].PatientID = item.ID
+		}
+	}
+	if len(item.ChopScaleTests) > 0 {
+		for i := range item.ChopScaleTests {
+			item.ChopScaleTests[i].PatientID = item.ID
 		}
 	}
 }

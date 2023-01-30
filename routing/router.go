@@ -2,9 +2,11 @@ package routing
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
+	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drug"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
+	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompany"
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkb"
@@ -23,9 +25,11 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
+	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
 	drugRouter "mdgkb/tsr-tegister-server-v1/routing/drug"
 	fileInfoRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfo"
+	hmfseScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/hmfsescalequestions"
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insurancecompany"
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbRouter "mdgkb/tsr-tegister-server-v1/routing/mkb"
@@ -52,7 +56,7 @@ import (
 
 func Init(r *gin.Engine, helper *helperPack.Helper) {
 	r.Static("/api/v1/static", "./static/")
-	r.Use(helper.HTTP.CORSMiddleware())
+	//r.Use(helper.HTTP.CORSMiddleware())
 	api := r.Group("/api/v1")
 	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documenttypes.CreateHandler(helper))
@@ -76,4 +80,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	mkbDiagnosesRouter.Init(api.Group("/mkb-diagnoses"), mkbdiagnoses.CreateHandler(helper))
 	mkbSubDiagnosesRouter.Init(api.Group("/mkb-sub-diagnoses"), mkbsubdiagnoses.CreateHandler(helper))
 	mkbConcreteDiagnosesRouter.Init(api.Group("/mkb-concrete-diagnoses"), mkbconcretediagnoses.CreateHandler(helper))
+	chopScaleQuestionsRouter.Init(api.Group("/chop-scale-questions"), chopscalequestions.CreateHandler(helper))
+	hmfseScaleQuestionsRouter.Init(api.Group("/hmfse-scale-questions"), hmfsescalequestions.CreateHandler(helper))
 }

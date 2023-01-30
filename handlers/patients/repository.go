@@ -80,6 +80,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("RegisterGroupsToPatient.RegisterPropertyOthersToPatient").
 		Relation("PatientDrugRegimen.DrugRegimen.Drug").
 		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
+		Relation("ChopScaleTests.ChopScaleTestResults.ChopScaleQuestionScore").
 		Relation("CreatedBy").
 		Relation("UpdatedBy").
 		Where("?TableAlias.id = ?", *id)
