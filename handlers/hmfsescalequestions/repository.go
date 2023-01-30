@@ -18,7 +18,10 @@ func (r *Repository) create(item *models.HmfseScaleQuestion) (err error) {
 func (r *Repository) getAll() (models.HmfseScaleQuestions, error) {
 	items := make(models.HmfseScaleQuestions, 0)
 	err := r.db().NewSelect().Model(&items).
-		Relation("HmfseScaleQuestionScores").
+		Relation("HmfseScaleQuestionScores", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("hmfse_scale_question_scores.score DESC")
+		}).
+		Order("item_order").
 		Scan(r.ctx)
 	return items, err
 }

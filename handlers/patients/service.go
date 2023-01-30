@@ -6,6 +6,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/headcircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/heightweight"
+	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescaletests"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
@@ -61,6 +62,10 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = chopscaletests.CreateService(s.helper).CreateMany(item.ChopScaleTests)
+	if err != nil {
+		return err
+	}
+	err = hmfsescaletests.CreateService(s.helper).CreateMany(item.HmfseScaleTests)
 	if err != nil {
 		return err
 	}
@@ -187,6 +192,15 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
+	hmfseScaleTestService := hmfsescaletests.CreateService(s.helper)
+	err = hmfseScaleTestService.UpsertMany(item.HmfseScaleTests)
+	if err != nil {
+		return err
+	}
+	err = hmfseScaleTestService.DeleteMany(item.HmfseScaleTestsForDelete)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -263,7 +277,6 @@ func (s *Service) GetDisabilities() (models.PatientsWithCount, error) {
 	}
 	return items, nil
 }
-
 func (s *Service) setQueryFilter(c *gin.Context) (err error) {
 	err = s.repository.setQueryFilter(c)
 	return err

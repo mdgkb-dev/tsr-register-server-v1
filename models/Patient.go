@@ -40,6 +40,9 @@ type Patient struct {
 
 	ChopScaleTests          ChopScaleTests `bun:"rel:has-many" json:"chopScaleTests"`
 	ChopScaleTestsForDelete []uuid.UUID    `bun:"-" json:"chopScaleTestsForDelete"`
+
+	HmfseScaleTests          HmfseScaleTests `bun:"rel:has-many" json:"hmfseScaleTests"`
+	HmfseScaleTestsForDelete []uuid.UUID     `bun:"-" json:"chohmfseScaleTestsForDelete"`
 }
 
 type Patients []*Patient
@@ -116,6 +119,11 @@ func (item *Patient) SetIDForChildren() {
 	if len(item.ChopScaleTests) > 0 {
 		for i := range item.ChopScaleTests {
 			item.ChopScaleTests[i].PatientID = item.ID
+		}
+	}
+	if len(item.HmfseScaleTests) > 0 {
+		for i := range item.HmfseScaleTests {
+			item.HmfseScaleTests[i].PatientID = item.ID
 		}
 	}
 }
