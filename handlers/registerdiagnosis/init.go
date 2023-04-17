@@ -2,19 +2,18 @@ package registerdiagnosis
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/helper"
 )
 
 type IService interface {
-	CreateMany([]*models.RegisterDiagnosis) error
+	//CreateMany([]*models.RegisterDiagnosis) error
 }
 
 type IRepository interface {
-	createMany([]*models.RegisterDiagnosis) error
-	upsertMany([]*models.RegisterDiagnosis) error
-	deleteMany([]string) error
+	//createMany([]*models.RegisterDiagnosis) error
+	//upsertMany([]*models.RegisterDiagnosis) error
+	//deleteMany([]string) error
 }
 
 type Handler struct {

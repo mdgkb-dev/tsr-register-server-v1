@@ -3,7 +3,6 @@ package register
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
 
@@ -27,7 +26,7 @@ type IHandler interface {
 
 type IService interface {
 	setQueryFilter(*gin.Context) error
-	GetAll(uuid.UUID) ([]*models.Register, error)
+	GetAll() ([]*models.Register, error)
 	Get(string) (*models.Register, error)
 	Create(*models.Register) error
 	Update(*models.Register) error
@@ -40,7 +39,7 @@ type IRepository interface {
 	setQueryFilter(*gin.Context) error
 	db() *bun.DB
 	create(*models.Register) error
-	getAll(uuid.UUID) ([]*models.Register, error)
+	getAll() ([]*models.Register, error)
 	get(string) (*models.Register, error)
 	update(*models.Register) error
 	delete(*string) error

@@ -14,8 +14,8 @@ type RegisterQueryGroupProperty struct {
 	RegisterQueryGroupID uuid.UUID           `bun:"type:uuid" json:"registerQueryGroupId"`
 	RegisterQueryGroup   *RegisterQueryGroup `bun:"rel:belongs-to" json:"registerQueryGroup"`
 
-	RegisterPropertyID uuid.UUID         `bun:"type:uuid" json:"registerPropertyId"`
-	RegisterProperty   *RegisterProperty `bun:"rel:belongs-to" json:"registerProperty"`
+	RegisterPropertyID uuid.UUID `bun:"type:uuid" json:"registerPropertyId"`
+	RegisterProperty   *Question `bun:"rel:belongs-to" json:"registerProperty"`
 
 	Order                    int                      `bun:"item_order" json:"order"`
 	AggregatedValues         map[string]float64       `bun:"-" json:"aggregatedValues"`
@@ -45,32 +45,32 @@ func (items RegisterQueryGroupProperties) writeXlsxHeader(xl *xlsxhelper.XlsxHel
 }
 
 func (item *RegisterQueryGroupProperty) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
-	if item.EveryRadioSet {
-		xl.WriteString(2, xl.Cursor, &[]string{item.RegisterProperty.Name})
-		if item.RegisterProperty.ValueType.IsSet() {
-			for _, setItem := range item.RegisterProperty.RegisterPropertySets {
-				xl.WriteString(3, xl.Cursor, &[]string{setItem.Name})
-				xl.Cursor++
-				for _, other := range setItem.RegisterPropertyOthers {
-					xl.WriteString(3, xl.Cursor, &[]string{other.Name})
-					xl.Cursor++
-				}
-			}
-		}
-		if item.RegisterProperty.ValueType.IsRadio() {
-			for _, radioItem := range item.RegisterProperty.RegisterPropertyRadios {
-				xl.WriteString(3, xl.Cursor, &[]string{radioItem.Name})
-				xl.Cursor++
-				for _, other := range radioItem.RegisterPropertyOthers {
-					xl.WriteString(3, xl.Cursor, &[]string{other.Name})
-					xl.Cursor++
-				}
-			}
-		}
-	} else {
-		xl.WriteString(2, xl.Cursor, &[]string{item.RegisterProperty.Name})
-		xl.Cursor++
-	}
+	//if item.EveryRadioSet {
+	//	xl.WriteString(2, xl.Cursor, &[]string{item.ResearchResult.Name})
+	//	if item.ResearchResult.ValueType.IsSet() {
+	//		for _, setItem := range item.ResearchResult.RegisterPropertySets {
+	//			xl.WriteString(3, xl.Cursor, &[]string{setItem.Name})
+	//			xl.Cursor++
+	//			for _, other := range setItem.RegisterPropertyOthers {
+	//				xl.WriteString(3, xl.Cursor, &[]string{other.Name})
+	//				xl.Cursor++
+	//			}
+	//		}
+	//	}
+	//	if item.ResearchResult.ValueType.IsRadio() {
+	//		for _, radioItem := range item.ResearchResult.AnswersVariants {
+	//			xl.WriteString(3, xl.Cursor, &[]string{radioItem.Name})
+	//			xl.Cursor++
+	//			for _, other := range radioItem.RegisterPropertyOthers {
+	//				xl.WriteString(3, xl.Cursor, &[]string{other.Name})
+	//				xl.Cursor++
+	//			}
+	//		}
+	//	}
+	//} else {
+	//	xl.WriteString(2, xl.Cursor, &[]string{item.ResearchResult.Name})
+	//	xl.Cursor++
+	//}
 }
 
 func (items RegisterQueryGroupProperties) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *RegisterQueryGroup, writeEmpty bool) {
@@ -80,67 +80,67 @@ func (items RegisterQueryGroupProperties) writeXlsxData(xl *xlsxhelper.XlsxHelpe
 }
 
 func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *RegisterQueryGroup, propNum int, writeEmpty bool) {
-	if item.EveryRadioSet {
-		if item.RegisterProperty.ValueType.IsSet() {
-			for i := range item.RegisterProperty.RegisterPropertySets {
-				v := No
-				if g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertySetToPatient.Include(item.RegisterProperty.RegisterPropertySets[i].ID) {
-					v = Yes
-				}
-				if writeEmpty {
-					v = NoData
-				}
-				xl.Data = append(xl.Data, v)
-				item.RegisterProperty.RegisterPropertySets[i].writeXlsxAggregatedValues(v)
-				for _, other := range item.RegisterProperty.RegisterPropertySets[i].RegisterPropertyOthers {
-					v := No
-					for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
-						if setValue.RegisterPropertyOtherID == other.ID {
-							v = setValue.Value
-						}
-					}
-					if writeEmpty {
-						v = NoData
-					}
-					xl.Data = append(xl.Data, v)
-				}
-			}
-		}
-		if item.RegisterProperty.ValueType.IsRadio() {
-			for i := range item.RegisterProperty.RegisterPropertyRadios {
-				exists := No
-				for _, propToPat := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyToPatient {
-					if propToPat.RegisterPropertyRadioID == item.RegisterProperty.RegisterPropertyRadios[i].ID {
-						exists = Yes
-					}
-				}
-				if writeEmpty {
-					exists = NoData
-				}
-				item.RegisterProperty.RegisterPropertyRadios[i].writeXlsxAggregatedValues(exists)
-				xl.Data = append(xl.Data, exists)
-				for _, other := range item.RegisterProperty.RegisterPropertyRadios[i].RegisterPropertyOthers {
-					v := No
-					for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
-						if setValue.RegisterPropertyOtherID == other.ID {
-							v = setValue.Value
-						}
-					}
-					if writeEmpty {
-						v = NoData
-					}
-					xl.Data = append(xl.Data, v)
-				}
-			}
-		}
-	} else {
-		res := g.GetResultFromData(item.RegisterProperty, propNum)
-		if writeEmpty {
-			res = NoData
-		}
-		xl.Data = append(xl.Data, res)
-		item.writeXlsxAggregatedValues(res)
-	}
+	//if item.EveryRadioSet {
+	//	if item.ResearchResult.ValueType.IsSet() {
+	//		for i := range item.ResearchResult.RegisterPropertySets {
+	//			v := No
+	//			if g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertySetToPatient.Include(item.ResearchResult.RegisterPropertySets[i].ID) {
+	//				v = Yes
+	//			}
+	//			if writeEmpty {
+	//				v = NoData
+	//			}
+	//			xl.Data = append(xl.Data, v)
+	//			item.ResearchResult.RegisterPropertySets[i].writeXlsxAggregatedValues(v)
+	//			for _, other := range item.ResearchResult.RegisterPropertySets[i].RegisterPropertyOthers {
+	//				v := No
+	//				for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
+	//					if setValue.RegisterPropertyOtherID == other.ID {
+	//						v = setValue.Value
+	//					}
+	//				}
+	//				if writeEmpty {
+	//					v = NoData
+	//				}
+	//				xl.Data = append(xl.Data, v)
+	//			}
+	//		}
+	//	}
+	//	if item.ResearchResult.ValueType.IsRadio() {
+	//		for i := range item.ResearchResult.AnswersVariants {
+	//			exists := No
+	//			for _, propToPat := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyToPatient {
+	//				if propToPat.AnswerVariantID == item.ResearchResult.AnswersVariants[i].ID {
+	//					exists = Yes
+	//				}
+	//			}
+	//			if writeEmpty {
+	//				exists = NoData
+	//			}
+	//			item.ResearchResult.AnswersVariants[i].writeXlsxAggregatedValues(exists)
+	//			xl.Data = append(xl.Data, exists)
+	//			for _, other := range item.ResearchResult.AnswersVariants[i].RegisterPropertyOthers {
+	//				v := No
+	//				for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
+	//					if setValue.RegisterPropertyOtherID == other.ID {
+	//						v = setValue.Value
+	//					}
+	//				}
+	//				if writeEmpty {
+	//					v = NoData
+	//				}
+	//				xl.Data = append(xl.Data, v)
+	//			}
+	//		}
+	//	}
+	//} else {
+	//	res := g.GetResultFromData(item.ResearchResult, propNum)
+	//	if writeEmpty {
+	//		res = NoData
+	//	}
+	//	xl.Data = append(xl.Data, res)
+	//	item.writeXlsxAggregatedValues(res)
+	//}
 }
 
 func (item *RegisterQueryGroupProperty) writeXlsxAggregatedValues(key string) {
@@ -159,24 +159,24 @@ func (items RegisterQueryGroupProperties) writeAggregates(xl *xlsxhelper.XlsxHel
 }
 
 func (item *RegisterQueryGroupProperty) writeAggregates(xl *xlsxhelper.XlsxHelper) {
-	if item.EveryRadioSet {
-		if item.RegisterProperty.ValueType.IsSet() {
-			for _, s := range item.RegisterProperty.RegisterPropertySets {
-				item.AggregateType.WriteAggregatedValues(xl, s.AggregatedValues)
-				for range s.RegisterPropertyOthers {
-					xl.Cursor++
-				}
-			}
-		}
-		if item.RegisterProperty.ValueType.IsRadio() {
-			for _, r := range item.RegisterProperty.RegisterPropertyRadios {
-				item.AggregateType.WriteAggregatedValues(xl, r.AggregatedValues)
-				for range r.RegisterPropertyOthers {
-					xl.Cursor++
-				}
-			}
-		}
-	} else {
-		item.AggregateType.WriteAggregatedValues(xl, item.AggregatedValues)
-	}
+	//if item.EveryRadioSet {
+	//	if item.ResearchResult.ValueType.IsSet() {
+	//		for _, s := range item.ResearchResult.RegisterPropertySets {
+	//			item.AggregateType.WriteAggregatedValues(xl, s.AggregatedValues)
+	//			for range s.RegisterPropertyOthers {
+	//				xl.Cursor++
+	//			}
+	//		}
+	//	}
+	//	if item.ResearchResult.ValueType.IsRadio() {
+	//		for _, r := range item.ResearchResult.AnswersVariants {
+	//			item.AggregateType.WriteAggregatedValues(xl, r.AggregatedValues)
+	//			for range r.RegisterPropertyOthers {
+	//				xl.Cursor++
+	//			}
+	//		}
+	//	}
+	//} else {
+	//	item.AggregateType.WriteAggregatedValues(xl, item.AggregatedValues)
+	//}
 }

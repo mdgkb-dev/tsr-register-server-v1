@@ -20,25 +20,25 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.RegisterPropertyVariant, error)
-	Get(*string) (*models.RegisterPropertyVariant, error)
-	Create(*models.RegisterPropertyVariant) error
-	Update(*models.RegisterPropertyVariant) error
+	GetAll() ([]*models.QuestionVariant, error)
+	Get(*string) (*models.QuestionVariant, error)
+	Create(*models.QuestionVariant) error
+	Update(*models.QuestionVariant) error
 	Delete(*string) error
 
-	UpsertMany(models.RegisterPropertyVariants) error
+	UpsertMany(variants models.QuestionVariants) error
 	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
 	db() *bun.DB
-	create(*models.RegisterPropertyVariant) error
-	getAll() ([]*models.RegisterPropertyVariant, error)
-	get(*string) (*models.RegisterPropertyVariant, error)
-	update(*models.RegisterPropertyVariant) error
+	create(*models.QuestionVariant) error
+	getAll() ([]*models.QuestionVariant, error)
+	get(*string) (*models.QuestionVariant, error)
+	update(*models.QuestionVariant) error
 	delete(*string) error
 
-	upsertMany(models.RegisterPropertyVariants) error
+	upsertMany(variants models.QuestionVariants) error
 	deleteMany([]uuid.UUID) error
 }
 

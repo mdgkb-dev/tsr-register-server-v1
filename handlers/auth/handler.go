@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
@@ -13,33 +14,37 @@ func (h *Handler) Register(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	res, err := h.service.Register(user)
+	item, err := h.service.Register(user)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(http.StatusOK, res)
+	c.JSON(http.StatusOK, item)
 }
 
 func (h *Handler) Login(c *gin.Context) {
-	var user models.User
-	err := c.Bind(&user)
+	var item models.Login
+	err := c.Bind(&item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	res, err := h.service.Login(&user)
+	err = h.validator.Login(&item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusBadRequest) {
+		return
+	}
+	res, err := h.service.Login(&item, false)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, res)
 }
 
-func (h *Handler) Me(c *gin.Context) {
-	userID, err := h.helper.Token.GetUserID(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
+func (h *Handler) LoginAs(c *gin.Context) {
+	var item models.Login
+	err := c.Bind(&item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	userStringID := userID.String()
-	res, err := h.service.GetUserByID(&userStringID)
+	res, err := h.service.Login(&item, true)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -47,8 +52,9 @@ func (h *Handler) Me(c *gin.Context) {
 }
 
 func (h *Handler) Logout(c *gin.Context) {
-	//_, err := models.ExtractTokenMetadata(c.Request)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	//_, err := h.helper.Token.ExtractTokenMetadata(c.Request)
+	//if err != nil {
+	//	c.JSON(http.StatusUnauthorized, "unauthorized")
 	//	return
 	//}
 	//delErr := helpers.DeleteTokens(metadata, h.redis)
@@ -59,11 +65,6 @@ func (h *Handler) Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, "Successfully logged out")
 }
 
-func (h *Handler) DoesLoginExist(c *gin.Context) {
-	login := c.Param("login")
-	doesLoginExist, _ := h.service.DoesLoginExist(&login)
-	c.JSON(http.StatusOK, &DoesLoginExist{doesLoginExist})
-}
 func (h *Handler) RefreshToken(c *gin.Context) {
 	type refreshToken struct {
 		RefreshToken string `json:"refreshToken"`
@@ -80,24 +81,123 @@ func (h *Handler) RefreshToken(c *gin.Context) {
 	c.JSON(http.StatusOK, tokens)
 }
 
-// Пока что на проекте нет путей доступа
+func (h *Handler) RefreshPassword(c *gin.Context) {
+	var item models.User
+	err := c.Bind(&item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.service.UpdatePassword(&item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, nil)
+}
+
+func (h *Handler) RestorePassword(c *gin.Context) {
+	var user *models.User
+	err := c.Bind(&user)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	findedUser, err := h.service.FindUserByEmail(user.Email)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	emailStruct := struct {
+		RestoreLink string
+		Host        string
+	}{
+		h.helper.HTTP.GetRestorePasswordURL(findedUser.ID.UUID.String(), findedUser.UUID.String()),
+		h.helper.HTTP.Host,
+	}
+	mail, err := h.helper.Templater.ParseTemplate(emailStruct, "email/passwordRestore.gohtml")
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.helper.Email.SendEmail([]string{user.Email}, "Восстановление пароля для портала МДГКБ", mail)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, err)
+}
+
+func (h *Handler) CheckUUID(c *gin.Context) {
+	findedUser, err := h.service.GetUserByID(c.Param("user-id"))
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	if !findedUser.CompareWithUUID(c.Param("uuid")) {
+		err = errors.New("wrong unique signature")
+		if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+			return
+		}
+	}
+	err = h.service.DropUUID(findedUser)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, nil)
+}
+
+func (h *Handler) SavePathPermissions(c *gin.Context) {
+	var items models.PathPermissions
+	err := c.Bind(&items)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.service.UpsertManyPathPermissions(items)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, err)
+}
+
+func (h *Handler) GetAllPathPermissions(c *gin.Context) {
+	items, err := h.service.GetAllPathPermissions()
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) GetAllPathPermissionsAdmin(c *gin.Context) {
+	err := h.service.setQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	items, err := h.service.GetAllPathPermissionsAdmin()
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) GetPathPermissionsByRoleID(c *gin.Context) {
+	items, err := h.service.GetPathPermissionsByRoleID(c.Param("roleId"))
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
 func (h *Handler) CheckPathPermissions(c *gin.Context) {
 	var path string
 	err := c.Bind(&path)
 	if h.helper.HTTP.HandleError(c, err, http.StatusForbidden) {
 		return
 	}
-	//userRoleId := ""
+	userRoleID := ""
 	if c.Request.Header.Get("token") != "null" {
-		_, err := h.helper.Token.GetAccessDetail(c)
+		accessDetails, err := h.helper.Token.GetAccessDetail(c)
 		if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
 			return
 		}
-		//userRoleId = accessDetails.UserRoleID
+		userRoleID = accessDetails.UserRoleID
 	}
-	//err = h.service.CheckPathPermissions(path, userRoleId)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusForbidden) {
-	//	return
-	//}
+	err = h.service.CheckPathPermissions(path, userRoleID)
+	if h.helper.HTTP.HandleError(c, err, http.StatusForbidden) {
+		return
+	}
 	c.JSON(http.StatusOK, nil)
 }

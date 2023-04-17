@@ -15,16 +15,16 @@ type Patient struct {
 	Region   *Region   `bun:"rel:belongs-to" json:"region"`
 	RegionID uuid.UUID `bun:"type:uuid" json:"regionId"`
 
-	RepresentativeToPatient          []*RepresentativeToPatient `bun:"rel:has-many" json:"representativeToPatient"`
-	RepresentativeToPatientForDelete []uuid.UUID                `bun:"-" json:"representativeToPatientForDelete"`
-	HeightWeight                     []*HeightWeight            `bun:"rel:has-many" json:"heightWeight"`
-	HeightWeightForDelete            []uuid.UUID                `bun:"-" json:"heightWeightForDelete"`
-	Disabilities                     []*Disability              `bun:"rel:has-many" json:"disabilities"`
-	DisabilitiesForDelete            []uuid.UUID                `bun:"-" json:"disabilitiesForDelete"`
-	ChestCircumference               []*ChestCircumference      `bun:"rel:has-many" json:"chestCircumference"`
-	ChestCircumferenceForDelete      []uuid.UUID                `bun:"-" json:"chestCircumferenceForDelete"`
-	HeadCircumference                []*HeadCircumference       `bun:"rel:has-many" json:"headCircumference"`
-	HeadCircumferenceForDelete       []uuid.UUID                `bun:"-" json:"headCircumferenceForDelete"`
+	PatientsRepresentatives          PatientsRepresentatives `bun:"rel:has-many" json:"patientsRepresentatives"`
+	PatientsRepresentativesForDelete []uuid.UUID             `bun:"-" json:"patientsRepresentativesForDelete"`
+	HeightWeight                     []*HeightWeight         `bun:"rel:has-many" json:"heightWeight"`
+	HeightWeightForDelete            []uuid.UUID             `bun:"-" json:"heightWeightForDelete"`
+	Disabilities                     []*Disability           `bun:"rel:has-many" json:"disabilities"`
+	DisabilitiesForDelete            []uuid.UUID             `bun:"-" json:"disabilitiesForDelete"`
+	ChestCircumference               []*ChestCircumference   `bun:"rel:has-many" json:"chestCircumference"`
+	ChestCircumferenceForDelete      []uuid.UUID             `bun:"-" json:"chestCircumferenceForDelete"`
+	HeadCircumference                []*HeadCircumference    `bun:"rel:has-many" json:"headCircumference"`
+	HeadCircumferenceForDelete       []uuid.UUID             `bun:"-" json:"headCircumferenceForDelete"`
 
 	PatientDiagnosis          []*PatientDiagnosis `bun:"rel:has-many" json:"patientDiagnosis"`
 	PatientDiagnosisForDelete []uuid.UUID         `bun:"-" json:"patientDiagnosisForDelete"`
@@ -32,23 +32,27 @@ type Patient struct {
 	PatientDrugRegimen          []*PatientDrugRegimen `bun:"rel:has-many" json:"patientDrugRegimen"`
 	PatientDrugRegimenForDelete []uuid.UUID           `bun:"-" json:"patientDrugRegimenForDelete"`
 
-	RegisterGroupsToPatient           RegisterGroupsToPatients `bun:"rel:has-many" json:"registerGroupsToPatient"`
-	RegisterGroupsToPatientsForDelete []uuid.UUID              `bun:"-" json:"registerGroupsToPatientForDelete"`
+	//RegisterGroupsToPatient           RegisterGroupsToPatients `bun:"rel:has-many" json:"registerGroupsToPatient"`
+	//RegisterGroupsToPatientsForDelete []uuid.UUID              `bun:"-" json:"registerGroupsToPatientForDelete"`
 
-	RegisterToPatient          []*RegisterToPatient `bun:"rel:has-many" json:"registerToPatient"`
-	RegisterToPatientForDelete []uuid.UUID          `bun:"-" json:"registerToPatientForDelete"`
+	RegisterToPatient          []*ResearchResult `bun:"rel:has-many" json:"registerToPatient"`
+	RegisterToPatientForDelete []uuid.UUID       `bun:"-" json:"registerToPatientForDelete"`
 
 	ChopScaleTests          ChopScaleTests `bun:"rel:has-many" json:"chopScaleTests"`
 	ChopScaleTestsForDelete []uuid.UUID    `bun:"-" json:"chopScaleTestsForDelete"`
 
 	HmfseScaleTests          HmfseScaleTests `bun:"rel:has-many" json:"hmfseScaleTests"`
 	HmfseScaleTestsForDelete []uuid.UUID     `bun:"-" json:"chohmfseScaleTestsForDelete"`
+
+	FullName  string `bun:"-" json:"fullName"`
+	IsMale    string `bun:"-" json:"isMale"`
+	DateBirth string `bun:"-" json:"dateBirth"`
 }
 
 type Patients []*Patient
 
 type PatientsWithCount struct {
-	Patients Patients `json:"patients"`
+	Patients Patients `json:"items"`
 	Count    int      `json:"count"`
 }
 
@@ -63,17 +67,17 @@ func (item *Patient) SetFilePath(fileID *string) *string {
 			return path
 		}
 	}
-	path = item.RegisterGroupsToPatient.SetFilePath(fileID)
-	if path != nil {
-		return path
-	}
+	//path = item.RegisterGroupsToPatient.SetFilePath(fileID)
+	//if path != nil {
+	//	return path
+	//}
 	return nil
 }
 
 func (item *Patient) SetIDForChildren() {
-	if len(item.RepresentativeToPatient) > 0 {
-		for i := range item.RepresentativeToPatient {
-			item.RepresentativeToPatient[i].PatientID = item.ID
+	if len(item.PatientsRepresentatives) > 0 {
+		for i := range item.PatientsRepresentatives {
+			item.PatientsRepresentatives[i].PatientID = item.ID
 		}
 	}
 	if len(item.HeightWeight) > 0 {
@@ -111,11 +115,11 @@ func (item *Patient) SetIDForChildren() {
 			item.RegisterToPatient[i].PatientID = item.ID
 		}
 	}
-	if len(item.RegisterGroupsToPatient) > 0 {
-		for i := range item.RegisterGroupsToPatient {
-			item.RegisterGroupsToPatient[i].PatientID = item.ID
-		}
-	}
+	//if len(item.RegisterGroupsToPatient) > 0 {
+	//	for i := range item.RegisterGroupsToPatient {
+	//		item.RegisterGroupsToPatient[i].PatientID = item.ID
+	//	}
+	//}
 	if len(item.ChopScaleTests) > 0 {
 		for i := range item.ChopScaleTests {
 			item.ChopScaleTests[i].PatientID = item.ID
@@ -129,8 +133,8 @@ func (item *Patient) SetIDForChildren() {
 }
 
 func (item *Patient) SetDeleteIDForChildren() {
-	for i := range item.RepresentativeToPatient {
-		item.RepresentativeToPatientForDelete = append(item.RepresentativeToPatientForDelete, item.RepresentativeToPatient[i].ID)
+	for i := range item.PatientsRepresentatives {
+		item.PatientsRepresentativesForDelete = append(item.PatientsRepresentativesForDelete, item.PatientsRepresentatives[i].ID)
 	}
 	for i := range item.HeightWeight {
 		item.HeightWeightForDelete = append(item.HeightWeightForDelete, item.HeightWeight[i].ID)

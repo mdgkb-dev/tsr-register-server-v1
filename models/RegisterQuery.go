@@ -83,11 +83,11 @@ func (item *RegisterQuery) writeData(xl *xlsxhelper.XlsxHelper) {
 		item.RegisterQueryGroups[groupNum].AggregatedValues = make(map[string]float64)
 		for propNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties {
 			item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].AggregatedValues = make(map[string]float64)
-			for setNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.RegisterPropertySets {
-				item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.RegisterPropertySets[setNum].AggregatedValues = make(map[string]float64)
-			}
-			for radioNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.RegisterPropertyRadios {
-				item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.RegisterPropertyRadios[radioNum].AggregatedValues = make(map[string]float64)
+			//for setNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].ResearchResult.RegisterPropertySets {
+			//	item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].ResearchResult.RegisterPropertySets[setNum].AggregatedValues = make(map[string]float64)
+			//}
+			for radioNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.AnswersVariants {
+				item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.AnswersVariants[radioNum].AggregatedValues = make(map[string]float64)
 			}
 		}
 	}

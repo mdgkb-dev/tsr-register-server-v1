@@ -11,13 +11,13 @@ import (
 )
 
 type IService interface {
-	CreateMany(models.RegisterPropertiesToPatients) error
+	CreateMany(models.Answers) error
 }
 
 type IRepository interface {
 	db() *bun.DB
-	createMany(models.RegisterPropertiesToPatients) error
-	upsertMany(models.RegisterPropertiesToPatients) error
+	createMany(models.Answers) error
+	upsertMany(models.Answers) error
 	deleteMany([]uuid.UUID) error
 }
 

@@ -10,14 +10,14 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.RepresentativeToPatient) error
-	UpsertMany([]*models.RepresentativeToPatient) error
+	CreateMany([]*models.PatientRepresentative) error
+	UpsertMany([]*models.PatientRepresentative) error
 	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
-	createMany([]*models.RepresentativeToPatient) error
-	upsertMany([]*models.RepresentativeToPatient) error
+	createMany([]*models.PatientRepresentative) error
+	upsertMany([]*models.PatientRepresentative) error
 	deleteMany([]uuid.UUID) error
 }
 

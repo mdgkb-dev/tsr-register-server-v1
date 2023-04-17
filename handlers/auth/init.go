@@ -4,65 +4,102 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
-	"github.com/pro-assistance/pro-assister/helper"
-
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v7"
+	"github.com/google/uuid"
+	"github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
+	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
 	Register(c *gin.Context)
 	Login(c *gin.Context)
+	LoginAs(c *gin.Context)
+	Logout(c *gin.Context)
 	RefreshToken(c *gin.Context)
-	Me(c *gin.Context)
-	DoesLoginExist(c *gin.Context)
+	RefreshPassword(c *gin.Context)
+	RestorePassword(c *gin.Context)
+	CheckUUID(c *gin.Context)
+	SavePathPermissions(c *gin.Context)
+	GetAllPathPermissions(c *gin.Context)
+	GetAllPathPermissionsAdmin(c *gin.Context)
+	GetPathPermissionsByRoleID(c *gin.Context)
 	CheckPathPermissions(c *gin.Context)
-	//Refresh(c *gin.Context) error
-	//Logout(c *gin.Context) error
 }
 
 type IService interface {
-	Register(*models.User) (*models.TokensWithUser, error)
-	Login(*models.User) (*models.TokensWithUser, error)
-	GetUserByID(*string) (*models.User, error)
-	DoesLoginExist(*string) (bool, error)
+	setQueryFilter(*gin.Context) error
+	Register(user *models.User) (*models.TokensWithUser, error)
+	Login(user *models.Login, skipPassword bool) (*models.TokensWithUser, error)
+	FindUserByEmail(email string) (*models.User, error)
+	GetUserByID(id string) (*models.User, error)
+	DropUUID(*models.User) error
+	UpdatePassword(*models.User) error
+	UpsertManyPathPermissions(models.PathPermissions) error
+	GetAllPathPermissions() (models.PathPermissions, error)
+	GetAllPathPermissionsAdmin() (models.PathPermissionsWithCount, error)
+	GetPathPermissionsByRoleID(id string) (models.PathPermissions, error)
+	CheckPathPermissions(path string, roleID string) error
 }
 
 type IRepository interface {
-	getByLogin(*string) (*models.User, error)
-	getByID(*string) (*models.User, error)
-	create(*models.User) error
+	setQueryFilter(*gin.Context) error
+	db() *bun.DB
+	getAllPathPermissions() (models.PathPermissions, error)
+	getAllPathPermissionsAdmin() (models.PathPermissionsWithCount, error)
+	getPathPermissionsByRoleID(id string) (models.PathPermissions, error)
+	upsertManyPathPermissions(items models.PathPermissions) (err error)
+	deleteManyPathPermissions(idPool []uuid.UUID) (err error)
+	upsertManyPathPermissionsRoles(items models.PathPermissionsRoles) (err error)
+	deleteManyPathPermissionsRoles(idPool []uuid.UUID) (err error)
+	checkPathPermissions(path string, roleID string) error
+}
+
+type IValidator interface {
+	Login(user *models.Login) error
+}
+
+type IFilesService interface {
+	//Upload(*gin.Context, *models.VacancyResponse, map[string][]*multipart.FileHeader) error
 }
 
 type Handler struct {
-	service IService
-	helper  *helper.Helper
+	service      IService
+	filesService IFilesService
+	helper       *helper.Helper
+	validator    IValidator
 }
 
 type Service struct {
 	repository IRepository
-	redis      *redis.Client
 	helper     *helper.Helper
 }
 
 type Repository struct {
-	ctx    context.Context
+	ctx         context.Context
+	helper      *helper.Helper
+	queryFilter *sqlHelper.QueryFilter
+}
+
+type FilesService struct {
 	helper *helper.Helper
 }
 
-type DoesLoginExist struct {
-	DoesLoginExist bool
+type ValidateService struct {
+	helper *helper.Helper
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {
 	repo := NewRepository(helper)
 	service := NewService(repo, helper)
-	return NewHandler(service, helper)
+	filesService := NewFilesService(helper)
+	validateService := NewValidateService(helper)
+	return NewHandler(service, filesService, helper, validateService)
 }
 
 // NewHandler constructor
-func NewHandler(s IService, helper *helper.Helper) *Handler {
-	return &Handler{service: s, helper: helper}
+func NewHandler(s IService, filesService IFilesService, helper *helper.Helper, validateService *ValidateService) *Handler {
+	return &Handler{service: s, filesService: filesService, helper: helper, validator: validateService}
 }
 
 func NewService(repository IRepository, helper *helper.Helper) *Service {
@@ -71,4 +108,12 @@ func NewService(repository IRepository, helper *helper.Helper) *Service {
 
 func NewRepository(helper *helper.Helper) *Repository {
 	return &Repository{ctx: context.Background(), helper: helper}
+}
+
+func NewFilesService(helper *helper.Helper) *FilesService {
+	return &FilesService{helper: helper}
+}
+
+func NewValidateService(helper *helper.Helper) *ValidateService {
+	return &ValidateService{helper: helper}
 }

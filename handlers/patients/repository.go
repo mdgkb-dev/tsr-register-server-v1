@@ -37,12 +37,12 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
 		Relation("Human.InsuranceCompanyToHuman").
-		Relation("RepresentativeToPatient.Representative.Human.Contact").
-		Relation("RepresentativeToPatient.RepresentativeType").
-		Relation("PatientDiagnosis.MkbDiagnosis").
-		Relation("PatientDiagnosis.MkbSubDiagnosis").
-		Relation("PatientDiagnosis.MkbConcreteDiagnosis").
-		Relation("RegisterToPatient.Register").
+		Relation("PatientsRepresentatives.Representative.Human.Contact").
+		Relation("PatientsRepresentatives.RepresentativeType").
+		Relation("PatientDiagnosis.MkbItem").
+		//Relation("PatientDiagnosis.MkbSubDiagnosis").
+		//Relation("PatientDiagnosis.MkbConcreteDiagnosis").
+		//Relation("ResearchResult.ResearchesPool").
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
 	//Join("JOIN regions_users ON patients.region_id = regions_users.region_id AND regions_users.user_id = ?")
@@ -66,18 +66,15 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
 		Relation("Human.Contact").
 		Relation("Human.Photo").
-		Relation("RepresentativeToPatient.Representative.Human.Contact").
-		Relation("RepresentativeToPatient.RepresentativeType").
-		Relation("PatientDiagnosis.MkbDiagnosis.MkbGroup").
-		Relation("PatientDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
-		Relation("PatientDiagnosis.MkbSubDiagnosis").
-		Relation("PatientDiagnosis.MkbConcreteDiagnosis").
+		Relation("PatientsRepresentatives.Representative.Human.Contact").
+		Relation("PatientsRepresentatives.RepresentativeType").
+		Relation("PatientDiagnosis.MkbItem").
 		Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
-		Relation("RegisterToPatient.Register").
-		Relation("RegisterGroupsToPatient.RegisterPropertyToPatient.RegisterProperty").
-		Relation("RegisterGroupsToPatient.RegisterPropertyToPatient.RegisterPropertiesToPatientsToFileInfos.FileInfo").
-		Relation("RegisterGroupsToPatient.RegisterPropertySetToPatient.RegisterPropertySet").
-		Relation("RegisterGroupsToPatient.RegisterPropertyOthersToPatient").
+		//Relation("ResearchResult.ResearchesPool").
+		//Relation("RegisterGroupsToPatient.Answer.Question").
+		//Relation("RegisterGroupsToPatient.Answer.RegisterPropertiesToPatientsToFileInfos.FileInfo").
+		//Relation("RegisterGroupsToPatient.Answer.AnswerVariant").
+		//Relation("RegisterGroupsToPatient.PatientAnswerComments").
 		Relation("PatientDrugRegimen.DrugRegimen.Drug").
 		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
 		Relation("ChopScaleTests.ChopScaleTestResults.ChopScaleQuestionScore").

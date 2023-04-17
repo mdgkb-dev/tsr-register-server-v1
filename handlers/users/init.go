@@ -6,6 +6,7 @@ import (
 	"mime/multipart"
 
 	"github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
@@ -14,26 +15,46 @@ import (
 type IHandler interface {
 	GetAll(c *gin.Context)
 	Get(c *gin.Context)
+	GetByEmail(c *gin.Context)
 	Create(c *gin.Context)
 	Update(c *gin.Context)
-	Delete(c *gin.Context)
+	AddToUser(c *gin.Context)
+	RemoveFromUser(c *gin.Context)
 }
 
 type IService interface {
-	GetAll() (models.Users, error)
-	Get(*string) (*models.User, error)
+	GetAll() (models.UsersWithCount, error)
+	setQueryFilter(*gin.Context) error
+	Get(string) (*models.User, error)
+	GetByEmail(string) (*models.User, error)
+	EmailExists(string) (bool, error)
+	AddToUser(map[string]interface{}, string) error
 	Create(*models.User) error
 	Update(*models.User) error
-	Delete(*string) error
+	Upsert(*models.User) error
+	RemoveFromUser(map[string]interface{}, string) error
+	UpsertEmail(*models.User) error
+	DropUUID(*models.User) error
+	UpdatePassword(*models.User) error
+	SetAccessLink(item *models.User) error
 }
 
 type IRepository interface {
 	db() *bun.DB
+	setQueryFilter(*gin.Context) error
 	create(*models.User) error
-	getAll() (models.Users, error)
-	get(*string) (*models.User, error)
+	getAll() (models.UsersWithCount, error)
+	get(string) (*models.User, error)
+	getByEmail(string) (*models.User, error)
+	emailExists(string) (bool, error)
 	update(*models.User) error
-	delete(*string) error
+	upsert(*models.User) error
+	upsertEmail(*models.User) error
+
+	addToUser(map[string]interface{}, string) error
+	removeFromUser(map[string]interface{}, string) error
+	dropUUID(*models.User) error
+	updatePassword(*models.User) error
 }
 
 type IFilesService interface {
@@ -52,8 +73,9 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx    context.Context
-	helper *helper.Helper
+	ctx         context.Context
+	helper      *helper.Helper
+	queryFilter *sqlHelper.QueryFilter
 }
 
 type FilesService struct {
@@ -65,6 +87,11 @@ func CreateHandler(helper *helper.Helper) *Handler {
 	service := NewService(repo, helper)
 	filesService := NewFilesService(helper)
 	return NewHandler(service, filesService, helper)
+}
+
+func CreateService(helper *helper.Helper) *Service {
+	repo := NewRepository(helper)
+	return NewService(repo, helper)
 }
 
 // NewHandler constructor

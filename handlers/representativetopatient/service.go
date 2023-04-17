@@ -6,14 +6,14 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Service) CreateMany(items []*models.RepresentativeToPatient) error {
+func (s *Service) CreateMany(items []*models.PatientRepresentative) error {
 	if len(items) == 0 {
 		return nil
 	}
 	return s.repository.createMany(items)
 }
 
-func (s *Service) UpsertMany(items []*models.RepresentativeToPatient) error {
+func (s *Service) UpsertMany(items []*models.PatientRepresentative) error {
 	if len(items) == 0 {
 		return nil
 	}

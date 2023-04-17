@@ -19,7 +19,7 @@ func (r *Repository) create(query *models.RegisterQuery) (err error) {
 func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
 	err = r.db().NewSelect().
 		Model(&queries).
-		Relation("Register").
+		Relation("ResearchesPool").
 		Scan(r.ctx)
 	return queries, err
 }
@@ -34,24 +34,24 @@ func (r *Repository) get(id string) (*models.RegisterQuery, error) {
 		Relation("RegisterQueryGroups.RegisterQueryGroupProperties", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_query_group_properties.item_order")
 		}).
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.RegisterProperty.ValueType").
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.RegisterProperty.RegisterPropertySets.RegisterPropertyOthers").
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.RegisterProperty.RegisterPropertyRadios.RegisterPropertyOthers").
-		Relation("RegisterQueryGroups.RegisterGroup.RegisterGroupsToPatients.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.ValueType").
+		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.RegisterPropertySets.RegisterPropertyOthers").
+		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.AnswersVariants.RegisterPropertyOthers").
+		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient.full_name")
 		}).
-		Relation("RegisterQueryGroups.RegisterGroup.RegisterGroupsToPatients.RegisterPropertyOthersToPatient").
-		Relation("RegisterQueryGroups.RegisterGroup.RegisterGroupsToPatients.RegisterPropertyToPatient.RegisterProperty.ValueType").
-		Relation("RegisterQueryGroups.RegisterGroup.RegisterGroupsToPatients.RegisterPropertySetToPatient").
-		Relation("Register.RegisterToPatient.Patient", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.PatientAnswerComments").
+		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Answer.Question.ValueType").
+		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Answer").
+		Relation("ResearchesPool.ResearchResult.Patient", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient.full_name")
 		}).
-		Relation("Register.RegisterToPatient.Patient.Human").
-		//Relation("Register.RegisterToPatient.Patient.RegisterGroupsToPatient", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("ResearchesPool.ResearchResult.Patient.Human").
+		//Relation("ResearchesPool.ResearchResult.Patient.RegisterGroupsToPatient", func(q *bun.SelectQuery) *bun.SelectQuery {
 		//	return q.Join("JOIN register_query_groups rqg on rqg.id = register_groups_to_patients.register_group_id").
 		//		Order("rqg.item_order")
 		//}).
-		//Relation("Register.RegisterToPatient.Patient.RegisterGroupsToPatient.RegisterPropertyToPatient", func(q *bun.SelectQuery) *bun.SelectQuery {
+		//Relation("ResearchesPool.ResearchResult.Patient.RegisterGroupsToPatient.Answer", func(q *bun.SelectQuery) *bun.SelectQuery {
 		//	return q.Join("JOIN register_query_group_properties rqgp on rqgp.id = register_groups_to_patients.register_property_id").
 		//		Order("rqgp.item_order")
 		//}).

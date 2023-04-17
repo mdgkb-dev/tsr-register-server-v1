@@ -22,14 +22,14 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) GetAll(c *gin.Context) {
 	err := h.service.setQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	userID, err := h.helper.Token.GetUserID(c)
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
+	//userID, err := h.helper.Token.GetUserID(c)
 	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
 		return
 	}
-	items, err := h.service.GetAll(*userID)
+	items, err := h.service.GetAll()
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -80,7 +80,7 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 }
 
 func (h *Handler) GetXlsx(c *gin.Context) {
-	//var item models.Register
+	//var item models.ResearchesPool
 	//err := c.Bind(&item)
 	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 	//	return

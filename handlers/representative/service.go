@@ -19,7 +19,7 @@ func (s *Service) Create(item *models.Representative) error {
 		return err
 	}
 	item.SetIDForChildren()
-	err = representativetopatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
+	err = representativetopatient.CreateService(s.helper).CreateMany(item.PatientsRepresentatives)
 	if err != nil {
 		return err
 	}
@@ -55,11 +55,11 @@ func (s *Service) Update(item *models.Representative) error {
 	item.SetIDForChildren()
 
 	representativeToPatientService := representativetopatient.CreateService(s.helper)
-	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
+	err = representativeToPatientService.UpsertMany(item.PatientsRepresentatives)
 	if err != nil {
 		return err
 	}
-	err = representativeToPatientService.DeleteMany(item.RepresentativeToPatientForDelete)
+	err = representativeToPatientService.DeleteMany(item.PatientsRepresentativesForDelete)
 	if err != nil {
 		return err
 	}

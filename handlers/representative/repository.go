@@ -33,8 +33,8 @@ func (r *Repository) getAll() (item models.RepresentativesWithCount, err error) 
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
-		Relation("RepresentativeToPatient.Patient.Human").
-		Relation("RepresentativeToPatient.RepresentativeType")
+		Relation("PatientRepresentative.Patient.Human").
+		Relation("PatientRepresentative.RepresentativeType")
 	//Order("human.surname")
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
@@ -61,8 +61,8 @@ func (r *Repository) get(id *string) (*models.Representative, error) {
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Relation("Human.Contact").
 		Relation("Human.Photo").
-		Relation("RepresentativeToPatient.Patient.Human").
-		Relation("RepresentativeToPatient.RepresentativeType").
+		Relation("PatientRepresentative.Patient.Human").
+		Relation("PatientRepresentative.RepresentativeType").
 		Where("?TableAlias.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }

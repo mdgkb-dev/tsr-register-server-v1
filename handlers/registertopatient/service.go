@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Service) CreateMany(items []*models.RegisterToPatient) error {
+func (s *Service) CreateMany(items []*models.ResearchResult) error {
 	if len(items) == 0 {
 		return nil
 	}
@@ -14,7 +14,7 @@ func (s *Service) CreateMany(items []*models.RegisterToPatient) error {
 	return s.repository.createMany(items)
 }
 
-func (s *Service) UpsertMany(items []*models.RegisterToPatient) error {
+func (s *Service) UpsertMany(items []*models.ResearchResult) error {
 	if len(items) == 0 {
 		return nil
 	}
@@ -26,4 +26,8 @@ func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 		return nil
 	}
 	return s.repository.deleteMany(idPool)
+}
+
+func (s *Service) Delete(id string) error {
+	return s.repository.delete(id)
 }

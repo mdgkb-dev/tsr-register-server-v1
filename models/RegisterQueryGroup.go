@@ -12,19 +12,19 @@ import (
 type RegisterQueryGroup struct {
 	bun.BaseModel   `bun:"register_query_groups,alias:register_query_groups"`
 	ID              uuid.UUID      `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
-	Name            string         `json:"name"`
+	Name            string         `bun:"-" json:"name"`
 	RegisterQueryID uuid.UUID      `bun:"type:uuid" json:"registerQueryId"`
 	RegisterQuery   *RegisterQuery `bun:"rel:belongs-to" json:"registerQuery"`
 
-	RegisterGroupID uuid.UUID      `bun:"type:uuid" json:"registerGroupId"`
-	RegisterGroup   *RegisterGroup `bun:"rel:belongs-to" json:"registerGroup"`
+	RegisterGroupID uuid.UUID `bun:"type:uuid" json:"registerGroupId"`
+	RegisterGroup   *Research `bun:"rel:belongs-to" json:"registerGroup"`
 
 	RegisterQueryGroupProperties RegisterQueryGroupProperties `bun:"rel:has-many" json:"registerQueryGroupProperties"`
 
 	Order int `bun:"item_order" json:"order"`
 
-	AggregateType        AggregateType      `json:"aggregateType"`
-	AggregatedProperties RegisterProperties `bun:"rel:has-many" json:"aggregatedProperties"`
+	AggregateType        AggregateType `json:"aggregateType"`
+	AggregatedProperties Questions     `bun:"rel:has-many" json:"aggregatedProperties"`
 
 	CountSum        bool `json:"countSum"`
 	CountPercentage bool `json:"countPercentage"`
@@ -46,27 +46,27 @@ type RegisterQueryPercentages []*RegisterQueryPercentage
 
 type RegisterQueryGroups []*RegisterQueryGroup
 
-func (item *RegisterQueryGroup) GetResultFromData(prop *RegisterProperty, propertyIndex int) string {
+func (item *RegisterQueryGroup) GetResultFromData(prop *Question, propertyIndex int) string {
 	return item.getAggregatedData(prop, propertyIndex)
 }
 
-func (item *RegisterQueryGroup) getAggregatedData(prop *RegisterProperty, propertyIndex int) string {
-	if item.AggregateType == AggregateNone {
-		if prop.ValueType.IsSet() {
-			return prop.RegisterPropertySets.Include(item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertySetToPatient)
-		}
-		if len(item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient) > 0 {
-			if propertyIndex < len(item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient) {
-				return item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient[propertyIndex].GetData(prop)
-			}
-			return No
-		}
-	}
-	if item.AggregateType == AggregateExisting {
-		if item.RegisterGroup.RegisterGroupsToPatients != nil && item.PatientIndex < len(item.RegisterGroup.RegisterGroupsToPatients) {
-			return item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].GetAggregateExistingData()
-		}
-	}
+func (item *RegisterQueryGroup) getAggregatedData(prop *Question, propertyIndex int) string {
+	//if item.AggregateType == AggregateNone {
+	//	if prop.ValueType.IsSet() {
+	//		return prop.RegisterPropertySets.Include(item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertySetToPatient)
+	//	}
+	//	if len(item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient) > 0 {
+	//		if propertyIndex < len(item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient) {
+	//			return item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient[propertyIndex].GetData(prop)
+	//		}
+	//		return No
+	//	}
+	//}
+	//if item.AggregateType == AggregateExisting {
+	//	if item.RegisterGroup.RegisterGroupsToPatients != nil && item.PatientIndex < len(item.RegisterGroup.RegisterGroupsToPatients) {
+	//		return item.RegisterGroup.RegisterGroupsToPatients[item.PatientIndex].GetAggregateExistingData()
+	//	}
+	//}
 	return ""
 }
 
@@ -100,9 +100,9 @@ func (item *RegisterQueryGroup) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
 func (items RegisterQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, id uuid.UUID) {
 	for i := range items {
 		writeEmpty := false
-		if items[i].RegisterGroup.RegisterGroupsToPatients[items[i].PatientIndex].PatientID != id {
-			writeEmpty = true
-		}
+		//if items[i].RegisterGroup.RegisterGroupsToPatients[items[i].PatientIndex].PatientID != id {
+		//	writeEmpty = true
+		//}
 		items[i].writeXlsxData(xl, writeEmpty)
 		if !writeEmpty {
 			items[i].PatientIndex++

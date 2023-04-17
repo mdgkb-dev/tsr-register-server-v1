@@ -1,11 +1,57 @@
 package users
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
+
+func (h *Handler) GetAll(c *gin.Context) {
+	err := h.service.setQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	items, err := h.service.GetAll()
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) Get(c *gin.Context) {
+	item, err := h.service.Get(c.Param("id"))
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, item)
+}
+
+func (h *Handler) GetByEmail(c *gin.Context) {
+	item, err := h.service.EmailExists(c.Param("email"))
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, item)
+}
+
+func (h *Handler) Update(c *gin.Context) {
+	var item models.User
+	files, err := h.helper.HTTP.GetForm(c, &item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.filesService.Upload(c, &item, files)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.service.Update(&item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, item)
+}
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.User
@@ -24,44 +70,54 @@ func (h *Handler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, item)
 }
 
-func (h *Handler) GetAll(c *gin.Context) {
-	items, err := h.service.GetAll()
+type FavouriteForm struct {
+	ID string `json:"id"`
+}
+
+func (h *Handler) AddToUser(c *gin.Context) {
+	userID, err := h.helper.Token.GetUserID(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
+		return
+	}
+
+	domain := c.Param("domain")
+	table := fmt.Sprintf("%ss_users", domain)
+	domainCol := fmt.Sprintf("%s_id", domain)
+
+	fav := FavouriteForm{}
+	err = c.Bind(&fav)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(http.StatusOK, items)
-}
+	domainID := fav.ID
 
-func (h *Handler) Get(c *gin.Context) {
-	id := c.Param("id")
-	item, err := h.service.Get(&id)
+	values := map[string]interface{}{
+		domainCol: domainID,
+		"user_id": userID,
+	}
+	item := h.service.AddToUser(values, table)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
 }
 
-func (h *Handler) Delete(c *gin.Context) {
-	id := c.Param("id")
-	err := h.service.Delete(&id)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{})
-}
-
-func (h *Handler) Update(c *gin.Context) {
-	var item models.User
-	files, err := h.helper.HTTP.GetForm(c, &item)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	err = h.filesService.Upload(c, &item, files)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+func (h *Handler) RemoveFromUser(c *gin.Context) {
+	userID, err := h.helper.Token.GetUserID(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
 		return
 	}
 
-	err = h.service.Update(&item)
+	domain := c.Param("domain")
+	table := fmt.Sprintf("%ss_users", domain)
+	domainCol := fmt.Sprintf("%s_id", domain)
+
+	domainID := c.Param("id")
+	values := map[string]interface{}{
+		domainCol: domainID,
+		"user_id": userID,
+	}
+	item := h.service.RemoveFromUser(values, table)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}

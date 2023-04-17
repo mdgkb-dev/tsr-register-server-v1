@@ -1,7 +1,7 @@
 package registerpropertyradio
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/registerpropertyradio"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/answers"
 
 	"github.com/gin-gonic/gin"
 )

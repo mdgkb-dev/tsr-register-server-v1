@@ -10,7 +10,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
-	"mdgkb/tsr-tegister-server-v1/handlers/registergroupstopatients"
 	"mdgkb/tsr-tegister-server-v1/handlers/registertopatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -29,7 +28,7 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	item.SetIDForChildren()
-	err = representativetopatient.CreateService(s.helper).CreateMany(item.RepresentativeToPatient)
+	err = representativetopatient.CreateService(s.helper).CreateMany(item.PatientsRepresentatives)
 	if err != nil {
 		return err
 	}
@@ -101,11 +100,11 @@ func (s *Service) Update(item *models.Patient) error {
 	item.SetIDForChildren()
 
 	representativeToPatientService := representativetopatient.CreateService(s.helper)
-	err = representativeToPatientService.UpsertMany(item.RepresentativeToPatient)
+	err = representativeToPatientService.UpsertMany(item.PatientsRepresentatives)
 	if err != nil {
 		return err
 	}
-	err = representativeToPatientService.DeleteMany(item.RepresentativeToPatientForDelete)
+	err = representativeToPatientService.DeleteMany(item.PatientsRepresentativesForDelete)
 	if err != nil {
 		return err
 	}
@@ -174,15 +173,15 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 
-	registerGroupsToPatientsService := registergroupstopatients.CreateService(s.helper)
-	err = registerGroupsToPatientsService.UpsertMany(item.RegisterGroupsToPatient)
-	if err != nil {
-		return err
-	}
-	err = registerGroupsToPatientsService.DeleteMany(item.RegisterGroupsToPatientsForDelete)
-	if err != nil {
-		return err
-	}
+	//registerGroupsToPatientsService := patientresearchsections.CreateService(s.helper)
+	//err = registerGroupsToPatientsService.UpsertMany(item.RegisterGroupsToPatient)
+	//if err != nil {
+	//	return err
+	//}
+	//err = registerGroupsToPatientsService.DeleteMany(item.RegisterGroupsToPatientsForDelete)
+	//if err != nil {
+	//	return err
+	//}
 	chopScaleTestService := chopscaletests.CreateService(s.helper)
 	err = chopScaleTestService.UpsertMany(item.ChopScaleTests)
 	if err != nil {
@@ -214,7 +213,7 @@ func (s *Service) Delete(id *string) error {
 	if err != nil {
 		return err
 	}
-	err = representativetopatient.CreateService(s.helper).DeleteMany(patient.RepresentativeToPatientForDelete)
+	err = representativetopatient.CreateService(s.helper).DeleteMany(patient.PatientsRepresentativesForDelete)
 	if err != nil {
 		return err
 	}

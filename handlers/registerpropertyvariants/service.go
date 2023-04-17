@@ -6,11 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Service) Create(item *models.RegisterPropertyVariant) error {
+func (s *Service) Create(item *models.QuestionVariant) error {
 	return s.repository.create(item)
 }
 
-func (s *Service) GetAll() ([]*models.RegisterPropertyVariant, error) {
+func (s *Service) GetAll() ([]*models.QuestionVariant, error) {
 	items, err := s.repository.getAll()
 	if err != nil {
 		return nil, err
@@ -18,7 +18,7 @@ func (s *Service) GetAll() ([]*models.RegisterPropertyVariant, error) {
 	return items, nil
 }
 
-func (s *Service) Get(id *string) (*models.RegisterPropertyVariant, error) {
+func (s *Service) Get(id *string) (*models.QuestionVariant, error) {
 	item, err := s.repository.get(id)
 	if err != nil {
 		return nil, err
@@ -26,7 +26,7 @@ func (s *Service) Get(id *string) (*models.RegisterPropertyVariant, error) {
 	return item, nil
 }
 
-func (s *Service) Update(item *models.RegisterPropertyVariant) error {
+func (s *Service) Update(item *models.QuestionVariant) error {
 	return s.repository.update(item)
 }
 
@@ -34,7 +34,7 @@ func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
 }
 
-func (s *Service) UpsertMany(items models.RegisterPropertyVariants) error {
+func (s *Service) UpsertMany(items models.QuestionVariants) error {
 	if len(items) == 0 {
 		return nil
 	}

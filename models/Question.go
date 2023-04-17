@@ -1,0 +1,134 @@
+package models
+
+import (
+	"github.com/google/uuid"
+	"github.com/uptrace/bun"
+)
+
+type Question struct {
+	bun.BaseModel   `bun:"questions,alias:questions"`
+	ID              uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name            string        `json:"name"`
+	ShortName       string        `json:"shortName"`
+	Code            string        `json:"code"`
+	ColWidth        int           `json:"colWidth"`
+	WithOther       bool          `json:"withOther"`
+	Tag             string        `json:"tag"`
+	Order           int           `bun:"item_order" json:"order"`
+	ValueType       *ValueType    `bun:"rel:belongs-to" json:"valueType"`
+	ValueTypeID     uuid.UUID     `bun:"type:uuid" json:"valueTypeId"`
+	Research        *Research     `bun:"rel:belongs-to" json:"research"`
+	ResearchID      uuid.NullUUID `bun:"type:uuid" json:"researchId"`
+	AgeCompare      bool          `json:"ageCompare"`
+	CalculateScores bool          `json:"calculateScores"`
+
+	AnswersVariants          AnswersVariants `bun:"rel:has-many" json:"answersVariants"`
+	AnswersVariantsForDelete []uuid.UUID     `bun:"-" json:"answersVariantsForDelete"`
+
+	QuestionVariants          QuestionVariants `bun:"rel:has-many" json:"questionVariants"`
+	QuestionVariantsForDelete []uuid.UUID      `bun:"-" json:"questionVariantsForDelete"`
+
+	QuestionExamples          QuestionExamples `bun:"rel:has-many" json:"questionExamples"`
+	QuestionExamplesForDelete []uuid.UUID      `bun:"-" json:"questionExamplesForDelete"`
+
+	QuestionMeasures          QuestionMeasures `bun:"rel:has-many" json:"questionMeasures"`
+	QuestionMeasuresForDelete []uuid.UUID      `bun:"-" json:"questionMeasuresForDelete"`
+}
+
+type Questions []*Question
+
+func (item *Question) SetIDForChildren() {
+	if len(item.AnswersVariants) > 0 {
+		for i := range item.AnswersVariants {
+			item.AnswersVariants[i].QuestionID = item.ID
+		}
+	}
+	if len(item.QuestionExamples) > 0 {
+		for i := range item.QuestionExamples {
+			item.QuestionExamples[i].QuestionID = item.ID
+		}
+	}
+	if len(item.QuestionMeasures) > 0 {
+		for i := range item.QuestionMeasures {
+			item.QuestionMeasures[i].QuestionID = item.ID
+		}
+	}
+	if len(item.QuestionVariants) > 0 {
+		for i := range item.QuestionVariants {
+			item.QuestionVariants[i].QuestionID = item.ID
+		}
+	}
+}
+
+func (items Questions) SetIDForChildren() {
+	if len(items) == 0 {
+		return
+	}
+	for i := range items {
+		items[i].SetIDForChildren()
+	}
+}
+
+func (items Questions) GetRegisterPropertyExamples() QuestionExamples {
+	itemsForGet := make(QuestionExamples, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].QuestionExamples...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyRadios() AnswersVariants {
+	itemsForGet := make(AnswersVariants, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].AnswersVariants...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyRadioForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].AnswersVariantsForDelete...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyExamplesForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].QuestionExamplesForDelete...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyMeasuresForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].QuestionMeasuresForDelete...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyMeasures() QuestionMeasures {
+	itemsForGet := make(QuestionMeasures, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].QuestionMeasures...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyVariants() QuestionVariants {
+	itemsForGet := make(QuestionVariants, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].QuestionVariants...)
+	}
+	return itemsForGet
+}
+
+func (items Questions) GetRegisterPropertyVariantsForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].QuestionVariantsForDelete...)
+	}
+	return itemsForGet
+}

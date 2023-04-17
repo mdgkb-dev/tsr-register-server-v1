@@ -1,7 +1,7 @@
 package registerproperty
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/registerproperty"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/questions"
 
 	"github.com/gin-gonic/gin"
 )

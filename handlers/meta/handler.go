@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pro-assistance/pro-assister/projecthelper"
 )
 
 func (h *Handler) GetCount(c *gin.Context) {
@@ -16,5 +17,5 @@ func (h *Handler) GetCount(c *gin.Context) {
 }
 
 func (h *Handler) GetSchema(c *gin.Context) {
-	c.JSON(http.StatusOK, h.service.GetSchema())
+	c.JSON(http.StatusOK, projecthelper.SchemasLib)
 }

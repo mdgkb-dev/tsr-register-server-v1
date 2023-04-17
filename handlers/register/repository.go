@@ -1,10 +1,9 @@
 package register
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/uptrace/bun"
 )
@@ -26,10 +25,9 @@ func (r *Repository) create(item *models.Register) (err error) {
 	return err
 }
 
-func (r *Repository) getAll(userID uuid.UUID) (items []*models.Register, err error) {
+func (r *Repository) getAll() (items []*models.Register, err error) {
 	err = r.db().NewSelect().
 		Model(&items).
-		Join("JOIN registers_users ON registers_users.user_id = ? and register.id = registers_users.register_id", userID).
 		Relation("RegisterDiagnosis").
 		Scan(r.ctx)
 	return items, err
@@ -43,38 +41,38 @@ func (r *Repository) get(id string) (*models.Register, error) {
 		Relation("RegisterDiagnosis.MkbDiagnosis.MkbGroup").
 		Relation("RegisterDiagnosis.MkbSubDiagnosis").
 		Relation("RegisterDiagnosis.MkbConcreteDiagnosis").
-		Relation("RegisterGroups", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_group.register_group_order")
 		}).
-		Relation("RegisterGroups.RegisterProperties", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches.Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property.register_property_order")
 		}).
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertyExamples").
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertyVariants").
-		Relation("RegisterGroups.RegisterProperties.ValueType").
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertyMeasures").
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches.Questions.QuestionExamples").
+		Relation("Researches.Questions.QuestionVariants").
+		Relation("Researches.Questions.ValueType").
+		Relation("Researches.Questions.QuestionMeasures").
+		Relation("Researches.Questions.RegisterPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_set.register_property_set_order")
 		}).
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertySets.RegisterPropertyOthers").
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches.Questions.RegisterPropertySets.RegisterPropertyOthers").
+		Relation("Researches.Questions.AnswersVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_radio.register_property_radio_order")
 		}).
-		Relation("RegisterGroups.RegisterProperties.RegisterPropertyRadios.RegisterPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches.Questions.AnswersVariants.RegisterPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_others.register_property_others_order")
 		}).
-		Relation("RegisterToPatient.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("ResearchResult.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 			//r.queryFilter.HandleQuery(q)
 			return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic")
 		}).
-		//Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
-		//Relation("RegisterToPatient.Patient.RegisterPropertyToPatient.RegisterProperty").
-		//Relation("RegisterToPatient.Patient.RegisterPropertySetToPatient.RegisterPropertySet").
+		//Relation("ResearchResult.Patient.Answer.Question").
+		//Relation("ResearchResult.Patient.Answer.Question").
+		//Relation("ResearchResult.Patient.Answer.AnswerVariant").
 		Where("register.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err
 	}
-	item.RegisterToPatientCount, err = r.db().NewSelect().Model((*models.RegisterToPatient)(nil)).Where("register_id = ?", id).Count(r.ctx)
+	item.RegisterToPatientCount, err = r.db().NewSelect().Model((*models.ResearchResult)(nil)).Where("register_id = ?", id).Count(r.ctx)
 	return &item, err
 }
 

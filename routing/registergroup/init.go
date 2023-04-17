@@ -1,7 +1,7 @@
 package registergroup
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/registergroup"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/researchsection"
 
 	"github.com/gin-gonic/gin"
 )
