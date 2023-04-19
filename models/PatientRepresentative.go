@@ -12,7 +12,7 @@ type PatientRepresentative struct {
 	ID                   uuid.UUID           `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	RepresentativeType   *RepresentativeType `bun:"rel:belongs-to" json:"representativeType"`
 	RepresentativeTypeID uuid.UUID           `bun:"type:uuid" json:"representativeTypeId"`
-	PatientID            uuid.UUID           `bun:"type:uuid" json:"patientId"`
+	PatientID            uuid.NullUUID       `bun:"type:uuid" json:"patientId"`
 	Patient              *Patient            `bun:"rel:belongs-to" json:"patient"`
 	RepresentativeID     uuid.UUID           `bun:"type:uuid" json:"representativeId"`
 	Representative       *Representative     `bun:"rel:belongs-to" json:"representative"`

@@ -7,12 +7,15 @@ import (
 
 type Formula struct {
 	bun.BaseModel `bun:"formulas,alias:formulas"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
-	Name          string    `json:"name"`
-	Formula       string    `json:"formula"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
+	Name          string        `json:"name"`
+	Formula       string        `json:"formula"`
 
-	Research   *Research `bun:"rel:belongs-to" json:"research"`
-	ResearchID uuid.UUID `bun:"type:uuid" json:"researchId"`
+	Research   *Research     `bun:"rel:belongs-to" json:"research"`
+	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`
+
+	FormulaResults          FormulaResults `bun:"rel:has-many" json:"formulaResults"`
+	FormulaResultsForDelete []uuid.UUID    `bun:"-" json:"formulaResultsForDelete"`
 }
 
 type Formulas []*Formula

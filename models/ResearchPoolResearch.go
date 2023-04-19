@@ -7,9 +7,9 @@ import (
 
 type ResearchesPoolResearch struct {
 	bun.BaseModel    `bun:"researches_pools_researches,alias:researches_pools_researches"`
-	ID               uuid.UUID       `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID               uuid.NullUUID   `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	ResearchesPool   *ResearchesPool `bun:"rel:belongs-to" json:"researchesPool"`
-	ResearchesPoolID uuid.UUID       `bun:"type:uuid" json:"researchesPoolId"`
+	ResearchesPoolID uuid.NullUUID   `bun:"type:uuid" json:"researchesPoolId"`
 
 	Research   *Research     `bun:"rel:belongs-to" json:"research"`
 	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`

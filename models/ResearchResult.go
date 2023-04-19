@@ -13,11 +13,11 @@ type ResearchResult struct {
 
 	Date *time.Time `bun:"item_date" json:"date"`
 
-	Research   *Research `bun:"rel:belongs-to" json:"research"`
-	ResearchID uuid.UUID `bun:"type:uuid" json:"researchId"`
-	Patient    *Patient  `bun:"rel:belongs-to" json:"patients"`
-	PatientID  uuid.UUID `bun:"type:uuid" json:"patientId"`
-	Answers    Answers   `bun:"rel:has-many" json:"answers"`
+	Research   *Research     `bun:"rel:belongs-to" json:"research"`
+	ResearchID uuid.UUID     `bun:"type:uuid" json:"researchId"`
+	Patient    *Patient      `bun:"rel:belongs-to" json:"patients"`
+	PatientID  uuid.NullUUID `bun:"type:uuid" json:"patientId"`
+	Answers    Answers       `bun:"rel:has-many" json:"answers"`
 
 	FillingPercentage uint `json:"fillingPercentage"`
 	Order             uint `bun:"item_order" json:"order"`

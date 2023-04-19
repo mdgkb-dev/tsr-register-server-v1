@@ -9,9 +9,9 @@ import (
 
 type PatientDiagnosis struct {
 	bun.BaseModel `bun:"patient_diagnosis,alias:patient_diagnosis"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Patient       *Patient  `bun:"rel:has-one" json:"patients"`
-	PatientID     uuid.UUID `bun:"type:uuid" json:"PatientId"`
+	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Patient       *Patient      `bun:"rel:has-one" json:"patients"`
+	PatientID     uuid.NullUUID `bun:"type:uuid" json:"PatientId"`
 	//MkbDiagnosis           *MkbDiagnosis         `bun:"rel:belongs-to" json:"mkbDiagnosis"`
 	//MkbDiagnosisID         uuid.UUID             `bun:"type:uuid" json:"mkbDiagnosisId"`
 	//MkbSubDiagnosis        *MkbSubDiagnosis      `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`

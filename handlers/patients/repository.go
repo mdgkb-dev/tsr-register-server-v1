@@ -54,33 +54,38 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) {
 	item := models.Patient{}
 	query := r.db().NewSelect().Model(&item).
-		Relation("HeightWeight").
-		Relation("ChestCircumference").
-		Relation("HeadCircumference").
-		Relation("Disabilities.Period").
-		Relation("Disabilities.Edvs.Period").
-		Relation("Disabilities.Edvs.FileInfo").
-		Relation("Human.Documents.DocumentType").
-		Relation("Human.Documents.FileInfoToDocument.FileInfo").
-		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
-		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
-		Relation("Human.Contact").
-		Relation("Human.Photo").
-		Relation("PatientsRepresentatives.Representative.Human.Contact").
-		Relation("PatientsRepresentatives.RepresentativeType").
-		Relation("PatientDiagnosis.MkbItem").
-		Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
+		//Relation("HeightWeight").
+		//Relation("ChestCircumference").
+		//Relation("HeadCircumference").
+		//Relation("Disabilities.Period").
+		//Relation("Disabilities.Edvs.Period").
+		//Relation("Disabilities.Edvs.FileInfo").
+		//Relation("Human.Documents.DocumentType").
+		//Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		//Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
+		//Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
+		//Relation("Human.Contact").
+		//Relation("Human.Photo").
+
+		Relation("PatientsResearchesPools.ResearchesPool.ResearchesPoolsResearches.Research.Questions.AnswersVariants").
+		Relation("PatientsResearchesPools.ResearchesPool.ResearchesPoolsResearches.Research.Questions.ValueType").
+		Relation("PatientsResearches.ResearchResults.Answers").
+		Relation("PatientsResearchesPools.ResearchesPool.ResearchesPoolsResearches.Research.Formulas.FormulaResults").
+		//Relation("PatientsRepresentatives.Representative.Human.Contact").
+		//Relation("PatientsRepresentatives.RepresentativeType").
+		//Relation("PatientDiagnosis.MkbItem").
+		//Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
 		//Relation("ResearchResult.ResearchesPool").
 		//Relation("RegisterGroupsToPatient.Answer.Question").
 		//Relation("RegisterGroupsToPatient.Answer.RegisterPropertiesToPatientsToFileInfos.FileInfo").
 		//Relation("RegisterGroupsToPatient.Answer.AnswerVariant").
 		//Relation("RegisterGroupsToPatient.PatientAnswerComments").
-		Relation("PatientDrugRegimen.DrugRegimen.Drug").
-		Relation("PatientDrugRegimen.PatientDrugRegimenItems").
-		Relation("ChopScaleTests.ChopScaleTestResults.ChopScaleQuestionScore").
-		Relation("HmfseScaleTests.HmfseScaleTestResults.HmfseScaleQuestionScore").
-		Relation("CreatedBy").
-		Relation("UpdatedBy").
+		//Relation("PatientDrugRegimen.DrugRegimen.Drug").
+		//Relation("PatientDrugRegimen.PatientDrugRegimenItems").
+		//Relation("ChopScaleTests.ChopScaleTestResults.ChopScaleQuestionScore").
+		//Relation("HmfseScaleTests.HmfseScaleTestResults.HmfseScaleQuestionScore").
+		//Relation("CreatedBy").
+		//Relation("UpdatedBy").
 		Where("?TableAlias.id = ?", *id)
 	if withDeleted {
 		query = query.WhereAllWithDeleted()

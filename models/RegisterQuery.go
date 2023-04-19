@@ -97,7 +97,7 @@ func (item *RegisterQuery) writeData(xl *xlsxhelper.XlsxHelper) {
 		if item.WithAge {
 			xl.Data = append(xl.Data, strconv.Itoa(registerToPatient.Patient.Human.GetAge()))
 		}
-		item.RegisterQueryGroups.writeXlsxData(xl, registerToPatient.PatientID)
+		//item.RegisterQueryGroups.writeXlsxData(xl, registerToPatient.PatientID)
 		xl.WriteString(4+patientNum, 0, &xl.Data)
 		xl.Data = []string{}
 	}

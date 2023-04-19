@@ -7,10 +7,13 @@ import (
 
 type ResearchesPool struct {
 	bun.BaseModel                      `bun:"researches_pools,alias:researches_pools"`
-	ID                                 uuid.UUID                 `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                                 uuid.NullUUID             `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                               string                    `json:"name"`
 	ResearchesPoolsResearches          ResearchesPoolsResearches `bun:"rel:has-many" json:"researchesPoolsResearches"`
 	ResearchesPoolsResearchesForDelete []uuid.UUID               `bun:"-" json:"researchesPoolsResearchesForDelete"`
+
+	PatientsResearchesPools          PatientsResearchesPools `bun:"rel:has-many" json:"patientsResearchesPools"`
+	PatientsResearchesPoolsForDelete []uuid.UUID             `bun:"-" json:"patientsResearchesPoolsForDelete"`
 	//ResearchDiagnosis          []*ResearchDiagnosis `bun:"rel:has-many" json:"ResearchDiagnosis"`
 	//ResearchDiagnosisForDelete []string             `bun:"-" json:"ResearchDiagnosisForDelete"`
 

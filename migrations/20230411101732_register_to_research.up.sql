@@ -161,7 +161,14 @@ alter table register_property_other_to_patient
 alter table register_property_other_to_patient
     rename to patient_answer_comments;
 
-
+create table formula_results
+(
+    id          uuid default uuid_generate_v4() not null primary key,
+    name varchar,
+    formula_id uuid not null references formulas,
+    low_range  numeric,
+    high_range  numeric
+);
 
 
 

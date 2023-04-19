@@ -8,9 +8,9 @@ import (
 type Patient struct {
 	bun.BaseModel `bun:"patients,select:patients_view,alias:patients_view"`
 	ModelInfo
-	ID      uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Human   *Human    `bun:"rel:belongs-to" json:"human"`
-	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
+	ID      uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Human   *Human        `bun:"rel:belongs-to" json:"human"`
+	HumanID uuid.UUID     `bun:"type:uuid" json:"humanId"`
 
 	Region   *Region   `bun:"rel:belongs-to" json:"region"`
 	RegionID uuid.UUID `bun:"type:uuid" json:"regionId"`
@@ -43,6 +43,12 @@ type Patient struct {
 
 	HmfseScaleTests          HmfseScaleTests `bun:"rel:has-many" json:"hmfseScaleTests"`
 	HmfseScaleTestsForDelete []uuid.UUID     `bun:"-" json:"chohmfseScaleTestsForDelete"`
+
+	PatientsResearchesPools          PatientsResearchesPools `bun:"rel:has-many" json:"patientsResearchesPools"`
+	PatientsResearchesPoolsForDelete []uuid.UUID             `bun:"-" json:"patientsResearchesPoolsForDelete"`
+
+	PatientsResearches          PatientsResearches `bun:"rel:has-many" json:"patientsResearches"`
+	PatientsResearchesForDelete []uuid.UUID        `bun:"-" json:"patientsResearchesForDelete"`
 
 	FullName  string `bun:"-" json:"fullName"`
 	IsMale    string `bun:"-" json:"isMale"`

@@ -12,7 +12,7 @@ type HmfseScaleTest struct {
 	ID                             uuid.UUID             `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Date                           time.Time             `bun:"item_date" json:"date"`
 	Patient                        *Patient              `bun:"rel:belongs-to" json:"patient"`
-	PatientID                      uuid.UUID             `bun:"type:uuid" json:"patientId"`
+	PatientID                      uuid.NullUUID         `bun:"type:uuid" json:"patientId"`
 	HmfseScaleTestResults          HmfseScaleTestResults `bun:"rel:has-many" json:"hmfseScaleTestResults"`
 	HmfseScaleTestResultsForDelete []uuid.UUID           `bun:"-" json:"hmfseScaleTestResultsForDelete"`
 }

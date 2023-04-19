@@ -11,6 +11,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkbitems"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/register"
@@ -33,6 +34,7 @@ import (
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbItemsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbitems"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
+	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	registerRouter "mdgkb/tsr-tegister-server-v1/routing/register"
 	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/registergroup"
@@ -79,4 +81,5 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	searchRouter.Init(api.Group("/search"), search.CreateHandler(helper))
 	chopScaleQuestionsRouter.Init(api.Group("/chop-scale-questions"), chopscalequestions.CreateHandler(helper))
 	hmfseScaleQuestionsRouter.Init(api.Group("/hmfse-scale-questions"), hmfsescalequestions.CreateHandler(helper))
+	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 }

@@ -22,6 +22,10 @@ type Answer struct {
 	ResearchResult   *ResearchResult `bun:"rel:belongs-to" json:"researchResult"`
 	ResearchResultID uuid.UUID       `bun:"type:uuid" json:"researchResultId"`
 	Filled           bool            `json:"filled"`
+
+	Question   *Question `bun:"rel:belongs-to" json:"question"`
+	QuestionID uuid.UUID `bun:"type:uuid" json:"questionId"`
+
 	//RegisterPropertiesToPatientsToFileInfos          RegisterPropertiesToPatientsToFileInfos `bun:"rel:has-many" json:"registerPropertiesToPatientsToFileInfos"`
 	//RegisterPropertiesToPatientsToFileInfosForDelete []uuid.UUID                             `bun:"-" json:"registerPropertiesToPatientsToFileInfosForDelete"`
 
