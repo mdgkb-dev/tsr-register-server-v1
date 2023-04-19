@@ -57,23 +57,22 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		//Relation("HeightWeight").
 		//Relation("ChestCircumference").
 		//Relation("HeadCircumference").
-		//Relation("Disabilities.Period").
-		//Relation("Disabilities.Edvs.Period").
-		//Relation("Disabilities.Edvs.FileInfo").
-		//Relation("Human.Documents.DocumentType").
-		//Relation("Human.Documents.FileInfoToDocument.FileInfo").
-		//Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
-		//Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
-		//Relation("Human.Contact").
-		//Relation("Human.Photo").
-
+		Relation("Disabilities.Period").
+		Relation("Disabilities.Edvs.Period").
+		Relation("Disabilities.Edvs.FileInfo").
+		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
+		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
+		Relation("Human.Contact").
+		Relation("Human.Photo").
 		Relation("PatientsResearchesPools.ResearchesPool.ResearchesPoolsResearches.Research.Questions.AnswersVariants").
 		Relation("PatientsResearchesPools.ResearchesPool.ResearchesPoolsResearches.Research.Questions.ValueType").
 		Relation("PatientsResearches.ResearchResults.Answers").
 		Relation("PatientsResearchesPools.ResearchesPool.ResearchesPoolsResearches.Research.Formulas.FormulaResults").
 		//Relation("PatientsRepresentatives.Representative.Human.Contact").
 		//Relation("PatientsRepresentatives.RepresentativeType").
-		//Relation("PatientDiagnosis.MkbItem").
+		Relation("PatientDiagnosis.MkbItem").
 		//Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
 		//Relation("ResearchResult.ResearchesPool").
 		//Relation("RegisterGroupsToPatient.Answer.Question").
