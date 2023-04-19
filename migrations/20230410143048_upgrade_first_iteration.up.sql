@@ -53,13 +53,17 @@ alter table patient_diagnosis add column mkb_item_id uuid REFERENCES mkb_items(i
 
 update patient_diagnosis set mkb_item_id = coalesce(mkb_sub_diagnosis_id, mkb_diagnosis_id, null) where id is not null;
 
-----------
--- USER --
-----------
+------------------
+-- USER/PATIENT --
+------------------
 
 alter table users add email varchar;
 create unique index users_email_uindex on users (email);
 alter table users add uuid uuid not null default uuid_generate_v4();
+
+alter table representative_to_patient
+    rename to patients_representatives;
+
 
 
 ----------------
