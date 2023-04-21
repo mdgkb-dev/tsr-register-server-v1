@@ -8,7 +8,7 @@ import (
 
 // Init func
 func Init(r *gin.RouterGroup, h handler.IHandler) {
-	r.GET("/", h.GetAll)
+	r.GET("", h.GetAll)
 	r.GET("/histories/:id", h.GetAllHistory)
 	r.GET("/history/:id", h.GetHistory)
 	r.GET("/:id", h.Get)

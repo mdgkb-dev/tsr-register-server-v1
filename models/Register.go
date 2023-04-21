@@ -33,9 +33,9 @@ func (item *Register) SetIDForChildren() {
 
 func (item *Register) GetPatientsAverageAge() int {
 	sum := 0
-	for _, p := range item.RegisterToPatient {
-		sum += p.Patient.Human.GetAge()
-	}
+	//for _, _ := range item.RegisterToPatient {
+	//	sum += p.Patient.Human.GetAge()
+	//}
 	res := sum / len(item.RegisterToPatient)
 	return res
 }

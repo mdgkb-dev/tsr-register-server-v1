@@ -26,10 +26,10 @@ type IHandler interface {
 
 type IService interface {
 	setQueryFilter(*gin.Context) error
-	GetAll() (models.ResearchesPools, error)
-	Get(string) (*models.ResearchesPool, error)
-	Create(*models.ResearchesPool) error
-	Update(*models.ResearchesPool) error
+	GetAll() (models.Researches, error)
+	Get(string) (*models.Research, error)
+	Create(*models.Research) error
+	Update(*models.Research) error
 	Delete(*string) error
 
 	GetValueTypes() (models.ValueTypes, error)
@@ -38,17 +38,17 @@ type IService interface {
 type IRepository interface {
 	setQueryFilter(*gin.Context) error
 	db() *bun.DB
-	create(*models.ResearchesPool) error
-	getAll() (models.ResearchesPools, error)
-	get(string) (*models.ResearchesPool, error)
-	update(*models.ResearchesPool) error
+	create(*models.Research) error
+	getAll() (models.Researches, error)
+	get(string) (*models.Research, error)
+	update(*models.Research) error
 	delete(*string) error
 
 	getValueTypes() (models.ValueTypes, error)
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.ResearchesPool, map[string][]*multipart.FileHeader) error
+	Upload(*gin.Context, *models.Research, map[string][]*multipart.FileHeader) error
 }
 
 type Handler struct {

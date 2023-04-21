@@ -92,16 +92,20 @@ create table patients_researches
     id          uuid default uuid_generate_v4() not null primary key,
     research_id uuid not null references researches,
     patient_id  uuid not null references patients,
+    filling_percentage int not null default 0,
     item_order int not null default 0
 );
 
 alter table register_property rename column register_property_order to item_order;
-alter table register_property rename column register_group_id to research_section_id;
+alter table register_property rename column register_group_id to research_id;
+alter table register_property add column code varchar;
+alter table register_property add column calculate_scores bool;
 alter table register_property rename to questions;
 
 alter table register_property_radio rename column register_property_radio_order to item_order;
 alter table register_property_radio rename column register_property_id to question_id;
-alter table register_property_radio rename to answers_variants;
+alter table register_property_radio add column score int;
+alter table register_property_radio rename to answer_variants;
 
 alter table register_property_examples rename to question_examples;
 alter table question_examples rename column register_property_id to question_id;
@@ -113,7 +117,13 @@ alter table register_property_measures rename to question_measures;
 
 alter table register_groups_to_patients rename column register_groups_to_patients_date to item_date;
 alter table register_groups_to_patients rename column register_group_id to research_id;
+alter table register_groups_to_patients add column filling_percentage int not null default 0;
+alter table register_groups_to_patients add column item_order int not null default 0;
 alter table register_groups_to_patients rename to research_results;
+alter table research_results add patient_research_id uuid references patients_researches;
+alter table research_results drop constraint register_groups_to_patients_register_group_id_fkey;
+alter table research_results drop constraint register_groups_to_patients_patient_id_fkey;
+alter table research_results add constraint research_results_patients_researches_id_fk foreign key (patient_research_id) references patients_researches on update cascade on delete cascade;
 
 alter table register_property_others rename column register_property_others_order to item_order;
 alter table register_property_others rename column register_property_id to question_id;
@@ -126,15 +136,18 @@ alter table register_property_to_patient rename column register_group_to_patient
 alter table register_property_to_patient rename column register_property_measure_id to question_measure_id;
 alter table register_property_to_patient rename column register_property_variant_id to question_variant_id;
 alter table register_property_to_patient rename to answers;
+alter table answers add column filled bool default false;
 
-insert into answers_variants (id, name, item_order, question_id)
+insert into answer_variants (id, name, item_order, question_id)
 select id, name, register_property_set_order, register_property_id from register_property_set;
 
 alter table register_property_set_to_patient rename column register_property_set_id to answer_variant_id;
 alter table register_property_set_to_patient rename column register_group_to_patient_id to research_result_id;
 alter table register_property_set_to_patient drop  constraint "FK_8281318758557dfc2a1fd67f090";
-alter table register_property_set_to_patient add constraint "FK_8281318758557dfc2a1fd67f090" foreign key (answer_variant_id) references answers_variants ;
-alter table register_property_set_to_patient rename to answer_answer_variants;
+alter table register_property_set_to_patient add constraint "FK_8281318758557dfc2a1fd67f090" foreign key (answer_variant_id) references answer_variants;
+alter table register_property_set_to_patient rename to selected_answer_variants;
+alter table selected_answer_variants add answer_id uuid default uuid_generate_v4();
+
 
 update answer_comments set answer_variant_id = register_property_set_id where answer_variant_id is null;
 alter table answer_comments drop column register_property_set_id;
@@ -160,17 +173,8 @@ create table formula_results
 
 
 
--- alter table researches
---     rename column register_id to research_id;
-
--- insert into patients_researches
--- select id, register_id, patient_id from register_to_patient;
 
 
-
-
--- insert into researches
--- select * from register;
 
 -- alter table researches
 --     add foreign key (research_id) references researches

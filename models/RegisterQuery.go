@@ -86,17 +86,17 @@ func (item *RegisterQuery) writeData(xl *xlsxhelper.XlsxHelper) {
 			//for setNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].ResearchResult.RegisterPropertySets {
 			//	item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].ResearchResult.RegisterPropertySets[setNum].AggregatedValues = make(map[string]float64)
 			//}
-			for radioNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.AnswersVariants {
-				item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.AnswersVariants[radioNum].AggregatedValues = make(map[string]float64)
+			for radioNum := range item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.AnswerVariants {
+				item.RegisterQueryGroups[groupNum].RegisterQueryGroupProperties[propNum].RegisterProperty.AnswerVariants[radioNum].AggregatedValues = make(map[string]float64)
 			}
 		}
 	}
 
-	for patientNum, registerToPatient := range item.Register.RegisterToPatient {
-		xl.Data = append(xl.Data, strconv.Itoa(patientNum+1), registerToPatient.Patient.Human.GetFullName())
-		if item.WithAge {
-			xl.Data = append(xl.Data, strconv.Itoa(registerToPatient.Patient.Human.GetAge()))
-		}
+	for patientNum, _ := range item.Register.RegisterToPatient {
+		//xl.Data = append(xl.Data, strconv.Itoa(patientNum+1), registerToPatient.Patient.Human.GetFullName())
+		//if item.WithAge {
+		//	xl.Data = append(xl.Data, strconv.Itoa(registerToPatient.Patient.Human.GetAge()))
+		//}
 		//item.RegisterQueryGroups.writeXlsxData(xl, registerToPatient.PatientID)
 		xl.WriteString(4+patientNum, 0, &xl.Data)
 		xl.Data = []string{}

@@ -1,17 +1,17 @@
 package answers
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/answercomment"
+	"mdgkb/tsr-tegister-server-v1/handlers/selectedanswervariants"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
 )
 
-func (s *Service) Create(item *models.AnswerVariant) error {
+func (s *Service) Create(item *models.Answer) error {
 	return s.repository.create(item)
 }
 
-func (s *Service) GetAll() ([]*models.AnswerVariant, error) {
+func (s *Service) GetAll() ([]*models.Answer, error) {
 	items, err := s.repository.getAll()
 	if err != nil {
 		return nil, err
@@ -19,7 +19,7 @@ func (s *Service) GetAll() ([]*models.AnswerVariant, error) {
 	return items, nil
 }
 
-func (s *Service) Get(id *string) (*models.AnswerVariant, error) {
+func (s *Service) Get(id *string) (*models.Answer, error) {
 	item, err := s.repository.get(id)
 	if err != nil {
 		return nil, err
@@ -27,7 +27,7 @@ func (s *Service) Get(id *string) (*models.AnswerVariant, error) {
 	return item, nil
 }
 
-func (s *Service) Update(item *models.AnswerVariant) error {
+func (s *Service) Update(item *models.Answer) error {
 	return s.repository.update(item)
 }
 
@@ -35,7 +35,7 @@ func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
 }
 
-func (s *Service) UpsertMany(items models.AnswersVariants) error {
+func (s *Service) UpsertMany(items models.Answers) error {
 	if len(items) == 0 {
 		return nil
 	}
@@ -43,13 +43,12 @@ func (s *Service) UpsertMany(items models.AnswersVariants) error {
 	if err != nil {
 		return err
 	}
-	items.SetIDForChildren()
-	registerPropertyOthersService := answercomment.CreateService(s.helper)
-	//err = registerPropertyOthersService.UpsertMany(items.GetRegisterPropertyOthers())
-	//if err != nil {
-	//	return err
-	//}
-	err = registerPropertyOthersService.DeleteMany(items.GetRegisterPropertyOthersForDelete())
+	selectedAnswerVariantsService := selectedanswervariants.CreateService(s.helper)
+	err = selectedAnswerVariantsService.UpsertMany(items.GetSelectedAnswerVariants())
+	if err != nil {
+		return err
+	}
+	err = selectedAnswerVariantsService.DeleteMany(items.GetSelectedAnswerVariantsForDelete())
 	if err != nil {
 		return err
 	}

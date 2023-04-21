@@ -1,7 +1,7 @@
 package questions
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/answers"
+	"mdgkb/tsr-tegister-server-v1/handlers/answervariants"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionexamples"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionmeasures"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertyvariants"
@@ -56,7 +56,7 @@ func (s *Service) UpsertMany(items models.Questions) error {
 		return err
 	}
 	items.SetIDForChildren()
-	registerPropertyRadioService := answers.CreateService(s.helper)
+	registerPropertyRadioService := answervariants.CreateService(s.helper)
 	err = registerPropertyRadioService.UpsertMany(items.GetRegisterPropertyRadios())
 	if err != nil {
 		return err

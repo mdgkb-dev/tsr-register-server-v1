@@ -55,10 +55,10 @@ func (r *Repository) get(id string) (*models.Register, error) {
 			return q.Order("register_property_set.register_property_set_order")
 		}).
 		Relation("Researches.Questions.RegisterPropertySets.RegisterPropertyOthers").
-		Relation("Researches.Questions.AnswersVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches.Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_radio.register_property_radio_order")
 		}).
-		Relation("Researches.Questions.AnswersVariants.RegisterPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("Researches.Questions.AnswerVariants.RegisterPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_property_others.register_property_others_order")
 		}).
 		Relation("ResearchResult.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {

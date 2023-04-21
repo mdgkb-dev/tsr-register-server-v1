@@ -36,7 +36,7 @@ func (r *Repository) get(id string) (*models.RegisterQuery, error) {
 		}).
 		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.ValueType").
 		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.RegisterPropertySets.RegisterPropertyOthers").
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.AnswersVariants.RegisterPropertyOthers").
+		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.AnswerVariants.RegisterPropertyOthers").
 		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient.full_name")
 		}).

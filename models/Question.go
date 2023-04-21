@@ -7,7 +7,7 @@ import (
 
 type Question struct {
 	bun.BaseModel   `bun:"questions,alias:questions"`
-	ID              uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID              uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name            string        `json:"name"`
 	ShortName       string        `json:"shortName"`
 	Code            string        `json:"code"`
@@ -22,8 +22,8 @@ type Question struct {
 	AgeCompare      bool          `json:"ageCompare"`
 	CalculateScores bool          `json:"calculateScores"`
 
-	AnswersVariants          AnswersVariants `bun:"rel:has-many" json:"answersVariants"`
-	AnswersVariantsForDelete []uuid.UUID     `bun:"-" json:"answersVariantsForDelete"`
+	AnswerVariants          AnswerVariants `bun:"rel:has-many" json:"answerVariants"`
+	AnswerVariantsForDelete []uuid.UUID    `bun:"-" json:"answerVariantsForDelete"`
 
 	QuestionVariants          QuestionVariants `bun:"rel:has-many" json:"questionVariants"`
 	QuestionVariantsForDelete []uuid.UUID      `bun:"-" json:"questionVariantsForDelete"`
@@ -38,9 +38,9 @@ type Question struct {
 type Questions []*Question
 
 func (item *Question) SetIDForChildren() {
-	if len(item.AnswersVariants) > 0 {
-		for i := range item.AnswersVariants {
-			item.AnswersVariants[i].QuestionID = item.ID
+	if len(item.AnswerVariants) > 0 {
+		for i := range item.AnswerVariants {
+			item.AnswerVariants[i].QuestionID = item.ID
 		}
 	}
 	if len(item.QuestionExamples) > 0 {
@@ -77,10 +77,10 @@ func (items Questions) GetRegisterPropertyExamples() QuestionExamples {
 	return itemsForGet
 }
 
-func (items Questions) GetRegisterPropertyRadios() AnswersVariants {
-	itemsForGet := make(AnswersVariants, 0)
+func (items Questions) GetRegisterPropertyRadios() AnswerVariants {
+	itemsForGet := make(AnswerVariants, 0)
 	for i := range items {
-		itemsForGet = append(itemsForGet, items[i].AnswersVariants...)
+		itemsForGet = append(itemsForGet, items[i].AnswerVariants...)
 	}
 	return itemsForGet
 }
@@ -88,7 +88,7 @@ func (items Questions) GetRegisterPropertyRadios() AnswersVariants {
 func (items Questions) GetRegisterPropertyRadioForDelete() []uuid.UUID {
 	itemsForGet := make([]uuid.UUID, 0)
 	for i := range items {
-		itemsForGet = append(itemsForGet, items[i].AnswersVariantsForDelete...)
+		itemsForGet = append(itemsForGet, items[i].AnswerVariantsForDelete...)
 	}
 	return itemsForGet
 }

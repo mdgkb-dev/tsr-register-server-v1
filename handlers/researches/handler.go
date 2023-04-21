@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.ResearchesPool
+	var item models.Research
 	err := c.Bind(&item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -59,7 +59,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.ResearchesPool
+	var item models.Research
 	err := c.Bind(&item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -80,7 +80,7 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 }
 
 func (h *Handler) GetXlsx(c *gin.Context) {
-	//var item models.ResearchesPool
+	//var item models.Research
 	//err := c.Bind(&item)
 	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 	//	return

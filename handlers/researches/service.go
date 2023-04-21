@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) Create(item *models.ResearchesPool) error {
+func (s *Service) Create(item *models.Research) error {
 	err := s.repository.create(item)
 	if err != nil {
 		return err
@@ -23,7 +23,7 @@ func (s *Service) Create(item *models.ResearchesPool) error {
 	return err
 }
 
-func (s *Service) GetAll() (models.ResearchesPools, error) {
+func (s *Service) GetAll() (models.Researches, error) {
 	items, err := s.repository.getAll()
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (s *Service) GetAll() (models.ResearchesPools, error) {
 	return items, nil
 }
 
-func (s *Service) Get(id string) (*models.ResearchesPool, error) {
+func (s *Service) Get(id string) (*models.Research, error) {
 	item, err := s.repository.get(id)
 	if err != nil {
 		return nil, err
@@ -39,7 +39,7 @@ func (s *Service) Get(id string) (*models.ResearchesPool, error) {
 	return item, nil
 }
 
-func (s *Service) Update(item *models.ResearchesPool) error {
+func (s *Service) Update(item *models.Research) error {
 	err := s.repository.update(item)
 	if err != nil {
 		return err

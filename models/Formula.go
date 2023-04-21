@@ -22,9 +22,9 @@ type Formulas []*Formula
 
 //
 //func (item *Formula) SetIDForChildren() {
-//	if len(item.AnswersVariants) > 0 {
-//		for i := range item.AnswersVariants {
-//			item.AnswersVariants[i].FormulaID = item.ID
+//	if len(item.AnswerVariants) > 0 {
+//		for i := range item.AnswerVariants {
+//			item.AnswerVariants[i].FormulaID = item.ID
 //		}
 //	}
 //}
@@ -46,10 +46,10 @@ type Formulas []*Formula
 //	return itemsForGet
 //}
 //
-//func (items Formulas) GetRegisterPropertyRadios() AnswersVariants {
-//	itemsForGet := make(AnswersVariants, 0)
+//func (items Formulas) GetRegisterPropertyRadios() AnswerVariants {
+//	itemsForGet := make(AnswerVariants, 0)
 //	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].AnswersVariants...)
+//		itemsForGet = append(itemsForGet, items[i].AnswerVariants...)
 //	}
 //	return itemsForGet
 //}
@@ -57,7 +57,7 @@ type Formulas []*Formula
 //func (items Formulas) GetRegisterPropertyRadioForDelete() []uuid.UUID {
 //	itemsForGet := make([]uuid.UUID, 0)
 //	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].AnswersVariantsForDelete...)
+//		itemsForGet = append(itemsForGet, items[i].AnswerVariantsForDelete...)
 //	}
 //	return itemsForGet
 //}

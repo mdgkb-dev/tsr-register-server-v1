@@ -9,8 +9,8 @@ import (
 
 type Answer struct {
 	bun.BaseModel `bun:"answers,alias:answers"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Order         int       `bun:"item_order" json:"order"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	//Order         int       `bun:"item_order" json:"order"`
 
 	ValueString     string         `json:"valueString"`
 	ValueNumber     float32        `json:"valueNumber"`
@@ -20,12 +20,14 @@ type Answer struct {
 	AnswerVariantID uuid.NullUUID  `bun:"type:uuid" json:"answerVariantId"`
 
 	ResearchResult   *ResearchResult `bun:"rel:belongs-to" json:"researchResult"`
-	ResearchResultID uuid.UUID       `bun:"type:uuid" json:"researchResultId"`
+	ResearchResultID uuid.NullUUID   `bun:"type:uuid" json:"researchResultId"`
 	Filled           bool            `json:"filled"`
 
-	Question   *Question `bun:"rel:belongs-to" json:"question"`
-	QuestionID uuid.UUID `bun:"type:uuid" json:"questionId"`
+	Question   *Question     `bun:"rel:belongs-to" json:"question"`
+	QuestionID uuid.NullUUID `bun:"type:uuid" json:"questionId"`
 
+	SelectedAnswerVariants          SelectedAnswerVariants `bun:"rel:has-many" json:"selectedAnswerVariants"`
+	SelectedAnswerVariantsForDelete []uuid.UUID            `bun:"-" json:"selectedAnswerVariantsForDelete"`
 	//RegisterPropertiesToPatientsToFileInfos          RegisterPropertiesToPatientsToFileInfos `bun:"rel:has-many" json:"registerPropertiesToPatientsToFileInfos"`
 	//RegisterPropertiesToPatientsToFileInfosForDelete []uuid.UUID                             `bun:"-" json:"registerPropertiesToPatientsToFileInfosForDelete"`
 
@@ -66,29 +68,31 @@ type Answers []*Answer
 //	}
 //}
 //
-//func (items Answers) GetRegisterPropertiesToPatientsToFileInfos() RegisterPropertiesToPatientsToFileInfos {
-//	itemsForGet := make(RegisterPropertiesToPatientsToFileInfos, 0)
-//	if len(items) == 0 {
-//		return itemsForGet
-//	}
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].RegisterPropertiesToPatientsToFileInfos...)
-//	}
+func (items Answers) GetSelectedAnswerVariants() SelectedAnswerVariants {
+	itemsForGet := make(SelectedAnswerVariants, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].SelectedAnswerVariants...)
+	}
+
+	return itemsForGet
+}
+
 //
-//	return itemsForGet
-//}
-//
-//func (items Answers) GetRegisterPropertiesToPatientsToFileInfosForDelete() []uuid.UUID {
-//	itemsForGet := make([]uuid.UUID, 0)
-//	if len(items) == 0 {
-//		return itemsForGet
-//	}
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].RegisterPropertiesToPatientsToFileInfosForDelete...)
-//	}
-//
-//	return itemsForGet
-//}
+func (items Answers) GetSelectedAnswerVariantsForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].SelectedAnswerVariantsForDelete...)
+	}
+
+	return itemsForGet
+}
+
 //func (item *RegisterPropertyToPatient) GetData(prop *Question) string {
 //	if prop.ValueType.IsString() || prop.ValueType.IsText() {
 //		return item.ValueString

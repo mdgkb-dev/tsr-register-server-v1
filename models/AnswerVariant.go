@@ -8,10 +8,11 @@ import (
 )
 
 type AnswerVariant struct {
-	bun.BaseModel `bun:"answers_variants,alias:answers_variants"`
+	bun.BaseModel `bun:"answer_variants,alias:answer_variants"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string        `json:"name"`
-	QuestionID    uuid.UUID     `bun:"type:uuid" json:"questionId"`
+	QuestionID    uuid.NullUUID `bun:"type:uuid" json:"questionId"`
+	Question      *Question     `bun:"rel:belongs-to" json:"question"`
 	Order         int           `bun:"item_order" json:"order"`
 	Score         int           `json:"score"`
 	//RegisterPropertyOthers          RegisterPropertyOthers `bun:"rel:has-many" json:"registerPropertyOthers"`
@@ -21,7 +22,7 @@ type AnswerVariant struct {
 	RegisterQueryPercentages RegisterQueryPercentages `bun:"-" `
 }
 
-type AnswersVariants []*AnswerVariant
+type AnswerVariants []*AnswerVariant
 
 func (item *AnswerVariant) SetIDForChildren() {
 	//if len(item.RegisterPropertyOthers) == 0 {
@@ -32,7 +33,7 @@ func (item *AnswerVariant) SetIDForChildren() {
 	//}
 }
 
-func (items AnswersVariants) SetIDForChildren() {
+func (items AnswerVariants) SetIDForChildren() {
 	if len(items) == 0 {
 		return
 	}
@@ -41,7 +42,7 @@ func (items AnswersVariants) SetIDForChildren() {
 	}
 }
 
-//func (items AnswersVariants) GetRegisterPropertyOthers() RegisterPropertyOthers {
+//func (items AnswerVariants) GetRegisterPropertyOthers() RegisterPropertyOthers {
 //	itemsForGet := make(RegisterPropertyOthers, 0)
 //	for i := range items {
 //		itemsForGet = append(itemsForGet, items[i].RegisterPropertyOthers...)
@@ -49,7 +50,7 @@ func (items AnswersVariants) SetIDForChildren() {
 //	return itemsForGet
 //}
 
-func (items AnswersVariants) GetRegisterPropertyOthersForDelete() []uuid.UUID {
+func (items AnswerVariants) GetRegisterPropertyOthersForDelete() []uuid.UUID {
 	itemsForGet := make([]uuid.UUID, 0)
 	//for i := range items {
 	//	itemsForGet = append(itemsForGet, items[i].RegisterPropertyOthersForDelete...)

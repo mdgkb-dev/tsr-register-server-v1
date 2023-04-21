@@ -20,12 +20,12 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 	return nil
 }
 
-func (r *Repository) create(item *models.ResearchesPool) (err error) {
+func (r *Repository) create(item *models.Research) (err error) {
 	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) getAll() (items models.ResearchesPools, err error) {
+func (r *Repository) getAll() (items models.Researches, err error) {
 	err = r.db().NewSelect().
 		Model(&items).
 		Relation("ResearchDiagnosis").
@@ -33,32 +33,32 @@ func (r *Repository) getAll() (items models.ResearchesPools, err error) {
 	return items, err
 }
 
-func (r *Repository) get(id string) (*models.ResearchesPool, error) {
-	item := models.ResearchesPool{}
+func (r *Repository) get(id string) (*models.Research, error) {
+	item := models.Research{}
 	err := r.db().NewSelect().
 		Model(&item).
 		//Relation("ResearchDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
 		//Relation("ResearchDiagnosis.MkbDiagnosis.MkbGroup").
 		//Relation("ResearchDiagnosis.MkbSubDiagnosis").
 		//Relation("ResearchDiagnosis.MkbConcreteDiagnosis").
-		Relation("ResearchSections", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Order("research_sections.item_order")
+		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("questions.item_order")
 		}).
-		Relation("ResearchSections.Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Order("research_questions.item_order")
+		Relation("Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("answer_variants.item_order")
 		}).
-		Relation("ResearchSections.Questions.QuestionExamples").
-		Relation("ResearchSections.Questions.QuestionVariants").
-		Relation("ResearchSections.Questions.ValueType").
-		Relation("ResearchSections.Questions.QuestionMeasures").
+		Relation("Questions.QuestionExamples").
+		Relation("Questions.ValueType").
+		//Relation("Questions.QuestionVariants").
+		Relation("Formulas.FormulaResults").
 		//Relation("ResearchSections.Questions.ResearchPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {
 		//	return q.Order("Research_property_set.Research_property_set_order")
 		//}).
 		//Relation("ResearchSections.Questions.ResearchPropertySets.ResearchPropertyOthers").
-		//Relation("ResearchSections.Questions.AnswersVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+		//Relation("ResearchSections.rQuestions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
 		//	return q.Order("Research_property_radio.Research_property_radio_order")
 		//}).
-		//Relation("ResearchSections.Questions.AnswersVariants.ResearchPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
+		//Relation("ResearchSections.Questions.AnswerVariants.ResearchPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
 		//	return q.Order("Research_property_others.Research_property_others_order")
 		//}).
 		//Relation("ResearchResult.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
@@ -77,10 +77,10 @@ func (r *Repository) get(id string) (*models.ResearchesPool, error) {
 }
 
 func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db().NewDelete().Model(&models.ResearchesPool{}).Where("id = ?", *id).Exec(r.ctx)
+	_, err = r.db().NewDelete().Model(&models.Research{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
-func (r *Repository) update(item *models.ResearchesPool) (err error) {
+func (r *Repository) update(item *models.Research) (err error) {
 	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }

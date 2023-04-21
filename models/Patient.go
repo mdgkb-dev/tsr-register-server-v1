@@ -117,9 +117,9 @@ func (item *Patient) SetIDForChildren() {
 		}
 	}
 	if len(item.RegisterToPatient) > 0 {
-		for i := range item.RegisterToPatient {
-			item.RegisterToPatient[i].PatientID = item.ID
-		}
+		//for i := range item.RegisterToPatient {
+		//	item.RegisterToPatient[i].PatientID = item.ID
+		//}
 	}
 	//if len(item.RegisterGroupsToPatient) > 0 {
 	//	for i := range item.RegisterGroupsToPatient {
@@ -160,7 +160,7 @@ func (item *Patient) SetDeleteIDForChildren() {
 	for i := range item.PatientDrugRegimen {
 		item.PatientDrugRegimenForDelete = append(item.PatientDrugRegimenForDelete, item.PatientDrugRegimen[i].ID)
 	}
-	for i := range item.RegisterToPatient {
-		item.RegisterToPatientForDelete = append(item.RegisterToPatientForDelete, item.RegisterToPatient[i].ID)
-	}
+	//for i := range item.RegisterToPatient {
+	//	item.RegisterToPatientForDelete = append(item.RegisterToPatientForDelete, item.RegisterToPatient[i].ID)
+	//}
 }

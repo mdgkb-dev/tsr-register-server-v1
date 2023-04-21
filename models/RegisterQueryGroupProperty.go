@@ -58,7 +58,7 @@ func (item *RegisterQueryGroupProperty) writeXlsxHeader(xl *xlsxhelper.XlsxHelpe
 	//		}
 	//	}
 	//	if item.ResearchResult.ValueType.IsRadio() {
-	//		for _, radioItem := range item.ResearchResult.AnswersVariants {
+	//		for _, radioItem := range item.ResearchResult.AnswerVariants {
 	//			xl.WriteString(3, xl.Cursor, &[]string{radioItem.Name})
 	//			xl.Cursor++
 	//			for _, other := range radioItem.RegisterPropertyOthers {
@@ -107,19 +107,19 @@ func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper,
 	//		}
 	//	}
 	//	if item.ResearchResult.ValueType.IsRadio() {
-	//		for i := range item.ResearchResult.AnswersVariants {
+	//		for i := range item.ResearchResult.AnswerVariants {
 	//			exists := No
 	//			for _, propToPat := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyToPatient {
-	//				if propToPat.AnswerVariantID == item.ResearchResult.AnswersVariants[i].ID {
+	//				if propToPat.AnswerVariantID == item.ResearchResult.AnswerVariants[i].ID {
 	//					exists = Yes
 	//				}
 	//			}
 	//			if writeEmpty {
 	//				exists = NoData
 	//			}
-	//			item.ResearchResult.AnswersVariants[i].writeXlsxAggregatedValues(exists)
+	//			item.ResearchResult.AnswerVariants[i].writeXlsxAggregatedValues(exists)
 	//			xl.Data = append(xl.Data, exists)
-	//			for _, other := range item.ResearchResult.AnswersVariants[i].RegisterPropertyOthers {
+	//			for _, other := range item.ResearchResult.AnswerVariants[i].RegisterPropertyOthers {
 	//				v := No
 	//				for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
 	//					if setValue.RegisterPropertyOtherID == other.ID {
@@ -169,7 +169,7 @@ func (item *RegisterQueryGroupProperty) writeAggregates(xl *xlsxhelper.XlsxHelpe
 	//		}
 	//	}
 	//	if item.ResearchResult.ValueType.IsRadio() {
-	//		for _, r := range item.ResearchResult.AnswersVariants {
+	//		for _, r := range item.ResearchResult.AnswerVariants {
 	//			item.AggregateType.WriteAggregatedValues(xl, r.AggregatedValues)
 	//			for range r.RegisterPropertyOthers {
 	//				xl.Cursor++

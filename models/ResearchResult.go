@@ -9,25 +9,33 @@ import (
 
 type ResearchResult struct {
 	bun.BaseModel `bun:"research_results,alias:research_results"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
 	Date *time.Time `bun:"item_date" json:"date"`
 
-	Research   *Research     `bun:"rel:belongs-to" json:"research"`
-	ResearchID uuid.UUID     `bun:"type:uuid" json:"researchId"`
-	Patient    *Patient      `bun:"rel:belongs-to" json:"patients"`
-	PatientID  uuid.NullUUID `bun:"type:uuid" json:"patientId"`
-	Answers    Answers       `bun:"rel:has-many" json:"answers"`
+	//Research   *Research     `bun:"rel:belongs-to" json:"research"`
+	//ResearchID uuid.UUID     `bun:"type:uuid" json:"researchId"`
+	//Patient    *Patient      `bun:"rel:belongs-to" json:"patients"`
+	//PatientID  uuid.NullUUID `bun:"type:uuid" json:"patientId"`
+
+	PatientResearch   *PatientResearch `bun:"rel:belongs-to" json:"patientResearch"`
+	PatientResearchID uuid.NullUUID    `bun:"type:uuid" json:"patientResearchId"`
+	Answers           Answers          `bun:"rel:has-many" json:"answers"`
 
 	FillingPercentage uint `json:"fillingPercentage"`
 	Order             uint `bun:"item_order" json:"order"`
 	//PatientAnswerComments PatientAnswerComments `bun:"rel:has-many" json:"patientAnswerComments"`
 	//RegisterPropertyToPatientForDelete    []uuid.UUID                     `bun:"-" json:"registerPropertyToPatientForDelete"`
-	//Answer          AnswersVariants  `bun:"rel:has-many" json:"registerPropertySetToPatient"`
+	//Answer          AnswerVariants  `bun:"rel:has-many" json:"registerPropertySetToPatient"`
 	//RegisterPropertySetToPatientForDelete []uuid.UUID                     `bun:"-" json:"registerPropertySetToPatientForDelete"`
 }
 
 type ResearchResults []*ResearchResult
+
+type ResearchResultsWithCount struct {
+	ResearchResults ResearchResults `json:"items"`
+	Count           int             `json:"count"`
+}
 
 func (items ResearchResults) SetFilePath(fileID *string) *string {
 	for i := range items {
@@ -55,11 +63,11 @@ func (item *ResearchResult) SetIDForChildren() {
 	//		item.RegisterPropertyToPatient[i].ResearchResultID = item.ID
 	//	}
 	//}
-	//if len(item.Answer) > 0 {
-	//	for i := range item.Answer {
-	//		item.Answer[i].ResearchResultID = item.ID
-	//	}
-	//}
+	if len(item.Answers) > 0 {
+		for i := range item.Answers {
+			item.Answers[i].ResearchResultID = item.ID
+		}
+	}
 	//if len(item.RegisterPropertyOthersToPatient) > 0 {
 	//	for i := range item.RegisterPropertyOthersToPatient {
 	//		item.RegisterPropertyOthersToPatient[i].ResearchResultID = item.ID

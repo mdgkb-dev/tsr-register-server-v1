@@ -20,25 +20,25 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.AnswerVariant, error)
-	Get(*string) (*models.AnswerVariant, error)
-	Create(*models.AnswerVariant) error
-	Update(*models.AnswerVariant) error
+	GetAll() ([]*models.Answer, error)
+	Get(*string) (*models.Answer, error)
+	Create(*models.Answer) error
+	Update(*models.Answer) error
 	Delete(*string) error
 
-	UpsertMany(models.AnswersVariants) error
+	UpsertMany(models.Answers) error
 	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
 	db() *bun.DB
-	create(*models.AnswerVariant) error
-	getAll() ([]*models.AnswerVariant, error)
-	get(*string) (*models.AnswerVariant, error)
-	update(*models.AnswerVariant) error
+	create(*models.Answer) error
+	getAll() ([]*models.Answer, error)
+	get(*string) (*models.Answer, error)
+	update(*models.Answer) error
 	delete(*string) error
 
-	upsertMany(radios models.AnswersVariants) error
+	upsertMany(radios models.Answers) error
 	deleteMany([]uuid.UUID) error
 }
 
