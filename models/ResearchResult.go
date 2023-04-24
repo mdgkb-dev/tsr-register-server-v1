@@ -102,6 +102,14 @@ func (items ResearchResults) GetRegisterPropertiesToPatients() Answers {
 	return itemsForGet
 }
 
+func (items ResearchResults) GetAnswers() Answers {
+	itemsForGet := make(Answers, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	return itemsForGet
+}
+
 func (items ResearchResults) GetRegisterPropertiesToPatientsForDelete() []uuid.UUID {
 	itemsForGet := make([]uuid.UUID, 0)
 	if len(items) == 0 {

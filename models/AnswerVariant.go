@@ -8,13 +8,14 @@ import (
 )
 
 type AnswerVariant struct {
-	bun.BaseModel `bun:"answer_variants,alias:answer_variants"`
-	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name          string        `json:"name"`
-	QuestionID    uuid.NullUUID `bun:"type:uuid" json:"questionId"`
-	Question      *Question     `bun:"rel:belongs-to" json:"question"`
-	Order         int           `bun:"item_order" json:"order"`
-	Score         int           `json:"score"`
+	bun.BaseModel     `bun:"answer_variants,alias:answer_variants"`
+	ID                uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name              string        `json:"name"`
+	QuestionID        uuid.NullUUID `bun:"type:uuid" json:"questionId"`
+	Question          *Question     `bun:"rel:belongs-to" json:"question"`
+	Order             int           `bun:"item_order" json:"order"`
+	Score             int           `json:"score"`
+	ShowMoreQuestions bool          `json:"showMoreQuestions"`
 	//RegisterPropertyOthers          RegisterPropertyOthers `bun:"rel:has-many" json:"registerPropertyOthers"`
 	//RegisterPropertyOthersForDelete []uuid.UUID            `bun:"-" json:"registerPropertyOthersForDelete"`
 

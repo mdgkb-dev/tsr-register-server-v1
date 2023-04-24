@@ -7,9 +7,9 @@ import (
 
 type ValueType struct {
 	bun.BaseModel `bun:"value_type,alias:value_type"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name          string    `json:"name"`
-	ValueRelation string    `bun:"type:value_type_value_relation_enum" json:"valueRelation"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name          string        `json:"name"`
+	ValueRelation string        `bun:"type:value_type_value_relation_enum" json:"valueRelation"`
 }
 
 type ValueTypes []*ValueType

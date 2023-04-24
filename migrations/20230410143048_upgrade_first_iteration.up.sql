@@ -101,10 +101,15 @@ alter table register_property rename column register_group_id to research_id;
 alter table register_property add column code varchar;
 alter table register_property add column calculate_scores bool;
 alter table register_property rename to questions;
+alter table questions add parent_id uuid;
+
+
+
 
 alter table register_property_radio rename column register_property_radio_order to item_order;
 alter table register_property_radio rename column register_property_id to question_id;
 alter table register_property_radio add column score int;
+alter table register_property_radio add column show_more_questions bool default false;
 alter table register_property_radio rename to answer_variants;
 
 alter table register_property_examples rename to question_examples;
@@ -159,6 +164,9 @@ create table formulas
     formula varchar,
     research_id uuid not null references researches
 );
+alter table formulas add age_relation bool;
+alter table formulas add sex_relation bool;
+
 
 create table formula_results
 (
@@ -168,6 +176,10 @@ create table formula_results
     low_range  numeric,
     high_range  numeric
 );
+alter table formula_results add column is_male bool;
+alter table formula_results add column month_from_birth integer;
+alter table formula_results add column result varchar;
+alter table formula_results add column color varchar;
 
 
 

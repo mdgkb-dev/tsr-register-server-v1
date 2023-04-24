@@ -13,6 +13,11 @@ func (s *Service) Create(item *models.ResearchResult) error {
 		return err
 	}
 	item.SetIDForChildren()
+	answersService := answers.CreateService(s.helper)
+	err = answersService.UpsertMany(item.Answers)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

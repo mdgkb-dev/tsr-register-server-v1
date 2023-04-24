@@ -16,7 +16,7 @@ type Question struct {
 	Tag             string        `json:"tag"`
 	Order           int           `bun:"item_order" json:"order"`
 	ValueType       *ValueType    `bun:"rel:belongs-to" json:"valueType"`
-	ValueTypeID     uuid.UUID     `bun:"type:uuid" json:"valueTypeId"`
+	ValueTypeID     uuid.NullUUID `bun:"type:uuid" json:"valueTypeId"`
 	Research        *Research     `bun:"rel:belongs-to" json:"research"`
 	ResearchID      uuid.NullUUID `bun:"type:uuid" json:"researchId"`
 	AgeCompare      bool          `json:"ageCompare"`
@@ -33,6 +33,9 @@ type Question struct {
 
 	QuestionMeasures          QuestionMeasures `bun:"rel:has-many" json:"questionMeasures"`
 	QuestionMeasuresForDelete []uuid.UUID      `bun:"-" json:"questionMeasuresForDelete"`
+	Children                  Questions        `bun:"rel:has-many,join:id=parent_id" json:"children"`
+	ParentID                  uuid.NullUUID    `bun:"type:uuid" json:"parentId"`
+	Parent                    *Question        `bun:"-" json:"parent"`
 }
 
 type Questions []*Question
