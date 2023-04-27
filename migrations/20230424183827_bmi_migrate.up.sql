@@ -4,10 +4,10 @@ INSERT INTO public.researches_pools_researches (id, researches_pool_id, research
 
 
 INSERT INTO public.questions (id, name, item_order, value_type_id, with_other, with_dates, research_id, tag, short_name, col_width, age_compare, is_files_storage, code, calculate_scores, parent_id) VALUES
-    ('e832640f-e824-4d21-b32c-da97763056cc', 'Рост', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, null, null, null);
+    ('e832640f-e824-4d21-b32c-da97763056cc', 'Рост', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, 'height', null, null);
 
 INSERT INTO public.questions (id, name, item_order, value_type_id, with_other, with_dates, research_id, tag, short_name, col_width, age_compare, is_files_storage, code, calculate_scores, parent_id) VALUES
-    ('7c99e32f-bf5a-403d-bc83-77fe577a3835', 'Вес', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, null, null, null);
+    ('7c99e32f-bf5a-403d-bc83-77fe577a3835', 'Вес', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, weight, null, null);
 
 insert into formulas (id, name, formula, research_id,  age_relation, sex_relation)
 values ('14db9484-b525-4bd7-a461-3e90a7b64187','ИМТ','weight/((height/100)^2)','af81a162-90fa-40f2-801c-f8eea0bfa947', true, true);
@@ -6013,3 +6013,25 @@ select key,'14db9484-b525-4bd7-a461-3e90a7b64187'::uuid,  value::numeric, (lead(
 from (
          select generate_series(0, 230) as i,  json_array_elements(js.bmi -> 'g') d  from js
      ) as j, json_each_text(j.d);
+
+
+UPDATE formula_results
+SET color = CASE
+                WHEN (name = '1st' or name = '99th') THEN 'red'
+                WHEN (name = '3rd' or name = '5th' or name = '95th' or name = '97th') THEN 'orange'
+                WHEN (name = '15th' or name = '85th')  THEN 'yellow'
+                WHEN (name = '25th' or name = '75th')  THEN 'lightGreen'
+                WHEN (name = '50th')   THEN 'green'
+    END
+where id is not null;
+
+UPDATE formula_results
+SET result = CASE
+                 WHEN (name = '1st' or name = '99th') THEN 'Eсть вероятность патологии развития'
+                 WHEN (name = '3rd' or name = '5th' or name = '95th' or name = '97th') THEN 'Возможно потребуются дополнительные обследования и консультации специалистов'
+                 WHEN (name = '15th' or name = '85th')  THEN 'Требуются дополнительные обследования и консультации специалистов'
+                 WHEN (name = '25th' or name = '75th')  THEN 'Нормальный вес'
+                 WHEN (name = '50th')   THEN 'Эталон'
+    END
+where id is not null;
+

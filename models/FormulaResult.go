@@ -9,6 +9,8 @@ type FormulaResult struct {
 	bun.BaseModel `bun:"formula_results,alias:formula_results"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
 	Name          string        `json:"name"`
+	Result        string        `json:"result"`
+	Color         string        `json:"color"`
 	LowRange      float64       `json:"lowRange"`
 	HighRange     float64       `json:"highRange"`
 
