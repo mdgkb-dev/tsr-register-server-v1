@@ -181,6 +181,10 @@ alter table formula_results add column month_from_birth integer;
 alter table formula_results add column result varchar;
 alter table formula_results add column color varchar;
 
+alter table disability rename to disabilities;
+alter table edv rename to edvs;
+alter table disabilities alter column period_id drop not null;
+alter table human rename to humans;
 
 
 

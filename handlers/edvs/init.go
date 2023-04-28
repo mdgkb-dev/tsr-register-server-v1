@@ -1,4 +1,4 @@
-package patientdiagnosis
+package edvs
 
 import (
 	"context"
@@ -14,11 +14,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.PatientDiagnosis, []*models.PatientDiagnosis, models.PatientDiagnosisWithCount]
+	basehandler.IService[models.Edv, models.Edvs, models.EdvsWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.PatientDiagnosis, []*models.PatientDiagnosis, models.PatientDiagnosisWithCount]
+	basehandler.IRepository[models.Edv, models.Edvs, models.EdvsWithCount]
 }
 
 type IFilesService interface {

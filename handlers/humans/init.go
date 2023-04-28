@@ -1,4 +1,4 @@
-package patientdiagnosis
+package humans
 
 import (
 	"context"
@@ -14,11 +14,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.PatientDiagnosis, []*models.PatientDiagnosis, models.PatientDiagnosisWithCount]
+	basehandler.IService[models.Human, models.Humans, models.HumansWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.PatientDiagnosis, []*models.PatientDiagnosis, models.PatientDiagnosisWithCount]
+	basehandler.IRepository[models.Human, models.Humans, models.HumansWithCount]
 }
 
 type IFilesService interface {

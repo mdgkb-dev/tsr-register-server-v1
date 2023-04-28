@@ -3,13 +3,17 @@ package routing
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
+	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drug"
+	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescalequestions"
+	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompany"
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkbitems"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearches"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
@@ -28,13 +32,17 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
+	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
 	drugRouter "mdgkb/tsr-tegister-server-v1/routing/drug"
+	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
 	fileInfoRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfo"
 	hmfseScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/hmfsescalequestions"
+	humansRouter "mdgkb/tsr-tegister-server-v1/routing/humans"
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insurancecompany"
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbItemsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbitems"
+	patientDiagnosisRouter "mdgkb/tsr-tegister-server-v1/routing/patientdiagnosis"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
@@ -88,4 +96,8 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 	researchesResultsRouter.Init(api.Group("/researches-results"), researchesresults.CreateHandler(helper))
 	patientsResearchesRouter.Init(api.Group("/patients-researches"), patientsresearches.CreateHandler(helper))
+	patientDiagnosisRouter.Init(api.Group("/patient-diagnosis"), patientdiagnosis.CreateHandler(helper))
+	disabilitiesRouter.Init(api.Group("/disabilities"), disabilities.CreateHandler(helper))
+	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
+	humansRouter.Init(api.Group("/humans"), humans.CreateHandler(helper))
 }

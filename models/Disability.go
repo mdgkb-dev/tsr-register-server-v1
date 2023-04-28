@@ -10,15 +10,22 @@ import (
 )
 
 type Disability struct {
-	bun.BaseModel `bun:"disability,alias:disability"`
+	bun.BaseModel `bun:"disabilities,alias:disabilities"`
 	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Patient       *Patient      `bun:"rel:belongs-to" json:"patient"`
 	PatientID     uuid.NullUUID `bun:"type:uuid" json:"patientId"`
-	Edvs          []*Edv        `bun:"rel:has-many" json:"edvs"`
-	EdvsForDelete []string      `bun:"-" json:"edvsForDelete"`
-	Period        *Period       `bun:"rel:belongs-to" json:"period"`
-	PeriodID      uuid.UUID     `bun:"type:uuid" json:"periodId"`
-	DeletedAt     *time.Time    `bun:",soft_delete" json:"deletedAt"`
+	Edvs          Edvs          `bun:"rel:has-many" json:"edvs"`
+	EdvsForDelete []uuid.UUID   `bun:"-" json:"edvsForDelete"`
+	//Period        *Period       `bun:"rel:belongs-to" json:"period"`
+	//PeriodID      uuid.UUID     `bun:"type:uuid" json:"periodId"`
+	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
+}
+
+type Disabilities []*Disability
+
+type DisabilitiesWithCount struct {
+	Disabilities Disabilities `json:"items"`
+	Count        int          `json:"count"`
 }
 
 func (item *Disability) SetIDForChildren() {
@@ -56,9 +63,9 @@ func GetPeriodsFromDisability(items []*Disability) []*Period {
 	if len(items) == 0 {
 		return itemsForGet
 	}
-	for i := range items {
-		itemsForGet = append(itemsForGet, items[i].Period)
-	}
+	//for i := range items {
+	//	itemsForGet = append(itemsForGet, items[i].Period)
+	//}
 	return itemsForGet
 }
 
@@ -66,7 +73,7 @@ func SetPeriodIDToDisabilities(items []*Disability) {
 	if len(items) == 0 {
 		return
 	}
-	for i := range items {
-		items[i].PeriodID = items[i].Period.ID
-	}
+	//for i := range items {
+	//	items[i].PeriodID = items[i].Period.ID
+	//}
 }

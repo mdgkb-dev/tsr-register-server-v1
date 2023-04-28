@@ -12,6 +12,7 @@ type PatientDiagnosis struct {
 	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Patient       *Patient      `bun:"rel:has-one" json:"patients"`
 	PatientID     uuid.NullUUID `bun:"type:uuid" json:"PatientId"`
+	DoctorName    string        `json:"doctorName"`
 	//MkbDiagnosis           *MkbDiagnosis         `bun:"rel:belongs-to" json:"mkbDiagnosis"`
 	//MkbDiagnosisID         uuid.UUID             `bun:"type:uuid" json:"mkbDiagnosisId"`
 	//MkbSubDiagnosis        *MkbSubDiagnosis      `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
@@ -24,6 +25,11 @@ type PatientDiagnosis struct {
 	MkbItemID                          uuid.NullUUID                `bun:"type:uuid" json:"mkbItemId"`
 	PatientDiagnosisAnamnesis          []*PatientDiagnosisAnamnesis `bun:"rel:has-many" json:"patientDiagnosisAnamnesis"`
 	PatientDiagnosisAnamnesisForDelete []string                     `bun:"-" json:"patientDiagnosisAnamnesisForDelete"`
+}
+
+type PatientDiagnosisWithCount struct {
+	PatientDiagnosis []*PatientDiagnosis `json:"items"`
+	Count            int                 `json:"count"`
 }
 
 func (item *PatientDiagnosis) SetIDForChildren() {

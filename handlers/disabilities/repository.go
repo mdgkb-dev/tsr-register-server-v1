@@ -1,4 +1,4 @@
-package patientdiagnosis
+package disabilities
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -20,22 +20,22 @@ func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
 	return nil
 }
 
-func (r *Repository) Create(item *models.PatientDiagnosis) (err error) {
+func (r *Repository) Create(item *models.Disability) (err error) {
 	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) GetAll() (item models.PatientDiagnosisWithCount, err error) {
-	item.PatientDiagnosis = make([]*models.PatientDiagnosis, 0)
-	query := r.DB().NewSelect().Model(&item.PatientDiagnosis)
+func (r *Repository) GetAll() (item models.DisabilitiesWithCount, err error) {
+	item.Disabilities = make(models.Disabilities, 0)
+	query := r.DB().NewSelect().Model(&item.Disabilities)
 
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }
 
-func (r *Repository) Get(slug string) (*models.PatientDiagnosis, error) {
-	item := models.PatientDiagnosis{}
+func (r *Repository) Get(slug string) (*models.Disability, error) {
+	item := models.Disability{}
 	err := r.DB().NewSelect().Model(&item).
 		Relation("Answers.SelectedAnswerVariants").
 		Where("?TableAlias.id = ?", slug).
@@ -44,11 +44,11 @@ func (r *Repository) Get(slug string) (*models.PatientDiagnosis, error) {
 }
 
 func (r *Repository) Delete(id string) (err error) {
-	_, err = r.DB().NewDelete().Model(&models.PatientDiagnosis{}).Where("id = ?", id).Exec(r.ctx)
+	_, err = r.DB().NewDelete().Model(&models.Disability{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) Update(item *models.PatientDiagnosis) (err error) {
+func (r *Repository) Update(item *models.Disability) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }

@@ -19,7 +19,7 @@ type Patient struct {
 	PatientsRepresentativesForDelete []uuid.UUID             `bun:"-" json:"patientsRepresentativesForDelete"`
 	HeightWeight                     []*HeightWeight         `bun:"rel:has-many" json:"heightWeight"`
 	HeightWeightForDelete            []uuid.UUID             `bun:"-" json:"heightWeightForDelete"`
-	Disabilities                     []*Disability           `bun:"rel:has-many" json:"disabilities"`
+	Disabilities                     Disabilities            `bun:"rel:has-many" json:"disabilities"`
 	DisabilitiesForDelete            []uuid.UUID             `bun:"-" json:"disabilitiesForDelete"`
 	ChestCircumference               []*ChestCircumference   `bun:"rel:has-many" json:"chestCircumference"`
 	ChestCircumferenceForDelete      []uuid.UUID             `bun:"-" json:"chestCircumferenceForDelete"`

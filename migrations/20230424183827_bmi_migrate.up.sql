@@ -7,7 +7,7 @@ INSERT INTO public.questions (id, name, item_order, value_type_id, with_other, w
     ('e832640f-e824-4d21-b32c-da97763056cc', 'Рост', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, 'height', null, null);
 
 INSERT INTO public.questions (id, name, item_order, value_type_id, with_other, with_dates, research_id, tag, short_name, col_width, age_compare, is_files_storage, code, calculate_scores, parent_id) VALUES
-    ('7c99e32f-bf5a-403d-bc83-77fe577a3835', 'Вес', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, weight, null, null);
+    ('7c99e32f-bf5a-403d-bc83-77fe577a3835', 'Вес', null, '47affcc5-5d32-4b1f-bf07-33382ed06cda', false, false, 'af81a162-90fa-40f2-801c-f8eea0bfa947', null, null, null, null, null, 'weight', null, null);
 
 insert into formulas (id, name, formula, research_id,  age_relation, sex_relation)
 values ('14db9484-b525-4bd7-a461-3e90a7b64187','ИМТ','weight/((height/100)^2)','af81a162-90fa-40f2-801c-f8eea0bfa947', true, true);
@@ -6034,4 +6034,6 @@ SET result = CASE
                  WHEN (name = '50th')   THEN 'Эталон'
     END
 where id is not null;
+
+
 

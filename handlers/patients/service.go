@@ -3,12 +3,10 @@ package patients
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/chestcircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscaletests"
-	"mdgkb/tsr-tegister-server-v1/handlers/disability"
 	"mdgkb/tsr-tegister-server-v1/handlers/headcircumference"
 	"mdgkb/tsr-tegister-server-v1/handlers/heightweight"
 	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescaletests"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
-	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/registertopatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
@@ -41,14 +39,6 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = headcircumference.CreateService(s.helper).CreateMany(item.HeadCircumference)
-	if err != nil {
-		return err
-	}
-	err = disability.CreateService(s.helper).CreateMany(item.Disabilities)
-	if err != nil {
-		return err
-	}
-	err = patientdiagnosis.CreateService(s.helper).CreateMany(item.PatientDiagnosis)
 	if err != nil {
 		return err
 	}
@@ -135,25 +125,7 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	disabilityService := disability.CreateService(s.helper)
-	err = disabilityService.UpsertMany(item.Disabilities)
-	if err != nil {
-		return err
-	}
-	err = disabilityService.DeleteMany(item.DisabilitiesForDelete)
-	if err != nil {
-		return err
-	}
 
-	patientDiagnosisService := patientdiagnosis.CreateService(s.helper)
-	err = patientDiagnosisService.UpsertMany(item.PatientDiagnosis)
-	if err != nil {
-		return err
-	}
-	err = patientDiagnosisService.DeleteMany(item.PatientDiagnosisForDelete)
-	if err != nil {
-		return err
-	}
 	patientDrugRegimenService := patientdrugregimen.CreateService(s.helper)
 	err = patientDrugRegimenService.UpsertMany(item.PatientDrugRegimen)
 	if err != nil {
@@ -226,14 +198,6 @@ func (s *Service) Delete(id *string) error {
 		return err
 	}
 	err = headcircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
-	if err != nil {
-		return err
-	}
-	err = disability.CreateService(s.helper).DeleteMany(patient.DisabilitiesForDelete)
-	if err != nil {
-		return err
-	}
-	err = patientdiagnosis.CreateService(s.helper).DeleteMany(patient.PatientDiagnosisForDelete)
 	if err != nil {
 		return err
 	}

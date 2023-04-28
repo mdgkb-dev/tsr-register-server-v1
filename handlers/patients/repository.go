@@ -31,8 +31,8 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("ChestCircumference").
 		Relation("HeadCircumference").
 		Relation("PatientDrugRegimen").
-		Relation("Disabilities.Edvs.Period").
-		Relation("Disabilities.Period").
+		Relation("Disabilities.Edvs").
+		Relation("Disabilities").
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
@@ -57,8 +57,8 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		//Relation("HeightWeight").
 		//Relation("ChestCircumference").
 		//Relation("HeadCircumference").
-		Relation("Disabilities.Period").
-		Relation("Disabilities.Edvs.Period").
+		Relation("Disabilities").
+		Relation("Disabilities.Edvs").
 		Relation("Disabilities.Edvs.FileInfo").
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").

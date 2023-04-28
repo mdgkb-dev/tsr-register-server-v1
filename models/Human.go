@@ -12,7 +12,7 @@ import (
 )
 
 type Human struct {
-	bun.BaseModel       `bun:"human,select:humans_view,alias:human"`
+	bun.BaseModel       `bun:"humans,alias:humans"`
 	ID                  uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                string        `json:"name"`
 	Surname             string        `json:"surname"`
@@ -32,6 +32,13 @@ type Human struct {
 
 	InsuranceCompanyToHuman          []*InsuranceCompanyToHuman `bun:"rel:has-many" json:"insuranceCompanyToHuman"`
 	InsuranceCompanyToHumanForDelete []uuid.UUID                `bun:"-" json:"insuranceCompanyToHumanForDelete"`
+}
+
+type Humans []*Human
+
+type HumansWithCount struct {
+	Humans Humans `json:"items"`
+	Count  int    `json:"count"`
 }
 
 func (item *Human) SetFilePath(fileID *string) *string {
