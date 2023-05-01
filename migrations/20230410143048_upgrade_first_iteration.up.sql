@@ -144,7 +144,11 @@ alter table register_property_to_patient rename to answers;
 alter table answers add column filled bool default false;
 
 insert into answer_variants (id, name, item_order, question_id)
-select id, name, register_property_set_order, register_property_id from register_property_set;
+select rps.id,  rps.name, rps.register_property_set_order, rps.register_property_id
+from register_property_set rps
+         join questions q on q.id = rps.register_property_id
+         join value_type vt on q.value_type_id = vt.id
+where vt.name = 'set';
 
 alter table register_property_set_to_patient rename column register_property_set_id to answer_variant_id;
 alter table register_property_set_to_patient rename column register_group_to_patient_id to research_result_id;
@@ -154,7 +158,10 @@ alter table register_property_set_to_patient rename to selected_answer_variants;
 alter table selected_answer_variants add answer_id uuid default uuid_generate_v4();
 
 
-update answer_comments set answer_variant_id = register_property_set_id where answer_variant_id is null;
+update answer_comments set answer_variant_id =
+                               a.register_property_set_id from answer_comments a
+                                                                   join answer_variants av on av.id = a.register_property_set_id
+where  a.answer_variant_id is null;
 alter table answer_comments drop column register_property_set_id;
 
 create table formulas
