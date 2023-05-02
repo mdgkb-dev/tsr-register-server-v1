@@ -66,8 +66,8 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
 		Relation("Human.Contact").
 		Relation("Human.Photo").
-		//Relation("PatientsRepresentatives.Representative.Human.Contact").
-		//Relation("PatientsRepresentatives.RepresentativeType").
+		Relation("PatientsRepresentatives.Representative.Human.Contact").
+		Relation("PatientsRepresentatives.RepresentativeType").
 		Relation("PatientDiagnosis.MkbItem").
 		Relation("PatientsResearchesPools.ResearchesPool").
 		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").

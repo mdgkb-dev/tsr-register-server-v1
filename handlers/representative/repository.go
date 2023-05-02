@@ -61,8 +61,8 @@ func (r *Repository) get(id *string) (*models.Representative, error) {
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Relation("Human.Contact").
 		Relation("Human.Photo").
-		Relation("PatientRepresentative.Patient.Human").
-		Relation("PatientRepresentative.RepresentativeType").
+		Relation("PatientsRepresentatives.Patient.Human").
+		Relation("PatientsRepresentatives.RepresentativeType").
 		Where("?TableAlias.id = ?", *id).Scan(r.ctx)
 	return &item, err
 }

@@ -192,6 +192,11 @@ alter table disability rename to disabilities;
 alter table edv rename to edvs;
 alter table disabilities alter column period_id drop not null;
 alter table human rename to humans;
+alter table representative rename to representatives;
+alter table patients_representatives alter column representative_type_id drop not null;
+
+
+
 
 
 

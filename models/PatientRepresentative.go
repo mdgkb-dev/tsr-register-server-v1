@@ -11,7 +11,7 @@ type PatientRepresentative struct {
 	bun.BaseModel        `bun:"patients_representatives,alias:patients_representatives"`
 	ID                   uuid.UUID           `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	RepresentativeType   *RepresentativeType `bun:"rel:belongs-to" json:"representativeType"`
-	RepresentativeTypeID uuid.UUID           `bun:"type:uuid" json:"representativeTypeId"`
+	RepresentativeTypeID uuid.NullUUID       `bun:"type:uuid" json:"representativeTypeId"`
 	PatientID            uuid.NullUUID       `bun:"type:uuid" json:"patientId"`
 	Patient              *Patient            `bun:"rel:belongs-to" json:"patient"`
 	RepresentativeID     uuid.UUID           `bun:"type:uuid" json:"representativeId"`
@@ -20,3 +20,8 @@ type PatientRepresentative struct {
 }
 
 type PatientsRepresentatives []*PatientRepresentative
+
+type PatientsRepresentativesWithCount struct {
+	PatientsRepresentatives PatientsRepresentatives `json:"items"`
+	Count                   int                     `json:"count"`
+}
