@@ -69,9 +69,10 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientsRepresentatives.Representative.Human.Contact").
 		Relation("PatientsRepresentatives.RepresentativeType").
 		Relation("PatientDiagnosis.MkbItem").
+		Relation("PatientDiagnosis.Anamneses").
 		Relation("PatientsResearchesPools.ResearchesPool").
 		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
-		//Relation("PatientDiagnosis.PatientDiagnosisAnamnesis").
+		//Relation("PatientDiagnosis.Anamnesis").
 		//Relation("ResearchResult.ResearchesPool").
 		//Relation("RegisterGroupsToPatient.Answer.Question").
 		//Relation("RegisterGroupsToPatient.Answer.RegisterPropertiesToPatientsToFileInfos.FileInfo").

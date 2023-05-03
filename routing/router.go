@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"mdgkb/tsr-tegister-server-v1/handlers/anamneses"
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
@@ -31,6 +32,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/researchesresults"
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
+	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
@@ -103,4 +105,5 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
 	humansRouter.Init(api.Group("/humans"), humans.CreateHandler(helper))
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
+	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))
 }

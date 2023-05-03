@@ -10,15 +10,15 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.PatientDiagnosisAnamnesis) error
-	UpsertMany([]*models.PatientDiagnosisAnamnesis) error
+	CreateMany([]*models.Anamnesis) error
+	UpsertMany([]*models.Anamnesis) error
 	DeleteMany([]string) error
 }
 
 type IRepository interface {
 	db() *bun.DB
-	createMany([]*models.PatientDiagnosisAnamnesis) error
-	upsertMany([]*models.PatientDiagnosisAnamnesis) error
+	createMany([]*models.Anamnesis) error
+	upsertMany([]*models.Anamnesis) error
 	deleteMany([]string) error
 }
 

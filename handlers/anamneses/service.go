@@ -1,13 +1,12 @@
-package patientdiagnosis
+package anamneses
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosisanamnesis"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) Create(item *models.PatientDiagnosis) error {
+func (s *Service) Create(item *models.Anamnesis) error {
 	err := s.repository.Create(item)
 	if err != nil {
 		return err
@@ -15,25 +14,19 @@ func (s *Service) Create(item *models.PatientDiagnosis) error {
 	return nil
 }
 
-func (s *Service) Update(item *models.PatientDiagnosis) error {
+func (s *Service) Update(item *models.Anamnesis) error {
 	err := s.repository.Update(item)
-	if err != nil {
-		return err
-	}
-	item.SetIDForChildren()
-	answersService := patientdiagnosisanamnesis.CreateService(s.helper)
-	err = answersService.UpsertMany(item.Anamneses)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Service) GetAll() (models.PatientDiagnosisWithCount, error) {
+func (s *Service) GetAll() (models.AnamnesesWithCount, error) {
 	return s.repository.GetAll()
 }
 
-func (s *Service) Get(slug string) (*models.PatientDiagnosis, error) {
+func (s *Service) Get(slug string) (*models.Anamnesis, error) {
 	item, err := s.repository.Get(slug)
 	if err != nil {
 		return nil, err
