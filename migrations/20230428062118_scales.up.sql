@@ -34,3 +34,4 @@ UPDATE public.search_groups SET key = 'mkbItem', search_group_table = 'mkb_items
 
 alter table patient_diagnosis add doctor_name varchar;
 
+

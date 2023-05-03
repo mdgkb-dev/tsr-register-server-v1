@@ -143,3 +143,5 @@ update answers set question_id = '04e42ece-8105-4cf7-a2d7-d6b4b75595a4' where qu
 -- update answers set question_id = '' where question_id in ('',);
 delete from questions where id in ( '94227bab-3197-49f5-b327-4a2ad3129603','62beb7b0-4cbc-4bd2-adeb-65dbeabf9867','6a63c510-4c39-49e3-85dd-a77586fa629a','ec80417f-fad8-4010-9fa3-01857e0bb0d9',
                                     '8797245b-35ff-458a-a10f-1a1d28ca27dc','32f70724-766c-47b4-8ba4-3fb7b4d69743','0ab865cc-cb3c-4339-8fa5-3a42610a6b52','81f831e2-3789-4489-ae91-6ccbd4b3ed5d','8f29291a-0ae1-4280-9890-ef3d81955cd1'      );
+
+update questions set value_type_id = '47affcc5-5d32-4b1f-bf07-33382ed06cda' where name ilike '%Указать количество эпизодов%';

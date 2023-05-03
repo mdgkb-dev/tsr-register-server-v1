@@ -158,10 +158,10 @@ alter table register_property_set_to_patient rename to selected_answer_variants;
 alter table selected_answer_variants add answer_id uuid default uuid_generate_v4();
 
 
-update answer_comments set answer_variant_id =
-                               a.register_property_set_id from answer_comments a
-                                                                   join answer_variants av on av.id = a.register_property_set_id
-where  a.answer_variant_id is null;
+alter table answer_comments     drop constraint register_property_others_register_property_radio_id_fkey;
+
+
+update answer_comments set answer_variant_id = register_property_set_id where  answer_variant_id is null;
 alter table answer_comments drop column register_property_set_id;
 
 create table formulas
