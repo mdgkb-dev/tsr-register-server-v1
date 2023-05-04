@@ -1,8 +1,6 @@
-package register
+package registers
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/researchsection"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -14,10 +12,10 @@ func (s *Service) Create(item *models.Register) error {
 		return err
 	}
 	item.SetIDForChildren()
-	err = researchsection.CreateService(s.helper).UpsertMany(item.RegisterGroups)
-	if err != nil {
-		return err
-	}
+	//err = researchsection.CreateService(s.helper).UpsertMany(item.RegisterGroups)
+	//if err != nil {
+	//	return err
+	//}
 	//err = registerdiagnosis.CreateService(s.helper).CreateMany(item.RegisterDiagnosis)
 	//if err != nil {
 	//	return err
@@ -48,15 +46,15 @@ func (s *Service) Update(item *models.Register) error {
 	}
 	item.SetIDForChildren()
 
-	registerGroupService := researchsection.CreateService(s.helper)
-	err = registerGroupService.UpsertMany(item.RegisterGroups)
-	if err != nil {
-		return err
-	}
-	err = registerGroupService.DeleteMany(item.RegisterGroupsForDelete)
-	if err != nil {
-		return err
-	}
+	//registerGroupService := researchsection.CreateService(s.helper)
+	//err = registerGroupService.UpsertMany(item.RegisterGroups)
+	//if err != nil {
+	//	return err
+	//}
+	//err = registerGroupService.DeleteMany(item.RegisterGroupsForDelete)
+	//if err != nil {
+	//	return err
+	//}
 
 	//registerDiagnosisService := registerdiagnosis.CreateService(s.helper)
 	//err = registerDiagnosisService.UpsertMany(item.RegisterDiagnosis)

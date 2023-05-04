@@ -35,8 +35,8 @@ type Patient struct {
 	//RegisterGroupsToPatient           RegisterGroupsToPatients `bun:"rel:has-many" json:"registerGroupsToPatient"`
 	//RegisterGroupsToPatientsForDelete []uuid.UUID              `bun:"-" json:"registerGroupsToPatientForDelete"`
 
-	RegisterToPatient          []*ResearchResult `bun:"rel:has-many" json:"registerToPatient"`
-	RegisterToPatientForDelete []uuid.UUID       `bun:"-" json:"registerToPatientForDelete"`
+	PatientsRegisters PatientsRegisters `bun:"rel:has-many" json:"patientsRegisters"`
+	//RegisterToPatientForDelete []uuid.UUID       `bun:"-" json:"registerToPatientForDelete"`
 
 	ChopScaleTests          ChopScaleTests `bun:"rel:has-many" json:"chopScaleTests"`
 	ChopScaleTestsForDelete []uuid.UUID    `bun:"-" json:"chopScaleTestsForDelete"`
@@ -116,7 +116,7 @@ func (item *Patient) SetIDForChildren() {
 			item.PatientDrugRegimen[i].PatientID = item.ID
 		}
 	}
-	if len(item.RegisterToPatient) > 0 {
+	if len(item.PatientsRegisters) > 0 {
 		//for i := range item.RegisterToPatient {
 		//	item.RegisterToPatient[i].PatientID = item.ID
 		//}

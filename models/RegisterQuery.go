@@ -92,19 +92,19 @@ func (item *RegisterQuery) writeData(xl *xlsxhelper.XlsxHelper) {
 		}
 	}
 
-	for patientNum, _ := range item.Register.RegisterToPatient {
-		//xl.Data = append(xl.Data, strconv.Itoa(patientNum+1), registerToPatient.Patient.Human.GetFullName())
-		//if item.WithAge {
-		//	xl.Data = append(xl.Data, strconv.Itoa(registerToPatient.Patient.Human.GetAge()))
-		//}
-		//item.RegisterQueryGroups.writeXlsxData(xl, registerToPatient.PatientID)
-		xl.WriteString(4+patientNum, 0, &xl.Data)
-		xl.Data = []string{}
-	}
+	//for patientNum, _ := range item.Register.RegisterToPatient {
+	//xl.Data = append(xl.Data, strconv.Itoa(patientNum+1), registerToPatient.Patient.Human.GetFullName())
+	//if item.WithAge {
+	//	xl.Data = append(xl.Data, strconv.Itoa(registerToPatient.Patient.Human.GetAge()))
+	//}
+	//item.RegisterQueryGroups.writeXlsxData(xl, registerToPatient.PatientID)
+	//xl.WriteString(4+patientNum, 0, &xl.Data)
+	//xl.Data = []string{}
+	//}
 }
 
 func (item *RegisterQuery) writeAggregates(xl *xlsxhelper.XlsxHelper) {
-	xl.StrCursor = 4 + len(item.Register.RegisterToPatient)
+	//xl.StrCursor = 4 + len(item.Register.RegisterToPatient)
 	if item.WithAge {
 		xl.WriteString(xl.StrCursor, 2, &[]string{strconv.Itoa(item.Register.GetPatientsAverageAge())})
 	}
@@ -114,8 +114,8 @@ func (item *RegisterQuery) writeAggregates(xl *xlsxhelper.XlsxHelper) {
 
 func (item *RegisterQuery) setStyle(xl *xlsxhelper.XlsxHelper) {
 	xl.Cursor = 3
-	height := 6 + len(item.Register.RegisterToPatient)
-	xl.SetBorder(height)
+	//height := 6 + len(item.Register.RegisterToPatient)
+	//xl.SetBorder(height)
 	item.RegisterQueryGroups.writeAggregates(xl)
 	//xl.AutofitAllColumns()
 }

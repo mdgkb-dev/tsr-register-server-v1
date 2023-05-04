@@ -1,7 +1,7 @@
 package registertopatient
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/registertopatient"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/registerspatients"
 
 	"github.com/gin-gonic/gin"
 )

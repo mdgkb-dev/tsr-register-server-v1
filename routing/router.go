@@ -16,15 +16,15 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/mkbitems"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientsregisters"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsrepresentatives"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearches"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
-	"mdgkb/tsr-tegister-server-v1/handlers/register"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertytouser"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerquery"
-	"mdgkb/tsr-tegister-server-v1/handlers/registertopatient"
+	"mdgkb/tsr-tegister-server-v1/handlers/registers"
 	"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
@@ -47,16 +47,16 @@ import (
 	mkbItemsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbitems"
 	patientDiagnosisRouter "mdgkb/tsr-tegister-server-v1/routing/patientdiagnosis"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
+	patientsRegistersRouter "mdgkb/tsr-tegister-server-v1/routing/patientsregisters"
 	patientsRepresentativesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsrepresentatives"
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
-	registerRouter "mdgkb/tsr-tegister-server-v1/routing/register"
 	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/registergroup"
 	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/registerproperty"
 	registerPropertyToUserRouter "mdgkb/tsr-tegister-server-v1/routing/registerpropertytouser"
 	registerQueryRouter "mdgkb/tsr-tegister-server-v1/routing/registerquery"
-	registerToPatientRouter "mdgkb/tsr-tegister-server-v1/routing/registertopatient"
+	registersRouter "mdgkb/tsr-tegister-server-v1/routing/registers"
 	representativeRouter "mdgkb/tsr-tegister-server-v1/routing/representative"
 	representativeTypesRouter "mdgkb/tsr-tegister-server-v1/routing/representativetypes"
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
@@ -82,9 +82,8 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
 	patientsRouter.Init(api.Group("/patients"), patients.CreateHandler(helper))
-	registerRouter.Init(api.Group("/registers"), register.CreateHandler(helper))
+	registersRouter.Init(api.Group("/registers"), registers.CreateHandler(helper))
 	researchesRouter.Init(api.Group("/researches"), researches.CreateHandler(helper))
-	registerToPatientRouter.Init(api.Group("/registers-to-patients"), registertopatient.CreateHandler(helper))
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
 	registerQueryRouter.Init(api.Group("/register-queries"), registerquery.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
@@ -100,6 +99,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 	researchesResultsRouter.Init(api.Group("/researches-results"), researchesresults.CreateHandler(helper))
 	patientsResearchesRouter.Init(api.Group("/patients-researches"), patientsresearches.CreateHandler(helper))
+	patientsRegistersRouter.Init(api.Group("/patients-registers"), patientsregisters.CreateHandler(helper))
 	patientDiagnosisRouter.Init(api.Group("/patient-diagnosis"), patientdiagnosis.CreateHandler(helper))
 	disabilitiesRouter.Init(api.Group("/disabilities"), disabilities.CreateHandler(helper))
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))

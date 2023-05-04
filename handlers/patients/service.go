@@ -8,7 +8,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescaletests"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
-	"mdgkb/tsr-tegister-server-v1/handlers/registertopatient"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -43,10 +42,6 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	err = patientdrugregimen.CreateService(s.helper).CreateMany(item.PatientDrugRegimen)
-	if err != nil {
-		return err
-	}
-	err = registertopatient.CreateService(s.helper).CreateMany(item.RegisterToPatient)
 	if err != nil {
 		return err
 	}
@@ -135,15 +130,6 @@ func (s *Service) Update(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-	registerToPatientService := registertopatient.CreateService(s.helper)
-	err = registerToPatientService.UpsertMany(item.RegisterToPatient)
-	if err != nil {
-		return err
-	}
-	err = registerToPatientService.DeleteMany(item.RegisterToPatientForDelete)
-	if err != nil {
-		return err
-	}
 
 	//registerGroupsToPatientsService := patientresearchsections.CreateService(s.helper)
 	//err = registerGroupsToPatientsService.UpsertMany(item.RegisterGroupsToPatient)
@@ -202,10 +188,6 @@ func (s *Service) Delete(id *string) error {
 		return err
 	}
 	err = patientdrugregimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
-	if err != nil {
-		return err
-	}
-	err = registertopatient.CreateService(s.helper).DeleteMany(patient.RegisterToPatientForDelete)
 	if err != nil {
 		return err
 	}

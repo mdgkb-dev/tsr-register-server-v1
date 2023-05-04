@@ -6,15 +6,15 @@ import (
 )
 
 type Register struct {
-	bun.BaseModel           `bun:"register,alias:register"`
-	ID                      uuid.UUID   `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name                    string      `json:"name"`
-	RegisterGroups          Researches  `bun:"rel:has-many" json:"registerGroups"`
-	RegisterGroupsForDelete []uuid.UUID `bun:"-" json:"registerGroupsForDelete"`
+	bun.BaseModel `bun:"register,alias:register"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name          string        `json:"name"`
+	//RegisterGroups          Researches  `bun:"rel:has-many" json:"registerGroups"`
+	//RegisterGroupsForDelete []uuid.UUID `bun:"-" json:"registerGroupsForDelete"`
 	//RegisterDiagnosis          []*RegisterDiagnosis `bun:"rel:has-many" json:"registerDiagnosis"`
-	RegisterDiagnosisForDelete []string `bun:"-" json:"registerDiagnosisForDelete"`
+	//RegisterDiagnosisForDelete []string `bun:"-" json:"registerDiagnosisForDelete"`
 
-	RegisterToPatient      []*ResearchResult `bun:"rel:has-many" json:"registerToPatient"`
+	PatientsRegisters      PatientsRegisters `bun:"rel:has-many" json:"patientsRegisters"`
 	RegisterToPatientCount int               `bun:"-" json:"registerToPatientCount"`
 }
 
@@ -32,10 +32,10 @@ func (item *Register) SetIDForChildren() {
 }
 
 func (item *Register) GetPatientsAverageAge() int {
-	sum := 0
+	//sum := 0
 	//for _, _ := range item.RegisterToPatient {
 	//	sum += p.Patient.Human.GetAge()
 	//}
-	res := sum / len(item.RegisterToPatient)
-	return res
+	//res := sum / len(item.RegisterToPatient)
+	return 0
 }
