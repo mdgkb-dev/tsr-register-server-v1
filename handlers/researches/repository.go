@@ -49,6 +49,9 @@ func (r *Repository) get(id string) (*models.Research, error) {
 		}).
 		Relation("Questions.QuestionExamples").
 		Relation("Questions.ValueType").
+		Relation("Questions.QuestionVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("question_variants.name")
+		}).
 		Relation("Questions.Children.ValueType").
 		//Relation("Questions.QuestionVariants").
 		Relation("Formulas.FormulaResults").

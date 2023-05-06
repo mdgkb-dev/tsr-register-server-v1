@@ -200,9 +200,15 @@ alter table representative rename to representatives;
 alter table patients_representatives alter column representative_type_id drop not null;
 
 
+alter table register_property_variants rename to question_variants;
+alter table question_variants rename column register_property_id to question_id;
 
 
 
+
+update answers a set filled = true
+where a.value_string != '' or a.value_number > 0 or a.value_date != '0001-01-01' or a.answer_variant_id is not null
+or exists(select from selected_answer_variants where answer_id = a.id);
 
 
 

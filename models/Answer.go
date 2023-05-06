@@ -26,6 +26,9 @@ type Answer struct {
 	Question   *Question     `bun:"rel:belongs-to" json:"question"`
 	QuestionID uuid.NullUUID `bun:"type:uuid" json:"questionId"`
 
+	QuestionVariant   *QuestionVariant `bun:"rel:belongs-to" json:"questionVariant"`
+	QuestionVariantID uuid.NullUUID    `bun:"type:uuid" json:"questionVariantId"`
+
 	SelectedAnswerVariants          SelectedAnswerVariants `bun:"rel:has-many" json:"selectedAnswerVariants"`
 	SelectedAnswerVariantsForDelete []uuid.UUID            `bun:"-" json:"selectedAnswerVariantsForDelete"`
 	//RegisterPropertiesToPatientsToFileInfos          RegisterPropertiesToPatientsToFileInfos `bun:"rel:has-many" json:"registerPropertiesToPatientsToFileInfos"`
