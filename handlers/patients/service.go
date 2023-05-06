@@ -162,35 +162,35 @@ func (s *Service) Update(item *models.Patient) error {
 }
 
 func (s *Service) Delete(id *string) error {
-	patient, err := s.repository.get(id, false)
-	if err != nil {
-		return err
-	}
-	patient.SetDeleteIDForChildren()
-	err = human.CreateService(s.helper).Delete(patient.HumanID)
-	if err != nil {
-		return err
-	}
-	err = representativetopatient.CreateService(s.helper).DeleteMany(patient.PatientsRepresentativesForDelete)
-	if err != nil {
-		return err
-	}
-	err = heightweight.CreateService(s.helper).DeleteMany(patient.HeightWeightForDelete)
-	if err != nil {
-		return err
-	}
-	err = chestcircumference.CreateService(s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
-	if err != nil {
-		return err
-	}
-	err = headcircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
-	if err != nil {
-		return err
-	}
-	err = patientdrugregimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
-	if err != nil {
-		return err
-	}
+	//patient, err := s.repository.get(id, false)
+	//if err != nil {
+	//	return err
+	//}
+	//patient.SetDeleteIDForChildren()
+	//err = human.CreateService(s.helper).Delete(patient.HumanID)
+	//if err != nil {
+	//	return err
+	//}
+	//err = representativetopatient.CreateService(s.helper).DeleteMany(patient.PatientsRepresentativesForDelete)
+	//if err != nil {
+	//	return err
+	//}
+	//err = heightweight.CreateService(s.helper).DeleteMany(patient.HeightWeightForDelete)
+	//if err != nil {
+	//	return err
+	//}
+	//err = chestcircumference.CreateService(s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
+	//if err != nil {
+	//	return err
+	//}
+	//err = headcircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
+	//if err != nil {
+	//	return err
+	//}
+	//err = patientdrugregimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
+	//if err != nil {
+	//	return err
+	//}
 	//err = registerPropertyToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertyToPatientForDelete)
 	//if err != nil {
 	//	return err
@@ -199,7 +199,7 @@ func (s *Service) Delete(id *string) error {
 	//if err != nil {
 	//	return err
 	//}
-	err = s.repository.delete(id)
+	err := s.repository.delete(id)
 	if err != nil {
 		return err
 	}

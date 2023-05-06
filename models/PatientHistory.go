@@ -1,16 +1,36 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
 type PatientHistory struct {
-	bun.BaseModel    `bun:"patient_histories,alias:patient_histories"`
-	PatientHistoryID uuid.UUID     `bun:"type:uuid,nullzero,notnull,default:uuid_generate_v4()" json:"patientHistoryId" `
-	History          *History      `bun:"rel:belongs-to" json:"history"`
-	HistoryID        uuid.UUID     `bun:"type:uuid" json:"historyId"`
-	HumanHistory     *HumanHistory `bun:"rel:belongs-to,join:human_history_id=human_history_id" json:"human"`
-	HumanHistoryID   uuid.UUID     `bun:"type:uuid" json:"humanId"`
-	Patient
+	bun.BaseModel `bun:"patient_histories,alias:patient_histories"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Patient       *Patient      `bun:"rel:belongs-to" json:"patients"`
+	PatientID     uuid.NullUUID `bun:"type:uuid" json:"patientId"`
+	User          *User         `bun:"rel:belongs-to" json:"user"`
+	UserID        uuid.NullUUID `bun:"type:uuid" json:"userId"`
+	CreatedAt     time.Time     `bun:",nullzero,notnull,default:current_timestamp" json:"createdAt"`
+
+	ActionType PatientHistoryActionType `json:"actionType"`
+	ObjectCopy map[string]interface{}   `json:"objectCopy"`
 }
+
+type PatientHistories []*PatientHistory
+
+type PatientHistoriesWithCount struct {
+	PatientHistories PatientHistories `json:"items"`
+	Count            int              `json:"count"`
+}
+
+type PatientHistoryActionType string
+
+const (
+	ActionCreate PatientHistoryActionType = "create"
+	ActionUpdate PatientHistoryActionType = "update"
+	ActionDelete PatientHistoryActionType = "delete"
+)

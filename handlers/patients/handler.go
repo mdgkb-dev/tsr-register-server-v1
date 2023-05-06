@@ -59,14 +59,14 @@ func (h *Handler) Delete(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	item, err := h.service.Get(&id, true)
+	_, err = h.service.Get(&id, true)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	err = h.historyService.Create(item, models.RequestTypeDelete)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
+	//err = h.historyService.Create(item, models.RequestTypeDelete)
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
 	c.JSON(http.StatusOK, gin.H{})
 }
 
@@ -93,22 +93,4 @@ func (h *Handler) Update(c *gin.Context) {
 	//	return
 	//}
 	c.JSON(http.StatusOK, item)
-}
-
-func (h *Handler) GetAllHistory(c *gin.Context) {
-	id := c.Param("id")
-	items, err := h.historyService.GetAll(&id)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.JSON(http.StatusOK, items)
-}
-
-func (h *Handler) GetHistory(c *gin.Context) {
-	id := c.Param("id")
-	items, err := h.historyService.Get(&id)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.JSON(http.StatusOK, items)
 }

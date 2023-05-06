@@ -1,56 +1,28 @@
-package patients
+package patienthistories
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-
-	"mdgkb/tsr-tegister-server-v1/models"
-	"mime/multipart"
-
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
+	basehandler.IHandler
 }
 
 type IService interface {
-	setQueryFilter(*gin.Context) error
-
-	GetAll() (models.PatientsWithCount, error)
-	GetOnlyNames() (models.PatientsWithCount, error)
-	Get(*string, bool) (*models.Patient, error)
-	Create(*models.Patient) error
-	Update(*models.Patient) error
-	Delete(*string) error
-
-	GetBySearch(*string) ([]*models.Patient, error)
-	GetDisabilities() (models.PatientsWithCount, error)
+	basehandler.IService[models.PatientHistory, models.PatientHistories, models.PatientHistoriesWithCount]
 }
 
 type IRepository interface {
-	setQueryFilter(*gin.Context) error
-	db() *bun.DB
-	create(*models.Patient) error
-	getAll() (models.PatientsWithCount, error)
-	get(*string, bool) (*models.Patient, error)
-	update(*models.Patient) error
-	delete(*string) error
-
-	getOnlyNames() (models.PatientsWithCount, error)
-	getBySearch(*string) ([]*models.Patient, error)
-	getDisabilities() (models.PatientsWithCount, error)
+	basehandler.IRepository[models.PatientHistory, models.PatientHistories, models.PatientHistoriesWithCount]
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.Patient, map[string][]*multipart.FileHeader) error
+	basehandler.IFilesService
 }
 
 type Handler struct {
@@ -79,6 +51,11 @@ func CreateHandler(helper *helper.Helper) *Handler {
 	service := NewService(repo, helper)
 	filesService := NewFilesService(helper)
 	return NewHandler(service, filesService, helper)
+}
+
+func CreateService(helper *helper.Helper) *Service {
+	repo := NewRepository(helper)
+	return NewService(repo, helper)
 }
 
 // NewHandler constructor

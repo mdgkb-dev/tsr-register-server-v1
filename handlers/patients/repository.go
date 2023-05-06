@@ -40,9 +40,8 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("PatientsRepresentatives.Representative.Human.Contact").
 		Relation("PatientsRepresentatives.RepresentativeType").
 		Relation("PatientDiagnosis.MkbItem").
-		//Relation("PatientDiagnosis.MkbSubDiagnosis").
-		//Relation("PatientDiagnosis.MkbConcreteDiagnosis").
-		//Relation("ResearchResult.ResearchesPool").
+		Relation("PatientsRegisters.Register").
+		Relation("PatientsRegisters.User").
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
 	//Join("JOIN regions_users ON patients.region_id = regions_users.region_id AND regions_users.user_id = ?")
@@ -74,6 +73,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
+		Relation("PatientHistories.User").
 
 		//Relation("PatientDiagnosis.Anamnesis").
 		//Relation("ResearchResult.ResearchesPool").

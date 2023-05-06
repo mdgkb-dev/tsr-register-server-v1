@@ -49,10 +49,13 @@ type Patient struct {
 
 	PatientsResearches          PatientsResearches `bun:"rel:has-many" json:"patientsResearches"`
 	PatientsResearchesForDelete []uuid.UUID        `bun:"-" json:"patientsResearchesForDelete"`
+	PatientHistories            PatientHistories   `bun:"rel:has-many" json:"patientHistories"`
+	FullName                    string             `bun:"-" json:"fullName"`
+	IsMale                      string             `bun:"-" json:"isMale"`
+	DateBirth                   string             `bun:"-" json:"dateBirth"`
 
-	FullName  string `bun:"-" json:"fullName"`
-	IsMale    string `bun:"-" json:"isMale"`
-	DateBirth string `bun:"-" json:"dateBirth"`
+	CreatedBy   *User         `bun:"rel:belongs-to" json:"createdBy"`
+	CreatedByID uuid.NullUUID `bun:"type:uuid" json:"createdById"`
 }
 
 type Patients []*Patient

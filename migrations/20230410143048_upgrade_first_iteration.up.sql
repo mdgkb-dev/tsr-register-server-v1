@@ -85,7 +85,9 @@ create table patients_researches_pools
 
 alter table register_group rename to researches;
 alter table researches rename column register_group_order to item_order;
+
 alter table researches drop constraint register_group_register_id_fkey;
+
 
 create table patients_researches
 (
@@ -156,6 +158,8 @@ alter table register_property_set_to_patient drop  constraint "FK_8281318758557d
 alter table register_property_set_to_patient add constraint "FK_8281318758557dfc2a1fd67f090" foreign key (answer_variant_id) references answer_variants;
 alter table register_property_set_to_patient rename to selected_answer_variants;
 alter table selected_answer_variants add answer_id uuid default uuid_generate_v4();
+
+
 
 
 alter table answer_comments     drop constraint register_property_others_register_property_radio_id_fkey;

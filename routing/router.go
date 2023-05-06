@@ -15,6 +15,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkbitems"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
+	"mdgkb/tsr-tegister-server-v1/handlers/patienthistories"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsregisters"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsrepresentatives"
@@ -46,6 +47,7 @@ import (
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbItemsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbitems"
 	patientDiagnosisRouter "mdgkb/tsr-tegister-server-v1/routing/patientdiagnosis"
+	patientHistoriesRouter "mdgkb/tsr-tegister-server-v1/routing/patienthistories"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
 	patientsRegistersRouter "mdgkb/tsr-tegister-server-v1/routing/patientsregisters"
 	patientsRepresentativesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsrepresentatives"
@@ -106,4 +108,5 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	humansRouter.Init(api.Group("/humans"), humans.CreateHandler(helper))
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))
+	patientHistoriesRouter.Init(api.Group("/patient-histories"), patienthistories.CreateHandler(helper))
 }

@@ -12,6 +12,7 @@ type Research struct {
 	Questions          Questions     `bun:"rel:has-many" json:"questions"`
 	QuestionsForDelete []uuid.UUID   `bun:"-" json:"questionsForDelete"`
 	WithDates          bool          `json:"withDates"`
+	WithScores         bool          `json:"withScores"`
 
 	ResearchResults ResearchResults `bun:"rel:has-many" json:"researchResults"`
 
