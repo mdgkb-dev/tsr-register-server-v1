@@ -73,7 +73,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
-		Relation("PatientHistories.User").
+		//Relation("PatientHistories.User").
 
 		//Relation("PatientDiagnosis.Anamnesis").
 		//Relation("ResearchResult.ResearchesPool").

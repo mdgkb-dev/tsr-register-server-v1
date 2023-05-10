@@ -18,11 +18,6 @@ func (s *Service) Create(item *models.Representative) error {
 	if err != nil {
 		return err
 	}
-	item.SetIDForChildren()
-	err = representativetopatient.CreateService(s.helper).CreateMany(item.PatientsRepresentatives)
-	if err != nil {
-		return err
-	}
 	return err
 }
 
