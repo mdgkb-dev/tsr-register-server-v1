@@ -33,8 +33,8 @@ func (r *Repository) getAll() (item models.RepresentativesWithCount, err error) 
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.FileInfoToDocument.FileInfo").
 		Relation("Human.Contact").
-		Relation("PatientRepresentative.Patient.Human").
-		Relation("PatientRepresentative.RepresentativeType")
+		Relation("PatientsRepresentatives.Patient.Human").
+		Relation("PatientsRepresentatives.RepresentativeType")
 	//Order("human.surname")
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)

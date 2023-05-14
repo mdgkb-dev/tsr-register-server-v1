@@ -4,6 +4,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/anamneses"
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
+	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
+	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drug"
@@ -36,6 +38,8 @@ import (
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
+	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
+	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsTemplates"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
 	drugRouter "mdgkb/tsr-tegister-server-v1/routing/drug"
@@ -109,4 +113,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))
 	patientHistoriesRouter.Init(api.Group("/patient-histories"), patienthistories.CreateHandler(helper))
+	commissionsTemplatesRouter.Init(api.Group("/commissions-templates"), commissionstemplates.CreateHandler(helper))
+	commissionsRouter.Init(api.Group("/commissions"), commissions.CreateHandler(helper))
 }

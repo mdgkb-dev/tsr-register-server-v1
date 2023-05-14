@@ -36,6 +36,7 @@ type Patient struct {
 	//RegisterGroupsToPatientsForDelete []uuid.UUID              `bun:"-" json:"registerGroupsToPatientForDelete"`
 
 	PatientsRegisters PatientsRegisters `bun:"rel:has-many" json:"patientsRegisters"`
+	Commissions       Commissions       `bun:"rel:has-many" json:"commissions"`
 	//RegisterToPatientForDelete []uuid.UUID       `bun:"-" json:"registerToPatientForDelete"`
 
 	ChopScaleTests          ChopScaleTests `bun:"rel:has-many" json:"chopScaleTests"`
