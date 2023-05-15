@@ -21,7 +21,7 @@ create table commissions
 
 alter table commissions add number serial;
 create unique index commissions_number_uindex on commissions (number);
-
+alter table commissions add patient_diagnosis_id uuid;
 
 
 create table doctors
@@ -34,18 +34,18 @@ create table doctors
 create table commissions_doctors
 (
     id   uuid default uuid_generate_v4() not null primary key,
-    commission_id uuid not null references commissions,
-    doctor_id uuid not null references doctors,
-    doctor_role varchar,
+    commission_id uuid not null references commissions on delete cascade,
+    doctor_id uuid not null references doctors on delete cascade,
+    role varchar,
     item_order int default 0
 );
 
 create table commissions_doctors_templates
 (
     id   uuid default uuid_generate_v4() not null primary key,
-    commission_template_id uuid not null references commissions_templates,
-    doctor_id uuid not null references doctors,
-    doctor_role varchar,
+    commission_template_id uuid not null references commissions_templates on delete cascade,
+    doctor_id uuid not null references doctors on delete cascade,
+    role varchar,
     item_order int default 0
 );
 
@@ -93,7 +93,7 @@ values  ('97bc5bb2-f419-45fd-b638-713ab5d83202', 'Л.В.Дымнова', null),
 
 
 
-insert into public.commissions_doctors_templates (id, commission_template_id, doctor_id, doctor_role, item_order)
+insert into public.commissions_doctors_templates (id, commission_template_id, doctor_id, role, item_order)
 values  ('44fc0442-f056-4744-b4d4-2def83e7162e', 'd49cafcc-3736-44d3-960b-285d4cb1c9d0', '8626b62d-f150-4819-845e-b72db78122a3', 'Председатель', 0),
         ('891ad973-0da7-4889-aaa8-dd1fe91d36a5', 'd49cafcc-3736-44d3-960b-285d4cb1c9d0', '0fd6506d-7a93-4075-bac7-6baa2c8521bf', 'Зам.председателя', 1),
         ('0138a013-6ae0-4456-ba2c-47559bd7d90d', 'd49cafcc-3736-44d3-960b-285d4cb1c9d0', '97bc5bb2-f419-45fd-b638-713ab5d83202', 'Секретарь', 2),

@@ -73,6 +73,9 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
+		Relation("Commissions", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("commissions.number")
+		}).
 		Relation("Commissions.CommissionsDoctors.Doctor").
 		//Relation("PatientHistories.User").
 

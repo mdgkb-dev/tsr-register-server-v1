@@ -1,9 +1,9 @@
-package drug
+package doctors
 
 import (
-	"github.com/gin-gonic/gin"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/doctors"
 
-	handler "mdgkb/tsr-tegister-server-v1/handlers/drug"
+	"github.com/gin-gonic/gin"
 )
 
 // Init func

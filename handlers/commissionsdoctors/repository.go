@@ -16,7 +16,7 @@ func (r *Repository) create(item *models.CommissionDoctor) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() (items []*models.CommissionDoctor, err error) {
+func (r *Repository) getAll() (items models.CommissionsDoctors, err error) {
 	err = r.db().NewSelect().Model(&items).Scan(r.ctx)
 	return items, err
 }

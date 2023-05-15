@@ -158,9 +158,9 @@ func (item *Patient) SetDeleteIDForChildren() {
 	for i := range item.Disabilities {
 		item.DisabilitiesForDelete = append(item.DisabilitiesForDelete, item.Disabilities[i].ID)
 	}
-	for i := range item.PatientDiagnosis {
-		item.PatientDiagnosisForDelete = append(item.PatientDiagnosisForDelete, item.PatientDiagnosis[i].ID)
-	}
+	//for i := range item.PatientDiagnosis {
+	//	item.PatientDiagnosisForDelete = append(item.PatientDiagnosisForDelete, item.PatientDiagnosis[i].)
+	//}
 	for i := range item.PatientDrugRegimen {
 		item.PatientDrugRegimenForDelete = append(item.PatientDrugRegimenForDelete, item.PatientDrugRegimen[i].ID)
 	}

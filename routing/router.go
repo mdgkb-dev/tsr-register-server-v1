@@ -5,10 +5,12 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
+	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
+	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
-	"mdgkb/tsr-tegister-server-v1/handlers/drug"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugs"
 	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescalequestions"
@@ -39,10 +41,12 @@ import (
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
-	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsTemplates"
+	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
+	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionstemplates"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
+	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
-	drugRouter "mdgkb/tsr-tegister-server-v1/routing/drug"
+	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
 	fileInfoRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfo"
 	hmfseScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/hmfsescalequestions"
@@ -57,9 +61,8 @@ import (
 	patientsRepresentativesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsrepresentatives"
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
+	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
-	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/registergroup"
-	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/registerproperty"
 	registerPropertyToUserRouter "mdgkb/tsr-tegister-server-v1/routing/registerpropertytouser"
 	registerQueryRouter "mdgkb/tsr-tegister-server-v1/routing/registerquery"
 	registersRouter "mdgkb/tsr-tegister-server-v1/routing/registers"
@@ -68,6 +71,7 @@ import (
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
 	researchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/researchespools"
 	researchesResultsRouter "mdgkb/tsr-tegister-server-v1/routing/researchesresults"
+	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/researchsection"
 	searchRouter "mdgkb/tsr-tegister-server-v1/routing/search"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
 
@@ -82,7 +86,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	api := r.Group("/api/v1")
 	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documenttypes.CreateHandler(helper))
-	drugRouter.Init(api.Group("/drugs"), drug.CreateHandler(helper))
+	drugsRouter.Init(api.Group("/drugs"), drugs.CreateHandler(helper))
 	fileInfoRouter.Init(api.Group("/files-info"), fileinfos.CreateHandler(helper))
 	insuranceCompanyRouter.Init(api.Group("/insurance-companies"), insurancecompany.CreateHandler(helper))
 	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
@@ -115,4 +119,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientHistoriesRouter.Init(api.Group("/patient-histories"), patienthistories.CreateHandler(helper))
 	commissionsTemplatesRouter.Init(api.Group("/commissions-templates"), commissionstemplates.CreateHandler(helper))
 	commissionsRouter.Init(api.Group("/commissions"), commissions.CreateHandler(helper))
+	commissionsDoctorsRouter.Init(api.Group("/commissions-doctors"), commissionsdoctors.CreateHandler(helper))
+	doctorsRouter.Init(api.Group("/doctors"), doctors.CreateHandler(helper))
 }

@@ -10,7 +10,7 @@ func (s *Service) Create(item *models.CommissionDoctor) error {
 	return s.repository.create(item)
 }
 
-func (s *Service) GetAll() ([]*models.CommissionDoctor, error) {
+func (s *Service) GetAll() (models.CommissionsDoctors, error) {
 	items, err := s.repository.getAll()
 	if err != nil {
 		return nil, err

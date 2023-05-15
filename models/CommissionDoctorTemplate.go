@@ -13,7 +13,7 @@ type CommissionDoctorTemplate struct {
 	DoctorID             uuid.NullUUID       `bun:"type:uuid" json:"doctorId"`
 	Doctor               *Doctor             `bun:"rel:belongs-to" json:"doctor"`
 	Role                 string              `json:"role"`
-	Order                string              `bun:"item_order" json:"order"`
+	Order                int                 `bun:"item_order" json:"order"`
 }
 
 type CommissionsDoctorsTemplates []*CommissionDoctorTemplate

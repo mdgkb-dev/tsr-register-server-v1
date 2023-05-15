@@ -23,6 +23,11 @@ type Drug struct {
 	DrugsDiagnosis          DrugsDiagnosis `bun:"rel:has-many" json:"drugsDiagnosis"`
 	DrugsDiagnosisForDelete []uuid.UUID    `bun:"-" json:"drugsDiagnosisForDelete"`
 }
+type Drugs []*Drug
+type DrugsWithCount struct {
+	Drugs Drugs `json:"items"`
+	Count int   `json:"count"`
+}
 
 func (item *Drug) SetIDForChildren() {
 	if len(item.DrugRegimens) > 0 {

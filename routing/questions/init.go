@@ -1,7 +1,7 @@
-package commissions
+package questions
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/commissions"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/questions"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,9 +9,10 @@ import (
 // Init func
 func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.GET("", h.GetAll)
-	r.GET("/xlsx", h.GetXlsx)
 	r.GET("/:id", h.Get)
-	r.POST("", h.Create)
+	r.POST("/", h.Create)
 	r.DELETE("/:id", h.Delete)
 	r.PUT("/:id", h.Update)
+
+	r.GET("/value-types", h.GetValueTypes)
 }

@@ -20,7 +20,7 @@ type IHandler interface {
 }
 
 type IService interface {
-	GetAll() ([]*models.CommissionDoctor, error)
+	GetAll() (models.CommissionsDoctors, error)
 	Get(*string) (*models.CommissionDoctor, error)
 	Create(*models.CommissionDoctor) error
 	Update(*models.CommissionDoctor) error
@@ -33,7 +33,7 @@ type IService interface {
 type IRepository interface {
 	db() *bun.DB
 	create(*models.CommissionDoctor) error
-	getAll() ([]*models.CommissionDoctor, error)
+	getAll() (models.CommissionsDoctors, error)
 	get(*string) (*models.CommissionDoctor, error)
 	update(*models.CommissionDoctor) error
 	delete(*string) error
