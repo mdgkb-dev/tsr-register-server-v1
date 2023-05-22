@@ -10,9 +10,12 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugarrives"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugs"
 	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
+	"mdgkb/tsr-tegister-server-v1/handlers/fundcontracts"
+	"mdgkb/tsr-tegister-server-v1/handlers/fundcouncils"
 	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompany"
@@ -46,9 +49,12 @@ import (
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
+	drugarrivesRouter "mdgkb/tsr-tegister-server-v1/routing/drugarrives"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
 	fileInfoRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfo"
+	fundcontractsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcontracts"
+	fundcouncilsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcouncils"
 	hmfseScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/hmfsescalequestions"
 	humansRouter "mdgkb/tsr-tegister-server-v1/routing/humans"
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insurancecompany"
@@ -121,4 +127,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	commissionsRouter.Init(api.Group("/commissions"), commissions.CreateHandler(helper))
 	commissionsDoctorsRouter.Init(api.Group("/commissions-doctors"), commissionsdoctors.CreateHandler(helper))
 	doctorsRouter.Init(api.Group("/doctors"), doctors.CreateHandler(helper))
+	drugarrivesRouter.Init(api.Group("/drug-arrives"), drugarrives.CreateHandler(helper))
+	fundcontractsRouter.Init(api.Group("/fund-contracts"), fundcontracts.CreateHandler(helper))
+	fundcouncilsRouter.Init(api.Group("/fund-councils"), fundcouncils.CreateHandler(helper))
 }

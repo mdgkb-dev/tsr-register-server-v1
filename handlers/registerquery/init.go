@@ -20,22 +20,22 @@ type IHandler interface {
 }
 
 type IService interface {
-	Create(*models.RegisterQuery) error
-	GetAll() (models.RegisterQueries, error)
-	Get(string) (*models.RegisterQuery, error)
-	Update(*models.RegisterQuery) error
+	Create(*models.ResearchQuery) error
+	GetAll() (models.ResearchQueries, error)
+	Get(string) (*models.ResearchQuery, error)
+	Update(*models.ResearchQuery) error
 	Delete(string) error
-	Execute(*models.RegisterQuery) error
+	Execute(*models.ResearchQuery) error
 }
 
 type IRepository interface {
 	db() *bun.DB
-	create(*models.RegisterQuery) error
-	getAll() (models.RegisterQueries, error)
-	get(string) (*models.RegisterQuery, error)
-	update(*models.RegisterQuery) error
+	create(*models.ResearchQuery) error
+	getAll() (models.ResearchQueries, error)
+	get(string) (*models.ResearchQuery, error)
+	update(*models.ResearchQuery) error
 	delete(string) error
-	execute(*models.RegisterQuery) error
+	execute(*models.ResearchQuery) error
 }
 
 type Handler struct {

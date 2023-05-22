@@ -21,8 +21,8 @@ const (
 	NoData string = "Нет данных"
 )
 
-func (item AggregateType) GetAggregatedPercentage(aggregatedValues map[string]float64) RegisterQueryPercentages {
-	r := make(RegisterQueryPercentages, 0)
+func (item AggregateType) GetAggregatedPercentage(aggregatedValues map[string]float64) ResearchQueryPercentages {
+	r := make(ResearchQueryPercentages, 0)
 	sum := float64(0)
 	for _, v := range aggregatedValues {
 		sum += v
@@ -30,14 +30,14 @@ func (item AggregateType) GetAggregatedPercentage(aggregatedValues map[string]fl
 	if item == AggregateNone || item == "" || item == AggregateExisting {
 		for k, v := range aggregatedValues {
 			perc := v * 100 / sum
-			r = append(r, &RegisterQueryPercentage{k, perc})
+			r = append(r, &ResearchQueryPercentage{k, perc})
 		}
 		sort.Slice(r, func(i, j int) bool {
 			return r[i].Value > r[j].Value
 		})
 	}
 	if item == AggregateAverage {
-		r = append(r, &RegisterQueryPercentage{Key: "Среднее значение", Value: sum / float64(len(aggregatedValues))})
+		r = append(r, &ResearchQueryPercentage{Key: "Среднее значение", Value: sum / float64(len(aggregatedValues))})
 	}
 	return r
 }

@@ -20,7 +20,7 @@ type IXlsxService interface {
 }
 
 type IService interface {
-	GetRegisterQuery(id string) (*models.RegisterQuery, error)
+	GetRegisterQuery(id string) (*models.ResearchQuery, error)
 }
 
 type IRepository interface {

@@ -5,7 +5,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
-func (s *Service) Create(query *models.RegisterQuery) error {
+func (s *Service) Create(query *models.ResearchQuery) error {
 	err := s.repository.create(query)
 
 	if err != nil {
@@ -13,11 +13,11 @@ func (s *Service) Create(query *models.RegisterQuery) error {
 	}
 
 	query.SetIDForChildren()
-	err = registerquerytoregisterproperty.CreateService(s.helper).CreateMany(query.RegisterQueryToRegisterProperty)
+	err = registerquerytoregisterproperty.CreateService(s.helper).CreateMany(query.ResearchQueriesQuestions)
 	return err
 }
 
-func (s *Service) GetAll() (models.RegisterQueries, error) {
+func (s *Service) GetAll() (models.ResearchQueries, error) {
 	queries, err := s.repository.getAll()
 
 	if err != nil {
@@ -27,7 +27,7 @@ func (s *Service) GetAll() (models.RegisterQueries, error) {
 	return queries, nil
 }
 
-func (s *Service) Get(id string) (*models.RegisterQuery, error) {
+func (s *Service) Get(id string) (*models.ResearchQuery, error) {
 	query, err := s.repository.get(id)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (s *Service) Get(id string) (*models.RegisterQuery, error) {
 	return query, nil
 }
 
-func (s *Service) Update(query *models.RegisterQuery) error {
+func (s *Service) Update(query *models.ResearchQuery) error {
 	err := s.repository.update(query)
 
 	if err != nil {
@@ -44,13 +44,13 @@ func (s *Service) Update(query *models.RegisterQuery) error {
 
 	query.SetIDForChildren()
 	registerQueryToRegisterPropertyService := registerquerytoregisterproperty.CreateService(s.helper)
-	err = registerQueryToRegisterPropertyService.UpsertMany(query.RegisterQueryToRegisterProperty)
+	err = registerQueryToRegisterPropertyService.UpsertMany(query.ResearchQueriesQuestions)
 
 	if err != nil {
 		return err
 	}
 
-	err = registerQueryToRegisterPropertyService.DeleteMany(query.RegisterQueryToRegisterPropertyForDelete)
+	//err = registerQueryToRegisterPropertyService.DeleteMany(query.RegisterQueryToRegisterPropertyForDelete)
 	return err
 }
 
@@ -58,7 +58,7 @@ func (s *Service) Delete(id string) error {
 	return s.repository.delete(id)
 }
 
-func (s *Service) Execute(registerQuery *models.RegisterQuery) error {
+func (s *Service) Execute(registerQuery *models.ResearchQuery) error {
 	err := s.repository.execute(registerQuery)
 	if err != nil {
 		return err

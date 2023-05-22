@@ -11,12 +11,12 @@ func (r *Repository) db() *bun.DB {
 	return r.helper.DB.DB
 }
 
-func (r *Repository) create(query *models.RegisterQuery) (err error) {
+func (r *Repository) create(query *models.ResearchQuery) (err error) {
 	_, err = r.db().NewInsert().Model(query).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
+func (r *Repository) getAll() (queries models.ResearchQueries, err error) {
 	err = r.db().NewSelect().
 		Model(&queries).
 		Relation("ResearchesPool").
@@ -24,25 +24,25 @@ func (r *Repository) getAll() (queries models.RegisterQueries, err error) {
 	return queries, err
 }
 
-func (r *Repository) get(id string) (*models.RegisterQuery, error) {
-	query := models.RegisterQuery{}
+func (r *Repository) get(id string) (*models.ResearchQuery, error) {
+	query := models.ResearchQuery{}
 	err := r.db().NewSelect().
 		Model(&query).
-		Relation("RegisterQueryGroups", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("ResearchQueryGroups", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_query_groups.item_order")
 		}).
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("register_query_group_properties.item_order")
 		}).
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.ValueType").
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.RegisterPropertySets.RegisterPropertyOthers").
-		Relation("RegisterQueryGroups.RegisterQueryGroupProperties.Question.AnswerVariants.RegisterPropertyOthers").
-		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
+		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.ValueType").
+		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.RegisterPropertySets.RegisterPropertyOthers").
+		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.AnswerVariants.RegisterPropertyOthers").
+		Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient.full_name")
 		}).
-		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.PatientAnswerComments").
-		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Answer.Question.ValueType").
-		Relation("RegisterQueryGroups.Researches.RegisterGroupsToPatients.Answer").
+		Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.PatientAnswerComments").
+		Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.Answer.Question.ValueType").
+		Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.Answer").
 		Relation("ResearchesPool.ResearchResult.Patient", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("patient.full_name")
 		}).
@@ -59,17 +59,17 @@ func (r *Repository) get(id string) (*models.RegisterQuery, error) {
 	return &query, err
 }
 
-func (r *Repository) update(query *models.RegisterQuery) (err error) {
+func (r *Repository) update(query *models.ResearchQuery) (err error) {
 	_, err = r.db().NewUpdate().Model(query).Where("id = ?", query.ID).Exec(r.ctx)
 	return err
 }
 
 func (r *Repository) delete(id string) (err error) {
-	_, err = r.db().NewDelete().Model(&models.RegisterQuery{}).Where("id = ?", id).Exec(r.ctx)
+	_, err = r.db().NewDelete().Model(&models.ResearchQuery{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) execute(registerQuery *models.RegisterQuery) error {
+func (r *Repository) execute(registerQuery *models.ResearchQuery) error {
 	fmt.Println(registerQuery)
 	return nil
 }

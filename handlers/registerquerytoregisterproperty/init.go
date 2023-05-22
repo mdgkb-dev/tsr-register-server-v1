@@ -8,12 +8,12 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.RegisterQueryToRegisterProperty) error
+	CreateMany([]*models.ResearchQueryQuestion) error
 }
 
 type IRepository interface {
-	createMany([]*models.RegisterQueryToRegisterProperty) error
-	upsertMany([]*models.RegisterQueryToRegisterProperty) error
+	createMany([]*models.ResearchQueryQuestion) error
+	upsertMany([]*models.ResearchQueryQuestion) error
 	deleteMany([]string) error
 }
 

@@ -20,7 +20,7 @@ type AnswerVariant struct {
 	//RegisterPropertyOthersForDelete []uuid.UUID            `bun:"-" json:"registerPropertyOthersForDelete"`
 
 	AggregatedValues         map[string]float64       `bun:"-" json:"aggregatedValues"`
-	RegisterQueryPercentages RegisterQueryPercentages `bun:"-" `
+	RegisterQueryPercentages ResearchQueryPercentages `bun:"-" `
 }
 
 type AnswerVariants []*AnswerVariant
@@ -72,7 +72,7 @@ func (item *AnswerVariant) GetAggregatedPercentage() {
 	sum := float64(0)
 	for k, v := range item.AggregatedValues {
 		sum += v
-		item.RegisterQueryPercentages = append(item.RegisterQueryPercentages, &RegisterQueryPercentage{k, v})
+		item.RegisterQueryPercentages = append(item.RegisterQueryPercentages, &ResearchQueryPercentage{k, v})
 	}
 	sort.Slice(item.RegisterQueryPercentages, func(i, j int) bool {
 		return item.RegisterQueryPercentages[i].Value > item.RegisterQueryPercentages[j].Value

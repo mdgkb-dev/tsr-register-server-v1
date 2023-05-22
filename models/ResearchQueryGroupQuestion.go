@@ -8,43 +8,46 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type RegisterQueryGroupProperty struct {
+type ResearchQueryGroupQuestion struct {
 	bun.BaseModel        `bun:"register_query_group_properties,alias:register_query_group_properties"`
 	ID                   uuid.UUID           `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
-	RegisterQueryGroupID uuid.UUID           `bun:"type:uuid" json:"registerQueryGroupId"`
-	RegisterQueryGroup   *RegisterQueryGroup `bun:"rel:belongs-to" json:"registerQueryGroup"`
+	ResearchQueryGroupID uuid.NullUUID       `bun:"type:uuid" json:"researchQueryGroupId"`
+	ResearchQueryGroup   *ResearchQueryGroup `bun:"rel:belongs-to" json:"researchQueryGroup"`
 
-	RegisterPropertyID uuid.UUID `bun:"type:uuid" json:"registerPropertyId"`
-	RegisterProperty   *Question `bun:"rel:belongs-to" json:"registerProperty"`
+	ResearchResultID uuid.UUID       `bun:"type:uuid" json:"researchResultId"`
+	ResearchResult   *ResearchResult `bun:"rel:belongs-to" json:"researchResult"`
+
+	Question   *Question `bun:"rel:belongs-to" json:"question"`
+	QuestionID uuid.UUID `bun:"type:uuid" json:"questionId"`
 
 	Order                    int                      `bun:"item_order" json:"order"`
 	AggregatedValues         map[string]float64       `bun:"-" json:"aggregatedValues"`
-	RegisterQueryPercentages RegisterQueryPercentages `bun:"-" `
+	ResearchQueryPercentages ResearchQueryPercentages `bun:"-" `
 	EveryRadioSet            bool                     `json:"everyRadioSet"`
 
 	AggregateType AggregateType `json:"aggregateType"`
 }
 
-type RegisterQueryGroupProperties []*RegisterQueryGroupProperty
+type ResearchQueryGroupQuestions []*ResearchQueryGroupQuestion
 
-func (item *RegisterQueryGroupProperty) GetAggregatedPercentage() {
+func (item *ResearchQueryGroupQuestion) GetAggregatedPercentage() {
 	sum := float64(0)
 	for k, v := range item.AggregatedValues {
 		sum += v
-		item.RegisterQueryPercentages = append(item.RegisterQueryPercentages, &RegisterQueryPercentage{k, v})
+		item.ResearchQueryPercentages = append(item.ResearchQueryPercentages, &ResearchQueryPercentage{k, v})
 	}
-	sort.Slice(item.RegisterQueryPercentages, func(i, j int) bool {
-		return item.RegisterQueryPercentages[i].Value > item.RegisterQueryPercentages[j].Value
+	sort.Slice(item.ResearchQueryPercentages, func(i, j int) bool {
+		return item.ResearchQueryPercentages[i].Value > item.ResearchQueryPercentages[j].Value
 	})
 }
 
-func (items RegisterQueryGroupProperties) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
+func (items ResearchQueryGroupQuestions) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
 	for i := range items {
 		items[i].writeXlsxHeader(xl)
 	}
 }
 
-func (item *RegisterQueryGroupProperty) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
+func (item *ResearchQueryGroupQuestion) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
 	//if item.EveryRadioSet {
 	//	xl.WriteString(2, xl.Cursor, &[]string{item.ResearchResult.Name})
 	//	if item.ResearchResult.ValueType.IsSet() {
@@ -73,18 +76,18 @@ func (item *RegisterQueryGroupProperty) writeXlsxHeader(xl *xlsxhelper.XlsxHelpe
 	//}
 }
 
-func (items RegisterQueryGroupProperties) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *RegisterQueryGroup, writeEmpty bool) {
+func (items ResearchQueryGroupQuestions) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *ResearchQueryGroup, writeEmpty bool) {
 	for i := range items {
 		items[i].writeXlsxData(xl, g, i, writeEmpty)
 	}
 }
 
-func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *RegisterQueryGroup, propNum int, writeEmpty bool) {
+func (item *ResearchQueryGroupQuestion) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *ResearchQueryGroup, propNum int, writeEmpty bool) {
 	//if item.EveryRadioSet {
 	//	if item.ResearchResult.ValueType.IsSet() {
 	//		for i := range item.ResearchResult.RegisterPropertySets {
 	//			v := No
-	//			if g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertySetToPatient.Include(item.ResearchResult.RegisterPropertySets[i].ID) {
+	//			if g.Research.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertySetToPatient.Include(item.ResearchResult.RegisterPropertySets[i].ID) {
 	//				v = Yes
 	//			}
 	//			if writeEmpty {
@@ -94,7 +97,7 @@ func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper,
 	//			item.ResearchResult.RegisterPropertySets[i].writeXlsxAggregatedValues(v)
 	//			for _, other := range item.ResearchResult.RegisterPropertySets[i].RegisterPropertyOthers {
 	//				v := No
-	//				for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
+	//				for _, setValue := range g.Research.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
 	//					if setValue.RegisterPropertyOtherID == other.ID {
 	//						v = setValue.Value
 	//					}
@@ -109,7 +112,7 @@ func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper,
 	//	if item.ResearchResult.ValueType.IsRadio() {
 	//		for i := range item.ResearchResult.AnswerVariants {
 	//			exists := No
-	//			for _, propToPat := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyToPatient {
+	//			for _, propToPat := range g.Research.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyToPatient {
 	//				if propToPat.AnswerVariantID == item.ResearchResult.AnswerVariants[i].ID {
 	//					exists = Yes
 	//				}
@@ -121,7 +124,7 @@ func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper,
 	//			xl.Data = append(xl.Data, exists)
 	//			for _, other := range item.ResearchResult.AnswerVariants[i].RegisterPropertyOthers {
 	//				v := No
-	//				for _, setValue := range g.RegisterGroup.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
+	//				for _, setValue := range g.Research.RegisterGroupsToPatients[g.PatientIndex].RegisterPropertyOthersToPatient {
 	//					if setValue.RegisterPropertyOtherID == other.ID {
 	//						v = setValue.Value
 	//					}
@@ -143,7 +146,7 @@ func (item *RegisterQueryGroupProperty) writeXlsxData(xl *xlsxhelper.XlsxHelper,
 	//}
 }
 
-func (item *RegisterQueryGroupProperty) writeXlsxAggregatedValues(key string) {
+func (item *ResearchQueryGroupQuestion) writeXlsxAggregatedValues(key string) {
 	_, ok := item.AggregatedValues[key]
 	if ok {
 		item.AggregatedValues[key]++
@@ -152,13 +155,13 @@ func (item *RegisterQueryGroupProperty) writeXlsxAggregatedValues(key string) {
 	}
 }
 
-func (items RegisterQueryGroupProperties) writeAggregates(xl *xlsxhelper.XlsxHelper) {
+func (items ResearchQueryGroupQuestions) writeAggregates(xl *xlsxhelper.XlsxHelper) {
 	for i := range items {
 		items[i].writeAggregates(xl)
 	}
 }
 
-func (item *RegisterQueryGroupProperty) writeAggregates(xl *xlsxhelper.XlsxHelper) {
+func (item *ResearchQueryGroupQuestion) writeAggregates(xl *xlsxhelper.XlsxHelper) {
 	//if item.EveryRadioSet {
 	//	if item.ResearchResult.ValueType.IsSet() {
 	//		for _, s := range item.ResearchResult.RegisterPropertySets {

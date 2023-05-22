@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -9,7 +11,12 @@ type FundContract struct {
 	bun.BaseModel `bun:"fund_contracts,alias:fund_contracts"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Commissions   Commissions   `bun:"rel:has-many" json:"commissions"`
-	BuyContracts  BuyContracts  `bun:"rel:has-many" json:"buyContracts"`
+	DrugArrives   DrugArrives   `bun:"rel:has-many" json:"drugArrives"`
+	Date          *time.Time    `bun:"item_date" json:"date"`
+	Number        string        `json:"number"`
+
+	//Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
+	//DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
 }
 
 type FundContracts []*FundContract

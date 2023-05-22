@@ -11,7 +11,7 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var query models.RegisterQuery
+	var query models.ResearchQuery
 	err := c.Bind(&query)
 
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
@@ -58,7 +58,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var query models.RegisterQuery
+	var query models.ResearchQuery
 	err := c.Bind(&query)
 
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {

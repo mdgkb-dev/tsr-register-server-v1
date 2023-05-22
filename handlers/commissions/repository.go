@@ -29,6 +29,7 @@ func (r *Repository) getAll() (items models.CommissionsWithCount, err error) {
 	query := r.db().NewSelect().
 		Model(&items.Commissions).
 		Relation("CommissionsDoctors.Doctor").
+		Relation("PatientDiagnosis.MkbItem").
 		Relation("Patient.Human")
 	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)

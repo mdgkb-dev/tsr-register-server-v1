@@ -56,15 +56,42 @@ create table drug_applications
     commission_id uuid not null references commissions
 );
 
-create table fund_contracts
-(
-    id   uuid default uuid_generate_v4() not null primary key
-);
-
-create table buy_contracts
+create table fund_councils
 (
     id   uuid default uuid_generate_v4() not null primary key,
-    fund_contract_id uuid not null references fund_contracts
+    item_date date,
+    number varchar unique,
+    quantity int
+);
+
+create table fund_contracts
+(
+    id   uuid default uuid_generate_v4() not null primary key,
+    item_date date,
+    number varchar unique,
+    quantity int
+);
+
+
+
+create table drug_arrives
+(
+    id   uuid default uuid_generate_v4() not null primary key,
+    fund_contract_id uuid not null references fund_contracts,
+    drug_id uuid not null references drugs,
+    quantity varchar,
+    arrived bool,
+    item_date date
+);
+
+create table drug_decreases
+(
+    id   uuid default uuid_generate_v4() not null primary key,
+    drug_arrive_id uuid not null references drug_arrives,
+    patient_id uuid not null references patients,
+    quantity varchar,
+    comment varchar,
+    item_date date
 );
 
 
