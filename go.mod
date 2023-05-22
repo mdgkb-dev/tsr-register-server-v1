@@ -3,7 +3,6 @@ module mdgkb/tsr-tegister-server-v1
 go 1.18
 
 require (
-	github.com/elastic/go-elasticsearch/v8 v8.2.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/go-redis/redis/v7 v7.4.1
@@ -19,7 +18,6 @@ require (
 require (
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.7.2 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/elastic/elastic-transport-go/v8 v8.1.0 // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
@@ -71,7 +69,6 @@ require (
 	golang.org/x/net v0.8.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
-	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

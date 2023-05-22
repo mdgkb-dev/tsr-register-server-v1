@@ -1,11 +1,8 @@
 package search
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 
-	"github.com/elastic/go-elasticsearch/v8/esutil"
 	"github.com/pro-assistance/pro-assister/search"
 	"github.com/uptrace/bun"
 )
@@ -47,20 +44,20 @@ func (r *Repository) search(searchModel *search.SearchModel) error {
 
 func (r *Repository) elasticSearch(model *search.SearchModel) error {
 	var data map[string]interface{}
-	query, indexes := model.BuildQuery()
-	res, err := r.elasticsearch.Search(
-		r.elasticsearch.Search.WithIndex(indexes...),
-		r.elasticsearch.Search.WithBody(esutil.NewJSONReader(&query)),
-		r.elasticsearch.Search.WithPretty(),
-	)
-	defer res.Body.Close()
-	if err != nil {
-		return err
-	}
-	err = json.NewDecoder(res.Body).Decode(&data)
-	if err != nil {
-		return err
-	}
+	//query, indexes := model.BuildQuery()
+	//res, err := r.elasticsearch.Search(
+	//	r.elasticsearch.Search.WithIndex(indexes...),
+	//	r.elasticsearch.Search.WithBody(esutil.NewJSONReader(&query)),
+	//	r.elasticsearch.Search.WithPretty(),
+	//)
+	//defer res.Body.Close()
+	//if err != nil {
+	//	return err
+	//}
+	//err = json.NewDecoder(res.Body).Decode(&data)
+	//if err != nil {
+	//	return err
+	//}
 	model.ParseMap(data)
 	return nil
 }
@@ -79,25 +76,25 @@ func (r *Repository) elasticSuggester(model *search.SearchModel) error {
 			},
 		},
 	})
-	var buf bytes.Buffer
-	query := map[string]interface{}{
-		"query": should[0],
-	}
-	_ = json.NewEncoder(&buf).Encode(query)
-	res, err := r.elasticsearch.Search(
-		//r.elasticsearch.Search.WithIndex(indexes...),
-		r.elasticsearch.Search.WithBody(&buf),
-		//r.elasticsearch.Get.
-		r.elasticsearch.Search.WithPretty(),
-	)
-	defer res.Body.Close()
-	if err != nil {
-		return err
-	}
-	err = json.NewDecoder(res.Body).Decode(&re)
-	if err != nil {
-		return err
-	}
+	//var buf bytes.Buffer
+	//query := map[string]interface{}{
+	//	"query": should[0],
+	//}
+	//_ = json.NewEncoder(&buf).Encode(query)
+	//res, err := r.elasticsearch.Search(
+	//	//r.elasticsearch.Search.WithIndex(indexes...),
+	//	r.elasticsearch.Search.WithBody(&buf),
+	//	//r.elasticsearch.Get.
+	//	r.elasticsearch.Search.WithPretty(),
+	//)
+	//defer res.Body.Close()
+	//if err != nil {
+	//	return err
+	//}
+	//err = json.NewDecoder(res.Body).Decode(&re)
+	//if err != nil {
+	//	return err
+	//}
 	model.ParseMap(re)
 	return nil
 }

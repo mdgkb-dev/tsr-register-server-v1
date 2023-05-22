@@ -4,7 +4,6 @@ import (
 	"context"
 	"mime/multipart"
 
-	"github.com/elastic/go-elasticsearch/v8"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/search"
 
@@ -50,9 +49,8 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx           context.Context
-	helper        *helper.Helper
-	elasticsearch *elasticsearch.Client
+	ctx    context.Context
+	helper *helper.Helper
 }
 
 type FilesService struct {
