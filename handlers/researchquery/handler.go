@@ -1,4 +1,4 @@
-package registerquery
+package researchquery
 
 import (
 	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"

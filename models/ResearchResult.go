@@ -17,6 +17,9 @@ type ResearchResult struct {
 	PatientResearchID uuid.NullUUID    `bun:"type:uuid" json:"patientResearchId"`
 	Answers           Answers          `bun:"rel:has-many" json:"answers"`
 
+	Research   *Research     `bun:"rel:belongs-to" json:"research"`
+	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`
+
 	FillingPercentage uint `json:"fillingPercentage"`
 	Order             uint `bun:"item_order" json:"order"`
 }
@@ -156,13 +159,13 @@ func (items ResearchResults) GetRegisterPropertyOthersToPatient() PatientAnswerC
 //	return itemsForGet
 //}
 //
-//func (item *ResearchResult) GetAggregateExistingData() string {
-//	res := No
-//	for _, prop := range item.RegisterPropertyToPatient {
-//		if prop.GetAggregateExistingData() {
-//			res = Yes
-//			break
-//		}
-//	}
-//	return res
-//}
+func (item *ResearchResult) GetAggregateExistingData() string {
+	res := No
+	for _, answer := range item.Answers {
+		if answer.GetAggregateExistingData() {
+			res = Yes
+			break
+		}
+	}
+	return res
+}

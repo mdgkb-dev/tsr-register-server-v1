@@ -16,9 +16,9 @@ type Disability struct {
 	PatientID     uuid.NullUUID `bun:"type:uuid" json:"patientId"`
 	Edvs          Edvs          `bun:"rel:has-many" json:"edvs"`
 	EdvsForDelete []uuid.UUID   `bun:"-" json:"edvsForDelete"`
-	//Period        *Period       `bun:"rel:belongs-to" json:"period"`
-	//PeriodID      uuid.UUID     `bun:"type:uuid" json:"periodId"`
-	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
+	DateStart     time.Time     `json:"dateStart"`
+	DateEnd       time.Time     `json:"dateEnd"`
+	DeletedAt     *time.Time    `bun:",soft_delete" json:"deletedAt"`
 }
 
 type Disabilities []*Disability

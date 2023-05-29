@@ -78,3 +78,25 @@ func (item *AnswerVariant) GetAggregatedPercentage() {
 		return item.RegisterQueryPercentages[i].Value > item.RegisterQueryPercentages[j].Value
 	})
 }
+
+func (items AnswerVariants) Include(answers Answers) string {
+	exists := No
+	for _, item := range items {
+		if len(answers) == 0 {
+			break
+		}
+		for _, a := range answers {
+			for _, s := range a.SelectedAnswerVariants {
+				if s.AnswerVariantID == item.ID {
+					exists = Yes
+					break
+				}
+
+			}
+			if exists == Yes {
+				break
+			}
+		}
+	}
+	return exists
+}

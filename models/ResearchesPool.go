@@ -40,11 +40,11 @@ func (item *ResearchesPool) SetIDForChildren() {
 	//}
 }
 
-//func (item *ResearchesPool) GetPatientsAverageAge() int {
-//	sum := 0
-//	for _, p := range item.ResearchResults {
-//		sum += p.Patient.Human.GetAge()
-//	}
-//	res := sum / len(item.ResearchResults)
-//	return res
-//}
+func (item *ResearchesPool) GetPatientsAverageAge() int {
+	sum := 0
+	//for _, p := range item.PatientsResearchesPools {
+	//	sum += p.Patient.Human.GetAge()
+	//}
+	res := sum / len(item.PatientsResearchesPools)
+	return res
+}

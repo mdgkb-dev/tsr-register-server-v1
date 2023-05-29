@@ -31,13 +31,13 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertytouser"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerquery"
 	"mdgkb/tsr-tegister-server-v1/handlers/registers"
 	"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchesresults"
+	"mdgkb/tsr-tegister-server-v1/handlers/researchquery"
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
@@ -70,13 +70,13 @@ import (
 	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	registerPropertyToUserRouter "mdgkb/tsr-tegister-server-v1/routing/registerpropertytouser"
-	registerQueryRouter "mdgkb/tsr-tegister-server-v1/routing/registerquery"
 	registersRouter "mdgkb/tsr-tegister-server-v1/routing/registers"
 	representativeRouter "mdgkb/tsr-tegister-server-v1/routing/representative"
 	representativeTypesRouter "mdgkb/tsr-tegister-server-v1/routing/representativetypes"
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
 	researchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/researchespools"
 	researchesResultsRouter "mdgkb/tsr-tegister-server-v1/routing/researchesresults"
+	researchQueryRouter "mdgkb/tsr-tegister-server-v1/routing/researchquery"
 	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/researchsection"
 	searchRouter "mdgkb/tsr-tegister-server-v1/routing/search"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
@@ -101,7 +101,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	registersRouter.Init(api.Group("/registers"), registers.CreateHandler(helper))
 	researchesRouter.Init(api.Group("/researches"), researches.CreateHandler(helper))
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
-	registerQueryRouter.Init(api.Group("/register-queries"), registerquery.CreateHandler(helper))
+	researchQueryRouter.Init(api.Group("/research-queries"), researchquery.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
 	representativeRouter.Init(api.Group("/representatives"), representative.CreateHandler(helper))
 	representativeTypesRouter.Init(api.Group("/representative-types"), representativetypes.CreateHandler(helper))

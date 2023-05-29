@@ -11,7 +11,7 @@ import (
 
 type ResearchQuery struct {
 	bun.BaseModel            `bun:"research_queries,alias:research_queries"`
-	ID                       uuid.UUID                `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
+	ID                       uuid.NullUUID            `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
 	Name                     string                   `json:"name"`
 	Type                     string                   `bun:"type:register_query_type_enum" json:"type"`
 	ResearchesPool           *ResearchesPool          `bun:"rel:belongs-to" json:"researchesPool"`
@@ -27,6 +27,10 @@ type ResearchQuery struct {
 }
 
 type ResearchQueries []*ResearchQuery
+type ResearchQueriesWithCount struct {
+	ResearchQueries ResearchQueries `json:"items"`
+	Count           int             `json:"count"`
+}
 
 func (item *ResearchQuery) SetIDForChildren() {
 	if len(item.ResearchQueriesQuestions) == 0 {
@@ -70,10 +74,10 @@ func (item *ResearchQuery) WriteXlsx(xl *xlsxhelper.XlsxHelper) ([]byte, error) 
 	if xl.Err != nil {
 		return nil, xl.Err
 	}
-	item.setStyle(xl)
-	if xl.Err != nil {
-		return nil, xl.Err
-	}
+	//item.setStyle(xl)
+	//if xl.Err != nil {
+	//	return nil, xl.Err
+	//}
 	return xl.WriteFile()
 }
 
@@ -82,28 +86,32 @@ func (item *ResearchQuery) writeData(xl *xlsxhelper.XlsxHelper) {
 		item.ResearchQueryGroups[groupNum].AggregatedValues = make(map[string]float64)
 		for propNum := range item.ResearchQueryGroups[groupNum].ResearchQueryGroupQuestions {
 			item.ResearchQueryGroups[groupNum].ResearchQueryGroupQuestions[propNum].AggregatedValues = make(map[string]float64)
-			for radioNum := range item.ResearchQueryGroups[groupNum].ResearchQueryGroupQuestions[propNum].Question.AnswerVariants {
-				item.ResearchQueryGroups[groupNum].ResearchQueryGroupQuestions[propNum].Question.AnswerVariants[radioNum].AggregatedValues = make(map[string]float64)
-			}
+			//for radioNum := range item.ResearchQueryGroups[groupNum].ResearchQueryGroupQuestions[propNum].Question.AnswerVariants {
+			//	item.ResearchQueryGroups[groupNum].ResearchQueryGroupQuestions[propNum].Question.AnswerVariants[radioNum].AggregatedValues = make(map[string]float64)
+			//}
 		}
 	}
 
 	for patientNum, patientResearchPool := range item.ResearchesPool.PatientsResearchesPools {
+		if patientResearchPool.Patient == nil {
+			continue
+		}
 		xl.Data = append(xl.Data, strconv.Itoa(patientNum+1), patientResearchPool.Patient.Human.GetFullName())
 		if item.WithAge {
 			xl.Data = append(xl.Data, strconv.Itoa(patientResearchPool.Patient.Human.GetAge()))
 		}
 		item.ResearchQueryGroups.writeXlsxData(xl, patientResearchPool.PatientID)
 		xl.WriteString(4+patientNum, 0, &xl.Data)
+		//fmt.Println(len(xl.Data))
 		xl.Data = []string{}
 	}
 }
 
 func (item *ResearchQuery) writeAggregates(xl *xlsxhelper.XlsxHelper) {
-	//xl.StrCursor = 4 + len(item.ResearchesPool.RegisterToPatient)
-	//if item.WithAge {
-	//	xl.WriteString(xl.StrCursor, 2, &[]string{strconv.Itoa(item.ResearchesPool.GetPatientsAverageAge())})
-	//}
+	xl.StrCursor = 4 + len(item.ResearchesPool.PatientsResearchesPools)
+	if item.WithAge {
+		xl.WriteString(xl.StrCursor, 2, &[]string{strconv.Itoa(item.ResearchesPool.GetPatientsAverageAge())})
+	}
 	xl.Cursor = 3
 	item.ResearchQueryGroups.writeAggregates(xl)
 }

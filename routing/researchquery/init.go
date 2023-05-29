@@ -1,7 +1,7 @@
-package registerquery
+package researchquery
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/registerquery"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/researchquery"
 
 	"github.com/gin-gonic/gin"
 )

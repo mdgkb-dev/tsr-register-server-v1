@@ -10,10 +10,10 @@ import (
 )
 
 type ResearchQueryGroup struct {
-	bun.BaseModel   `bun:"register_query_groups,alias:register_query_groups"`
-	ID              uuid.UUID      `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
-	Name            string         `bun:"-" json:"name"`
-	ResearchQueryID uuid.UUID      `bun:"type:uuid" json:"researchQueryId"`
+	bun.BaseModel   `bun:"research_query_groups,alias:research_query_groups"`
+	ID              uuid.NullUUID  `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
+	Name            string         `json:"name"`
+	ResearchQueryID uuid.NullUUID  `bun:"type:uuid" json:"researchQueryId"`
 	ResearchQuery   *ResearchQuery `bun:"rel:belongs-to" json:"researchQuery"`
 
 	ResearchID uuid.UUID `bun:"type:uuid" json:"researchId"`
@@ -50,23 +50,23 @@ func (item *ResearchQueryGroup) GetResultFromData(prop *Question, propertyIndex 
 	return item.getAggregatedData(prop, propertyIndex)
 }
 
-func (item *ResearchQueryGroup) getAggregatedData(prop *Question, propertyIndex int) string {
-	//if item.AggregateType == AggregateNone {
-	//	if prop.ValueType.IsSet() {
-	//		return prop.RegisterPropertySets.Include(item.Research.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertySetToPatient)
-	//	}
-	//	if len(item.Research.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient) > 0 {
-	//		if propertyIndex < len(item.Research.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient) {
-	//			return item.Research.RegisterGroupsToPatients[item.PatientIndex].RegisterPropertyToPatient[propertyIndex].GetData(prop)
-	//		}
-	//		return No
-	//	}
-	//}
-	//if item.AggregateType == AggregateExisting {
-	//	if item.Research.RegisterGroupsToPatients != nil && item.PatientIndex < len(item.Research.RegisterGroupsToPatients) {
-	//		return item.Research.RegisterGroupsToPatients[item.PatientIndex].GetAggregateExistingData()
-	//	}
-	//}
+func (item *ResearchQueryGroup) getAggregatedData(question *Question, propertyIndex int) string {
+	if item.AggregateType == AggregateNone {
+		if question.ValueType.IsSet() {
+			return question.AnswerVariants.Include(item.Research.ResearchResults[item.PatientIndex].Answers)
+		}
+		if len(item.Research.ResearchResults[item.PatientIndex].Answers) > 0 {
+			if propertyIndex < len(item.Research.ResearchResults[item.PatientIndex].Answers) {
+				return item.Research.ResearchResults[item.PatientIndex].Answers[propertyIndex].GetData(question)
+			}
+			return No
+		}
+	}
+	if item.AggregateType == AggregateExisting {
+		if item.Research.ResearchResults != nil && item.PatientIndex < len(item.Research.ResearchResults) {
+			return item.Research.ResearchResults[item.PatientIndex].GetAggregateExistingData()
+		}
+	}
 	return ""
 }
 
@@ -100,15 +100,22 @@ func (item *ResearchQueryGroup) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
 func (items ResearchQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, id uuid.NullUUID) {
 	for i := range items {
 		writeEmpty := false
-		if items[i].Research.ResearchResults[items[i].PatientIndex].PatientResearch.PatientID != id {
-			writeEmpty = true
+		if items[i].PatientIndex >= len(items[i].Research.ResearchResults) {
+			return
 		}
+		if items[i].Research.ResearchResults[items[i].PatientIndex] == nil {
+			return
+		}
+		//if items[i].Research.ResearchResults[items[i].PatientIndex].PatientResearch.PatientID != id {
+		//	writeEmpty = true
+		//}
 		items[i].writeXlsxData(xl, writeEmpty)
 		if !writeEmpty {
 			items[i].PatientIndex++
 		}
 	}
 }
+
 func (item *ResearchQueryGroup) writeXlsxData(xl *xlsxhelper.XlsxHelper, writeEmpty bool) {
 	if item.AggregateType == AggregateNone {
 		item.ResearchQueryGroupQuestions.writeXlsxData(xl, item, writeEmpty)

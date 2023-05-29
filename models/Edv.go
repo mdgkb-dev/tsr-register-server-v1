@@ -1,22 +1,24 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
 type Edv struct {
 	bun.BaseModel `bun:"edvs,alias:edvs"`
-	ID            uuid.UUID   `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Disability    *Disability `bun:"rel:belongs-to" json:"disability"`
-	DisabilityID  uuid.UUID   `bun:"type:uuid" json:"disabilityId"`
-	Parameter1    bool        `json:"parameter1"`
-	Parameter2    bool        `json:"parameter2"`
-	Parameter3    bool        `json:"parameter3"`
-	//Period        *Period       `bun:"rel:belongs-to" json:"period"`
-	//PeriodID      uuid.UUID     `bun:"type:uuid" json:"periodId"`
-	FileInfo   *FileInfo     `bun:"rel:belongs-to" json:"fileInfo"`
-	FileInfoID uuid.NullUUID `bun:"type:uuid" json:"fileInfoId"`
+	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Disability    *Disability   `bun:"rel:belongs-to" json:"disability"`
+	DisabilityID  uuid.UUID     `bun:"type:uuid" json:"disabilityId"`
+	Parameter1    bool          `json:"parameter1"`
+	Parameter2    bool          `json:"parameter2"`
+	Parameter3    bool          `json:"parameter3"`
+	DateStart     time.Time     `json:"dateStart"`
+	DateEnd       time.Time     `json:"dateEnd"`
+	FileInfo      *FileInfo     `bun:"rel:belongs-to" json:"fileInfo"`
+	FileInfoID    uuid.NullUUID `bun:"type:uuid" json:"fileInfoId"`
 }
 
 type Edvs []*Edv

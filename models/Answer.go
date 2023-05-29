@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -96,43 +97,43 @@ func (items Answers) GetSelectedAnswerVariantsForDelete() []uuid.UUID {
 	return itemsForGet
 }
 
-//func (item *RegisterPropertyToPatient) GetData(prop *Question) string {
-//	if prop.ValueType.IsString() || prop.ValueType.IsText() {
-//		return item.ValueString
-//	}
-//	if prop.ValueType.IsNumber() {
-//		return strconv.Itoa(int(item.ValueNumber))
-//	}
-//	if prop.ValueType.IsDate() {
-//		return item.ValueDate.String()
-//	}
-//	if prop.ValueType.IsRadio() {
-//		res := No
-//		for _, radio := range prop.RegisterPropertyRadios {
-//			if radio.ID == item.RegisterPropertyRadioID {
-//				res = Yes
-//				break
-//			}
-//		}
-//		return res
-//	}
-//	return ""
-//}
-//
-//func (item *RegisterPropertyToPatient) GetAggregateExistingData() bool {
-//	if item.ResearchResult.ValueType.IsString() || item.ResearchResult.ValueType.IsText() {
-//		return len(item.ValueString) > 0
-//	}
-//	if item.ResearchResult.ValueType.IsNumber() {
-//		return item.ValueNumber > 0
-//	}
-//	if item.ResearchResult.ValueType.IsDate() {
-//		return !item.ValueDate.IsZero()
-//	}
-//	if item.ResearchResult.ValueType.IsRadio() {
-//		if item.RegisterPropertyRadioID.Valid {
-//			return true
-//		}
-//	}
-//	return false
-//}
+func (item *Answer) GetData(prop *Question) string {
+	if prop.ValueType.IsString() || prop.ValueType.IsText() {
+		return item.ValueString
+	}
+	if prop.ValueType.IsNumber() {
+		return strconv.Itoa(int(item.ValueNumber))
+	}
+	if prop.ValueType.IsDate() {
+		return item.ValueDate.String()
+	}
+	if prop.ValueType.IsRadio() {
+		res := No
+		for _, radio := range prop.AnswerVariants {
+			if radio.ID == item.AnswerVariantID {
+				res = Yes
+				break
+			}
+		}
+		return res
+	}
+	return ""
+}
+
+func (item *Answer) GetAggregateExistingData() bool {
+	if item.Question.ValueType.IsString() || item.Question.ValueType.IsText() {
+		return len(item.ValueString) > 0
+	}
+	if item.Question.ValueType.IsNumber() {
+		return item.ValueNumber > 0
+	}
+	if item.Question.ValueType.IsDate() {
+		return !item.ValueDate.IsZero()
+	}
+	if item.Question.ValueType.IsRadio() {
+		if item.AnswerVariantID.Valid {
+			return true
+		}
+	}
+	return false
+}

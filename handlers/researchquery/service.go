@@ -1,12 +1,14 @@
-package registerquery
+package researchquery
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerquerytoregisterproperty"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (s *Service) Create(query *models.ResearchQuery) error {
-	err := s.repository.create(query)
+	err := s.repository.Create(query)
 
 	if err != nil {
 		return err
@@ -17,26 +19,16 @@ func (s *Service) Create(query *models.ResearchQuery) error {
 	return err
 }
 
-func (s *Service) GetAll() (models.ResearchQueries, error) {
-	queries, err := s.repository.getAll()
-
-	if err != nil {
-		return nil, err
-	}
-
-	return queries, nil
+func (s *Service) GetAll() (models.ResearchQueriesWithCount, error) {
+	return s.repository.GetAll()
 }
 
 func (s *Service) Get(id string) (*models.ResearchQuery, error) {
-	query, err := s.repository.get(id)
-	if err != nil {
-		return nil, err
-	}
-	return query, nil
+	return s.repository.Get(id)
 }
 
 func (s *Service) Update(query *models.ResearchQuery) error {
-	err := s.repository.update(query)
+	err := s.repository.Update(query)
 
 	if err != nil {
 		return err
@@ -55,13 +47,18 @@ func (s *Service) Update(query *models.ResearchQuery) error {
 }
 
 func (s *Service) Delete(id string) error {
-	return s.repository.delete(id)
+	return s.repository.Delete(id)
 }
 
 func (s *Service) Execute(registerQuery *models.ResearchQuery) error {
-	err := s.repository.execute(registerQuery)
+	err := s.repository.Execute(registerQuery)
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.SetQueryFilter(c)
+	return err
 }
