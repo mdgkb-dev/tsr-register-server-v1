@@ -1,5 +1,5 @@
 INSERT INTO public.researches (id, name, with_dates, with_scores) VALUES ('ca4f2407-ec10-410d-b47a-267d74cbc7cb', 'Шкала Rulm', true, true);
-INSERT INTO public.researches_pools_researches (id, researches_pool_id, research_id, item_order) VALUES ('5b7ec4e9-47d1-4f98-8b86-936263f1b902', 'b3aa8d37-58a8-4655-a613-f238d1cf1120', 'ca4f2407-ec10-410d-b47a-267d74cbc7cb', 3)
+INSERT INTO public.researches_pools_researches (id, researches_pool_id, research_id, item_order) VALUES ('5b7ec4e9-47d1-4f98-8b86-936263f1b902', 'b3aa8d37-58a8-4655-a613-f238d1cf1120', 'ca4f2407-ec10-410d-b47a-267d74cbc7cb', 3);
 
 
 insert into questions (id, name, item_order, value_type_id, research_id, calculate_scores)
