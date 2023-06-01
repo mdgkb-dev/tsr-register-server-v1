@@ -200,5 +200,6 @@ values
     ('50dfc0a4-b260-4c63-b16f-4119e1524802', 'Может поднять груз массой 1кг. без с компенсации', 2, '50dfc0a4-b260-4c63-b16f-4119e1520348', 2, false);
 
 
-
+insert into questions (id, name, item_order, value_type_id, research_id, calculate_scores, parent_id)
+values ('50dfc0a4-b260-4c63-b16f-4119e1520350','Какой тип', 0, '9f61f302-6821-40b9-94bc-78dedf955a11', 'ca4f2407-ec10-410d-b47a-267d74cbc7cb', false, '50dfc0a4-b260-4c63-b16f-4119e1520302');
 

@@ -81,6 +81,7 @@ create table drug_arrives
     drug_id uuid not null references drugs,
     quantity varchar,
     arrived bool,
+    stage varchar,
     item_date date
 );
 

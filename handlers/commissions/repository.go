@@ -26,6 +26,7 @@ func (r *Repository) create(item *models.Commission) (err error) {
 }
 
 func (r *Repository) getAll() (items models.CommissionsWithCount, err error) {
+	items.Commissions = make(models.Commissions, 0)
 	query := r.db().NewSelect().
 		Model(&items.Commissions).
 		Relation("CommissionsDoctors.Doctor").
