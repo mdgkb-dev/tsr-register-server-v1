@@ -1,5 +1,7 @@
 alter table disabilities add column date_start date;
 alter table disabilities add column date_end date;
+alter table disabilities add column series varchar;
+alter table disabilities add column number varchar;
 
 update disabilities
 set date_start = (select p.date_start from period p where p.id = disabilities.period_id)

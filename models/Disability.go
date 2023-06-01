@@ -18,6 +18,8 @@ type Disability struct {
 	EdvsForDelete []uuid.UUID   `bun:"-" json:"edvsForDelete"`
 	DateStart     time.Time     `json:"dateStart"`
 	DateEnd       time.Time     `json:"dateEnd"`
+	Series        string        `json:"series"`
+	Number        string        `json:"number"`
 	DeletedAt     *time.Time    `bun:",soft_delete" json:"deletedAt"`
 }
 
