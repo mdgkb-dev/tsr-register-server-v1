@@ -107,7 +107,6 @@ alter table questions add parent_id uuid;
 
 
 
-
 alter table register_property_radio rename column register_property_radio_order to item_order;
 alter table register_property_radio rename column register_property_id to question_id;
 alter table register_property_radio add column score int;
@@ -159,8 +158,7 @@ alter table register_property_set_to_patient add constraint "FK_8281318758557dfc
 alter table register_property_set_to_patient rename to selected_answer_variants;
 alter table selected_answer_variants add answer_id uuid default uuid_generate_v4();
 
-
-
+-- insert into answers
 
 alter table answer_comments     drop constraint register_property_others_register_property_radio_id_fkey;
 

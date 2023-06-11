@@ -46,25 +46,22 @@ type ResearchQueryPercentages []*ResearchQueryPercentage
 
 type ResearchQueryGroups []*ResearchQueryGroup
 
-func (item *ResearchQueryGroup) GetResultFromData(prop *Question, propertyIndex int) string {
-	return item.getAggregatedData(prop, propertyIndex)
+func (item *ResearchQueryGroup) GetResultFromData(prop *Question, result *ResearchResult) string {
+	return item.getAggregatedData(prop, result)
 }
 
-func (item *ResearchQueryGroup) getAggregatedData(question *Question, propertyIndex int) string {
+func (item *ResearchQueryGroup) getAggregatedData(question *Question, result *ResearchResult) string {
 	if item.AggregateType == AggregateNone {
 		if question.ValueType.IsSet() {
-			return question.AnswerVariants.Include(item.Research.ResearchResults[item.PatientIndex].Answers)
+			return question.AnswerVariants.Include(result.Answers)
 		}
-		if len(item.Research.ResearchResults[item.PatientIndex].Answers) > 0 {
-			if propertyIndex < len(item.Research.ResearchResults[item.PatientIndex].Answers) {
-				return item.Research.ResearchResults[item.PatientIndex].Answers[propertyIndex].GetData(question)
-			}
-			return No
+		if len(result.Answers) > 0 {
+			return result.GetData(question)
 		}
 	}
 	if item.AggregateType == AggregateExisting {
 		if item.Research.ResearchResults != nil && item.PatientIndex < len(item.Research.ResearchResults) {
-			return item.Research.ResearchResults[item.PatientIndex].GetAggregateExistingData()
+			return result.GetAggregateExistingData()
 		}
 	}
 	return ""
@@ -97,34 +94,21 @@ func (item *ResearchQueryGroup) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
 	}
 }
 
-func (items ResearchQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, id uuid.NullUUID) {
+func (items ResearchQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, patientId uuid.NullUUID) {
 	for i := range items {
-		writeEmpty := false
-		if items[i].PatientIndex >= len(items[i].Research.ResearchResults) {
-			return
-		}
-		if items[i].Research.ResearchResults[items[i].PatientIndex] == nil {
-			return
-		}
-		//if items[i].Research.ResearchResults[items[i].PatientIndex].PatientResearch.PatientID != id {
-		//	writeEmpty = true
-		//}
-		items[i].writeXlsxData(xl, writeEmpty)
-		if !writeEmpty {
-			items[i].PatientIndex++
-		}
+		result := items[i].Research.GetResultByPatientID(patientId)
+		items[i].writeXlsxData(xl, result)
+		items[i].PatientIndex++
 	}
+
 }
 
-func (item *ResearchQueryGroup) writeXlsxData(xl *xlsxhelper.XlsxHelper, writeEmpty bool) {
+func (item *ResearchQueryGroup) writeXlsxData(xl *xlsxhelper.XlsxHelper, result *ResearchResult) {
 	if item.AggregateType == AggregateNone {
-		item.ResearchQueryGroupQuestions.writeXlsxData(xl, item, writeEmpty)
+		item.ResearchQueryGroupQuestions.writeXlsxData(xl, item, result)
 	}
 	if item.AggregateType == AggregateExisting {
-		res := item.GetResultFromData(nil, 0)
-		if writeEmpty {
-			res = NoData
-		}
+		res := item.GetResultFromData(nil, result)
 		str := fmt.Sprintf("%v", res)
 		item.writePercentage(str)
 		xl.Data = append(xl.Data, str)

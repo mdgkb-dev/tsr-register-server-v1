@@ -44,13 +44,22 @@ func (r *Repository) Get(id string) (*models.ResearchQuery, error) {
 			return q.Order("research_query_group_questions.item_order")
 		}).
 		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.ValueType").
-		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.AnswerVariants").
+		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("answer_variants.item_order")
+		}).
+		Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.Children.ValueType").
 		//Relation("ResearchQueryGroups.ResearchQueryGroupQuestions.Question.AnswerVariants.RegisterPropertyOthers").
 		//Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
 		//	return q.Order("patients.full_name")
 		//}).
+		Relation("ResearchQueryGroups.Research.ResearchResults", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Join("JOIN patients_view p on research_results.patient_id = p.id").
+				Order("p.full_name")
+		}).
+		Relation("ResearchQueryGroups.Research.ResearchResults.PatientResearch").
 		Relation("ResearchQueryGroups.Research.ResearchResults.PatientResearch").
 		Relation("ResearchQueryGroups.Research.ResearchResults.Answers.Question.ValueType").
+		Relation("ResearchQueryGroups.Research.ResearchResults.Answers.SelectedAnswerVariants").
 		//Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.PatientAnswerComments").
 		//Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.Answer.Question.ValueType").
 		//Relation("ResearchQueryGroups.Researches.RegisterGroupsToPatients.Answer").

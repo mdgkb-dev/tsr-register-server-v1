@@ -17,6 +17,8 @@ type Commission struct {
 	Number             int               `bun:",autoincrement,notnull," json:"number"`
 	Patient            *Patient          `bun:"rel:belongs-to" json:"patient"`
 	PatientID          uuid.NullUUID     `bun:"type:uuid" json:"patientId"`
+	CommissionStatus   *CommissionStatus `bun:"rel:belongs-to" json:"commissionStatus"`
+	CommissionStatusID uuid.NullUUID     `bun:"type:uuid" json:"commissionStatusId"`
 	PatientDiagnosis   *PatientDiagnosis `bun:"rel:belongs-to" json:"patientDiagnosis"`
 	PatientDiagnosisID uuid.NullUUID     `bun:"type:uuid" json:"patientDiagnosisId"`
 	DrugRegimen        *DrugRegimen      `bun:"rel:belongs-to" json:"drugRegimen"`
@@ -25,6 +27,9 @@ type Commission struct {
 	Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
 	DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
 
+	DzmAnswerFile      *FileInfo          `bun:"rel:belongs-to" json:"dzmAnswerFile"`
+	DzmAnswerFileID    uuid.NullUUID      `bun:"type:uuid" json:"dzmAnswerFileId"`
+	DzmAnswerComment   string             `json:"dzmAnswerComment"`
 	CommissionsDoctors CommissionsDoctors `bun:"rel:has-many" json:"commissionsDoctors"`
 }
 

@@ -27,8 +27,17 @@ update questions
 set item_order = 2
 where id = '179ab020-0f90-4e49-849d-62f3c580a721';
 
+update questions
+set item_order = item_order + 2
+where research_id = '6be7f5c3-434f-40be-99f2-027c41e78853'
+and item_order > 1;
+
+
 insert into questions (name, item_order, value_type_id,  research_id, short_name)
-values ('Экзонов 7-8 гена SMN1', 1, '47affcc5-5d32-4b1f-bf07-33382ed06cda', '6be7f5c3-434f-40be-99f2-027c41e78853', 'Экзонов');
+values ('Экзонов 7-8 гена SMN1', 1, '47affcc5-5d32-4b1f-bf07-33382ed06cda', '6be7f5c3-434f-40be-99f2-027c41e78853', 'Экзонов SMN1');
+
+insert into questions (name, item_order, value_type_id,  research_id, short_name)
+values ('Экзонов 7-8 гена SMN2', 2, '47affcc5-5d32-4b1f-bf07-33382ed06cda', '6be7f5c3-434f-40be-99f2-027c41e78853', 'Экзонов SMN2');
 
 UPDATE public.researches SET name = 'Молекулярно-генетическое подтверждение' WHERE id = '6be7f5c3-434f-40be-99f2-027c41e78853';
 
@@ -37,7 +46,7 @@ insert into questions (name, item_order, value_type_id,  research_id, short_name
 values ('Дата исследования', 3 , 'efdd456c-091b-49d9-ac32-d0d345f88e64', '6be7f5c3-434f-40be-99f2-027c41e78853', 'Дата');
 
 insert into questions (name, item_order, value_type_id,  research_id, short_name)
-values ('Место исследования', 4 , '9f61f302-6821-40b9-94bc-78dedf955a11', '6be7f5c3-434f-40be-99f2-027c41e78853', 'Место исследования');
+values ('Место исследования', 5 , '9f61f302-6821-40b9-94bc-78dedf955a11', '6be7f5c3-434f-40be-99f2-027c41e78853', 'Место исследования');
 
 
 UPDATE questions SET item_order = 3 WHERE id = 'bd35e4b0-8801-4b33-9102-ae0e4aa933bb';

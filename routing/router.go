@@ -6,6 +6,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
+	"mdgkb/tsr-tegister-server-v1/handlers/commissionsstatuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
@@ -45,6 +46,7 @@ import (
 	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
+	commissionsStatusesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsstatuses"
 	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionstemplates"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
@@ -130,4 +132,5 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	drugarrivesRouter.Init(api.Group("/drug-arrives"), drugarrives.CreateHandler(helper))
 	fundcontractsRouter.Init(api.Group("/fund-contracts"), fundcontracts.CreateHandler(helper))
 	fundcouncilsRouter.Init(api.Group("/fund-councils"), fundcouncils.CreateHandler(helper))
+	commissionsStatusesRouter.Init(api.Group("/commissions-statuses"), commissionsstatuses.CreateHandler(helper))
 }

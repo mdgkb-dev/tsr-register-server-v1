@@ -6,7 +6,8 @@ import (
 )
 
 type PatientResearch struct {
-	bun.BaseModel `bun:"patients_researches,alias:patients_researches"`
+	//bun.BaseModel `bun:"patients_researches,select:patients_researches_view,alias:patients_researches_view"`
+	bun.BaseModel `bun:"patients_researches,alias:patients_researches_view"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
 	Research          *Research       `bun:"rel:belongs-to" json:"research"`

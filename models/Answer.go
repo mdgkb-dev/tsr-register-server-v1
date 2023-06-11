@@ -110,8 +110,11 @@ func (item *Answer) GetData(prop *Question) string {
 	if prop.ValueType.IsRadio() {
 		res := No
 		for _, radio := range prop.AnswerVariants {
+			//if prop.Name == "Атопический дерматит" {
+			//	fmt.Println(radio.ID.UUID, radio.Name, item.ID.UUID, item.QuestionID.UUID, prop.ID.UUID)
+			//}
 			if radio.ID == item.AnswerVariantID {
-				res = Yes
+				res = radio.Name
 				break
 			}
 		}
@@ -136,4 +139,15 @@ func (item *Answer) GetAggregateExistingData() bool {
 		}
 	}
 	return false
+}
+
+func (item *Answer) AnswerVariantSelected(variantId uuid.NullUUID) string {
+	res := No
+	for _, selectedVariant := range item.SelectedAnswerVariants {
+		if selectedVariant.AnswerVariantID == variantId {
+			res = Yes
+			break
+		}
+	}
+	return res
 }

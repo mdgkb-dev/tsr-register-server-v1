@@ -66,14 +66,15 @@ func (item *ResearchQuery) WriteXlsx(xl *xlsxhelper.XlsxHelper) ([]byte, error) 
 	if xl.Err != nil {
 		return nil, xl.Err
 	}
+
 	item.writeData(xl)
 	if xl.Err != nil {
 		return nil, xl.Err
 	}
-	item.writeAggregates(xl)
-	if xl.Err != nil {
-		return nil, xl.Err
-	}
+	//item.writeAggregates(xl)
+	//if xl.Err != nil {
+	//	return nil, xl.Err
+	//}
 	//item.setStyle(xl)
 	//if xl.Err != nil {
 	//	return nil, xl.Err
@@ -91,14 +92,13 @@ func (item *ResearchQuery) writeData(xl *xlsxhelper.XlsxHelper) {
 			//}
 		}
 	}
-
 	for patientNum, patientResearchPool := range item.ResearchesPool.PatientsResearchesPools {
 		if patientResearchPool.Patient == nil {
 			continue
 		}
 		xl.Data = append(xl.Data, strconv.Itoa(patientNum+1), patientResearchPool.Patient.Human.GetFullName())
 		if item.WithAge {
-			xl.Data = append(xl.Data, strconv.Itoa(patientResearchPool.Patient.Human.GetAge()))
+			xl.Data = append(xl.Data, patientResearchPool.Patient.Human.GetFormattedDateBirth())
 		}
 		item.ResearchQueryGroups.writeXlsxData(xl, patientResearchPool.PatientID)
 		xl.WriteString(4+patientNum, 0, &xl.Data)
@@ -120,6 +120,6 @@ func (item *ResearchQuery) setStyle(xl *xlsxhelper.XlsxHelper) {
 	xl.Cursor = 3
 	//height := 6 + len(item.ResearchesPool.RegisterToPatient)
 	//xl.SetBorder(height)
-	item.ResearchQueryGroups.writeAggregates(xl)
+	//item.ResearchQueryGroups.writeAggregates(xl)
 	//xl.AutofitAllColumns()
 }

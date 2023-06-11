@@ -55,3 +55,13 @@ func (items Researches) GetQuestionsForDelete() []uuid.UUID {
 	}
 	return itemsForGet
 }
+
+func (item *Research) GetResultByPatientID(patientID uuid.NullUUID) *ResearchResult {
+	research := &ResearchResult{}
+	for i := range item.ResearchResults {
+		if item.ResearchResults[i].PatientID == patientID {
+			research = item.ResearchResults[i]
+		}
+	}
+	return research
+}

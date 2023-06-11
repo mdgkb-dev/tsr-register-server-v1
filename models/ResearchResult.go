@@ -20,6 +20,9 @@ type ResearchResult struct {
 	Research   *Research     `bun:"rel:belongs-to" json:"research"`
 	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`
 
+	Patient   *Research     `bun:"rel:belongs-to" json:"patient"`
+	PatientID uuid.NullUUID `bun:"type:uuid" json:"patientId"`
+
 	FillingPercentage uint `json:"fillingPercentage"`
 	Order             uint `bun:"item_order" json:"order"`
 }
@@ -164,6 +167,28 @@ func (item *ResearchResult) GetAggregateExistingData() string {
 	for _, answer := range item.Answers {
 		if answer.GetAggregateExistingData() {
 			res = Yes
+			break
+		}
+	}
+	return res
+}
+
+func (item *ResearchResult) Include(variantId uuid.NullUUID) string {
+	res := No
+	for _, answer := range item.Answers {
+		res = answer.AnswerVariantSelected(variantId)
+		if res == Yes {
+			break
+		}
+	}
+	return res
+}
+
+func (item *ResearchResult) GetData(question *Question) string {
+	res := No
+	for _, answer := range item.Answers {
+		if answer.QuestionID == question.ID {
+			res = answer.GetData(question)
 			break
 		}
 	}

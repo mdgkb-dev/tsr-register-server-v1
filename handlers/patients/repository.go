@@ -27,6 +27,8 @@ func (r *Repository) create(item *models.Patient) (err error) {
 func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 	query := r.db().NewSelect().
 		Model(&items.Patients).
+		Relation("Disabilities").
+		Relation("Disabilities.Edvs").
 		Relation("HeightWeight").
 		Relation("ChestCircumference").
 		Relation("HeadCircumference").

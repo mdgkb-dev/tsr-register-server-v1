@@ -143,3 +143,7 @@ func (item *Human) ageFromDateOfBirth() int {
 	}
 	return ageYear
 }
+
+func (item *Human) GetFormattedDateBirth() string {
+	return item.DateBirth.Format("02.01.2006")
+}
