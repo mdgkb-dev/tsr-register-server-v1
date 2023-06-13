@@ -1,4 +1,4 @@
-package commissions
+package drugapplications
 
 import (
 	"context"
@@ -15,20 +15,18 @@ import (
 
 type IHandler interface {
 	basehandler.IHandler
-	FillApplicationTemplate(c *gin.Context)
 }
 
 type IService interface {
-	basehandler.IService[models.Commission, models.Commissions, models.CommissionsWithCount]
+	basehandler.IService[models.DrugApplication, models.DrugApplications, models.DrugApplicationsWithCount]
 }
 
 type IRepository interface {
-	basehandler.IService[models.Commission, models.Commissions, models.CommissionsWithCount]
+	basehandler.IService[models.DrugApplication, models.DrugApplications, models.DrugApplicationsWithCount]
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.Commission, map[string][]*multipart.FileHeader) error
-	FillApplicationTemplate(*models.Commission) ([]byte, error)
+	Upload(*gin.Context, *models.DrugApplication, map[string][]*multipart.FileHeader) error
 }
 
 type Handler struct {

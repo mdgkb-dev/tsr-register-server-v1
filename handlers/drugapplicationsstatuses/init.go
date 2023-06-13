@@ -1,40 +1,34 @@
-package commissions
+package drugapplicationsstatuses
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-
-	"mdgkb/tsr-tegister-server-v1/models"
-	"mime/multipart"
-
-	"github.com/gin-gonic/gin"
 )
 
 type IHandler interface {
 	basehandler.IHandler
-	FillApplicationTemplate(c *gin.Context)
 }
 
 type IService interface {
-	basehandler.IService[models.Commission, models.Commissions, models.CommissionsWithCount]
+	basehandler.IService[models.DrugApplicationStatus, models.DrugApplicationsStatuses, models.DrugApplicationsStatusesWithCount]
 }
 
 type IRepository interface {
-	basehandler.IService[models.Commission, models.Commissions, models.CommissionsWithCount]
+	basehandler.IRepository[models.DrugApplicationStatus, models.DrugApplicationsStatuses, models.DrugApplicationsStatusesWithCount]
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.Commission, map[string][]*multipart.FileHeader) error
-	FillApplicationTemplate(*models.Commission) ([]byte, error)
+	basehandler.IFilesService
 }
 
 type Handler struct {
 	service      IService
-	helper       *helper.Helper
 	filesService IFilesService
+	helper       *helper.Helper
 }
 
 type Service struct {
@@ -57,6 +51,11 @@ func CreateHandler(helper *helper.Helper) *Handler {
 	service := NewService(repo, helper)
 	filesService := NewFilesService(helper)
 	return NewHandler(service, filesService, helper)
+}
+
+func CreateService(helper *helper.Helper) *Service {
+	repo := NewRepository(helper)
+	return NewService(repo, helper)
 }
 
 // NewHandler constructor

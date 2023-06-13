@@ -1,4 +1,4 @@
-package commissions
+package commissionsdrugapplications
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.Commission
+	var item models.CommissionDrugApplication
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -59,7 +59,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.Commission
+	var item models.CommissionDrugApplication
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -69,17 +69,4 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
-}
-
-func (h *Handler) FillApplicationTemplate(c *gin.Context) {
-	var item models.Commission
-	err := c.Bind(&item)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	doc, err := h.filesService.FillApplicationTemplate(&item)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.Data(http.StatusOK, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", doc)
 }

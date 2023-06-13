@@ -9,13 +9,7 @@ create table research_query_group_questions
     aggregate_type    varchar
 );
 
--- data small fix
-insert into answers (id, question_id,  research_result_id)
-select answer_id, question_id, research_result_id from selected_answer_variants sav
-join answer_variants av on sav.answer_variant_id = av.id
-join questions q on av.question_id = q.id
-on conflict do nothing ;
-----
+
 delete from research_query_groups where id is not null;
 --
 insert into public.research_query_groups (id, research_query_id, research_id, item_order, aggregate_type, count_sum, count_percentage, name)

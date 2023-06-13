@@ -1,7 +1,7 @@
-package commissions
+package commissionsdrugapplications
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/commissions"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,5 +13,4 @@ func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.POST("", h.Create)
 	r.DELETE("/:id", h.Delete)
 	r.PUT("/:id", h.Update)
-	r.POST("/fill-commission-template", h.FillApplicationTemplate)
 }

@@ -27,10 +27,11 @@ type Commission struct {
 	Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
 	DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
 
-	DzmAnswerFile      *FileInfo          `bun:"rel:belongs-to" json:"dzmAnswerFile"`
-	DzmAnswerFileID    uuid.NullUUID      `bun:"type:uuid" json:"dzmAnswerFileId"`
-	DzmAnswerComment   string             `json:"dzmAnswerComment"`
-	CommissionsDoctors CommissionsDoctors `bun:"rel:has-many" json:"commissionsDoctors"`
+	DzmAnswerFile               *FileInfo                   `bun:"rel:belongs-to" json:"dzmAnswerFile"`
+	DzmAnswerFileID             uuid.NullUUID               `bun:"type:uuid" json:"dzmAnswerFileId"`
+	DzmAnswerComment            string                      `json:"dzmAnswerComment"`
+	CommissionsDoctors          CommissionsDoctors          `bun:"rel:has-many" json:"commissionsDoctors"`
+	CommissionsDrugApplications CommissionsDrugApplications `bun:"rel:has-many" json:"commissionsDrugApplications"`
 }
 
 type Commissions []*Commission

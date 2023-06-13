@@ -1,14 +1,14 @@
-package commissions
+package drugapplicationsstatuses
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.Commission
+	var item models.DrugApplicationStatus
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -17,16 +17,12 @@ func (h *Handler) Create(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(http.StatusOK, item)
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
 	err := h.service.SetQueryFilter(c)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//userID, err := h.helper.Token.GetUserID(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusUnauthorized) {
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
 	items, err := h.service.GetAll()
@@ -37,12 +33,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 }
 
 func (h *Handler) Get(c *gin.Context) {
-	err := h.service.SetQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	id := c.Param("id")
-	item, err := h.service.Get(id)
+	item, err := h.service.Get(c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -50,8 +41,7 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 func (h *Handler) Delete(c *gin.Context) {
-	id := c.Param("id")
-	err := h.service.Delete(id)
+	err := h.service.Delete(c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -59,8 +49,9 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.Commission
+	var item models.DrugApplicationStatus
 	_, err := h.helper.HTTP.GetForm(c, &item)
+
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -68,18 +59,5 @@ func (h *Handler) Update(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(http.StatusOK, item)
-}
-
-func (h *Handler) FillApplicationTemplate(c *gin.Context) {
-	var item models.Commission
-	err := c.Bind(&item)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	doc, err := h.filesService.FillApplicationTemplate(&item)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.Data(http.StatusOK, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", doc)
+	c.JSON(http.StatusOK, gin.H{})
 }

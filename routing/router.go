@@ -6,11 +6,14 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
+	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsstatuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugapplications"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugapplicationsstatuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugarrives"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugs"
 	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
@@ -46,11 +49,14 @@ import (
 	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
+	commissionsdrugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdrugapplications"
 	commissionsStatusesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsstatuses"
 	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionstemplates"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
+	drugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplications"
+	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplicationsstatuses"
 	drugarrivesRouter "mdgkb/tsr-tegister-server-v1/routing/drugarrives"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
@@ -133,4 +139,8 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	fundcontractsRouter.Init(api.Group("/fund-contracts"), fundcontracts.CreateHandler(helper))
 	fundcouncilsRouter.Init(api.Group("/fund-councils"), fundcouncils.CreateHandler(helper))
 	commissionsStatusesRouter.Init(api.Group("/commissions-statuses"), commissionsstatuses.CreateHandler(helper))
+	drugapplicationsRouter.Init(api.Group("/drug-applications"), drugapplications.CreateHandler(helper))
+	commissionsdrugapplicationsRouter.Init(api.Group("/commissions-drug-applications"), commissionsdrugapplications.CreateHandler(helper))
+	drugapplicationsstatusesRouter.Init(api.Group("/drug-applications-statuses"), drugapplicationsstatuses.CreateHandler(helper))
+
 }
