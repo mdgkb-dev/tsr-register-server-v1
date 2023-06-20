@@ -15,8 +15,8 @@ type FundContract struct {
 	Date          *time.Time    `bun:"item_date" json:"date"`
 	Number        string        `json:"number"`
 
-	//Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
-	//DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
+	DrugApplication   *DrugApplication `bun:"rel:belongs-to" json:"drugApplication"`
+	DrugApplicationID uuid.NullUUID    `bun:"type:uuid" json:"drugApplicationId"`
 }
 
 type FundContracts []*FundContract

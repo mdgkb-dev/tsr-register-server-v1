@@ -13,8 +13,8 @@ type DrugArrive struct {
 	FundContract   *FundContract `bun:"rel:belongs-to" json:"fundContract"`
 	FundContractID uuid.NullUUID `bun:"type:uuid" json:"fundContractId"`
 
-	Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
-	DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
+	//Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
+	//DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
 
 	Quantity int  `json:"quantity"`
 	Stage    int  `json:"stage"`

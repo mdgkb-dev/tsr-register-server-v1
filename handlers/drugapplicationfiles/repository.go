@@ -1,4 +1,4 @@
-package drugapplications
+package DrugApplicationFilefiles
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -20,29 +20,24 @@ func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
 	return nil
 }
 
-func (r *Repository) Create(item *models.DrugApplication) (err error) {
+func (r *Repository) Create(item *models.DrugApplicationFile) (err error) {
 	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) GetAll() (items models.DrugApplicationsWithCount, err error) {
-	items.DrugApplications = make(models.DrugApplications, 0)
+func (r *Repository) GetAll() (items models.DrugApplicationFilesWithCount, err error) {
+	items.DrugApplicationFiles = make(models.DrugApplicationFiles, 0)
 	query := r.DB().NewSelect().
-		Model(&items.DrugApplications).
-		Relation("DrugApplicationStatus").
-		Relation("FundContract.DrugArrives.DrugDecreases").
-		Relation("DrugApplicationFiles.FileInfo").
-		Relation("CommissionsDrugApplications.Commission")
+		Model(&items.DrugApplicationFiles)
 	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
 
-func (r *Repository) Get(id string) (*models.DrugApplication, error) {
-	item := models.DrugApplication{}
+func (r *Repository) Get(id string) (*models.DrugApplicationFile, error) {
+	item := models.DrugApplicationFile{}
 	err := r.DB().NewSelect().
 		Model(&item).
-		Relation("DrugApplicationStatus").
 		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err
@@ -51,10 +46,10 @@ func (r *Repository) Get(id string) (*models.DrugApplication, error) {
 }
 
 func (r *Repository) Delete(id string) (err error) {
-	_, err = r.DB().NewDelete().Model(&models.DrugApplication{}).Where("id = ?", id).Exec(r.ctx)
+	_, err = r.DB().NewDelete().Model(&models.DrugApplicationFile{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
-func (r *Repository) Update(item *models.DrugApplication) (err error) {
+func (r *Repository) Update(item *models.DrugApplicationFile) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
