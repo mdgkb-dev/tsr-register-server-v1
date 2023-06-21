@@ -36,6 +36,6 @@ func (s *FilesService) FillApplicationTemplate(item *models.Commission) ([]byte,
 		//p = append(p, strconv.Itoa(i+1)+". "+point.PointsAchievement.Name)
 		p = append(p, strconv.Itoa(i+1)+". "+commissionDoctor.Role+" - "+commissionDoctor.Doctor.Name)
 	}
-	m["item.CommissionsDoctors"] = strings.Join(p, "\n")
+	m["item.CommissionsDoctors"] = strings.Join(p, "\n\n")
 	return s.helper.Templater.ReplaceDoc(m, "commissionProtocol.docx")
 }

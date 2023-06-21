@@ -30,6 +30,9 @@ func (r *Repository) GetAll() (items models.DrugApplicationsWithCount, err error
 	query := r.DB().NewSelect().
 		Model(&items.DrugApplications).
 		Relation("DrugApplicationStatus").
+		Relation("FundContract.DrugArrives", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("drug_arrives.stage")
+		}).
 		Relation("FundContract.DrugArrives.DrugDecreases").
 		Relation("DrugApplicationFiles.FileInfo").
 		Relation("CommissionsDrugApplications.Commission")
