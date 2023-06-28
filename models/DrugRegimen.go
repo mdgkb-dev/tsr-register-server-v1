@@ -16,6 +16,12 @@ type DrugRegimen struct {
 	DrugRegimenBlocksForDelete []string            `bun:"-" json:"drugRegimenBlocksForDelete"`
 }
 
+type DrugRegimens []*DrugRegimen
+type DrugRegimensWithCount struct {
+	DrugRegimens DrugRegimens `json:"items"`
+	Count        int          `json:"count"`
+}
+
 func (item *DrugRegimen) SetIDForChildren() {
 	if len(item.DrugRegimenBlocks) > 0 {
 		for i := range item.DrugRegimenBlocks {

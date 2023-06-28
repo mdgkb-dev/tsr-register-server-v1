@@ -13,12 +13,13 @@ type Drug struct {
 	Name          string    `json:"name"`
 	NameMNN       string    `bun:"name_mnn" json:"nameMNN"`
 	//ReportName            string         `json:"reportName"`
-	Form                  string         `json:"form"`
-	Doze                  string         `json:"doze"`
-	Registered            bool           `json:"registered"`
-	DateRegistration      *time.Time     `json:"dateRegistration"`
-	DrugRegimens          []*DrugRegimen `bun:"rel:has-many" json:"drugRegimens"`
-	DrugRegimensForDelete []string       `bun:"-" json:"drugRegimensForDelete"`
+	Form                  string       `json:"form"`
+	Doze                  string       `json:"doze"`
+	Registered            bool         `json:"registered"`
+	DateRegistration      *time.Time   `json:"dateRegistration"`
+	DrugRegimens          DrugRegimens `bun:"rel:has-many" json:"drugRegimens"`
+	DrugDozes             DrugDozes    `bun:"rel:has-many" json:"drugDozes"`
+	DrugRegimensForDelete []string     `bun:"-" json:"drugRegimensForDelete"`
 
 	DrugsDiagnosis          DrugsDiagnosis `bun:"rel:has-many" json:"drugsDiagnosis"`
 	DrugsDiagnosisForDelete []uuid.UUID    `bun:"-" json:"drugsDiagnosisForDelete"`

@@ -37,6 +37,8 @@ func (r *Repository) GetAll() (item models.DrugsWithCount, err error) {
 func (r *Repository) Get(slug string) (*models.Drug, error) {
 	item := models.Drug{}
 	err := r.DB().NewSelect().Model(&item).
+		Relation("DrugDozes").
+		Relation("DrugRegimens").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)
 	return &item, err
