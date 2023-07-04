@@ -79,6 +79,7 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 			return q.Order("commissions.number")
 		}).
 		Relation("Commissions.CommissionsDoctors.Doctor").
+		Relation("Commissions.PatientDiagnosis.MkbItem").
 		//Relation("PatientHistories.User").
 
 		//Relation("PatientDiagnosis.Anamnesis").
