@@ -34,7 +34,10 @@ func (r *Repository) GetAll() (items models.CommissionsWithCount, err error) {
 		Relation("PatientDiagnosis.MkbItem").
 		Relation("Patient.Human").
 		Relation("Patient.PatientDiagnosis.MkbItem").
-		Relation("CommissionStatus")
+		Relation("CommissionStatus").
+		Relation("DrugRecipe.Drug").
+		Relation("DrugRecipe.DrugForm").
+		Relation("DrugRecipe.DrugDoze")
 	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
@@ -46,6 +49,9 @@ func (r *Repository) Get(id string) (*models.Commission, error) {
 		Model(&item).
 		Relation("CommissionsDoctors.Doctor").
 		Relation("Patient.Human").
+		Relation("DrugRecipe.Drug").
+		Relation("DrugRecipe.DrugForm").
+		Relation("DrugRecipe.DrugDoze").
 		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err

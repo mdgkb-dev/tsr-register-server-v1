@@ -25,10 +25,10 @@ func (s *FilesService) FillApplicationTemplate(item *models.Commission) ([]byte,
 	m := map[string]interface{}{
 		"item.PatientDiagnosis.MkbItem.Name": item.PatientDiagnosis.MkbItem.Name,
 		"item.Number":                        item.Number,
-		"item.Drug.Name":                     item.Drug.Name,
-		"year":                               time.Now().Year(),
-		"item.Date":                          item.Date.Format("02.01.2006"),
-		"item.FormValue.User.Human.Surname":  item.Patient.Human,
+		//"item.Drug.Name":                     item.Drug.Name,
+		"year":                              time.Now().Year(),
+		"item.Date":                         item.Date.Format("02.01.2006"),
+		"item.FormValue.User.Human.Surname": item.Patient.Human,
 	}
 
 	p := make([]string, 0)
@@ -36,6 +36,6 @@ func (s *FilesService) FillApplicationTemplate(item *models.Commission) ([]byte,
 		//p = append(p, strconv.Itoa(i+1)+". "+point.PointsAchievement.Name)
 		p = append(p, strconv.Itoa(i+1)+". "+commissionDoctor.Role+" - "+commissionDoctor.Doctor.Name)
 	}
-	m["item.CommissionsDoctors"] = strings.Join(p, "\n\n")
+	m["item.CommissionsDoctors"] = strings.Join(p, "\n")
 	return s.helper.Templater.ReplaceDoc(m, "commissionProtocol.docx")
 }

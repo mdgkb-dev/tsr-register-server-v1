@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -11,19 +9,13 @@ type DrugDoze struct {
 	bun.BaseModel `bun:"drug_dozes,alias:drugs"`
 	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
-	NameMNN       string    `bun:"name_mnn" json:"nameMNN"`
-	//ReportName            string         `json:"reportName"`
-	Form                  string         `json:"form"`
-	Doze                  string         `json:"doze"`
-	Registered            bool           `json:"registered"`
-	DateRegistration      *time.Time     `json:"dateRegistration"`
-	DrugRegimens          []*DrugRegimen `bun:"rel:has-many" json:"drugRegimens"`
-	DrugRegimensForDelete []string       `bun:"-" json:"drugRegimensForDelete"`
+	Quantity      float32   `json:"quantity"`
 
-	DrugsDiagnosis          DrugsDiagnosis `bun:"rel:has-many" json:"drugsDiagnosis"`
-	DrugsDiagnosisForDelete []uuid.UUID    `bun:"-" json:"drugsDiagnosisForDelete"`
+	DrugForm   *DrugForm     `bun:"rel:belongs-to" json:"drugForm"`
+	DrugFormID uuid.NullUUID `bun:"type:uuid" json:"drugFormId"`
 }
-type DrugDozes []*Drug
+type DrugDozes []*DrugDoze
+
 type DrugDozesWithCount struct {
 	DrugDozes DrugDozes `json:"items"`
 	Count     int       `json:"count"`

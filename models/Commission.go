@@ -21,11 +21,9 @@ type Commission struct {
 	CommissionStatusID uuid.NullUUID     `bun:"type:uuid" json:"commissionStatusId"`
 	PatientDiagnosis   *PatientDiagnosis `bun:"rel:belongs-to" json:"patientDiagnosis"`
 	PatientDiagnosisID uuid.NullUUID     `bun:"type:uuid" json:"patientDiagnosisId"`
-	DrugRegimen        *DrugRegimen      `bun:"rel:belongs-to" json:"drugRegimen"`
-	DrugRegimenID      uuid.NullUUID     `bun:"type:uuid" json:"drugRegimenId"`
 
-	Drug   *Drug         `bun:"rel:belongs-to" json:"drug"`
-	DrugID uuid.NullUUID `bun:"type:uuid" json:"drugId"`
+	DrugRecipe   *DrugRecipe   `bun:"rel:belongs-to" json:"drugRecipe"`
+	DrugRecipeID uuid.NullUUID `bun:"type:uuid" json:"drugRecipeId"`
 
 	DzmAnswerFile               *FileInfo                   `bun:"rel:belongs-to" json:"dzmAnswerFile"`
 	DzmAnswerFileID             uuid.NullUUID               `bun:"type:uuid" json:"dzmAnswerFileId"`

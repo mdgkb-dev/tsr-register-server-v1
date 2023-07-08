@@ -7,9 +7,9 @@ import (
 
 type DrugRegimen struct {
 	bun.BaseModel `bun:"drug_regimens,alias:drug_regimens"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name          string    `json:"name"`
-	DrugID        uuid.UUID `bun:"type:uuid" json:"drugId"`
+	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name          string        `json:"name"`
+	DrugID        uuid.NullUUID `bun:"type:uuid" json:"drugId"`
 
 	Drug                       *Drug               `bun:"rel:belongs-to" json:"drug"`
 	DrugRegimenBlocks          []*DrugRegimenBlock `bun:"rel:has-many" json:"drugRegimenBlocks"`
