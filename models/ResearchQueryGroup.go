@@ -94,13 +94,12 @@ func (item *ResearchQueryGroup) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
 	}
 }
 
-func (items ResearchQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, patientId uuid.NullUUID) {
+func (items ResearchQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, patientID uuid.NullUUID) {
 	for i := range items {
-		result := items[i].Research.GetResultByPatientID(patientId)
+		result := items[i].Research.GetResultByPatientID(patientID)
 		items[i].writeXlsxData(xl, result)
 		items[i].PatientIndex++
 	}
-
 }
 
 func (item *ResearchQueryGroup) writeXlsxData(xl *xlsxhelper.XlsxHelper, result *ResearchResult) {

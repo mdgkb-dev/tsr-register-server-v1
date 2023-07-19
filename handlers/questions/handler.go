@@ -25,8 +25,15 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	registerID := c.Query("registerId")
-	items, err := h.service.GetAll(&registerID)
+	err := h.service.SetQueryFilter(c)
+	errCode := http.StatusInternalServerError
+	if err != nil && err.Error() == "Token is expired" {
+		errCode = http.StatusUnauthorized
+	}
+	if h.helper.HTTP.HandleError(c, err, errCode) {
+		return
+	}
+	items, err := h.service.GetAll()
 
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -37,7 +44,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	item, err := h.service.Get(&id)
+	item, err := h.service.Get(id)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -46,7 +53,7 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := h.service.Delete(&id)
+	err := h.service.Delete(id)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -64,12 +71,4 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
-}
-
-func (h *Handler) GetValueTypes(c *gin.Context) {
-	items, err := h.service.GetValueTypes()
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	c.JSON(http.StatusOK, items)
 }

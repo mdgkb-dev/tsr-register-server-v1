@@ -1,4 +1,4 @@
-package DrugApplicationFilefiles
+package drugapplicationfiles
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"

@@ -4,53 +4,27 @@ import (
 	"context"
 
 	"github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
+	"github.com/pro-assistance/pro-assister/tokenHelper"
 
 	"mdgkb/tsr-tegister-server-v1/models"
-	"mime/multipart"
-
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
+	basehandler.IHandler
 }
 
 type IService interface {
-	setQueryFilter(*gin.Context) error
-
-	GetAll() (models.PatientsWithCount, error)
-	GetOnlyNames() (models.PatientsWithCount, error)
-	Get(*string, bool) (*models.Patient, error)
-	Create(*models.Patient) error
-	Update(*models.Patient) error
-	Delete(*string) error
-
-	GetBySearch(*string) ([]*models.Patient, error)
-	GetDisabilities() (models.PatientsWithCount, error)
+	basehandler.IService[models.Patient, models.Patients, models.PatientsWithCount]
 }
 
 type IRepository interface {
-	setQueryFilter(*gin.Context) error
-	db() *bun.DB
-	create(*models.Patient) error
-	getAll() (models.PatientsWithCount, error)
-	get(*string, bool) (*models.Patient, error)
-	update(*models.Patient) error
-	delete(*string) error
-
-	getOnlyNames() (models.PatientsWithCount, error)
-	getBySearch(*string) ([]*models.Patient, error)
-	getDisabilities() (models.PatientsWithCount, error)
+	basehandler.IRepository[models.Patient, models.Patients, models.PatientsWithCount]
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.Patient, map[string][]*multipart.FileHeader) error
+	basehandler.IFilesService
 }
 
 type Handler struct {
@@ -65,9 +39,10 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx         context.Context
-	helper      *helper.Helper
-	queryFilter *sqlHelper.QueryFilter
+	ctx           context.Context
+	helper        *helper.Helper
+	queryFilter   *sqlHelper.QueryFilter
+	accessDetails *tokenHelper.AccessDetails
 }
 
 type FilesService struct {

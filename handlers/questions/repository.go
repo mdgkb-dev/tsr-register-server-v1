@@ -3,82 +3,66 @@ package questions
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) db() *bun.DB {
+func (r *Repository) DB() *bun.DB {
 	return r.helper.DB.DB
 }
 
-func (r *Repository) create(item *models.Question) (err error) {
-	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
+func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
+	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
+	if err != nil {
+		return err
+	}
+
+	r.accessDetails, err = r.helper.Token.GetAccessDetail(c)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Repository) Create(item *models.Question) (err error) {
+	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) getAll(registerID *string) ([]*models.Question, error) {
-	items := []*models.Question{}
-	query := r.db().NewSelect().Model(&items)
-
-	if *registerID != "" {
-		query.
-			Join("join register_group on register_group.id = ?TableName.register_group_id ").
-			Where("register_group.register_id = ? ", *registerID)
+func (r *Repository) GetAll() (items models.QuestionsWithCount, err error) {
+	items.Questions = make(models.Questions, 0)
+	query := r.DB().NewSelect().
+		Model(&items.Questions).
+		Relation("AnswerVariants")
+	if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
+		query.Where("?TableAlias.domain_id = ?", r.accessDetails.UserDomainID)
 	}
-
-	err := query.Scan(r.ctx)
+	r.queryFilter.HandleQuery(query)
+	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
 
-func (r *Repository) get(id *string) (*models.Question, error) {
+func (r *Repository) Get(id string) (*models.Question, error) {
 	item := models.Question{}
-	err := r.db().NewSelect().Model(&item).
+	err := r.DB().NewSelect().Model(&item).
 		Relation("AnswerVariant").
-		Relation("AnswerVariant").
-		Where("register_property.id = ?", *id).Scan(r.ctx)
+		Where("register_property.id = ?", id).Scan(r.ctx)
 	return &item, err
 }
 
-func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db().NewDelete().Model(&models.Question{}).Where("id = ?", *id).Exec(r.ctx)
+func (r *Repository) Delete(id string) (err error) {
+	_, err = r.DB().NewDelete().Model(&models.Question{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) update(item *models.Question) (err error) {
-	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+func (r *Repository) Update(item *models.Question) (err error) {
+	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
-
-func (r *Repository) getValueTypes() ([]*models.ValueType, error) {
-	items := []*models.ValueType{}
-	err := r.db().NewSelect().
-		Model(&items).
-		Scan(r.ctx)
-	return items, err
-}
-
-//
-//var existsRegisterPropertyWithGroupId string = `
-//exists
-//(
-//	select *
-//	from
-//		register_property_to_register_group as rptrg
-//	where
-//		rptrg.register_property_id = register_property.id
-//		and exists
-//		(
-//			select *
-//			from
-//				register_group_to_register as rgtr
-//			where
-//				rgtr.register_group_id = rptrg.register_group_id
-//				and rgtr.register_id = ?
-//		)
-//)`
 
 func (r *Repository) upsertMany(items models.Questions) (err error) {
-	_, err = r.db().NewInsert().On("conflict (id) do update").
+	_, err = r.DB().NewInsert().On("conflict (id) do update").
 		Model(&items).
 		Set(`name = EXCLUDED.name`).
 		Set(`short_name = EXCLUDED.short_name`).
@@ -95,7 +79,7 @@ func (r *Repository) upsertMany(items models.Questions) (err error) {
 }
 
 func (r *Repository) deleteMany(idPool []uuid.UUID) (err error) {
-	_, err = r.db().NewDelete().
+	_, err = r.DB().NewDelete().
 		Model((*models.Question)(nil)).
 		Where("id IN (?)", bun.In(idPool)).
 		Exec(r.ctx)

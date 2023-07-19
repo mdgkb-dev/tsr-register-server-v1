@@ -1,7 +1,6 @@
 package registerpropertytopatient
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertiestopatientstofileinfos"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
@@ -22,16 +21,16 @@ func (s *Service) UpsertMany(items models.Answers) error {
 	if err != nil {
 		return err
 	}
-	items.SetIDForChildren()
-	registerPropertiesToPatientsToFileInfosService := registerpropertiestopatientstofileinfos.CreateService(s.helper)
-	err = registerPropertiesToPatientsToFileInfosService.UpsertMany(items.GetRegisterPropertiesToPatientsToFileInfos())
-	if err != nil {
-		return err
-	}
-	err = registerPropertiesToPatientsToFileInfosService.DeleteMany(items.GetRegisterPropertiesToPatientsToFileInfosForDelete())
-	if err != nil {
-		return err
-	}
+	//items.SetIDForChildren()
+	//registerPropertiesToPatientsToFileInfosService := registerpropertiestopatientstofileinfos.CreateService(s.helper)
+	//err = registerPropertiesToPatientsToFileInfosService.UpsertMany(items.GetRegisterPropertiesToPatientsToFileInfos())
+	//if err != nil {
+	//	return err
+	//}
+	//err = registerPropertiesToPatientsToFileInfosService.DeleteMany(items.GetRegisterPropertiesToPatientsToFileInfosForDelete())
+	//if err != nil {
+	//	return err
+	//}
 	return nil
 }
 

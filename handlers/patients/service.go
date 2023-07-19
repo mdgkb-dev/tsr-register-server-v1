@@ -20,7 +20,7 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 	item.HumanID = item.Human.ID
-	err = s.repository.create(item)
+	err = s.repository.Create(item)
 	if err != nil {
 		return err
 	}
@@ -57,15 +57,11 @@ func (s *Service) Create(item *models.Patient) error {
 }
 
 func (s *Service) GetAll() (models.PatientsWithCount, error) {
-	return s.repository.getAll()
+	return s.repository.GetAll()
 }
 
-func (s *Service) GetOnlyNames() (models.PatientsWithCount, error) {
-	return s.repository.getOnlyNames()
-}
-
-func (s *Service) Get(id *string, withDeleted bool) (*models.Patient, error) {
-	item, err := s.repository.get(id, withDeleted)
+func (s *Service) Get(id string) (*models.Patient, error) {
+	item, err := s.repository.Get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +74,7 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 	item.HumanID = item.Human.ID
-	err = s.repository.update(item)
+	err = s.repository.Update(item)
 	if err != nil {
 		return err
 	}
@@ -161,68 +157,15 @@ func (s *Service) Update(item *models.Patient) error {
 	return nil
 }
 
-func (s *Service) Delete(id *string) error {
-	//patient, err := s.repository.get(id, false)
-	//if err != nil {
-	//	return err
-	//}
-	//patient.SetDeleteIDForChildren()
-	//err = human.CreateService(s.helper).Delete(patient.HumanID)
-	//if err != nil {
-	//	return err
-	//}
-	//err = representativetopatient.CreateService(s.helper).DeleteMany(patient.PatientsRepresentativesForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	//err = heightweight.CreateService(s.helper).DeleteMany(patient.HeightWeightForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	//err = chestcircumference.CreateService(s.helper).DeleteMany(patient.ChestCircumferenceForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	//err = headcircumference.CreateService(s.helper).DeleteMany(patient.HeadCircumferenceForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	//err = patientdrugregimen.CreateService(s.helper).DeleteMany(patient.PatientDrugRegimenForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	//err = registerPropertyToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertyToPatientForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	//err = registerPropertySetToPatient.CreateService(s.helper).DeleteMany(patient.RegisterPropertySetToPatientForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	err := s.repository.delete(id)
+func (s *Service) Delete(id string) error {
+	err := s.repository.Delete(id)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *Service) GetBySearch(query *string) ([]*models.Patient, error) {
-	queryRu := s.helper.Util.TranslitToRu(*query)
-	items, err := s.repository.getBySearch(&queryRu)
-	if err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
-func (s *Service) GetDisabilities() (models.PatientsWithCount, error) {
-	items, err := s.repository.getDisabilities()
-	if err != nil {
-		return items, err
-	}
-	return items, nil
-}
-func (s *Service) setQueryFilter(c *gin.Context) (err error) {
-	err = s.repository.setQueryFilter(c)
+func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.SetQueryFilter(c)
 	return err
 }

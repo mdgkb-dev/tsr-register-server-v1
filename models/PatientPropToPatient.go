@@ -8,9 +8,8 @@ import (
 type PatientProp struct {
 	bun.BaseModel `bun:"patients,select:patients_view,alias:patients_view"`
 	ModelInfo
-	ID      uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Human   *Human        `bun:"rel:belongs-to" json:"human"`
-	HumanID uuid.UUID     `bun:"type:uuid" json:"humanId"`
+	ID      uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
+	Name string `json:"name"`
 }
 
 type PatientProps []*PatientProp

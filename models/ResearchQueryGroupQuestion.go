@@ -79,10 +79,9 @@ func (items ResearchQueryGroupQuestions) writeXlsxData(xl *xlsxhelper.XlsxHelper
 	}
 }
 
-func (item *ResearchQueryGroupQuestion) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *ResearchQueryGroup, propNum int, result *ResearchResult) {
+func (item *ResearchQueryGroupQuestion) writeXlsxData(xl *xlsxhelper.XlsxHelper, g *ResearchQueryGroup, _ int, result *ResearchResult) {
 	if item.EveryRadioSet {
 		if item.Question.ValueType.IsSet() {
-
 			for _, av := range item.Question.AnswerVariants {
 				v := result.Include(av.ID)
 				if item.Question.Name == "Если у Вас при развитии данной реакции отмечались симптомы со стороны кожи/слизистых, то какие?" && g.PatientIndex == 0 {

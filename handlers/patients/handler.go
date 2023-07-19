@@ -33,8 +33,12 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	err := h.service.setQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	err := h.service.SetQueryFilter(c)
+	errCode := http.StatusInternalServerError
+	if err != nil && err.Error() == "Token is expired" {
+		errCode = http.StatusUnauthorized
+	}
+	if h.helper.HTTP.HandleError(c, err, errCode) {
 		return
 	}
 	items, err := h.service.GetAll()
@@ -46,7 +50,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	item, err := h.service.Get(&id, true)
+	item, err := h.service.Get(id)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -55,18 +59,10 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := h.service.Delete(&id)
+	err := h.service.Delete(id)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	_, err = h.service.Get(&id, true)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
-	//err = h.historyService.Create(item, models.RequestTypeDelete)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
 	c.JSON(http.StatusOK, gin.H{})
 }
 

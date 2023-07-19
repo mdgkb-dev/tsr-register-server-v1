@@ -1,4 +1,4 @@
-package DrugApplicationFilefiles
+package drugapplicationfiles
 
 import (
 	"context"

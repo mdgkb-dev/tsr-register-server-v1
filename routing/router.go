@@ -79,6 +79,7 @@ import (
 	patientsRepresentativesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsrepresentatives"
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
+	questionsRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	registerPropertyToUserRouter "mdgkb/tsr-tegister-server-v1/routing/registerpropertytouser"
@@ -148,5 +149,5 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	drugapplicationsstatusesRouter.Init(api.Group("/drug-applications-statuses"), drugapplicationsstatuses.CreateHandler(helper))
 	drugdecreasesRouter.Init(api.Group("/drug-decreases"), drugdecreases.CreateHandler(helper))
 	drugrecipesRouter.Init(api.Group("/drug-recipes"), drugrecipes.CreateHandler(helper))
-
+	questionsRouter.Init(api.Group("/questions"), questions.CreateHandler(helper))
 }

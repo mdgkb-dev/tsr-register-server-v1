@@ -7,23 +7,24 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertyvariants"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 func (s *Service) Create(item *models.Question) error {
-	return s.repository.create(item)
+	return s.repository.Create(item)
 }
 
-func (s *Service) GetAll(registerID *string) ([]*models.Question, error) {
-	items, err := s.repository.getAll(registerID)
+func (s *Service) GetAll() (models.QuestionsWithCount, error) {
+	items, err := s.repository.GetAll()
 	if err != nil {
-		return nil, err
+		return items, err
 	}
 	return items, nil
 }
 
-func (s *Service) Get(id *string) (*models.Question, error) {
-	item, err := s.repository.get(id)
+func (s *Service) Get(id string) (*models.Question, error) {
+	item, err := s.repository.Get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -31,19 +32,11 @@ func (s *Service) Get(id *string) (*models.Question, error) {
 }
 
 func (s *Service) Update(item *models.Question) error {
-	return s.repository.update(item)
+	return s.repository.Update(item)
 }
 
-func (s *Service) Delete(id *string) error {
-	return s.repository.delete(id)
-}
-
-func (s *Service) GetValueTypes() ([]*models.ValueType, error) {
-	items, err := s.repository.getValueTypes()
-	if err != nil {
-		return nil, err
-	}
-	return items, nil
+func (s *Service) Delete(id string) error {
+	return s.repository.Delete(id)
 }
 
 func (s *Service) UpsertMany(items models.Questions) error {
@@ -102,4 +95,9 @@ func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 		return nil
 	}
 	return s.repository.deleteMany(idPool)
+}
+
+func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
+	err = s.repository.SetQueryFilter(c)
+	return err
 }

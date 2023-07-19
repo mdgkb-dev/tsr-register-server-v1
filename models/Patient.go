@@ -120,11 +120,6 @@ func (item *Patient) SetIDForChildren() {
 			item.PatientDrugRegimen[i].PatientID = item.ID
 		}
 	}
-	if len(item.PatientsRegisters) > 0 {
-		//for i := range item.RegisterToPatient {
-		//	item.RegisterToPatient[i].PatientID = item.ID
-		//}
-	}
 	//if len(item.RegisterGroupsToPatient) > 0 {
 	//	for i := range item.RegisterGroupsToPatient {
 	//		item.RegisterGroupsToPatient[i].PatientID = item.ID

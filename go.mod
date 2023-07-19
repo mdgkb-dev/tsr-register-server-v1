@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/onsi/ginkgo/v2 v2.9.2
 	github.com/onsi/gomega v1.27.4
-	github.com/pro-assistance/pro-assister v0.0.106-0.20230407121050-8673b77a8dde
+	github.com/pro-assistance/pro-assister v0.0.106-0.20230718161931-9061e31de2a1
 	github.com/uptrace/bun v1.1.8
 	github.com/xuri/excelize/v2 v2.4.1
 	golang.org/x/crypto v0.0.0-20220511200225-c6db032c6c88

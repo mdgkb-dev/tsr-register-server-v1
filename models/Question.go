@@ -36,9 +36,17 @@ type Question struct {
 	Children                  Questions        `bun:"rel:has-many,join:id=parent_id" json:"children"`
 	ParentID                  uuid.NullUUID    `bun:"type:uuid" json:"parentId"`
 	Parent                    *Question        `bun:"-" json:"parent"`
+
+	DomainID uuid.NullUUID `bun:"type:uuid" json:"domainId"`
+	Domain   *Domain       `bun:"-" json:"domain"`
 }
 
 type Questions []*Question
+
+type QuestionsWithCount struct {
+	Questions Questions `json:"items"`
+	Count     int       `json:"count"`
+}
 
 func (item *Question) SetIDForChildren() {
 	if len(item.AnswerVariants) > 0 {

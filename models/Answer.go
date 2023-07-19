@@ -141,10 +141,10 @@ func (item *Answer) GetAggregateExistingData() bool {
 	return false
 }
 
-func (item *Answer) AnswerVariantSelected(variantId uuid.NullUUID) string {
+func (item *Answer) AnswerVariantSelected(variantID uuid.NullUUID) string {
 	res := No
 	for _, selectedVariant := range item.SelectedAnswerVariants {
-		if selectedVariant.AnswerVariantID == variantId {
+		if selectedVariant.AnswerVariantID == variantID {
 			res = Yes
 			break
 		}

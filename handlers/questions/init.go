@@ -6,40 +6,24 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
-
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
+	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
+	"github.com/pro-assistance/pro-assister/tokenHelper"
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
-	GetValueTypes(c *gin.Context)
+	basehandler.IHandler
 }
 
 type IService interface {
-	GetAll(*string) ([]*models.Question, error)
-	Get(*string) (*models.Question, error)
-	Create(*models.Question) error
-	Update(*models.Question) error
-	Delete(*string) error
-	GetValueTypes() ([]*models.ValueType, error)
+	basehandler.IService[models.Question, models.Questions, models.QuestionsWithCount]
 
 	UpsertMany(models.Questions) error
 	DeleteMany([]uuid.UUID) error
 }
 
 type IRepository interface {
-	db() *bun.DB
-	create(*models.Question) error
-	getAll(*string) ([]*models.Question, error)
-	get(*string) (*models.Question, error)
-	update(*models.Question) error
-	delete(*string) error
-	getValueTypes() ([]*models.ValueType, error)
+	basehandler.IRepository[models.Question, models.Questions, models.QuestionsWithCount]
 
 	upsertMany(models.Questions) error
 	deleteMany([]uuid.UUID) error
@@ -55,8 +39,10 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx    context.Context
-	helper *helper.Helper
+	ctx           context.Context
+	helper        *helper.Helper
+	queryFilter   *sqlHelper.QueryFilter
+	accessDetails *tokenHelper.AccessDetails
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

@@ -18,12 +18,15 @@ type User struct {
 	//
 	RegistersUsers          RegistersUsers `bun:"rel:has-many" json:"registersUsers"`
 	RegistersUsersForDelete []uuid.UUID    `bun:"-" json:"registersUsersForDelete"`
+
+	DomainID uuid.NullUUID `bun:"type:uuid" json:"domainId"`
+	Domain   *Domain       `bun:"rel:belongs-to" json:"domain"`
 }
 
 type Users []*User
 
-func (i *User) CompareWithUUID(externalUUID string) bool {
-	return i.UUID.String() == externalUUID
+func (item *User) CompareWithUUID(externalUUID string) bool {
+	return item.UUID.String() == externalUUID
 }
 
 func (item *User) SetIDForChildren() {
@@ -35,7 +38,7 @@ func (item *User) SetIDForChildren() {
 type RegisterPropertyToUser struct {
 	bun.BaseModel      `bun:"register_property_to_user,alias:register_property_to_user"`
 	ID                 uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	RegisterProperty   *Question `bun:"rel:belongs-to" json:"registerProperty"`
+	RegisterProperty   *Domain   `bun:"rel:belongs-to" json:"registerProperty"`
 	RegisterPropertyID uuid.UUID `bun:"type:uuid" json:"registerPropertyId"`
 	User               *User     `bun:"rel:belongs-to" json:"user"`
 	UserID             uuid.UUID `bun:"type:uuid" json:"userId"`

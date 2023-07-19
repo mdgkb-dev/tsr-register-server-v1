@@ -91,7 +91,6 @@ func (items AnswerVariants) Include(answers Answers) string {
 					exists = Yes
 					break
 				}
-
 			}
 			if exists == Yes {
 				break

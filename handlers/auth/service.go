@@ -24,7 +24,7 @@ func (s *Service) Register(item *models.User) (*models.TokensWithUser, error) {
 	if err != nil {
 		return nil, err
 	}
-	ts, err := s.helper.Token.CreateToken(item.ID.UUID.String(), "", "")
+	ts, err := s.helper.Token.CreateToken(item.ID.UUID.String(), "", "", item.DomainID.UUID.String())
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (s *Service) Login(item *models.Login, skipPassword bool) (*models.TokensWi
 	if !findedUser.CompareWithHashPassword(item.Password) && !skipPassword {
 		return nil, errors.New("wrong login or password")
 	}
-	ts, err := s.helper.Token.CreateToken(findedUser.ID.UUID.String(), "", "")
+	ts, err := s.helper.Token.CreateToken(findedUser.ID.UUID.String(), "", "", findedUser.DomainID.UUID.String())
 	if err != nil {
 		return nil, err
 	}

@@ -173,10 +173,10 @@ func (item *ResearchResult) GetAggregateExistingData() string {
 	return res
 }
 
-func (item *ResearchResult) Include(variantId uuid.NullUUID) string {
+func (item *ResearchResult) Include(variantID uuid.NullUUID) string {
 	res := No
 	for _, answer := range item.Answers {
-		res = answer.AnswerVariantSelected(variantId)
+		res = answer.AnswerVariantSelected(variantID)
 		if res == Yes {
 			break
 		}

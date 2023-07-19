@@ -7,31 +7,34 @@ import (
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) db() *bun.DB {
+func (r *Repository) DB() *bun.DB {
 	return r.helper.DB.DB
 }
 
-func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
+func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
 	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
+	if err != nil {
+		return err
+	}
+
+	r.accessDetails, err = r.helper.Token.GetAccessDetail(c)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *Repository) create(item *models.Patient) (err error) {
-	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
+func (r *Repository) Create(item *models.Patient) (err error) {
+	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
-	query := r.db().NewSelect().
+func (r *Repository) GetAll() (items models.PatientsWithCount, err error) {
+	items.Patients = make(models.Patients, 0)
+	query := r.DB().NewSelect().
 		Model(&items.Patients).
 		Relation("Disabilities").
 		Relation("Disabilities.Edvs").
-		Relation("HeightWeight").
-		Relation("ChestCircumference").
-		Relation("HeadCircumference").
 		Relation("PatientDrugRegimen").
 		Relation("Disabilities.Edvs").
 		Relation("Disabilities").
@@ -46,18 +49,17 @@ func (r *Repository) getAll() (items models.PatientsWithCount, err error) {
 		Relation("PatientsRegisters.User").
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
-	//Join("JOIN regions_users ON patients.region_id = regions_users.region_id AND regions_users.user_id = ?")
+	if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
+		query.Where("?TableAlias.domain_id = ?", r.accessDetails.UserDomainID)
+	}
 	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
 
-func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) {
+func (r *Repository) Get(id string) (*models.Patient, error) {
 	item := models.Patient{}
-	query := r.db().NewSelect().Model(&item).
-		//Relation("HeightWeight").
-		//Relation("ChestCircumference").
-		//Relation("HeadCircumference").
+	query := r.DB().NewSelect().Model(&item).
 		Relation("Disabilities").
 		Relation("Disabilities.Edvs").
 		Relation("Disabilities.Edvs.FileInfo").
@@ -80,72 +82,17 @@ func (r *Repository) get(id *string, withDeleted bool) (*models.Patient, error) 
 		}).
 		Relation("Commissions.CommissionsDoctors.Doctor").
 		Relation("Commissions.PatientDiagnosis.MkbItem").
-		//Relation("PatientHistories.User").
-
-		//Relation("PatientDiagnosis.Anamnesis").
-		//Relation("ResearchResult.ResearchesPool").
-		//Relation("RegisterGroupsToPatient.Answer.Question").
-		//Relation("RegisterGroupsToPatient.Answer.RegisterPropertiesToPatientsToFileInfos.FileInfo").
-		//Relation("RegisterGroupsToPatient.Answer.AnswerVariant").
-		//Relation("RegisterGroupsToPatient.PatientAnswerComments").
-		//Relation("PatientDrugRegimen.DrugRegimen.Drug").
-		//Relation("PatientDrugRegimen.PatientDrugRegimenItems").
-		//Relation("ChopScaleTests.ChopScaleTestResults.ChopScaleQuestionScore").
-		//Relation("HmfseScaleTests.HmfseScaleTestResults.HmfseScaleQuestionScore").
-		//Relation("CreatedBy").
-		//Relation("UpdatedBy").
-		Where("?TableAlias.id = ?", *id)
-	if withDeleted {
-		query = query.WhereAllWithDeleted()
-	}
+		Where("?TableAlias.id = ?", id)
 	err := query.Scan(r.ctx)
 	return &item, err
 }
 
-func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db().NewDelete().Model(&models.Patient{}).Where("id = ?", *id).Exec(r.ctx)
+func (r *Repository) Delete(id string) (err error) {
+	_, err = r.DB().NewDelete().Model(&models.Patient{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) update(item *models.Patient) (err error) {
-	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+func (r *Repository) Update(item *models.Patient) (err error) {
+	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
-}
-
-func (r *Repository) getOnlyNames() (items models.PatientsWithCount, err error) {
-	items.Count, err = r.db().NewSelect().
-		Model(&items.Patients).
-		Relation("Human").
-		Order("human.surname").
-		Order("human.name").
-		Order("human.patronymic").
-		ScanAndCount(r.ctx)
-	return items, err
-}
-
-func (r *Repository) getBySearch(search *string) ([]*models.Patient, error) {
-	items := make([]*models.Patient, 0)
-
-	err := r.db().NewSelect().
-		Model(&items).
-		Relation("Human").
-		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		Scan(r.ctx)
-	return items, err
-}
-
-func (r *Repository) getDisabilities() (item models.PatientsWithCount, err error) {
-	item.Patients = make([]*models.Patient, 0)
-	item.Count, err = r.db().NewSelect().
-		Model(&item.Patients).
-		Join("JOIN disability ON disability.patient_id = patients.id").
-		Relation("Human").
-		Relation("Disabilities.Period").
-		Relation("Disabilities.Edvs.Period").
-		Relation("Disabilities.Edvs.FileInfo").
-		Group("patients.id", "human.id", "human.name", "human.surname", "human.patronymic", "human.is_male", "human.date_birth", "human.address_registration", "human.address_residential", "human.contact_id", "human.photo_id", "human.deleted_at").
-		ScanAndCount(r.ctx)
-	return item, err
 }

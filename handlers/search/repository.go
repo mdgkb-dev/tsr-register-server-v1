@@ -68,14 +68,14 @@ func (r *Repository) elasticSuggester(model *search.SearchModel) error {
 	//if model.SearchGroup != nil {
 	//	indexes = append(indexes, model.SearchGroup.Table)
 	//}
-	should := make([]interface{}, 0)
-	should = append(should, map[string]interface{}{
-		"prefix": map[string]interface{}{
-			"name": map[string]interface{}{
-				"value": model.Query,
-			},
-		},
-	})
+	//should := make([]interface{}, 0)
+	//should = append(should, map[string]interface{}{
+	//	"prefix": map[string]interface{}{
+	//		"name": map[string]interface{}{
+	//			"value": model.Query,
+	//		},
+	//	},
+	//})
 	//var buf bytes.Buffer
 	//query := map[string]interface{}{
 	//	"query": should[0],
