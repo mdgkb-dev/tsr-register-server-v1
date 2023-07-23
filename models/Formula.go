@@ -10,6 +10,7 @@ type Formula struct {
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
 	Name          string        `json:"name"`
 	Formula       string        `json:"formula"`
+	Color         string        `json:"color"`
 
 	Research   *Research     `bun:"rel:belongs-to" json:"research"`
 	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`

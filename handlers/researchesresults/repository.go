@@ -27,7 +27,7 @@ func (r *Repository) Create(item *models.ResearchResult) (err error) {
 
 func (r *Repository) GetAll() (item models.ResearchResultsWithCount, err error) {
 	item.ResearchResults = make(models.ResearchResults, 0)
-	query := r.DB().NewSelect().Model(&item.ResearchResults)
+	query := r.DB().NewSelect().Model(&item.ResearchResults).Relation("Answers")
 
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
