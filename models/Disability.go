@@ -40,10 +40,11 @@ func (item *Disability) SetIDForChildren() {
 
 func (item *Disability) SetFilePath(fileID *string) *string {
 	for i := range item.Edvs {
-		if item.Edvs[i].FileInfo.ID.String() == *fileID {
+		if item.Edvs[i].FileInfo.ID.UUID.String() == *fileID {
 			item.Edvs[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
 			return &item.Edvs[i].FileInfo.FileSystemPath
 		}
+
 	}
 	return nil
 }

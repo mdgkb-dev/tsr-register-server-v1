@@ -5,16 +5,23 @@ import (
 	"github.com/uptrace/bun"
 )
 
-type FileInfoToDocument struct {
-	bun.BaseModel `bun:"file_info_to_document,alias:file_info_to_document"`
-	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	FileInfo      *FileInfo `bun:"rel:belongs-to" json:"fileInfo"`
-	FileInfoID    uuid.UUID `bun:"type:uuid" json:"fileInfoId"`
-	Document      *Document `bun:"rel:belongs-to" json:"document"`
-	DocumentID    uuid.UUID `bun:"type:uuid" json:"documentId"`
+type DocumentFileInfo struct {
+	bun.BaseModel `bun:"document_file_infos,alias:document_file_infos"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	FileInfo      *FileInfo     `bun:"rel:belongs-to" json:"fileInfo"`
+	FileInfoID    uuid.NullUUID `bun:"type:uuid" json:"fileInfoId"`
+	Document      *Document     `bun:"rel:belongs-to" json:"document"`
+	DocumentID    uuid.NullUUID `bun:"type:uuid" json:"documentId"`
 }
 
-func GetFileInfoFileInfoToDocument(items []*FileInfoToDocument) []*FileInfo {
+type DocumentFileInfos []*DocumentFileInfo
+
+type DocumentFileInfosWithCount struct {
+	DocumentFileInfos DocumentFileInfos `json:"items"`
+	Count             int               `json:"count"`
+}
+
+func GetFileInfoFileInfoToDocument(items []*DocumentFileInfo) []*FileInfo {
 	itemsForGet := make([]*FileInfo, 0)
 	if len(items) == 0 {
 		return itemsForGet
@@ -51,8 +58,8 @@ func GetFileInfosFromDocuments(items []*Document) []*FileInfo {
 		return itemsForGet
 	}
 	for i := range items {
-		for j := range items[i].FileInfoToDocument {
-			itemsForGet = append(itemsForGet, items[i].FileInfoToDocument[j].FileInfo)
+		for j := range items[i].DocumentFileInfos {
+			itemsForGet = append(itemsForGet, items[i].DocumentFileInfos[j].FileInfo)
 		}
 	}
 	return itemsForGet

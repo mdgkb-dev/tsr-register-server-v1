@@ -7,11 +7,11 @@ import (
 
 type RegisterPropertyToPatientToFileInfo struct {
 	bun.BaseModel               `bun:"register_properties_to_patients_to_file_infos,alias:register_properties_to_patients_to_file_infos"`
-	ID                          uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	RegisterPropertyToPatient   *Answer   `bun:"rel:belongs-to" json:"registerPropertyToPatient"`
-	RegisterPropertyToPatientID uuid.UUID `bun:"type:uuid" json:"registerPropertyToPatientId"`
-	FileInfo                    *FileInfo `bun:"rel:belongs-to" json:"fileInfo"`
-	FileInfoID                  uuid.UUID `bun:"type:uuid" json:"fileInfoId"`
+	ID                          uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	RegisterPropertyToPatient   *Answer       `bun:"rel:belongs-to" json:"registerPropertyToPatient"`
+	RegisterPropertyToPatientID uuid.UUID     `bun:"type:uuid" json:"registerPropertyToPatientId"`
+	FileInfo                    *FileInfo     `bun:"rel:belongs-to" json:"fileInfo"`
+	FileInfoID                  uuid.NullUUID `bun:"type:uuid" json:"fileInfoId"`
 }
 
 type RegisterPropertiesToPatientsToFileInfos []*RegisterPropertyToPatientToFileInfo

@@ -1,4 +1,4 @@
-package documenttypes
+package documentfieldvalues
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.DocumentType
+	var item models.DocumentFieldValue
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -49,7 +49,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.DocumentType
+	var item models.DocumentFieldValue
 	_, err := h.helper.HTTP.GetForm(c, &item)
 
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {

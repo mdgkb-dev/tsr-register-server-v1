@@ -31,7 +31,7 @@ func (r *Repository) getAll() (item models.RepresentativesWithCount, err error) 
 	query := r.db().NewSelect().
 		Model(&item.Representatives).
 		Relation("Human.Documents.DocumentType").
-		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Documents.DocumentFileInfo.FileInfo").
 		Relation("Human.Contact").
 		Relation("PatientsRepresentatives.Patient.Human").
 		Relation("PatientsRepresentatives.RepresentativeType")
@@ -57,7 +57,7 @@ func (r *Repository) get(id *string) (*models.Representative, error) {
 	item := models.Representative{}
 	err := r.db().NewSelect().Model(&item).
 		Relation("Human.Documents.DocumentType").
-		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Documents.DocumentFileInfo.FileInfo").
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Relation("Human.Contact").
 		Relation("Human.Photo").

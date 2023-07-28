@@ -1,4 +1,4 @@
-package documenttypes
+package documents
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -20,35 +20,36 @@ func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
 	return nil
 }
 
-func (r *Repository) Create(item *models.DocumentType) (err error) {
+func (r *Repository) Create(item *models.Document) (err error) {
 	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) GetAll() (item models.DocumentTypesWithCount, err error) {
-	item.DocumentTypes = make(models.DocumentTypes, 0)
-	query := r.DB().NewSelect().Model(&item.DocumentTypes)
+func (r *Repository) GetAll() (item models.DocumentsWithCount, err error) {
+	item.Documents = make(models.Documents, 0)
+	query := r.DB().NewSelect().Model(&item.Documents)
 
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }
 
-func (r *Repository) Get(slug string) (*models.DocumentType, error) {
-	item := models.DocumentType{}
+func (r *Repository) Get(slug string) (*models.Document, error) {
+	item := models.Document{}
 	err := r.DB().NewSelect().Model(&item).
-		Relation("DocumentTypeFields.ValueType").
+		Relation("DocumentFieldValues.DocumentTypeField.ValueType").
+		Relation("DocumentFileInfos.FileInfo").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)
 	return &item, err
 }
 
 func (r *Repository) Delete(id string) (err error) {
-	_, err = r.DB().NewDelete().Model(&models.DocumentType{}).Where("id = ?", id).Exec(r.ctx)
+	_, err = r.DB().NewDelete().Model(&models.Document{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) Update(item *models.DocumentType) (err error) {
+func (r *Repository) Update(item *models.Document) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }

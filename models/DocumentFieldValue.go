@@ -14,9 +14,16 @@ type DocumentFieldValue struct {
 	ValueNumber   int       `json:"valueNumber"`
 	ValueDate     time.Time `json:"valueDate"`
 
-	Document   *Document `bun:"rel:has-one" json:"document"`
-	DocumentID uuid.UUID `bun:"type:uuid" json:"documentId"`
+	Document   *Document     `bun:"rel:has-one" json:"document"`
+	DocumentID uuid.NullUUID `bun:"type:uuid" json:"documentId"`
 
 	DocumentTypeField   *DocumentTypeField `bun:"rel:belongs-to" json:"documentTypeField"`
-	DocumentTypeFieldID uuid.UUID          `bun:"type:uuid" json:"documentTypeFieldId"`
+	DocumentTypeFieldID uuid.NullUUID      `bun:"type:uuid" json:"documentTypeFieldId"`
+}
+
+type DocumentFieldValues []*DocumentFieldValue
+
+type DocumentFieldValuesWithCount struct {
+	DocumentFieldValues DocumentFieldValues `json:"items"`
+	Count               int                 `json:"count"`
 }

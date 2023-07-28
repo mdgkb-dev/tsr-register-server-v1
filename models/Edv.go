@@ -66,7 +66,7 @@ func SetFileInfoIDToEdv(items []*Edv) {
 	}
 	for i := range items {
 		if items[i].FileInfo != nil {
-			items[i].FileInfoID.UUID = items[i].FileInfo.ID
+			items[i].FileInfoID = items[i].FileInfo.ID
 		}
 	}
 }

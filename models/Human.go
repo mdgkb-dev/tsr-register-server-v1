@@ -48,7 +48,7 @@ func (item *Human) SetFilePath(fileID *string) *string {
 			return path
 		}
 	}
-	if item.Photo != nil && item.Photo.ID.String() == *fileID {
+	if item.Photo != nil && item.Photo.ID.UUID.String() == *fileID {
 		item.Photo.FileSystemPath = uploadHelper.BuildPath(fileID)
 		return &item.Photo.FileSystemPath
 	}
@@ -69,9 +69,6 @@ func (item *Human) SetIDForChildren() {
 }
 
 func (item *Human) SetDeleteIDForChildren() {
-	for i := range item.Documents {
-		item.DocumentsForDelete = append(item.DocumentsForDelete, item.Documents[i].ID)
-	}
 	for i := range item.InsuranceCompanyToHuman {
 		item.InsuranceCompanyToHumanForDelete = append(item.InsuranceCompanyToHumanForDelete, item.InsuranceCompanyToHuman[i].ID)
 	}

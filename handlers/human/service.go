@@ -2,7 +2,6 @@ package human
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/contact"
-	"mdgkb/tsr-tegister-server-v1/handlers/document"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompanytohuman"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -25,7 +24,7 @@ func (s *Service) Create(item *models.Human) error {
 		return err
 	}
 	if item.Photo != nil {
-		item.PhotoID.UUID = item.Photo.ID
+		item.PhotoID = item.Photo.ID
 	}
 
 	err = s.repository.create(item)
@@ -35,10 +34,6 @@ func (s *Service) Create(item *models.Human) error {
 	item.SetIDForChildren()
 
 	err = insurancecompanytohuman.CreateService(s.helper).CreateMany(item.InsuranceCompanyToHuman)
-	if err != nil {
-		return err
-	}
-	err = document.CreateService(s.helper).CreateMany(item.Documents)
 	if err != nil {
 		return err
 	}
@@ -60,7 +55,7 @@ func (s *Service) Update(item *models.Human) error {
 		return err
 	}
 	if item.Photo != nil {
-		item.PhotoID.UUID = item.Photo.ID
+		item.PhotoID = item.Photo.ID
 	}
 
 	err = s.repository.update(item)
@@ -75,15 +70,6 @@ func (s *Service) Update(item *models.Human) error {
 		return err
 	}
 	err = insuranceCompanyToHumanService.DeleteMany(item.InsuranceCompanyToHumanForDelete)
-	if err != nil {
-		return err
-	}
-	documentService := document.CreateService(s.helper)
-	err = documentService.UpsertMany(item.Documents)
-	if err != nil {
-		return err
-	}
-	err = documentService.DeleteMany(item.DocumentsForDelete)
 	if err != nil {
 		return err
 	}
@@ -105,14 +91,6 @@ func (s *Service) Delete(id uuid.UUID) error {
 		return err
 	}
 	err = insurancecompanytohuman.CreateService(s.helper).DeleteMany(human.InsuranceCompanyToHumanForDelete)
-	if err != nil {
-		return err
-	}
-	err = document.CreateService(s.helper).DeleteMany(human.DocumentsForDelete)
-	if err != nil {
-		return err
-	}
-	err = s.repository.delete(id)
 	if err != nil {
 		return err
 	}

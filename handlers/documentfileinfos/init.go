@@ -1,4 +1,4 @@
-package documenttypes
+package documentfileinfos
 
 import (
 	"context"
@@ -14,11 +14,13 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.DocumentType, models.DocumentTypes, models.DocumentTypesWithCount]
+	basehandler.IService[models.DocumentFileInfo, models.DocumentFileInfos, models.DocumentFileInfosWithCount]
+	UpsertMany(values models.DocumentFileInfos) error
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.DocumentType, models.DocumentTypes, models.DocumentTypesWithCount]
+	basehandler.IRepository[models.DocumentFileInfo, models.DocumentFileInfos, models.DocumentFileInfosWithCount]
+	UpsertMany(values models.DocumentFileInfos) error
 }
 
 type IFilesService interface {

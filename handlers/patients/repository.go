@@ -39,7 +39,7 @@ func (r *Repository) GetAll() (items models.PatientsWithCount, err error) {
 		Relation("Disabilities.Edvs").
 		Relation("Disabilities").
 		Relation("Human.Documents.DocumentType").
-		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Documents.DocumentFileInfos.FileInfo").
 		Relation("Human.Contact").
 		Relation("Human.InsuranceCompanyToHuman").
 		Relation("PatientsRepresentatives.Representative.Human.Contact").
@@ -64,7 +64,7 @@ func (r *Repository) Get(id string) (*models.Patient, error) {
 		Relation("Disabilities.Edvs").
 		Relation("Disabilities.Edvs.FileInfo").
 		Relation("Human.Documents.DocumentType").
-		Relation("Human.Documents.FileInfoToDocument.FileInfo").
+		Relation("Human.Documents.DocumentFileInfos.FileInfo").
 		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
 		Relation("Human.Contact").

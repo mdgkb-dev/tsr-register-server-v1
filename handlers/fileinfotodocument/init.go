@@ -11,13 +11,13 @@ import (
 )
 
 type IService interface {
-	CreateMany([]*models.FileInfoToDocument) error
+	CreateMany([]*models.DocumentFileInfo) error
 }
 
 type IRepository interface {
 	db() *bun.DB
-	createMany([]*models.FileInfoToDocument) error
-	upsertMany([]*models.FileInfoToDocument) error
+	createMany([]*models.DocumentFileInfo) error
+	upsertMany([]*models.DocumentFileInfo) error
 	deleteMany([]uuid.UUID) error
 }
 

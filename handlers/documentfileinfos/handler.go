@@ -1,4 +1,4 @@
-package chopscalequestions
+package documentfileinfos
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -8,8 +8,8 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.ChopScaleQuestion
-	err := c.Bind(&item)
+	var item models.DocumentFileInfo
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -17,10 +17,14 @@ func (h *Handler) Create(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(http.StatusOK, item)
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	err := h.service.SetQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
 	items, err := h.service.GetAll()
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
@@ -29,8 +33,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 }
 
 func (h *Handler) Get(c *gin.Context) {
-	id := c.Param("id")
-	item, err := h.service.Get(id)
+	item, err := h.service.Get(c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -38,8 +41,7 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 func (h *Handler) Delete(c *gin.Context) {
-	id := c.Param("id")
-	err := h.service.Delete(id)
+	err := h.service.Delete(c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -47,8 +49,9 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.ChopScaleQuestion
-	err := c.ShouldBind(&item)
+	var item models.DocumentFileInfo
+	_, err := h.helper.HTTP.GetForm(c, &item)
+
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -56,5 +59,5 @@ func (h *Handler) Update(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	c.JSON(http.StatusOK, item)
+	c.JSON(http.StatusOK, gin.H{})
 }

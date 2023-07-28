@@ -6,13 +6,14 @@ import (
 )
 
 type Research struct {
-	bun.BaseModel      `bun:"researches,alias:researches"`
-	ID                 uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name               string        `json:"name"`
-	Questions          Questions     `bun:"rel:has-many" json:"questions"`
-	QuestionsForDelete []uuid.UUID   `bun:"-" json:"questionsForDelete"`
-	WithDates          bool          `json:"withDates"`
-	WithScores         bool          `json:"withScores"`
+	bun.BaseModel `bun:"researches,alias:researches"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name          string        `json:"name"`
+
+	Questions          Questions   `bun:"rel:has-many" json:"questions"`
+	QuestionsForDelete []uuid.UUID `bun:"-" json:"questionsForDelete"`
+	WithDates          bool        `json:"withDates"`
+	WithScores         bool        `json:"withScores"`
 
 	ResearchResults ResearchResults `bun:"rel:has-many" json:"researchResults"`
 

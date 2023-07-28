@@ -1,43 +1,30 @@
-package chopscalequestions
+package documentfieldvalues
 
 import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
-	"mime/multipart"
 
 	"github.com/pro-assistance/pro-assister/helper"
-
-	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
+	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
+	basehandler.IHandler
 }
 
 type IService interface {
-	GetAll() (models.ChopScaleQuestions, error)
-	Get(string) (*models.ChopScaleQuestion, error)
-	Create(*models.ChopScaleQuestion) error
-	Update(item *models.ChopScaleQuestion) error
-	Delete(string) error
+	basehandler.IService[models.DocumentFieldValue, models.DocumentFieldValues, models.DocumentFieldValuesWithCount]
+	UpsertMany(values models.DocumentFieldValues) error
 }
 
 type IRepository interface {
-	db() *bun.DB
-	create(*models.ChopScaleQuestion) error
-	getAll() (models.ChopScaleQuestions, error)
-	get(string) (*models.ChopScaleQuestion, error)
-	update(item *models.ChopScaleQuestion) error
-	delete(string) error
+	basehandler.IRepository[models.DocumentFieldValue, models.DocumentFieldValues, models.DocumentFieldValuesWithCount]
+	UpsertMany(values models.DocumentFieldValues) error
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.ChopScaleQuestion, map[string][]*multipart.FileHeader) error
+	basehandler.IFilesService
 }
 
 type Handler struct {
@@ -52,8 +39,9 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx    context.Context
-	helper *helper.Helper
+	ctx         context.Context
+	helper      *helper.Helper
+	queryFilter *sqlHelper.QueryFilter
 }
 
 type FilesService struct {
@@ -65,6 +53,11 @@ func CreateHandler(helper *helper.Helper) *Handler {
 	service := NewService(repo, helper)
 	filesService := NewFilesService(helper)
 	return NewHandler(service, filesService, helper)
+}
+
+func CreateService(helper *helper.Helper) *Service {
+	repo := NewRepository(helper)
+	return NewService(repo, helper)
 }
 
 // NewHandler constructor

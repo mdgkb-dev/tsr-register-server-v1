@@ -3,7 +3,6 @@ package routing
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/anamneses"
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
-	"mdgkb/tsr-tegister-server-v1/handlers/chopscalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
@@ -11,6 +10,9 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
+	"mdgkb/tsr-tegister-server-v1/handlers/documentfieldvalues"
+	"mdgkb/tsr-tegister-server-v1/handlers/documentfileinfos"
+	"mdgkb/tsr-tegister-server-v1/handlers/documents"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugapplications"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugapplicationsstatuses"
@@ -22,7 +24,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/fundcontracts"
 	"mdgkb/tsr-tegister-server-v1/handlers/fundcouncils"
-	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescalequestions"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompany"
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
@@ -48,7 +49,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
-	chopScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/chopscalequestions"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
 	commissionsdrugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdrugapplications"
@@ -56,6 +56,9 @@ import (
 	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionstemplates"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
+	documentfieldvaluesRouter "mdgkb/tsr-tegister-server-v1/routing/documentfieldvalues"
+	documentfileinfosRouter "mdgkb/tsr-tegister-server-v1/routing/documentfileinfos"
+	documentsRouter "mdgkb/tsr-tegister-server-v1/routing/documents"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
 	drugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplications"
 	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplicationsstatuses"
@@ -67,7 +70,6 @@ import (
 	fileInfoRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfo"
 	fundcontractsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcontracts"
 	fundcouncilsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcouncils"
-	hmfseScaleQuestionsRouter "mdgkb/tsr-tegister-server-v1/routing/hmfsescalequestions"
 	humansRouter "mdgkb/tsr-tegister-server-v1/routing/humans"
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insurancecompany"
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
@@ -123,8 +125,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(helper))
 	researchesPoolsRouter.Init(api.Group("/researches-pools"), researchespools.CreateHandler(helper))
 	searchRouter.Init(api.Group("/search"), search.CreateHandler(helper))
-	chopScaleQuestionsRouter.Init(api.Group("/chop-scale-questions"), chopscalequestions.CreateHandler(helper))
-	hmfseScaleQuestionsRouter.Init(api.Group("/hmfse-scale-questions"), hmfsescalequestions.CreateHandler(helper))
 	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 	researchesResultsRouter.Init(api.Group("/researches-results"), researchesresults.CreateHandler(helper))
 	patientsResearchesRouter.Init(api.Group("/patients-researches"), patientsresearches.CreateHandler(helper))
@@ -150,4 +150,8 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	drugdecreasesRouter.Init(api.Group("/drug-decreases"), drugdecreases.CreateHandler(helper))
 	drugrecipesRouter.Init(api.Group("/drug-recipes"), drugrecipes.CreateHandler(helper))
 	questionsRouter.Init(api.Group("/questions"), questions.CreateHandler(helper))
+	documentsRouter.Init(api.Group("/documents"), documents.CreateHandler(helper))
+	documentfieldvaluesRouter.Init(api.Group("/document-field-values"), documentfieldvalues.CreateHandler(helper))
+	documentfileinfosRouter.Init(api.Group("/document-file-infos"), documentfileinfos.CreateHandler(helper))
+
 }

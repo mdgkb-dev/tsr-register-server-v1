@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *Service) CreateMany(items []*models.FileInfoToDocument) error {
+func (s *Service) CreateMany(items []*models.DocumentFileInfo) error {
 	if len(items) == 0 {
 		return nil
 	}
@@ -25,7 +25,7 @@ func (s *Service) CreateMany(items []*models.FileInfoToDocument) error {
 	return nil
 }
 
-func (s *Service) UpsertMany(items []*models.FileInfoToDocument) error {
+func (s *Service) UpsertMany(items []*models.DocumentFileInfo) error {
 	if len(items) == 0 {
 		return nil
 	}

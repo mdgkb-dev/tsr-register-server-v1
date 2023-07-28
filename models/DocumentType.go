@@ -6,11 +6,17 @@ import (
 )
 
 type DocumentType struct {
-	bun.BaseModel               `bun:"document_types,alias:document_types"`
-	ID                          uuid.UUID            `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name                        string               `json:"name"`
-	DocumentTypeFields          []*DocumentTypeField `bun:"rel:has-many" json:"documentTypeFields"`
-	DocumentTypeFieldsForDelete []string             `bun:"-" json:"documentTypeFieldsForDelete"`
+	bun.BaseModel      `bun:"document_types,alias:document_types"`
+	ID                 uuid.NullUUID        `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name               string               `json:"name"`
+	DocumentTypeFields []*DocumentTypeField `bun:"rel:has-many" json:"documentTypeFields"`
+}
+
+type DocumentTypes []*DocumentType
+
+type DocumentTypesWithCount struct {
+	DocumentTypes DocumentTypes `json:"items"`
+	Count         int           `json:"count"`
 }
 
 func (item *DocumentType) SetIDForChildren() {

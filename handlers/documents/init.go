@@ -1,4 +1,4 @@
-package documenttypes
+package documents
 
 import (
 	"context"
@@ -14,11 +14,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.DocumentType, models.DocumentTypes, models.DocumentTypesWithCount]
+	basehandler.IService[models.Document, models.Documents, models.DocumentsWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.DocumentType, models.DocumentTypes, models.DocumentTypesWithCount]
+	basehandler.IRepository[models.Document, models.Documents, models.DocumentsWithCount]
 }
 
 type IFilesService interface {
