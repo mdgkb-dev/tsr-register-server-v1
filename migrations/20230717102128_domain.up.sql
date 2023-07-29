@@ -43,7 +43,7 @@ FROM patients p
 
 
 insert into questions (id, name, item_order, value_type_id, with_other, with_dates, research_id, tag, short_name, col_width, age_compare, is_files_storage, code, calculate_scores, parent_id, comment, domain_id)
-values  ('b54b5ce1-998b-4363-8ddb-e5dddba237bb', 'Тип госпитализации', 0, 'fc00cc5a-f7a5-4974-ad57-9432656d5e0e', false, false, null, null, null, null, null, null, null, null, null, null, 'b9d7b8a5-d155-4dd5-8040-83c2648f0949');
+values  ('b54b5ce1-998b-4363-8ddb-e5dddba237bb', 'госпитализация', 0, 'fc00cc5a-f7a5-4974-ad57-9432656d5e0e', false, false, null, null, null, null, null, null, null, null, null, null, 'b9d7b8a5-d155-4dd5-8040-83c2648f0949');
 
 
 insert into public.answer_variants (id, name, item_order, question_id, score, show_more_questions)
@@ -52,7 +52,7 @@ values  ('022fc517-81af-4c53-9207-89e7e3eb5aae', 'Экстренная', null, '
 
 
 insert into questions (id, name, item_order, value_type_id, with_other, with_dates, research_id, tag, short_name, col_width, age_compare, is_files_storage, code, calculate_scores, parent_id, comment, domain_id)
-values  ('b54b5ce1-998b-4363-8ddb-e5dddba237bc', 'Подтверждение T78.0', 0, 'fc00cc5a-f7a5-4974-ad57-9432656d5e0e', false, false, null, null, null, null, null, null, null, null, null, null, 'b9d7b8a5-d155-4dd5-8040-83c2648f0949');
+values  ('b54b5ce1-998b-4363-8ddb-e5dddba237bc', 'диагноз T78.0', 0, 'fc00cc5a-f7a5-4974-ad57-9432656d5e0e', false, false, null, null, null, null, null, null, null, null, null, null, 'b9d7b8a5-d155-4dd5-8040-83c2648f0949');
 
 
 insert into public.answer_variants (id, name, item_order, question_id, score, show_more_questions)
