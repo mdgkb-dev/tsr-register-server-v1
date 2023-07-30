@@ -44,7 +44,6 @@ func (item *Disability) SetFilePath(fileID *string) *string {
 			item.Edvs[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
 			return &item.Edvs[i].FileInfo.FileSystemPath
 		}
-
 	}
 	return nil
 }

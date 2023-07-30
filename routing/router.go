@@ -153,5 +153,4 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	documentsRouter.Init(api.Group("/documents"), documents.CreateHandler(helper))
 	documentfieldvaluesRouter.Init(api.Group("/document-field-values"), documentfieldvalues.CreateHandler(helper))
 	documentfileinfosRouter.Init(api.Group("/document-file-infos"), documentfileinfos.CreateHandler(helper))
-
 }
