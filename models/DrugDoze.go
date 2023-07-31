@@ -6,7 +6,7 @@ import (
 )
 
 type DrugDoze struct {
-	bun.BaseModel `bun:"drug_dozes,alias:drugs"`
+	bun.BaseModel `bun:"drug_dozes,alias:drug_dozes"`
 	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string    `json:"name"`
 	Quantity      float32   `json:"quantity"`

@@ -8,7 +8,7 @@ import (
 )
 
 type DrugForm struct {
-	bun.BaseModel    `bun:"drug_forms,alias:drugs"`
+	bun.BaseModel    `bun:"drug_forms,alias:drug_forms"`
 	ID               uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name             string        `json:"name"`
 	ReportName       string        `json:"reportName"`

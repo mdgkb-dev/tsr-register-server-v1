@@ -1,7 +1,6 @@
 package patients
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/hmfsescaletests"
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
@@ -26,10 +25,6 @@ func (s *Service) Create(item *models.Patient) error {
 		return err
 	}
 
-	err = hmfsescaletests.CreateService(s.helper).CreateMany(item.HmfseScaleTests)
-	if err != nil {
-		return err
-	}
 	return err
 }
 
@@ -77,24 +72,6 @@ func (s *Service) Update(item *models.Patient) error {
 		return err
 	}
 
-	//registerGroupsToPatientsService := patientresearchsections.CreateService(s.helper)
-	//err = registerGroupsToPatientsService.UpsertMany(item.RegisterGroupsToPatient)
-	//if err != nil {
-	//	return err
-	//}
-	//err = registerGroupsToPatientsService.DeleteMany(item.RegisterGroupsToPatientsForDelete)
-	//if err != nil {
-	//	return err
-	//}
-	hmfseScaleTestService := hmfsescaletests.CreateService(s.helper)
-	err = hmfseScaleTestService.UpsertMany(item.HmfseScaleTests)
-	if err != nil {
-		return err
-	}
-	err = hmfseScaleTestService.DeleteMany(item.HmfseScaleTestsForDelete)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 

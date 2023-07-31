@@ -18,6 +18,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/drugapplicationsstatuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugarrives"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugdecreases"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugdozes"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugforms"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugrecipes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugs"
 	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
@@ -64,6 +66,8 @@ import (
 	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplicationsstatuses"
 	drugarrivesRouter "mdgkb/tsr-tegister-server-v1/routing/drugarrives"
 	drugdecreasesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdecreases"
+	drugdozesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdozes"
+	drugformsRouter "mdgkb/tsr-tegister-server-v1/routing/drugforms"
 	drugrecipesRouter "mdgkb/tsr-tegister-server-v1/routing/drugrecipes"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
@@ -153,4 +157,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	documentsRouter.Init(api.Group("/documents"), documents.CreateHandler(helper))
 	documentfieldvaluesRouter.Init(api.Group("/document-field-values"), documentfieldvalues.CreateHandler(helper))
 	documentfileinfosRouter.Init(api.Group("/document-file-infos"), documentfileinfos.CreateHandler(helper))
+	drugformsRouter.Init(api.Group("/drug-forms"), drugforms.CreateHandler(helper))
+	drugdozesRouter.Init(api.Group("/drug-dozes"), drugdozes.CreateHandler(helper))
 }
