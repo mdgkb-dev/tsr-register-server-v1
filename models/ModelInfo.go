@@ -20,7 +20,7 @@ type ModelInfo struct {
 	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
-func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) error {
+func (item *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) error {
 	//userID, err := tokenHelper.GetUserID(c)
 	//if err != nil {
 	//	return err
@@ -30,12 +30,12 @@ func (m *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHelper
 	return nil
 }
 
-func (m *ModelInfo) FillModelInfoCreate(c *gin.Context) error {
-	//userId, err := GetUserID(c)
-	//if err != nil {
-	//	return err
-	//}
-	//m.CreatedByID = *userId
-	//m.UpdatedByID = *userId
+func (item *ModelInfo) FillModelInfoCreate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) (err error) {
+	uid, err := tokenHelper.GetUserID(c)
+	item.CreatedByID.UUID = *uid
+	item.CreatedByID.Valid = true
+	if err != nil {
+		return err
+	}
 	return nil
 }

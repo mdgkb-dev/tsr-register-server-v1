@@ -1,6 +1,7 @@
 package patients
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
@@ -13,7 +14,8 @@ func (h *Handler) Create(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	err = item.FillModelInfoCreate(c)
+	err = item.FillModelInfoCreate(c, h.helper.Token)
+	fmt.Println(item.CreatedByID)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
@@ -72,10 +74,10 @@ func (h *Handler) Update(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
 	}
-	err = item.FillModelInfoUpdate(c, h.helper.Token)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-		return
-	}
+	//err = item.FillModelInfoUpdate(c, h.helper.Token)
+	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	//	return
+	//}
 	err = h.filesService.Upload(c, &item, files)
 	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
 		return
