@@ -49,6 +49,7 @@ func (r *Repository) Get(id string) (*models.Commission, error) {
 		Model(&item).
 		Relation("CommissionsDoctors.Doctor").
 		Relation("Patient.Human").
+		Relation("PatientDiagnosis.MkbItem").
 		Relation("DrugRecipe.Drug").
 		Relation("DrugRecipe.DrugForm").
 		Relation("DrugRecipe.DrugDoze").

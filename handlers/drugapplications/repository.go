@@ -35,7 +35,7 @@ func (r *Repository) GetAll() (items models.DrugApplicationsWithCount, err error
 		}).
 		Relation("FundContract.DrugArrives.DrugDecreases").
 		Relation("DrugApplicationFiles.FileInfo").
-		Relation("CommissionsDrugApplications.Commission")
+		Relation("CommissionsDrugApplications.Commission.Patient.Human")
 	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
