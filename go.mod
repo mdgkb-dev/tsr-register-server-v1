@@ -7,7 +7,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/uuid v1.3.0
 	github.com/oiime/logrusbun v0.1.1
-	github.com/pro-assistance/pro-assister v0.0.106-0.20230803201701-e13ce6e3dbdc
+	github.com/pro-assistance/pro-assister v0.0.106-0.20230804122819-21c2ed36b4a5
 	github.com/sirupsen/logrus v1.9.3
 	github.com/uptrace/bun v1.1.13
 	github.com/xuri/excelize/v2 v2.4.1

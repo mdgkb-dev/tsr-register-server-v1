@@ -14,7 +14,7 @@ import (
 
 func NewLogger() *logrus.Logger {
 	l := logrus.New()
-	l.SetLevel(6)
+	l.SetLevel(5)
 	setupOutput(l)
 	return l
 }
@@ -99,17 +99,18 @@ func LoggingMiddleware(logger *logrus.Logger) gin.HandlerFunc {
 		referer := ctx.Request.Referer()
 
 		entry := logger.WithFields(logrus.Fields{
-			"METHOD":    reqMethod,
-			"PATH":      path,
-			"STATUS":    statusCode,
-			"LATENCY":   latencyTime,
-			"CLIENT_IP": clientIP,
+			"METHOD":            reqMethod,
+			"PATH":              path,
+			"STATUS":            statusCode,
+			"LATENCY":           latencyTime,
+			"CLIENT_IP":         clientIP,
+			"CLIENT_USER_AGENT": clientUserAgent,
 		})
 
 		if len(ctx.Errors) > 0 {
 			entry.Error(ctx.Errors.ByType(gin.ErrorTypePrivate).String())
 		} else {
-			msg := fmt.Sprintf("%s - %s [%s] \"%s \" %d %d \"%s\" \"%s\" (%dms)", clientIP, startTime.Format(timeFormat), reqMethod, path, statusCode, dataLength, referer, clientUserAgent, latencyTime)
+			msg := fmt.Sprintf("%s - %s [%s] \"%s \" %d %d \"%s\" \"%s\" (%dms) %s", clientIP, startTime.Format(timeFormat), reqMethod, path, statusCode, dataLength, referer, clientUserAgent, latencyTime, ctx.Errors.String())
 			if statusCode >= http.StatusInternalServerError {
 				entry.Error(msg)
 			} else if statusCode >= http.StatusBadRequest {
