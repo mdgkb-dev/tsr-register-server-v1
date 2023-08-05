@@ -3,6 +3,7 @@ package fileinfos
 import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
+	"mime/multipart"
 
 	"github.com/pro-assistance/pro-assister/helper"
 
@@ -12,6 +13,7 @@ import (
 
 type IHandler interface {
 	Download(c *gin.Context)
+	Create(c *gin.Context)
 }
 
 type IService interface {
@@ -37,6 +39,7 @@ type IRepository interface {
 }
 type IFilesService interface {
 	GetFullPath(*string) *string
+	Upload(*gin.Context, *models.FileInfo, map[string][]*multipart.FileHeader) error
 }
 
 type Handler struct {

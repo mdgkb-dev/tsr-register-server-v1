@@ -1,4 +1,4 @@
-package drugapplicationsstatuses
+package statuses
 
 import (
 	"mime/multipart"

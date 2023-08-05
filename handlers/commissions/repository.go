@@ -34,7 +34,7 @@ func (r *Repository) GetAll() (items models.CommissionsWithCount, err error) {
 		Relation("PatientDiagnosis.MkbItem").
 		Relation("Patient.Human").
 		Relation("Patient.PatientDiagnosis.MkbItem").
-		Relation("CommissionStatus").
+		Relation("Status").
 		Relation("DrugRecipe.Drug").
 		Relation("DrugRecipe.DrugForm").
 		Relation("DrugRecipe.DrugDoze")

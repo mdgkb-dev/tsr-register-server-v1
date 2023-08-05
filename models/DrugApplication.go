@@ -12,8 +12,8 @@ type DrugApplication struct {
 	ID                          uuid.NullUUID               `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Date                        *time.Time                  `bun:"item_date" json:"name"`
 	Number                      string                      `json:"number"`
-	DrugApplicationStatus       *DrugApplicationStatus      `bun:"rel:belongs-to" json:"drugApplicationStatus"`
-	DrugApplicationStatusID     uuid.NullUUID               `bun:"type:uuid" json:"drugApplicationStatusId"`
+	Status                      *Status                     `bun:"rel:belongs-to" json:"status"`
+	StatusID                    uuid.NullUUID               `bun:"type:uuid" json:"statusId"`
 	CommissionsDrugApplications CommissionsDrugApplications `bun:"rel:has-many" json:"commissionsDrugApplications"`
 	DrugApplicationFiles        DrugApplicationFiles        `bun:"rel:has-many" json:"drugApplicationFiles"`
 	FundContract                *FundContract               `bun:"rel:has-one" json:"fundContract"`

@@ -29,7 +29,7 @@ func (r *Repository) GetAll() (items models.DrugApplicationsWithCount, err error
 	items.DrugApplications = make(models.DrugApplications, 0)
 	query := r.DB().NewSelect().
 		Model(&items.DrugApplications).
-		Relation("DrugApplicationStatus").
+		Relation("Status").
 		Relation("FundContract.DrugArrives", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("drug_arrives.stage")
 		}).
@@ -45,7 +45,7 @@ func (r *Repository) Get(id string) (*models.DrugApplication, error) {
 	item := models.DrugApplication{}
 	err := r.DB().NewSelect().
 		Model(&item).
-		Relation("DrugApplicationStatus").
+		Relation("Status").
 		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err

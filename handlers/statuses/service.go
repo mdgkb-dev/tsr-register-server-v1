@@ -1,4 +1,4 @@
-package drugapplicationsstatuses
+package statuses
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) Create(item *models.DrugApplicationStatus) error {
+func (s *Service) Create(item *models.Status) error {
 	err := s.repository.Create(item)
 	if err != nil {
 		return err
@@ -14,7 +14,7 @@ func (s *Service) Create(item *models.DrugApplicationStatus) error {
 	return nil
 }
 
-func (s *Service) Update(item *models.DrugApplicationStatus) error {
+func (s *Service) Update(item *models.Status) error {
 	err := s.repository.Update(item)
 	if err != nil {
 		return err
@@ -22,11 +22,11 @@ func (s *Service) Update(item *models.DrugApplicationStatus) error {
 	return nil
 }
 
-func (s *Service) GetAll() (models.DrugApplicationsStatusesWithCount, error) {
+func (s *Service) GetAll() (models.StatusesWithCount, error) {
 	return s.repository.GetAll()
 }
 
-func (s *Service) Get(slug string) (*models.DrugApplicationStatus, error) {
+func (s *Service) Get(slug string) (*models.Status, error) {
 	item, err := s.repository.Get(slug)
 	if err != nil {
 		return nil, err

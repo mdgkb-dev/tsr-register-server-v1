@@ -17,8 +17,8 @@ type Commission struct {
 	Number             int               `bun:",autoincrement,notnull," json:"number"`
 	Patient            *Patient          `bun:"rel:belongs-to" json:"patient"`
 	PatientID          uuid.NullUUID     `bun:"type:uuid" json:"patientId"`
-	CommissionStatus   *CommissionStatus `bun:"rel:belongs-to" json:"commissionStatus"`
-	CommissionStatusID uuid.NullUUID     `bun:"type:uuid" json:"commissionStatusId"`
+	Status             *Status           `bun:"rel:belongs-to" json:"status"`
+	StatusID           uuid.NullUUID     `bun:"type:uuid" json:"statusId"`
 	PatientDiagnosis   *PatientDiagnosis `bun:"rel:belongs-to" json:"patientDiagnosis"`
 	PatientDiagnosisID uuid.NullUUID     `bun:"type:uuid" json:"patientDiagnosisId"`
 

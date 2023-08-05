@@ -6,7 +6,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
-	"mdgkb/tsr-tegister-server-v1/handlers/commissionsstatuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
@@ -15,7 +14,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/documents"
 	"mdgkb/tsr-tegister-server-v1/handlers/documenttypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugapplications"
-	"mdgkb/tsr-tegister-server-v1/handlers/drugapplicationsstatuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugarrives"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugdecreases"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugdozes"
@@ -48,13 +46,13 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/researchesresults"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchquery"
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
+	"mdgkb/tsr-tegister-server-v1/handlers/statuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
 	commissionsdrugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdrugapplications"
-	commissionsStatusesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsstatuses"
 	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionstemplates"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
@@ -63,7 +61,6 @@ import (
 	documentsRouter "mdgkb/tsr-tegister-server-v1/routing/documents"
 	documentTypesRouter "mdgkb/tsr-tegister-server-v1/routing/documenttypes"
 	drugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplications"
-	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/drugapplicationsstatuses"
 	drugarrivesRouter "mdgkb/tsr-tegister-server-v1/routing/drugarrives"
 	drugdecreasesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdecreases"
 	drugdozesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdozes"
@@ -71,7 +68,7 @@ import (
 	drugrecipesRouter "mdgkb/tsr-tegister-server-v1/routing/drugrecipes"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
-	fileInfoRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfo"
+	fileInfosRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfos"
 	fundcontractsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcontracts"
 	fundcouncilsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcouncils"
 	humansRouter "mdgkb/tsr-tegister-server-v1/routing/humans"
@@ -98,6 +95,8 @@ import (
 	researchQueryRouter "mdgkb/tsr-tegister-server-v1/routing/researchquery"
 	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/researchsection"
 	searchRouter "mdgkb/tsr-tegister-server-v1/routing/search"
+	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
+	statusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
 
 	"github.com/gin-gonic/gin"
@@ -112,7 +111,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documenttypes.CreateHandler(helper))
 	drugsRouter.Init(api.Group("/drugs"), drugs.CreateHandler(helper))
-	fileInfoRouter.Init(api.Group("/files-info"), fileinfos.CreateHandler(helper))
+	fileInfosRouter.Init(api.Group("/file-infos"), fileinfos.CreateHandler(helper))
 	insuranceCompanyRouter.Init(api.Group("/insurance-companies"), insurancecompany.CreateHandler(helper))
 	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
@@ -147,10 +146,10 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	drugarrivesRouter.Init(api.Group("/drug-arrives"), drugarrives.CreateHandler(helper))
 	fundcontractsRouter.Init(api.Group("/fund-contracts"), fundcontracts.CreateHandler(helper))
 	fundcouncilsRouter.Init(api.Group("/fund-councils"), fundcouncils.CreateHandler(helper))
-	commissionsStatusesRouter.Init(api.Group("/commissions-statuses"), commissionsstatuses.CreateHandler(helper))
+	statusesRouter.Init(api.Group("/statuses"), statuses.CreateHandler(helper))
 	drugapplicationsRouter.Init(api.Group("/drug-applications"), drugapplications.CreateHandler(helper))
 	commissionsdrugapplicationsRouter.Init(api.Group("/commissions-drug-applications"), commissionsdrugapplications.CreateHandler(helper))
-	drugapplicationsstatusesRouter.Init(api.Group("/drug-applications-statuses"), drugapplicationsstatuses.CreateHandler(helper))
+	drugapplicationsstatusesRouter.Init(api.Group("/drug-applications-statuses"), statuses.CreateHandler(helper))
 	drugdecreasesRouter.Init(api.Group("/drug-decreases"), drugdecreases.CreateHandler(helper))
 	drugrecipesRouter.Init(api.Group("/drug-recipes"), drugrecipes.CreateHandler(helper))
 	questionsRouter.Init(api.Group("/questions"), questions.CreateHandler(helper))

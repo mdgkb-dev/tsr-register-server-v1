@@ -2,6 +2,7 @@ package patients
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/human"
+	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -41,7 +42,7 @@ func (s *Service) Get(id string) (*models.Patient, error) {
 }
 
 func (s *Service) Update(item *models.Patient) error {
-	err := human.CreateService(s.helper).Update(item.Human)
+	err := humans.CreateService(s.helper).Update(item.Human)
 	if err != nil {
 		return err
 	}
@@ -54,10 +55,6 @@ func (s *Service) Update(item *models.Patient) error {
 
 	representativeToPatientService := representativetopatient.CreateService(s.helper)
 	err = representativeToPatientService.UpsertMany(item.PatientsRepresentatives)
-	if err != nil {
-		return err
-	}
-	err = representativeToPatientService.DeleteMany(item.PatientsRepresentativesForDelete)
 	if err != nil {
 		return err
 	}

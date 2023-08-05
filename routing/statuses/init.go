@@ -1,7 +1,7 @@
-package drugapplicationsstatuses
+package statuses
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/drugapplicationsstatuses"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/statuses"
 
 	"github.com/gin-gonic/gin"
 )

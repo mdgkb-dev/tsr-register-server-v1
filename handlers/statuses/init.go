@@ -1,4 +1,4 @@
-package commissionsstatuses
+package statuses
 
 import (
 	"context"
@@ -14,11 +14,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.CommissionStatus, models.CommissionsStatuses, models.CommissionsStatusesWithCount]
+	basehandler.IService[models.Status, models.Statuses, models.StatusesWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.CommissionStatus, models.CommissionsStatuses, models.CommissionsStatusesWithCount]
+	basehandler.IRepository[models.Status, models.Statuses, models.StatusesWithCount]
 }
 
 type IFilesService interface {

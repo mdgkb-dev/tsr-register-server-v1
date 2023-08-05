@@ -1,4 +1,4 @@
-package commissionsstatuses
+package statuses
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -20,34 +20,34 @@ func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
 	return nil
 }
 
-func (r *Repository) Create(item *models.CommissionStatus) (err error) {
+func (r *Repository) Create(item *models.Status) (err error) {
 	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) GetAll() (item models.CommissionsStatusesWithCount, err error) {
-	item.CommissionsStatuses = make(models.CommissionsStatuses, 0)
-	query := r.DB().NewSelect().Model(&item.CommissionsStatuses)
+func (r *Repository) GetAll() (item models.StatusesWithCount, err error) {
+	item.Statuses = make(models.Statuses, 0)
+	query := r.DB().NewSelect().Model(&item.Statuses)
 
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }
 
-func (r *Repository) Get(slug string) (*models.CommissionStatus, error) {
-	item := models.CommissionStatus{}
+func (r *Repository) Get(slug string) (*models.Status, error) {
+	item := models.Status{}
 	err := r.DB().NewSelect().Model(&item).
-		Relation("CommissionStatus").
+		Relation("Status").
 		Scan(r.ctx)
 	return &item, err
 }
 
 func (r *Repository) Delete(id string) (err error) {
-	_, err = r.DB().NewDelete().Model(&models.CommissionStatus{}).Where("id = ?", id).Exec(r.ctx)
+	_, err = r.DB().NewDelete().Model(&models.Status{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) Update(item *models.CommissionStatus) (err error) {
+func (r *Repository) Update(item *models.Status) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
