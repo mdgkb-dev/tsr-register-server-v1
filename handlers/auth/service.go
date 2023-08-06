@@ -34,7 +34,7 @@ func (s *Service) Register(item *models.User) (*models.TokensWithUser, error) {
 func (s *Service) Login(item *models.Login, skipPassword bool) (*models.TokensWithUser, error) {
 	findedUser, err := users.CreateService(s.helper).GetByEmail(item.Email)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("wrong login or password")
 	}
 	if !findedUser.CompareWithHashPassword(item.Password) && !skipPassword {
 		return nil, errors.New("wrong login or password")
