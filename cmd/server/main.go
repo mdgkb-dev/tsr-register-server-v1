@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"mdgkb/tsr-tegister-server-v1/loggerhelper"
 	"mdgkb/tsr-tegister-server-v1/migrations"
@@ -25,10 +24,9 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Recovery())
-
+	//
 	router.Use(loggerhelper.LoggingMiddleware(logger))
 	routing.Init(router, helper)
-	fmt.Println(logger.Level)
 	helper.DB.DB.AddQueryHook(logrusbun.NewQueryHook(logrusbun.QueryHookOptions{Logger: logger, ErrorLevel: logrus.ErrorLevel, QueryLevel: logrus.DebugLevel}))
 	helper.Run(migrations.Init(), router)
 }

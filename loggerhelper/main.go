@@ -1,122 +1,105 @@
 package loggerhelper
 
 import (
-	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+
+	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
 )
 
 func NewLogger() *logrus.Logger {
 	l := logrus.New()
-	l.SetLevel(5)
+	l.SetLevel(logrus.DebugLevel)
 	setupOutput(l)
 	return l
 }
 
-type WriterHook struct {
-	Writer    io.Writer
-	LogLevels []logrus.Level
-}
-
-// Fire will be called when some logging function is called with current hook
-// It will format log entry to string and write it to appropriate writer
-func (hook *WriterHook) Fire(entry *logrus.Entry) error {
-	line, err := entry.String()
-	if err != nil {
-		return err
-	}
-	_, err = hook.Writer.Write([]byte(line))
-	return err
-}
-
-// Levels define on which log levels this hook would trigger
-func (hook *WriterHook) Levels() []logrus.Level {
-	return hook.LogLevels
-}
-
 func setupOutput(l *logrus.Logger) {
+	path := "logs"
 	l.SetOutput(ioutil.Discard) // Send all logs to nowhere by default
 
-	infoFile, err := os.OpenFile("log_info.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		l.Fatal("Failed to log to file, using default stderr")
-	}
-	errorFile, err := os.OpenFile("log_error.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		l.Fatal("Failed to log to file, using default stderr")
-	}
+	tForm := "%Y-%m-%d_%H:%M"
+	ageOpt := rotatelogs.WithMaxAge(time.Hour * 24 * 7)
+	rotateTimeOpt := rotatelogs.WithRotationTime(time.Hour)
 
-	l.AddHook(&WriterHook{ // Send info and debug logs to stdout
-		Writer:    infoFile,
-		LogLevels: []logrus.Level{logrus.InfoLevel, logrus.DebugLevel, logrus.WarnLevel, logrus.TraceLevel, logrus.DebugLevel},
-	})
+	infoPath := path + "/info/"
+	infoActualFileLink := rotatelogs.WithLinkName(infoPath + "_actual.log")
+	infoWriter, _ := rotatelogs.New(infoPath+tForm+".log", infoActualFileLink, ageOpt, rotateTimeOpt)
 
-	l.AddHook(&WriterHook{ // Send logs with level higher than warning to stderr
-		Writer:    errorFile,
-		LogLevels: []logrus.Level{logrus.PanicLevel, logrus.FatalLevel, logrus.ErrorLevel},
-	})
+	errorsPath := path + "/errors/"
+	errorsActualFileLink := rotatelogs.WithLinkName(errorsPath + "_actual.log")
+	errorsWriter, _ := rotatelogs.New(errorsPath+tForm+".log", errorsActualFileLink, ageOpt, rotateTimeOpt)
+
+	l.Hooks.Add(lfshook.NewHook(
+		lfshook.WriterMap{
+			// INFO
+			logrus.InfoLevel:  infoWriter,
+			logrus.DebugLevel: infoWriter,
+			logrus.WarnLevel:  infoWriter,
+			logrus.TraceLevel: infoWriter,
+			// ERROR
+			logrus.ErrorLevel: errorsWriter,
+			logrus.FatalLevel: errorsWriter,
+			logrus.PanicLevel: errorsWriter,
+		},
+		&logrus.JSONFormatter{PrettyPrint: true, DisableHTMLEscape: true},
+	))
 }
-
-var timeFormat = "02-01-2006:15:04:05"
 
 func LoggingMiddleware(logger *logrus.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// Starting time
 		startTime := time.Now()
+		//query := map[string]string{}
+		//err := ctx.Bind(query)
+		//if err != nil {
+		//	fmt.Println(err)
+		//}
+		//formBody := map[string]string{}
+		//form, err := ctx.MultipartForm()
+		//if err != nil {
+		//	fmt.Println(err)
+		//}
+		//err = json.Unmarshal([]byte(form.Value["form"][0]), &formBody)
+		//if err != nil {
+		//	fmt.Println(err)
+		//}
 
 		ctx.Next()
-
-		// End Time
 		endTime := time.Now()
-
-		// execution time
 		latencyTime := endTime.Sub(startTime)
-
-		// Request method
 		reqMethod := ctx.Request.Method
-
-		// Request route
 		path := ctx.Request.URL.Path
-
-		// status code
 		statusCode := ctx.Writer.Status()
-
-		// Request IP
 		clientIP := ctx.ClientIP()
-
-		dataLength := ctx.Writer.Size()
-		if dataLength < 0 {
-			dataLength = 0
-		}
-
 		clientUserAgent := ctx.Request.UserAgent()
-		referer := ctx.Request.Referer()
+		//referer := ctx.Request.Referer()
 
 		entry := logger.WithFields(logrus.Fields{
-			"METHOD":            reqMethod,
-			"PATH":              path,
-			"STATUS":            statusCode,
-			"LATENCY":           latencyTime,
-			"CLIENT_IP":         clientIP,
-			"CLIENT_USER_AGENT": clientUserAgent,
+			"method":          reqMethod,
+			"path":            path,
+			"status":          statusCode,
+			"latency":         latencyTime,
+			"clientIp":        clientIP,
+			"clientUserAgent": clientUserAgent,
+			"errors":          ctx.Errors.ByType(gin.ErrorTypePrivate).String(),
+			//"body":            query,
+			//"formBody": formBody,
 		})
 
 		if len(ctx.Errors) > 0 {
 			entry.Error(ctx.Errors.ByType(gin.ErrorTypePrivate).String())
 		} else {
-			msg := fmt.Sprintf("%s - %s [%s] \"%s \" %d %d \"%s\" \"%s\" (%dms) %s", clientIP, startTime.Format(timeFormat), reqMethod, path, statusCode, dataLength, referer, clientUserAgent, latencyTime, ctx.Errors.String())
 			if statusCode >= http.StatusInternalServerError {
-				entry.Error(msg)
+				entry.Error()
 			} else if statusCode >= http.StatusBadRequest {
-				entry.Warn(msg)
+				entry.Warn()
 			} else {
-				entry.Info(msg)
+				entry.Info()
 			}
 		}
 
