@@ -26,6 +26,7 @@ type Answer struct {
 
 	Question   *Question     `bun:"rel:belongs-to" json:"question"`
 	QuestionID uuid.NullUUID `bun:"type:uuid" json:"questionId"`
+	PatientID  uuid.NullUUID `bun:"type:uuid" json:"patientId"`
 
 	QuestionVariant   *QuestionVariant `bun:"rel:belongs-to" json:"questionVariant"`
 	QuestionVariantID uuid.NullUUID    `bun:"type:uuid" json:"questionVariantId"`

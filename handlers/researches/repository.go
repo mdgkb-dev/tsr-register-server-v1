@@ -17,6 +17,10 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 	if err != nil {
 		return err
 	}
+	r.accessDetails, err = r.helper.Token.GetAccessDetail(c)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -42,6 +46,9 @@ func (r *Repository) get(id string) (*models.Research, error) {
 		//Relation("ResearchDiagnosis.MkbSubDiagnosis").
 		//Relation("ResearchDiagnosis.MkbConcreteDiagnosis").
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
+			if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
+				return q.Order("questions.item_order").Where("questions.domain_id = ?", r.accessDetails.UserDomainID)
+			}
 			return q.Order("questions.item_order")
 		}).
 		Relation("Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {

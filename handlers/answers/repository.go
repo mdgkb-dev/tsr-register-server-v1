@@ -46,6 +46,7 @@ func (r *Repository) upsertMany(items models.Answers) (err error) {
 		Set("value_other = EXCLUDED.value_other").
 		Set("answer_variant_id = EXCLUDED.answer_variant_id").
 		Set("question_id = EXCLUDED.question_id").
+		Set("patient_id = EXCLUDED.patient_id").
 		Set("research_result_id = EXCLUDED.research_result_id").
 		Set("filled = EXCLUDED.filled").
 		Exec(r.ctx)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
+	"github.com/pro-assistance/pro-assister/tokenHelper"
 
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
@@ -63,9 +64,10 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx         context.Context
-	helper      *helper.Helper
-	queryFilter *sqlHelper.QueryFilter
+	ctx           context.Context
+	helper        *helper.Helper
+	queryFilter   *sqlHelper.QueryFilter
+	accessDetails *tokenHelper.AccessDetails
 }
 
 type FilesService struct {
