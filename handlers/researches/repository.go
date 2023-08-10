@@ -46,9 +46,9 @@ func (r *Repository) get(id string) (*models.Research, error) {
 		//Relation("ResearchDiagnosis.MkbSubDiagnosis").
 		//Relation("ResearchDiagnosis.MkbConcreteDiagnosis").
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
-			if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
-				return q.Order("questions.item_order").Where("questions.domain_id = ?", r.accessDetails.UserDomainID)
-			}
+			//if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
+			//	return q.Order("questions.item_order").Where("questions.domain_id = ?", r.accessDetails.UserDomainID)
+			//}
 			return q.Order("questions.item_order")
 		}).
 		Relation("Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
