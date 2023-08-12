@@ -19,8 +19,8 @@ type User struct {
 	RegistersUsers          RegistersUsers `bun:"rel:has-many" json:"registersUsers"`
 	RegistersUsersForDelete []uuid.UUID    `bun:"-" json:"registersUsersForDelete"`
 
-	DomainID uuid.NullUUID `bun:"type:uuid" json:"domainId"`
-	Domain   *Domain       `bun:"rel:belongs-to" json:"domain"`
+	DomainID uuid.NullUUID `bun:"type:uuid" json:"-"`
+	Domain   *Domain       `bun:"rel:belongs-to" json:"-"`
 }
 
 type Users []*User

@@ -49,16 +49,15 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	c.JSON(http.StatusInternalServerError, "test")
-	//var item models.DocumentFieldValue
-	//_, err := h.helper.HTTP.GetForm(c, &item)
-	//
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//err = h.service.Update(&item)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//c.JSON(http.StatusOK, gin.H{})
+	var item models.DocumentFieldValue
+	_, err := h.helper.HTTP.GetForm(c, &item)
+
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	err = h.service.Update(&item)
+	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{})
 }
