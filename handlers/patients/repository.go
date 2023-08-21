@@ -1,37 +1,22 @@
 package patients
 
 import (
+	"context"
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
-	"github.com/gin-gonic/gin"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) DB() *bun.DB {
-	return r.helper.DB.DB
-}
-
-func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
-	if err != nil {
-		return err
-	}
-
-	r.accessDetails, err = r.helper.Token.GetAccessDetail(c)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *Repository) Create(item *models.Patient) (err error) {
-	_, err = r.DB().NewInsert().Model(item).Exec(r.ctx)
+func (r *Repository) Create(c context.Context, item *models.Patient) error {
+	_, err := r.helper.DB.IDB(c).NewInsert().Model(item).Exec(c)
 	return err
 }
 
-func (r *Repository) GetAll() (items models.PatientsWithCount, err error) {
+func (r *Repository) GetAll(c context.Context) (items models.PatientsWithCount, err error) {
 	items.Patients = make(models.Patients, 0)
-	query := r.DB().NewSelect().
+	query := r.helper.DB.IDB(c).NewSelect().
 		Model(&items.Patients).
 		Relation("Disabilities").
 		Relation("Disabilities.Edvs").
@@ -48,18 +33,24 @@ func (r *Repository) GetAll() (items models.PatientsWithCount, err error) {
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
 		Relation("CreatedBy").
-		Relation("UpdatedBy")
-	if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
-		query.Where("?TableAlias.domain_id = ?", r.accessDetails.UserDomainID)
+		Relation("UpdatedBy").Limit(20)
+	//userDomainId, err := r.helper.Token.ExtractTokenMetadata(c.Request, "user_id")
+	//if userDomainId != "" {
+	//	query.Where("?TableAlias.domain_id = ?")
+	//}
+	i, ok := c.Value(fqKey{}).(*sqlHelper.QueryFilter)
+	if !ok {
+		fmt.Println("1", i)
 	}
-	r.queryFilter.HandleQuery(query)
-	items.Count, err = query.ScanAndCount(r.ctx)
+	//fmt.Println(r.helper.SQL.ExtractQueryFilter(c))
+	i.HandleQuery(query)
+	items.Count, err = query.ScanAndCount(c)
 	return items, err
 }
 
-func (r *Repository) Get(id string) (*models.Patient, error) {
+func (r *Repository) Get(c context.Context, id string) (*models.Patient, error) {
 	item := models.Patient{}
-	query := r.DB().NewSelect().Model(&item).
+	query := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Relation("Disabilities").
 		Relation("Disabilities.Edvs").
 		Relation("Disabilities.Edvs.FileInfo").
@@ -83,16 +74,16 @@ func (r *Repository) Get(id string) (*models.Patient, error) {
 		Relation("Commissions.CommissionsDoctors.Doctor").
 		Relation("Commissions.PatientDiagnosis.MkbItem").
 		Where("?TableAlias.id = ?", id)
-	err := query.Scan(r.ctx)
+	err := query.Scan(c)
 	return &item, err
 }
 
-func (r *Repository) Delete(id string) (err error) {
-	_, err = r.DB().NewDelete().Model(&models.Patient{}).Where("id = ?", id).Exec(r.ctx)
+func (r *Repository) Delete(c context.Context, id string) (err error) {
+	_, err = r.helper.DB.IDB(c).NewDelete().Model(&models.Patient{}).Where("id = ?", id).Exec(c)
 	return err
 }
 
-func (r *Repository) Update(item *models.Patient) (err error) {
-	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+func (r *Repository) Update(c context.Context, item *models.Patient) (err error) {
+	_, err = r.helper.DB.IDB(c).NewUpdate().Model(item).Where("id = ?", item.ID).Exec(c)
 	return err
 }

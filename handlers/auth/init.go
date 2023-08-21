@@ -5,7 +5,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
 	"github.com/uptrace/bun"
@@ -17,57 +16,27 @@ type IHandler interface {
 	LoginAs(c *gin.Context)
 	Logout(c *gin.Context)
 	RefreshToken(c *gin.Context)
-	RefreshPassword(c *gin.Context)
-	RestorePassword(c *gin.Context)
-	CheckUUID(c *gin.Context)
-	SavePathPermissions(c *gin.Context)
-	GetAllPathPermissions(c *gin.Context)
-	GetAllPathPermissionsAdmin(c *gin.Context)
-	GetPathPermissionsByRoleID(c *gin.Context)
-	CheckPathPermissions(c *gin.Context)
 }
 
 type IService interface {
 	setQueryFilter(*gin.Context) error
-	Register(user *models.User) (*models.TokensWithUser, error)
-	Login(user *models.Login, skipPassword bool) (*models.TokensWithUser, error)
-	FindUserByEmail(email string) (*models.User, error)
-	GetUserByID(id string) (*models.User, error)
-	DropUUID(*models.User) error
-	UpdatePassword(*models.User) error
-	UpsertManyPathPermissions(models.PathPermissions) error
-	GetAllPathPermissions() (models.PathPermissions, error)
-	GetAllPathPermissionsAdmin() (models.PathPermissionsWithCount, error)
-	GetPathPermissionsByRoleID(id string) (models.PathPermissions, error)
-	CheckPathPermissions(path string, roleID string) error
+	Register(user *models.UserAccount) (*models.TokensWithUser, error)
+	Login(user *models.UserAccount, skipPassword bool) (*models.TokensWithUser, error)
 }
 
 type IRepository interface {
 	setQueryFilter(*gin.Context) error
 	db() *bun.DB
-	getAllPathPermissions() (models.PathPermissions, error)
-	getAllPathPermissionsAdmin() (models.PathPermissionsWithCount, error)
-	getPathPermissionsByRoleID(id string) (models.PathPermissions, error)
-	upsertManyPathPermissions(items models.PathPermissions) (err error)
-	deleteManyPathPermissions(idPool []uuid.UUID) (err error)
-	upsertManyPathPermissionsRoles(items models.PathPermissionsRoles) (err error)
-	deleteManyPathPermissionsRoles(idPool []uuid.UUID) (err error)
-	checkPathPermissions(path string, roleID string) error
 }
 
 type IValidator interface {
-	Login(user *models.Login) error
-}
-
-type IFilesService interface {
-	//Upload(*gin.Context, *models.VacancyResponse, map[string][]*multipart.FileHeader) error
+	Login(*models.UserAccount) error
 }
 
 type Handler struct {
-	service      IService
-	filesService IFilesService
-	helper       *helper.Helper
-	validator    IValidator
+	service   IService
+	helper    *helper.Helper
+	validator IValidator
 }
 
 type Service struct {
@@ -92,14 +61,12 @@ type ValidateService struct {
 func CreateHandler(helper *helper.Helper) *Handler {
 	repo := NewRepository(helper)
 	service := NewService(repo, helper)
-	filesService := NewFilesService(helper)
-	validateService := NewValidateService(helper)
-	return NewHandler(service, filesService, helper, validateService)
+	return NewHandler(service, helper)
 }
 
 // NewHandler constructor
-func NewHandler(s IService, filesService IFilesService, helper *helper.Helper, validateService *ValidateService) *Handler {
-	return &Handler{service: s, filesService: filesService, helper: helper, validator: validateService}
+func NewHandler(s IService, helper *helper.Helper) *Handler {
+	return &Handler{service: s, helper: helper}
 }
 
 func NewService(repository IRepository, helper *helper.Helper) *Service {
@@ -108,12 +75,4 @@ func NewService(repository IRepository, helper *helper.Helper) *Service {
 
 func NewRepository(helper *helper.Helper) *Repository {
 	return &Repository{ctx: context.Background(), helper: helper}
-}
-
-func NewFilesService(helper *helper.Helper) *FilesService {
-	return &FilesService{helper: helper}
-}
-
-func NewValidateService(helper *helper.Helper) *ValidateService {
-	return &ValidateService{helper: helper}
 }

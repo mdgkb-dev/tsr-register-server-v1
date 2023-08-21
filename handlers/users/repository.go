@@ -41,10 +41,11 @@ func (r *Repository) get(id string) (*models.User, error) {
 	return &item, err
 }
 
-func (r *Repository) getByEmail(id string) (*models.User, error) {
+func (r *Repository) getByUserAccountID(accountId string) (*models.User, error) {
 	item := models.User{}
-	err := r.db().NewSelect().Model(&item).
-		Where("?TableAlias.email = ?", id).
+	err := r.db().NewSelect().
+		Model(&item).
+		Where("?TableAlias.user_account_id = ?", accountId).
 		Scan(r.ctx)
 	return &item, err
 }
@@ -54,23 +55,11 @@ func (r *Repository) create(user *models.User) (err error) {
 	return err
 }
 
-func (r *Repository) emailExists(email string) (bool, error) {
-	exists, err := r.db().NewSelect().Model((*models.User)(nil)).Where("users_view.email = ? and is_active = true", email).Exists(r.ctx)
-	return exists, err
-}
-
 func (r *Repository) update(item *models.User) (err error) {
 	_, err = r.db().NewUpdate().Model(item).
 		OmitZero().
 		ExcludeColumn("password", "is_active"). // all columns except col1
 		Where("id = ?", item.ID).
-		Exec(r.ctx)
-	return err
-}
-
-func (r *Repository) upsert(item *models.User) (err error) {
-	_, err = r.db().NewInsert().On("conflict (email) do update").Model(item).
-		Set("password = EXCLUDED.password").
 		Exec(r.ctx)
 	return err
 }
@@ -95,24 +84,5 @@ func (r *Repository) removeFromUser(values map[string]interface{}, table string)
 		q = q.Where("? = ?", bun.Ident(key), value)
 	}
 	_, err := q.Exec(r.ctx)
-	return err
-}
-
-func (r *Repository) dropUUID(item *models.User) (err error) {
-	_, err = r.db().NewUpdate().
-		Model(item).
-		Set("uuid = uuid_generate_v4()").
-		Where("id = ?", item.ID).
-		Exec(r.ctx)
-	return err
-}
-
-func (r *Repository) updatePassword(item *models.User) (err error) {
-	_, err = r.db().NewUpdate().
-		Model(item).
-		Set("password = ?", item.Password).
-		Set("is_active = true").
-		Where("id = ?", item.ID).
-		Exec(r.ctx)
 	return err
 }

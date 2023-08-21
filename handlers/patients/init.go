@@ -6,7 +6,7 @@ import (
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-	"github.com/pro-assistance/pro-assister/tokenHelper"
+	"github.com/uptrace/bun"
 
 	"mdgkb/tsr-tegister-server-v1/models"
 )
@@ -16,11 +16,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.Patient, models.Patients, models.PatientsWithCount]
+	basehandler.IServiceWithContext[models.Patient, models.Patients, models.PatientsWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.Patient, models.Patients, models.PatientsWithCount]
+	basehandler.IRepositoryWithContext[models.Patient, models.Patients, models.PatientsWithCount]
 }
 
 type IFilesService interface {
@@ -36,13 +36,16 @@ type Handler struct {
 type Service struct {
 	repository IRepository
 	helper     *helper.Helper
+	err        error
 }
 
 type Repository struct {
-	ctx           context.Context
-	helper        *helper.Helper
-	queryFilter   *sqlHelper.QueryFilter
-	accessDetails *tokenHelper.AccessDetails
+	ctx          context.Context
+	helper       *helper.Helper
+	queryFilter  *sqlHelper.QueryFilter
+	tx           *bun.Tx
+	userDomainId string
+	Error        error
 }
 
 type FilesService struct {

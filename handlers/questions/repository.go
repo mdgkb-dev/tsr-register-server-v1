@@ -17,11 +17,6 @@ func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
 	if err != nil {
 		return err
 	}
-
-	r.accessDetails, err = r.helper.Token.GetAccessDetail(c)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -35,9 +30,7 @@ func (r *Repository) GetAll() (items models.QuestionsWithCount, err error) {
 	query := r.DB().NewSelect().
 		Model(&items.Questions).
 		Relation("AnswerVariants")
-	if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
-		query.Where("?TableAlias.domain_id = ?", r.accessDetails.UserDomainID)
-	}
+
 	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err

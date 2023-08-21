@@ -8,7 +8,6 @@ import (
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-	"github.com/pro-assistance/pro-assister/tokenHelper"
 )
 
 type IHandler interface {
@@ -39,10 +38,9 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx           context.Context
-	helper        *helper.Helper
-	queryFilter   *sqlHelper.QueryFilter
-	accessDetails *tokenHelper.AccessDetails
+	ctx         context.Context
+	helper      *helper.Helper
+	queryFilter *sqlHelper.QueryFilter
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

@@ -1,22 +1,17 @@
 package patients
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/human"
+	"context"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
-
-	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) Create(item *models.Patient) error {
-	err := human.CreateService(s.helper).Create(item.Human)
-	if err != nil {
-		return err
-	}
+func (s *Service) Create(c context.Context, item *models.Patient) error {
+	err := humans.S.Create(c, item.Human)
 	item.HumanID = item.Human.ID
-	err = s.repository.Create(item)
+	err = s.repository.Create(c, item)
 	if err != nil {
 		return err
 	}
@@ -25,29 +20,28 @@ func (s *Service) Create(item *models.Patient) error {
 	if err != nil {
 		return err
 	}
-
-	return err
+	return nil
 }
 
-func (s *Service) GetAll() (models.PatientsWithCount, error) {
-	return s.repository.GetAll()
+func (s *Service) GetAll(c context.Context) (models.PatientsWithCount, error) {
+	return s.repository.GetAll(c)
 }
 
-func (s *Service) Get(id string) (*models.Patient, error) {
-	item, err := s.repository.Get(id)
+func (s *Service) Get(c context.Context, id string) (*models.Patient, error) {
+	item, err := s.repository.Get(c, id)
 	if err != nil {
 		return nil, err
 	}
 	return item, nil
 }
 
-func (s *Service) Update(item *models.Patient) error {
-	err := humans.CreateService(s.helper).Update(item.Human)
+func (s *Service) Update(c context.Context, item *models.Patient) error {
+	err := humans.S.Update(c, item.Human)
 	if err != nil {
 		return err
 	}
 	item.HumanID = item.Human.ID
-	err = s.repository.Update(item)
+	err = s.repository.Update(c, item)
 	if err != nil {
 		return err
 	}
@@ -72,15 +66,10 @@ func (s *Service) Update(item *models.Patient) error {
 	return nil
 }
 
-func (s *Service) Delete(id string) error {
-	err := s.repository.Delete(id)
+func (s *Service) Delete(c context.Context, id string) error {
+	err := s.repository.Delete(c, id)
 	if err != nil {
 		return err
 	}
 	return nil
-}
-
-func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
-	err = s.repository.SetQueryFilter(c)
-	return err
 }

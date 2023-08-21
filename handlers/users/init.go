@@ -15,28 +15,19 @@ import (
 type IHandler interface {
 	GetAll(c *gin.Context)
 	Get(c *gin.Context)
-	GetByEmail(c *gin.Context)
 	Create(c *gin.Context)
 	Update(c *gin.Context)
-	AddToUser(c *gin.Context)
-	RemoveFromUser(c *gin.Context)
 }
 
 type IService interface {
 	GetAll() (models.UsersWithCount, error)
 	setQueryFilter(*gin.Context) error
 	Get(string) (*models.User, error)
-	GetByEmail(string) (*models.User, error)
-	EmailExists(string) (bool, error)
+	GetByUserAccountID(string) (*models.User, error)
 	AddToUser(map[string]interface{}, string) error
 	Create(*models.User) error
 	Update(*models.User) error
-	Upsert(*models.User) error
 	RemoveFromUser(map[string]interface{}, string) error
-	UpsertEmail(*models.User) error
-	DropUUID(*models.User) error
-	UpdatePassword(*models.User) error
-	SetAccessLink(item *models.User) error
 }
 
 type IRepository interface {
@@ -45,16 +36,12 @@ type IRepository interface {
 	create(*models.User) error
 	getAll() (models.UsersWithCount, error)
 	get(string) (*models.User, error)
-	getByEmail(string) (*models.User, error)
-	emailExists(string) (bool, error)
+	getByUserAccountID(string) (*models.User, error)
 	update(*models.User) error
-	upsert(*models.User) error
 	upsertEmail(*models.User) error
 
 	addToUser(map[string]interface{}, string) error
 	removeFromUser(map[string]interface{}, string) error
-	dropUUID(*models.User) error
-	updatePassword(*models.User) error
 }
 
 type IFilesService interface {

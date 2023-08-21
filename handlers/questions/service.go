@@ -4,7 +4,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/answervariants"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionexamples"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionmeasures"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertyvariants"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -75,15 +74,6 @@ func (s *Service) UpsertMany(items models.Questions) error {
 		return err
 	}
 	err = registerPropertyMeasuresService.DeleteMany(items.GetRegisterPropertyMeasuresForDelete())
-	if err != nil {
-		return err
-	}
-	registerPropertyVariantsService := registerpropertyvariants.CreateService(s.helper)
-	err = registerPropertyVariantsService.UpsertMany(items.GetRegisterPropertyVariants())
-	if err != nil {
-		return err
-	}
-	err = registerPropertyVariantsService.DeleteMany(items.GetRegisterPropertyVariantsForDelete())
 	if err != nil {
 		return err
 	}

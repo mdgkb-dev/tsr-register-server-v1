@@ -155,14 +155,14 @@ import (
 
 func (h *Handler) GetTree(c *gin.Context) {
 	item, err := h.service.GetTree()
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
 }
 func (h *Handler) Get(c *gin.Context) {
 	item, err := h.service.Get(c.Param("id"))
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, item)

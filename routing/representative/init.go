@@ -3,7 +3,7 @@ package representative
 import (
 	"github.com/gin-gonic/gin"
 
-	handler "mdgkb/tsr-tegister-server-v1/handlers/representative"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/representatives"
 )
 
 // Init func

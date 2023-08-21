@@ -10,7 +10,7 @@ import (
 func (h *Handler) GetCount(c *gin.Context) {
 	table := c.Param("table")
 	items, err := h.service.GetCount(&table)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, items)

@@ -10,7 +10,7 @@ import (
 func (h *Handler) Create(c *gin.Context) {
 	var item models.PatientAnswerComments
 	err := c.Bind(&item)
-	if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
+	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
@@ -20,7 +20,6 @@ func (h *Handler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
-//
 func (h *Handler) Get(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }

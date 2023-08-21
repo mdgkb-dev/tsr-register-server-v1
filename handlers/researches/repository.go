@@ -17,10 +17,6 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 	if err != nil {
 		return err
 	}
-	r.accessDetails, err = r.helper.Token.GetAccessDetail(c)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 

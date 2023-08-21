@@ -1,7 +1,6 @@
 package researchquery
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/registerquerytoregisterproperty"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -15,7 +14,6 @@ func (s *Service) Create(query *models.ResearchQuery) error {
 	}
 
 	query.SetIDForChildren()
-	err = registerquerytoregisterproperty.CreateService(s.helper).CreateMany(query.ResearchQueriesQuestions)
 	return err
 }
 
@@ -35,12 +33,6 @@ func (s *Service) Update(query *models.ResearchQuery) error {
 	}
 
 	query.SetIDForChildren()
-	registerQueryToRegisterPropertyService := registerquerytoregisterproperty.CreateService(s.helper)
-	err = registerQueryToRegisterPropertyService.UpsertMany(query.ResearchQueriesQuestions)
-
-	if err != nil {
-		return err
-	}
 
 	//err = registerQueryToRegisterPropertyService.DeleteMany(query.RegisterQueryToRegisterPropertyForDelete)
 	return err

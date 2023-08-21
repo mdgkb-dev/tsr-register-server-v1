@@ -37,9 +37,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
-	"mdgkb/tsr-tegister-server-v1/handlers/registerpropertytouser"
-	"mdgkb/tsr-tegister-server-v1/handlers/registers"
-	"mdgkb/tsr-tegister-server-v1/handlers/representative"
+	//"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchespools"
@@ -85,9 +83,6 @@ import (
 	questionsRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
-	registerPropertyToUserRouter "mdgkb/tsr-tegister-server-v1/routing/registerpropertytouser"
-	registersRouter "mdgkb/tsr-tegister-server-v1/routing/registers"
-	representativeRouter "mdgkb/tsr-tegister-server-v1/routing/representative"
 	representativeTypesRouter "mdgkb/tsr-tegister-server-v1/routing/representativetypes"
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
 	researchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/researchespools"
@@ -116,14 +111,12 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
 	patientsRouter.Init(api.Group("/patients"), patients.CreateHandler(helper))
-	registersRouter.Init(api.Group("/registers"), registers.CreateHandler(helper))
 	researchesRouter.Init(api.Group("/researches"), researches.CreateHandler(helper))
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
 	researchQueryRouter.Init(api.Group("/research-queries"), researchquery.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
-	representativeRouter.Init(api.Group("/representatives"), representative.CreateHandler(helper))
+	//representativeRouter.Init(api.Group("/representatives"), representatives.CreateHandler(helper))
 	representativeTypesRouter.Init(api.Group("/representative-types"), representativetypes.CreateHandler(helper))
-	registerPropertyToUserRouter.Init(api.Group("/register-properties-to-user"), registerpropertytouser.CreateHandler(helper))
 	usersRouter.Init(api.Group("/users"), users.CreateHandler(helper))
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(helper))
 	researchesPoolsRouter.Init(api.Group("/researches-pools"), researchespools.CreateHandler(helper))
@@ -135,7 +128,8 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientDiagnosisRouter.Init(api.Group("/patient-diagnosis"), patientdiagnosis.CreateHandler(helper))
 	disabilitiesRouter.Init(api.Group("/disabilities"), disabilities.CreateHandler(helper))
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
-	humansRouter.Init(api.Group("/humans"), humans.CreateHandler(helper))
+	humans.Init(helper)
+	humansRouter.Init(api.Group("/humans"), humans.H)
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))
 	patientHistoriesRouter.Init(api.Group("/patient-histories"), patienthistories.CreateHandler(helper))

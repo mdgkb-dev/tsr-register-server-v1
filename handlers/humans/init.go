@@ -7,6 +7,7 @@ import (
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
+	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
@@ -14,11 +15,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.Human, models.Humans, models.HumansWithCount]
+	basehandler.IServiceWithContext[models.Human, models.Humans, models.HumansWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.Human, models.Humans, models.HumansWithCount]
+	basehandler.IRepositoryWithContext[models.Human, models.Humans, models.HumansWithCount]
 }
 
 type IFilesService interface {
@@ -31,8 +32,13 @@ type Handler struct {
 	helper       *helper.Helper
 }
 
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
 type Service struct {
-	repository IRepository
+	Repository IRepository
 	helper     *helper.Helper
 }
 
@@ -40,22 +46,18 @@ type Repository struct {
 	ctx         context.Context
 	helper      *helper.Helper
 	queryFilter *sqlHelper.QueryFilter
+	Tx          *bun.Tx
 }
 
 type FilesService struct {
 	helper *helper.Helper
 }
 
-func CreateHandler(helper *helper.Helper) *Handler {
-	repo := NewRepository(helper)
-	service := NewService(repo, helper)
-	filesService := NewFilesService(helper)
-	return NewHandler(service, filesService, helper)
-}
-
-func CreateService(helper *helper.Helper) *Service {
-	repo := NewRepository(helper)
-	return NewService(repo, helper)
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
 }
 
 // NewHandler constructor
@@ -64,7 +66,7 @@ func NewHandler(s IService, filesService IFilesService, helper *helper.Helper) *
 }
 
 func NewService(repository IRepository, helper *helper.Helper) *Service {
-	return &Service{repository: repository, helper: helper}
+	return &Service{Repository: repository, helper: helper}
 }
 
 func NewRepository(helper *helper.Helper) *Repository {
