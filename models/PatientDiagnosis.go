@@ -13,12 +13,7 @@ type PatientDiagnosis struct {
 	Patient       *Patient      `bun:"rel:has-one" json:"patients"`
 	PatientID     uuid.NullUUID `bun:"type:uuid" json:"PatientId"`
 	DoctorName    string        `json:"doctorName"`
-	//MkbDiagnosis           *MkbDiagnosis         `bun:"rel:belongs-to" json:"mkbDiagnosis"`
-	//MkbDiagnosisID         uuid.UUID             `bun:"type:uuid" json:"mkbDiagnosisId"`
-	//MkbSubDiagnosis        *MkbSubDiagnosis      `bun:"rel:belongs-to" json:"mkbSubDiagnosis"`
-	//MkbSubDiagnosisID      uuid.NullUUID         `bun:"type:uuid,nullzero" json:"mkbSubDiagnosisId"`
-	//MkbConcreteDiagnosis   *MkbConcreteDiagnosis `bun:"rel:belongs-to" json:"mkbConcreteDiagnosis"`
-	//MkbConcreteDiagnosisID uuid.NullUUID         `bun:"type:uuid,nullzero" json:"mkbConcreteDiagnosisId"`
+
 	Primary                            bool          `json:"primary"`
 	DeletedAt                          *time.Time    `bun:",soft_delete" json:"deletedAt"`
 	MkbItem                            *MkbItem      `bun:"rel:belongs-to" json:"mkbItem"`

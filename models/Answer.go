@@ -11,7 +11,6 @@ import (
 type Answer struct {
 	bun.BaseModel `bun:"answers,alias:answers"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	//Order         int       `bun:"item_order" json:"order"`
 
 	ValueString     string         `json:"valueString"`
 	ValueNumber     float32        `json:"valueNumber"`
@@ -33,46 +32,33 @@ type Answer struct {
 
 	SelectedAnswerVariants          SelectedAnswerVariants `bun:"rel:has-many" json:"selectedAnswerVariants"`
 	SelectedAnswerVariantsForDelete []uuid.UUID            `bun:"-" json:"selectedAnswerVariantsForDelete"`
-	//RegisterPropertiesToPatientsToFileInfos          RegisterPropertiesToPatientsToFileInfos `bun:"rel:has-many" json:"registerPropertiesToPatientsToFileInfos"`
-	//RegisterPropertiesToPatientsToFileInfosForDelete []uuid.UUID                             `bun:"-" json:"registerPropertiesToPatientsToFileInfosForDelete"`
 
-	//RegisterPropertyMeasure   *RegisterPropertyMeasure `bun:"rel:belongs-to" json:"registerPropertyMeasure"`
-	//RegisterPropertyMeasureID uuid.NullUUID            `bun:"type:uuid" json:"registerPropertyMeasureId"`
-
-	//RegisterPropertyVariant   *RegisterPropertyVariant `bun:"rel:belongs-to" json:"registerPropertyVariant"`
-	//RegisterPropertyVariantID uuid.NullUUID            `bun:"type:uuid" json:"registerPropertyVariantId"`
-
-	//RegisterGroupToPatient   *RegisterGroupToPatient `bun:"rel:belongs-to" json:"registerGroupToPatient"`
-	//RegisterGroupToPatientID uuid.UUID               `bun:"type:uuid" json:"registerGroupToPatientID"`
+	AnswerFiles          AnswerFiles `bun:"rel:has-many" json:"answerFiles"`
+	AnswerFilesForDelete []uuid.UUID `bun:"-" json:"answerFilesForDelete"`
 }
 
 type Answers []*Answer
 
-//
-//func (item *RegisterPropertyToPatient) SetFilePath(fileID *string) *string {
-//	for i := range item.RegisterPropertiesToPatientsToFileInfos {
-//		if item.RegisterPropertiesToPatientsToFileInfos[i].FileInfo.ID.String() == *fileID {
-//			item.RegisterPropertiesToPatientsToFileInfos[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
-//			return &item.RegisterPropertiesToPatientsToFileInfos[i].FileInfo.FileSystemPath
-//		}
-//	}
-//	return nil
-//}
-//
-//func (item *RegisterPropertyToPatient) SetIDForChildren() {
-//	if len(item.RegisterPropertiesToPatientsToFileInfos) > 0 {
-//		for i := range item.RegisterPropertiesToPatientsToFileInfos {
-//			item.RegisterPropertiesToPatientsToFileInfos[i].RegisterPropertyToPatientID = item.ID
-//		}
-//	}
-//}
-//
-//func (items Answers) SetIDForChildren() {
-//	for i := range items {
-//		items[i].SetIDForChildren()
-//	}
-//}
-//
+func (items Answers) SetFilePath(fileID *string) *string {
+	for i := range items {
+		path := items[i].SetFilePath(fileID)
+		if path != nil {
+			return path
+		}
+	}
+	return nil
+}
+
+func (item *Answer) SetFilePath(fileID *string) *string {
+	for i := range item.AnswerFiles {
+		path := item.AnswerFiles[i].SetFilePath(fileID)
+		if path != nil {
+			return path
+		}
+	}
+	return nil
+}
+
 func (items Answers) GetSelectedAnswerVariants() SelectedAnswerVariants {
 	itemsForGet := make(SelectedAnswerVariants, 0)
 	if len(items) == 0 {
@@ -85,7 +71,6 @@ func (items Answers) GetSelectedAnswerVariants() SelectedAnswerVariants {
 	return itemsForGet
 }
 
-//
 func (items Answers) GetSelectedAnswerVariantsForDelete() []uuid.UUID {
 	itemsForGet := make([]uuid.UUID, 0)
 	if len(items) == 0 {
@@ -93,6 +78,55 @@ func (items Answers) GetSelectedAnswerVariantsForDelete() []uuid.UUID {
 	}
 	for i := range items {
 		itemsForGet = append(itemsForGet, items[i].SelectedAnswerVariantsForDelete...)
+	}
+
+	return itemsForGet
+}
+func (item *Answer) SetIDForChildren() {
+	for i := range item.AnswerFiles {
+		item.AnswerFiles[i].AnswerID = item.ID
+	}
+	for i := range item.SelectedAnswerVariants {
+		item.AnswerFiles[i].AnswerID = item.ID
+	}
+}
+
+func (items Answers) SetIDForChildren() {
+	for i := range items {
+		items[i].SetIDForChildren()
+	}
+
+	//if len(item.RegisterGroups) > 0 {
+	//	for i := range item.RegisterGroups {
+	//		item.RegisterGroups[i].ResearchPoolID = item.ID
+	//	}
+	//}
+	//if len(item.RegisterDiagnosis) > 0 {
+	//	for i := range item.RegisterDiagnosis {
+	//		item.RegisterDiagnosis[i].ResearchPoolID = item.ID
+	//	}
+	//}
+}
+
+func (items Answers) GetAnswerFiles() AnswerFiles {
+	itemsForGet := make(AnswerFiles, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].AnswerFiles...)
+	}
+
+	return itemsForGet
+}
+
+func (items Answers) GetAnswerFilesForDelete() []uuid.UUID {
+	itemsForGet := make([]uuid.UUID, 0)
+	if len(items) == 0 {
+		return itemsForGet
+	}
+	for i := range items {
+		itemsForGet = append(itemsForGet, items[i].AnswerFilesForDelete...)
 	}
 
 	return itemsForGet
@@ -111,9 +145,6 @@ func (item *Answer) GetData(prop *Question) string {
 	if prop.ValueType.IsRadio() {
 		res := No
 		for _, radio := range prop.AnswerVariants {
-			//if prop.Name == "Атопический дерматит" {
-			//	fmt.Println(radio.ID.UUID, radio.Name, item.ID.UUID, item.QuestionID.UUID, prop.ID.UUID)
-			//}
 			if radio.ID == item.AnswerVariantID {
 				res = radio.Name
 				break

@@ -1,6 +1,7 @@
 package answers
 
 import (
+	"mdgkb/tsr-tegister-server-v1/handlers/answerfiles"
 	"mdgkb/tsr-tegister-server-v1/handlers/selectedanswervariants"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -52,6 +53,17 @@ func (s *Service) UpsertMany(items models.Answers) error {
 	if err != nil {
 		return err
 	}
+
+	answerfilesService := answerfiles.CreateService(s.helper)
+	err = answerfilesService.UpsertMany(items.GetAnswerFiles())
+	if err != nil {
+		return err
+	}
+	err = answerfilesService.DeleteMany(items.GetAnswerFilesForDelete())
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

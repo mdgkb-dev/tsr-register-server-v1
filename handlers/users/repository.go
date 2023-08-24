@@ -45,6 +45,7 @@ func (r *Repository) getByUserAccountID(accountId string) (*models.User, error) 
 	item := models.User{}
 	err := r.db().NewSelect().
 		Model(&item).
+		Relation("UsersDomains").
 		Where("?TableAlias.user_account_id = ?", accountId).
 		Scan(r.ctx)
 	return &item, err

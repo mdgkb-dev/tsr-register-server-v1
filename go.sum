@@ -260,6 +260,8 @@ github.com/pro-assistance/pro-assister v0.0.106-0.20230818140553-4d32e6c51b70 h1
 github.com/pro-assistance/pro-assister v0.0.106-0.20230818140553-4d32e6c51b70/go.mod h1:a67yMcX1UjcYI+arUPAopKVnaUxPQgZt7JozxC7sU2c=
 github.com/pro-assistance/pro-assister v0.0.106-0.20230818140851-24a9b75ab278 h1:N+lsCbpxshgCGQMDcGb8SosxQYLmN14PbtRGqNK7xyA=
 github.com/pro-assistance/pro-assister v0.0.106-0.20230818140851-24a9b75ab278/go.mod h1:a67yMcX1UjcYI+arUPAopKVnaUxPQgZt7JozxC7sU2c=
+github.com/pro-assistance/pro-assister v0.0.106-0.20230823112232-f0859b8bc870 h1:ejJ6QZGQ+Rn6w5RNWMwZJT3Sr8ID3DOjVtAbIxB9XIs=
+github.com/pro-assistance/pro-assister v0.0.106-0.20230823112232-f0859b8bc870/go.mod h1:a67yMcX1UjcYI+arUPAopKVnaUxPQgZt7JozxC7sU2c=
 github.com/prometheus/client_model v0.0.0-20190812154241-14fe0d1b01d4/go.mod h1:xMI15A0UPsDsEKsMN9yxemIoYk6Tm2C1GtYGdfGttqA=
 github.com/richardlehane/mscfb v1.0.3 h1:rD8TBkYWkObWO0oLDFCbwMeZ4KoalxQy+QgniCj3nKI=
 github.com/richardlehane/mscfb v1.0.3/go.mod h1:YzVpcZg9czvAuhk9T+a3avCpcFPMUWm7gK3DypaEsUk=

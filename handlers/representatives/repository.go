@@ -1,4 +1,4 @@
-package representative
+package representatives
 
 import (
 	"fmt"

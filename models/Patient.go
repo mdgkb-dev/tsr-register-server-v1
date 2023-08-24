@@ -96,3 +96,7 @@ func (item *Patient) SetDeleteIDForChildren() {
 		item.PatientDrugRegimenForDelete = append(item.PatientDrugRegimenForDelete, item.PatientDrugRegimen[i].ID)
 	}
 }
+
+//func (item *User) JoinByDomain(q *bun.SelectQuery, dom)   {
+//	q.Join("patients_domains on patients_domains.patient_id = ")
+//}

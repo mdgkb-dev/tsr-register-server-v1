@@ -27,7 +27,7 @@ func (h *Handler) Login(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.validator.Login(&item)
+	//err = h.validator.Login(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

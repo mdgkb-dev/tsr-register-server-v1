@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strings"
+
 	"github.com/uptrace/bun"
 
 	"github.com/google/uuid"
@@ -15,8 +17,7 @@ type User struct {
 	RegistersUsers          RegistersUsers           `bun:"rel:has-many" json:"registersUsers"`
 	RegistersUsersForDelete []uuid.UUID              `bun:"-" json:"registersUsersForDelete"`
 
-	DomainID uuid.NullUUID `bun:"type:uuid" json:"-"`
-	Domain   *Domain       `bun:"rel:belongs-to" json:"-"`
+	UsersDomains UsersDomains `bun:"rel:has-many" json:"-"`
 
 	UserAccountID uuid.NullUUID `bun:"type:uuid" json:"userAccountId"`
 	UserAccount   *UserAccount  `bun:"rel:belongs-to" json:"userAccount"`
@@ -48,5 +49,9 @@ type RegisterPropertiesToUser []*RegisterPropertyToUser
 
 func (item *User) SetJWTClaimsMap(claims map[string]interface{}) {
 	claims["user_id"] = item.ID.UUID
-	claims["user_domain_id"] = item.DomainID.UUID
+	domainIds := make([]string, len(item.UsersDomains))
+	for i := range item.UsersDomains {
+		domainIds[i] = item.UsersDomains[i].DomainID.UUID.String()
+	}
+	claims["domains_ids"] = strings.Join(domainIds, ",")
 }

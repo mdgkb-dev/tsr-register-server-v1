@@ -2,7 +2,6 @@ package patients
 
 import (
 	"context"
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/sqlHelper"
@@ -33,17 +32,16 @@ func (r *Repository) GetAll(c context.Context) (items models.PatientsWithCount, 
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
 		Relation("CreatedBy").
-		Relation("UpdatedBy").Limit(20)
-	//userDomainId, err := r.helper.Token.ExtractTokenMetadata(c.Request, "user_id")
-	//if userDomainId != "" {
-	//	query.Where("?TableAlias.domain_id = ?")
+		Relation("UpdatedBy")
+
+	//domainIDS, err := r.helper.Token.ExtractTokenMetadata(c.Request, "domains_ids")
+	//if domainIDS != "" {
+	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In([]string{"b9d7b8a5-d155-4dd5-8040-83c2648f0949"}))
 	//}
-	i, ok := c.Value(fqKey{}).(*sqlHelper.QueryFilter)
-	if !ok {
-		fmt.Println("1", i)
+	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
+	if ok {
+		i.HandleQuery(query)
 	}
-	//fmt.Println(r.helper.SQL.ExtractQueryFilter(c))
-	i.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(c)
 	return items, err
 }

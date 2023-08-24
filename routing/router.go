@@ -38,7 +38,9 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
+	"mdgkb/tsr-tegister-server-v1/handlers/representatives"
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
+	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
 
 	//"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
@@ -118,7 +120,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
 	researchQueryRouter.Init(api.Group("/research-queries"), researchquery.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
-	//representativeRouter.Init(api.Group("/representatives"), representatives.CreateHandler(helper))
+	representativesRouter.Init(api.Group("/representatives"), representatives.CreateHandler(helper))
 	representativeTypesRouter.Init(api.Group("/representative-types"), representativetypes.CreateHandler(helper))
 	usersRouter.Init(api.Group("/users"), users.CreateHandler(helper))
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(helper))

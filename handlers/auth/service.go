@@ -47,6 +47,7 @@ func (s *Service) Login(item *models.UserAccount, skipPassword bool) (t *models.
 	if err != nil {
 		return nil, err
 	}
+	t = &models.TokensWithUser{}
 	t.Init(token, *user)
 	return t, err
 }

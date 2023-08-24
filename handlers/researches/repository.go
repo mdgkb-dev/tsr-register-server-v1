@@ -26,25 +26,9 @@ func (r *Repository) create(item *models.Research) (err error) {
 }
 
 func (r *Repository) getAll() (items models.Researches, err error) {
-	err = r.db().NewSelect().
+	query := r.db().NewSelect().
 		Model(&items).
-		Relation("ResearchDiagnosis").
-		Scan(r.ctx)
-	return items, err
-}
-
-func (r *Repository) get(id string) (*models.Research, error) {
-	item := models.Research{}
-	err := r.db().NewSelect().
-		Model(&item).
-		//Relation("ResearchDiagnosis.MkbDiagnosis.MkbSubDiagnosis").
-		//Relation("ResearchDiagnosis.MkbDiagnosis.MkbGroup").
-		//Relation("ResearchDiagnosis.MkbSubDiagnosis").
-		//Relation("ResearchDiagnosis.MkbConcreteDiagnosis").
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
-			//if r.accessDetails != nil && r.accessDetails.UserDomainID != "" {
-			//	return q.Order("questions.item_order").Where("questions.domain_id = ?", r.accessDetails.UserDomainID)
-			//}
 			return q.Order("questions.item_order")
 		}).
 		Relation("Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
@@ -56,25 +40,31 @@ func (r *Repository) get(id string) (*models.Research, error) {
 			return q.Order("question_variants.name")
 		}).
 		Relation("Questions.Children.ValueType").
-		//Relation("Questions.QuestionVariants").
+		Relation("Formulas.FormulaResults")
+
+	r.queryFilter.HandleQuery(query)
+	err = query.Scan(r.ctx)
+
+	return items, err
+}
+
+func (r *Repository) get(id string) (*models.Research, error) {
+	item := models.Research{}
+	err := r.db().NewSelect().
+		Model(&item).
+		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("questions.item_order")
+		}).
+		Relation("Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("answer_variants.item_order")
+		}).
+		Relation("Questions.QuestionExamples").
+		Relation("Questions.ValueType").
+		Relation("Questions.QuestionVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("question_variants.name")
+		}).
+		Relation("Questions.Children.ValueType").
 		Relation("Formulas.FormulaResults").
-		//Relation("ResearchSections.Questions.ResearchPropertySets", func(q *bun.SelectQuery) *bun.SelectQuery {
-		//	return q.Order("Research_property_set.Research_property_set_order")
-		//}).
-		//Relation("ResearchSections.Questions.ResearchPropertySets.ResearchPropertyOthers").
-		//Relation("ResearchSections.rQuestions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
-		//	return q.Order("Research_property_radio.Research_property_radio_order")
-		//}).
-		//Relation("ResearchSections.Questions.AnswerVariants.ResearchPropertyOthers", func(q *bun.SelectQuery) *bun.SelectQuery {
-		//	return q.Order("Research_property_others.Research_property_others_order")
-		//}).
-		//Relation("ResearchResult.Patient.Human", func(q *bun.SelectQuery) *bun.SelectQuery {
-		//	//r.queryFilter.HandleQuery(q)
-		//	return q.Order("patient__human.surname", "patient__human.name", "patient__human.patronymic")
-		//}).
-		//Relation("ResearchResult.Patient.Answer.Question").
-		//Relation("ResearchResult.Patient.Answer.Question").
-		//Relation("ResearchResult.Patient.Answer.AnswerVariant").
 		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err

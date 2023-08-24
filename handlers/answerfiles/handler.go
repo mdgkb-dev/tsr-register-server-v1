@@ -1,4 +1,4 @@
-package representative
+package answerfiles
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -8,20 +8,8 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.Representative
-	files, err := h.helper.HTTP.GetForm(c, &item)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	//err = item.FillModelInfoCreate(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	err = h.filesService.Upload(c, &item, files)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	//err = item.FillModelInfoCreate(c)
+	var item models.AnswerFile
+	err := c.Bind(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -33,16 +21,14 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	err := h.service.setQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
 	items, err := h.service.GetAll()
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
 }
+
+//
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
 	item, err := h.service.Get(&id)
@@ -62,20 +48,11 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.Representative
-	files, err := h.helper.HTTP.GetForm(c, &item)
+	var item models.AnswerFile
+	err := c.Bind(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = item.FillModelInfoUpdate(c, h.helper.Token)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	err = h.filesService.Upload(c, &item, files)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-
 	err = h.service.Update(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return

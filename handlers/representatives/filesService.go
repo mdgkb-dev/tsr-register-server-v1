@@ -1,4 +1,4 @@
-package representative
+package representatives
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"

@@ -45,12 +45,12 @@ func (items ResearchResults) SetFilePath(fileID *string) *string {
 }
 
 func (item *ResearchResult) SetFilePath(fileID *string) *string {
-	//for i := range item.RegisterPropertyToPatient {
-	//	path := item.RegisterPropertyToPatient[i].SetFilePath(fileID)
-	//	if path != nil {
-	//		return path
-	//	}
-	//}
+	for i := range item.Answers {
+		path := item.Answers[i].SetFilePath(fileID)
+		if path != nil {
+			return path
+		}
+	}
 	return nil
 }
 
