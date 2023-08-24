@@ -38,7 +38,7 @@ func (r *Repository) Get(slug string) (*models.ResearchResult, error) {
 	item := models.ResearchResult{}
 	err := r.DB().NewSelect().Model(&item).
 		Relation("Answers.SelectedAnswerVariants").
-		Relation("Answers.AnswerFiles").
+		Relation("Answers.AnswerFiles.FileInfo").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)
 	return &item, err
