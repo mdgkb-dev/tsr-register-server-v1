@@ -20,7 +20,7 @@ type ResearchResult struct {
 	Research   *Research     `bun:"rel:belongs-to" json:"research"`
 	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`
 
-	Patient   *Research     `bun:"rel:belongs-to" json:"patient"`
+	Patient   *Patient      `bun:"rel:belongs-to" json:"patient"`
 	PatientID uuid.NullUUID `bun:"type:uuid" json:"patientId"`
 
 	FillingPercentage uint `json:"fillingPercentage"`

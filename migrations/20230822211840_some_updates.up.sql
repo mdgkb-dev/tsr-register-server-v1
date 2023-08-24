@@ -174,4 +174,18 @@ create table answer_files(
                              comment varchar,
                              answer_id uuid not null references answers,
                              file_info_id uuid not null references file_infos
-)
+);
+
+
+alter table anamneses
+    add column patient_id uuid references patients;
+
+alter table anamneses
+    add column mkb_item_id uuid references mkb_items;
+
+alter table anamneses
+drop column patient_diagnosis_id;
+
+
+update anamneses a set patient_id = pd.patient_id
+from patient_diagnosis pd where pd.id = a.patient_diagnosis_id;

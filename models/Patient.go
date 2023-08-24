@@ -37,6 +37,8 @@ type Patient struct {
 	FullName                    string             `bun:"-" json:"fullName"`
 	IsMale                      string             `bun:"-" json:"isMale"`
 	DateBirth                   string             `bun:"-" json:"dateBirth"`
+
+	Anamneses Anamneses `bun:"rel:has-many" json:"anamneses"`
 }
 
 type Patients []*Patient

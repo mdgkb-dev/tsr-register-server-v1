@@ -1,7 +1,6 @@
 package patientdiagnosis
 
 import (
-	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosisanamnesis"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -17,12 +16,6 @@ func (s *Service) Create(item *models.PatientDiagnosis) error {
 
 func (s *Service) Update(item *models.PatientDiagnosis) error {
 	err := s.repository.Update(item)
-	if err != nil {
-		return err
-	}
-	item.SetIDForChildren()
-	answersService := patientdiagnosisanamnesis.CreateService(s.helper)
-	err = answersService.UpsertMany(item.Anamneses)
 	if err != nil {
 		return err
 	}

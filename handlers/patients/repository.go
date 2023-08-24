@@ -71,6 +71,7 @@ func (r *Repository) Get(c context.Context, id string) (*models.Patient, error) 
 		}).
 		Relation("Commissions.CommissionsDoctors.Doctor").
 		Relation("Commissions.PatientDiagnosis.MkbItem").
+		Relation("Anamneses").
 		Where("?TableAlias.id = ?", id)
 	err := query.Scan(c)
 	return &item, err

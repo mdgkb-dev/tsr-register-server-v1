@@ -8,13 +8,16 @@ import (
 )
 
 type Anamnesis struct {
-	bun.BaseModel      `bun:"anamneses,alias:anamneses"`
-	ID                 uuid.NullUUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	PatientDiagnosis   *PatientDiagnosis `bun:"rel:belongs-to" json:"patientDiagnosis"`
-	PatientDiagnosisID uuid.NullUUID     `bun:"type:uuid" json:"patientDiagnosisId"`
-	Value              string            `json:"value"`
-	Date               time.Time         `bun:"item_date" json:"date"`
-	DoctorName         string            `json:"doctorName"`
+	bun.BaseModel `bun:"anamneses,alias:anamneses"`
+	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	MkbItem       *MkbItem      `bun:"rel:belongs-to" json:"mkbItem"`
+	MkbItemID     uuid.NullUUID `bun:"type:uuid" json:"mkbItemId"`
+	Value         string        `json:"value"`
+	Date          time.Time     `bun:"item_date" json:"date"`
+	DoctorName    string        `json:"doctorName"`
+
+	Patient   *Patient      `bun:"rel:belongs-to" json:"patient"`
+	PatientID uuid.NullUUID `bun:"type:uuid" json:"patientId"`
 }
 
 type Anamneses []*Anamnesis
