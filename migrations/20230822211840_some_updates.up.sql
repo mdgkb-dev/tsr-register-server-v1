@@ -47,14 +47,14 @@ VALUES
 UPDATE public.questions SET research_id = 'c21eb5de-e180-4faa-b1eb-bfd77dddb470' WHERE id in('fc171666-349d-4c79-86fc-cb6a2bfd2baf', 'fc171666-349d-4c79-86fc-cb6a2bfd2bad');
 
 insert into answer_variants (id, name, item_order, question_id, score, show_more_questions)
-values  ('b508f7ac-54b7-411d-bf3c-9594f8e0bf2c', 'Плановая', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bb', 1, false),
-        ('022fc517-81af-4c53-9207-89e7e3eb5aad', 'Подтверждён', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bc', 0, false),
-        ('b508f7ac-54b7-411d-bf3c-9594f8e0bf2d', 'Не подтверждён', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bc', 1, false);
+values  ('b508f7ac-54b7-411d-bf3c-9594f8e0bf22', 'Плановая', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bb', 1, false),
+        ('022fc517-81af-4c53-9207-89e7e3eb5aa3', 'Подтверждён', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bc', 0, false),
+        ('b508f7ac-54b7-411d-bf3c-9594f8e0bf23', 'Не подтверждён', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bc', 1, false);
 
 
 insert into public.answer_variants (id, name, item_order, question_id, score, show_more_questions)
-values  ('7ca20145-8add-41cf-a9ea-eaccf579fb5f', 'При включении в регистр впервые', 0, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', null, false),
-        ('31e2bb9c-3c6d-4764-bbf2-d97452deef10', 'Поставлен ранее', 1, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', null, false);
+values  ('7ca20145-8add-41cf-a9ea-eaccf579fb55', 'При включении в регистр впервые', 0, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', null, false),
+        ('31e2bb9c-3c6d-4764-bbf2-d97452deef12', 'Поставлен ранее', 1, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', null, false);
 
 insert into public.mkb_questions_domains (id, question_id, domain_id)
 values  ('3b835c1d-6c6e-43d5-b576-a9d8d97bc037', 'fc171666-349d-4c79-86fc-cb6a2bfd2baf', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
@@ -91,7 +91,7 @@ delete from researches_pools_researches where research_id in
                                                               'Наличие аллергических заболеваний у ближайших родствеников пациента (мать/отец, родные братья/сестры)',
                                                               'Характеристика последующих эпизодов системной реакции',
                                                               'Характеристика первого эпизода системной реакции'
-));
+                                                   ));
 
 create table users_domains
 (
@@ -145,14 +145,14 @@ select p.id, ud.domain_id from patients p
 insert into public.domains (id, name)
 values  ('c3424b60-da2c-4d49-8fc3-7a57a5a51377', '52hospital');
 
-UPDATE public.users_domains SET domain_id = 'c3424b60-da2c-4d49-8fc3-7a57a5a51377' WHERE id = '088d5663-d5ce-4910-84f7-308c1d0cb302'
+UPDATE public.users_domains SET domain_id = 'c3424b60-da2c-4d49-8fc3-7a57a5a51377' WHERE id = '088d5663-d5ce-4910-84f7-308c1d0cb302';
 
 update patients_domains set domain_id = 'c3424b60-da2c-4d49-8fc3-7a57a5a51377'
 where patient_id in (
     select p.id from patients p
                          join humans h on p.human_id = h.id
     where h.date_birth < '2005-08-23'
-)
+);
 
 
 -- files
@@ -183,9 +183,11 @@ alter table anamneses
 alter table anamneses
     add column mkb_item_id uuid references mkb_items;
 
-alter table anamneses
-drop column patient_diagnosis_id;
 
 
 update anamneses a set patient_id = pd.patient_id
 from patient_diagnosis pd where pd.id = a.patient_diagnosis_id;
+
+alter table anamneses
+    drop column patient_diagnosis_id;
+
