@@ -46,15 +46,15 @@ VALUES
 
 UPDATE public.questions SET research_id = 'c21eb5de-e180-4faa-b1eb-bfd77dddb470' WHERE id in('fc171666-349d-4c79-86fc-cb6a2bfd2baf', 'fc171666-349d-4c79-86fc-cb6a2bfd2bad');
 
-insert into answer_variants (id, name, item_order, question_id, score, show_more_questions)
-values  ('b508f7ac-54b7-411d-bf3c-9594f8e0bf22', 'Плановая', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bb', 1, false),
-        ('022fc517-81af-4c53-9207-89e7e3eb5aa3', 'Подтверждён', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bc', 0, false),
-        ('b508f7ac-54b7-411d-bf3c-9594f8e0bf23', 'Не подтверждён', null, 'b54b5ce1-998b-4363-8ddb-e5dddba237bc', 1, false);
+insert into answer_variants (id, name, item_order, question_id,  show_more_questions)
+values  ('b508f7ac-54b7-411d-bf3c-9594f8e0bf22', 'Сомнительный', 0, 'fc171666-349d-4c79-86fc-cb6a2bfd2baf', false),
+        ('022fc517-81af-4c53-9207-89e7e3eb5aa3', 'Высоковероятный' , 1, 'fc171666-349d-4c79-86fc-cb6a2bfd2baf',  false),
+        ('b508f7ac-54b7-411d-bf3c-9594f8e0bf23', 'Другое', 2,  'fc171666-349d-4c79-86fc-cb6a2bfd2baf', true);
 
 
-insert into public.answer_variants (id, name, item_order, question_id, score, show_more_questions)
-values  ('7ca20145-8add-41cf-a9ea-eaccf579fb55', 'При включении в регистр впервые', 0, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', null, false),
-        ('31e2bb9c-3c6d-4764-bbf2-d97452deef12', 'Поставлен ранее', 1, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', null, false);
+insert into public.answer_variants (id, name, item_order, question_id, show_more_questions)
+values  ('7ca20145-8add-41cf-a9ea-eaccf579fb55', 'При включении в регистр впервые', 0, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad', false),
+        ('31e2bb9c-3c6d-4764-bbf2-d97452deef12', 'Поставлен ранее', 1, 'fc171666-349d-4c79-86fc-cb6a2bfd2bad',  false);
 
 insert into public.mkb_questions_domains (id, question_id, domain_id)
 values  ('3b835c1d-6c6e-43d5-b576-a9d8d97bc037', 'fc171666-349d-4c79-86fc-cb6a2bfd2baf', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
@@ -66,19 +66,18 @@ values  ('3b835c1d-6c6e-43d5-b576-a9d8d97bc037', 'fc171666-349d-4c79-86fc-cb6a2b
 
 -- Вопросы к анамнезу
 
-create table anamnesis_researches_domains
+create table anamnesis_researches
 (
     id          uuid default uuid_generate_v4() not null primary key,
     research_id uuid not null references researches,
     domain_id uuid not null references domains
 );
 
-insert into public.anamnesis_researches_domains (id, research_id, domain_id)
+insert into public.anamnesis_researches (id, research_id, domain_id)
 values  ('298be1c7-7bf4-4bd4-b5b9-33b6a5326101', '8f2f58fd-38e2-4644-b8e7-e05794e838a8', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
         ('c1e3c26b-4ecc-4941-9b63-fbb6061dbf13', 'e9f2300f-afb7-43e0-93b9-eb110edfa683', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
         ('a5c5ec1b-457b-4f10-8c54-7cb4cc5adb72', 'e9f2300f-afb7-43e0-93b9-eb110edfa685', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
         ('df930bba-fd2f-4b94-b171-d32501709dbd', 'e9f2300f-afb7-43e0-93b9-eb110edfa686', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
-        ('215785bc-c2f4-43b6-961c-62a1557f19da', 'e9f2300f-afb7-43e0-93b9-eb110edfa688', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
         ('4ffea145-6cc8-4650-9615-2f54c13b3bd3', 'e9f2300f-afb7-43e0-93b9-eb110edfa689', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949');
 
 
@@ -190,4 +189,3 @@ from patient_diagnosis pd where pd.id = a.patient_diagnosis_id;
 
 alter table anamneses
     drop column patient_diagnosis_id;
-
