@@ -29,7 +29,11 @@ delete
 from anamneses_researches
 where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
 
-delete from selected_answer_variants s
+delete from selected_answer_variants sav where sav.answer_variant_id in
+(select  s.id from answer_variants s
+where s.question_id in (select id from  questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688'));
+
+delete from answer_variants s
 where s.question_id in (select id from  questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688');
 
 delete from questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
