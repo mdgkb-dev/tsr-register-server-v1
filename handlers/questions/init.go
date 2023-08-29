@@ -15,17 +15,27 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.Question, models.Questions, models.QuestionsWithCount]
+	basehandler.IServiceWithContext[models.Question, models.Questions, models.QuestionsWithCount]
 
-	UpsertMany(models.Questions) error
-	DeleteMany([]uuid.UUID) error
+	UpsertMany(context.Context, models.Questions) error
+	DeleteMany(context.Context, []uuid.UUID) error
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.Question, models.Questions, models.QuestionsWithCount]
+	basehandler.IRepositoryWithContext[models.Question, models.Questions, models.QuestionsWithCount]
 
-	upsertMany(models.Questions) error
-	deleteMany([]uuid.UUID) error
+	upsertMany(context.Context, models.Questions) error
+	deleteMany(context.Context, []uuid.UUID) error
+}
+
+var H *Handler
+var S *Service
+var R *Repository
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	H = NewHandler(S, h)
 }
 
 type Handler struct {

@@ -40,6 +40,7 @@ func (r *Repository) getAll() (items models.Researches, err error) {
 			return q.Order("question_variants.name")
 		}).
 		Relation("Questions.Children.ValueType").
+		Relation("Questions.Children.AnswerVariants").
 		Relation("Formulas.FormulaResults")
 
 	r.queryFilter.HandleQuery(query)
@@ -64,6 +65,9 @@ func (r *Repository) get(id string) (*models.Research, error) {
 			return q.Order("question_variants.name")
 		}).
 		Relation("Questions.Children.ValueType").
+		Relation("Questions.Children.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("answer_variants.item_order")
+		}).
 		Relation("Formulas.FormulaResults").
 		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	if err != nil {

@@ -15,7 +15,7 @@ func (h *Handler) Create(c *gin.Context) {
 		return
 	}
 
-	err = h.service.Create(&item)
+	err = h.service.Create(c, &item)
 
 	if h.helper.HTTP.HandleError(c, err) {
 		return
@@ -25,11 +25,12 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	err := h.service.SetQueryFilter(c)
+	fq, err := h.helper.SQL.CreateQueryFilter(c)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	items, err := h.service.GetAll()
+	h.helper.SQL.InjectQueryFilter(c, fq)
+	items, err := h.service.GetAll(c)
 
 	if h.helper.HTTP.HandleError(c, err) {
 		return
@@ -40,7 +41,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	item, err := h.service.Get(id)
+	item, err := h.service.Get(c, id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -49,7 +50,7 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := h.service.Delete(id)
+	err := h.service.Delete(c, id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -62,7 +63,7 @@ func (h *Handler) Update(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Update(&item)
+	err = h.service.Update(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

@@ -1,49 +1,49 @@
 package questions
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/handlers/answervariants"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionexamples"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionmeasures"
 	"mdgkb/tsr-tegister-server-v1/models"
 
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
-func (s *Service) Create(item *models.Question) error {
-	return s.repository.Create(item)
+func (s *Service) Create(c context.Context, item *models.Question) error {
+	return s.repository.Create(c, item)
 }
 
-func (s *Service) GetAll() (models.QuestionsWithCount, error) {
-	items, err := s.repository.GetAll()
+func (s *Service) GetAll(c context.Context) (models.QuestionsWithCount, error) {
+	items, err := s.repository.GetAll(c)
 	if err != nil {
 		return items, err
 	}
 	return items, nil
 }
 
-func (s *Service) Get(id string) (*models.Question, error) {
-	item, err := s.repository.Get(id)
+func (s *Service) Get(c context.Context, id string) (*models.Question, error) {
+	item, err := s.repository.Get(c, id)
 	if err != nil {
 		return nil, err
 	}
 	return item, nil
 }
 
-func (s *Service) Update(item *models.Question) error {
-	return s.repository.Update(item)
+func (s *Service) Update(c context.Context, item *models.Question) error {
+	return s.repository.Update(c, item)
 }
 
-func (s *Service) Delete(id string) error {
-	return s.repository.Delete(id)
+func (s *Service) Delete(c context.Context, id string) error {
+	return s.repository.Delete(c, id)
 }
 
-func (s *Service) UpsertMany(items models.Questions) error {
+func (s *Service) UpsertMany(c context.Context, items models.Questions) error {
 	if len(items) == 0 {
 		return nil
 	}
 
-	err := s.repository.upsertMany(items)
+	err := s.repository.upsertMany(c, items)
 	if err != nil {
 		return err
 	}
@@ -80,14 +80,9 @@ func (s *Service) UpsertMany(items models.Questions) error {
 	return nil
 }
 
-func (s *Service) DeleteMany(idPool []uuid.UUID) error {
+func (s *Service) DeleteMany(c context.Context, idPool []uuid.UUID) error {
 	if len(idPool) == 0 {
 		return nil
 	}
-	return s.repository.deleteMany(idPool)
-}
-
-func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
-	err = s.repository.SetQueryFilter(c)
-	return err
+	return s.repository.deleteMany(c, idPool)
 }

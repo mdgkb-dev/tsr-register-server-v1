@@ -133,11 +133,15 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientDiagnosisRouter.Init(api.Group("/patient-diagnosis"), patientdiagnosis.CreateHandler(helper))
 	disabilitiesRouter.Init(api.Group("/disabilities"), disabilities.CreateHandler(helper))
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
+
 	humans.Init(helper)
 	humansRouter.Init(api.Group("/humans"), humans.H)
 
 	menus.Init(helper)
 	menusRouter.Init(api.Group("/menus"), menus.H)
+
+	questions.Init(helper)
+	questionsRouter.Init(api.Group("/questions"), questions.H)
 
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))
@@ -155,7 +159,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	drugapplicationsstatusesRouter.Init(api.Group("/drug-applications-statuses"), statuses.CreateHandler(helper))
 	drugdecreasesRouter.Init(api.Group("/drug-decreases"), drugdecreases.CreateHandler(helper))
 	drugrecipesRouter.Init(api.Group("/drug-recipes"), drugrecipes.CreateHandler(helper))
-	questionsRouter.Init(api.Group("/questions"), questions.CreateHandler(helper))
+
 	documentsRouter.Init(api.Group("/documents"), documents.CreateHandler(helper))
 	documentfieldvaluesRouter.Init(api.Group("/document-field-values"), documentfieldvalues.CreateHandler(helper))
 	documentfileinfosRouter.Init(api.Group("/document-file-infos"), documentfileinfos.CreateHandler(helper))
