@@ -8,7 +8,7 @@ import (
 )
 
 type DocumentFieldValue struct {
-	bun.BaseModel `bun:"document_field_value,alias:document_field_value"`
+	bun.BaseModel `bun:"document_field_values,alias:document_field_values"`
 	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	ValueString   string    `json:"valueString"`
 	ValueNumber   int       `json:"valueNumber"`

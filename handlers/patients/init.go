@@ -3,6 +3,7 @@ package patients
 import (
 	"context"
 
+	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
@@ -13,14 +14,17 @@ import (
 
 type IHandler interface {
 	basehandler.IHandler
+	GetBySnilsNumber(c *gin.Context)
 }
 
 type IService interface {
 	basehandler.IServiceWithContext[models.Patient, models.Patients, models.PatientsWithCount]
+	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Patient, bool, error)
 }
 
 type IRepository interface {
 	basehandler.IRepositoryWithContext[models.Patient, models.Patients, models.PatientsWithCount]
+	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Patient, error)
 }
 
 type IFilesService interface {

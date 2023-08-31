@@ -32,7 +32,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patienthistories"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
-	"mdgkb/tsr-tegister-server-v1/handlers/patientsregisters"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsrepresentatives"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearches"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
@@ -42,7 +42,6 @@ import (
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
 	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
 
-	//"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchespools"
@@ -81,7 +80,7 @@ import (
 	patientDiagnosisRouter "mdgkb/tsr-tegister-server-v1/routing/patientdiagnosis"
 	patientHistoriesRouter "mdgkb/tsr-tegister-server-v1/routing/patienthistories"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
-	patientsRegistersRouter "mdgkb/tsr-tegister-server-v1/routing/patientsregisters"
+	patientsdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsdomains"
 	patientsRepresentativesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsrepresentatives"
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
@@ -99,6 +98,7 @@ import (
 	statusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
 
+	//"mdgkb/tsr-tegister-server-v1/handlers/representative"
 	"github.com/gin-gonic/gin"
 
 	helperPack "github.com/pro-assistance/pro-assister/helper"
@@ -129,19 +129,21 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 	researchesResultsRouter.Init(api.Group("/researches-results"), researchesresults.CreateHandler(helper))
 	patientsResearchesRouter.Init(api.Group("/patients-researches"), patientsresearches.CreateHandler(helper))
-	patientsRegistersRouter.Init(api.Group("/patients-registers"), patientsregisters.CreateHandler(helper))
 	patientDiagnosisRouter.Init(api.Group("/patient-diagnosis"), patientdiagnosis.CreateHandler(helper))
 	disabilitiesRouter.Init(api.Group("/disabilities"), disabilities.CreateHandler(helper))
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
 
 	humans.Init(helper)
-	humansRouter.Init(api.Group("/humans"), humans.H)
+	humansRouter.Init(api.Group("/humans"), patientsdomains.H)
 
 	menus.Init(helper)
 	menusRouter.Init(api.Group("/menus"), menus.H)
 
 	questions.Init(helper)
 	questionsRouter.Init(api.Group("/questions"), questions.H)
+
+	patientsdomains.Init(helper)
+	patientsdomainsRouter.Init(api.Group("/patients-domains"), patientsdomains.H)
 
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))

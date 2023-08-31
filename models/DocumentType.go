@@ -10,6 +10,8 @@ type DocumentType struct {
 	ID                 uuid.NullUUID        `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name               string               `json:"name"`
 	DocumentTypeFields []*DocumentTypeField `bun:"rel:has-many" json:"documentTypeFields"`
+	Required           bool                 `json:"required"`
+	Code               string               `json:"code"`
 }
 
 type DocumentTypes []*DocumentType
@@ -27,3 +29,9 @@ func (item *DocumentType) SetIDForChildren() {
 		item.DocumentTypeFields[i].DocumentTypeID = item.ID
 	}
 }
+
+type DocumentTypeCodes string
+
+const (
+	DocumentTypeCodeSnils = "snils"
+)

@@ -34,10 +34,8 @@ func (r *Repository) GetAll(c context.Context) (items models.PatientsWithCount, 
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
 
-	//domainIDS, err := r.helper.Token.ExtractTokenMetadata(c.Request, "domains_ids")
-	//if domainIDS != "" {
-	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In([]string{"b9d7b8a5-d155-4dd5-8040-83c2648f0949"}))
-	//}
+	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In([]string{models.ClaimDomainIDS.FromContext(c)}))
+
 	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
 	if ok {
 		i.HandleQuery(query)
@@ -73,6 +71,18 @@ func (r *Repository) Get(c context.Context, id string) (*models.Patient, error) 
 		Relation("Commissions.PatientDiagnosis.MkbItem").
 		Relation("Anamneses").
 		Where("?TableAlias.id = ?", id)
+	err := query.Scan(c)
+	return &item, err
+}
+
+func (r *Repository) GetBySnilsNumber(c context.Context, snillsNumber string) (*models.Patient, error) {
+	item := models.Patient{}
+	query := r.helper.DB.IDB(c).NewSelect().Model(&item).
+		Relation("Human").
+		Join("join humans h on h.id = ?TableAlias.human_id").
+		Join("join documents d on d.human_id = h.id").
+		Join("join document_field_values dfv on dfv.document_id = d.id and dfv.value_string = ?", snillsNumber).
+		Join("join document_types dt on d.document_type_id = dt.id and dt.code = ?", models.DocumentTypeCodeSnils)
 	err := query.Scan(c)
 	return &item, err
 }

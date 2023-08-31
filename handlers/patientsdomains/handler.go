@@ -1,6 +1,7 @@
-package patientsregisters
+package patientsdomains
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
@@ -8,12 +9,32 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.PatientRegister
+	var item models.PatientDomain
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Create(&item)
+	err = h.service.Create(c, &item)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{})
+}
+
+func (h *Handler) AddToDomain(c *gin.Context) {
+
+	d, err := h.helper.Token.ExtractTokenMetadata(c.Request, models.ClaimDomainIDS.String())
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	ctx := context.WithValue(c, models.ClaimDomainIDS.String(), d)
+
+	var item models.PatientDomain
+	_, err = h.helper.HTTP.GetForm(c, &item)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	err = S.AddToDomain(ctx, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -21,11 +42,12 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	err := h.service.SetQueryFilter(c)
+	fq, err := h.helper.SQL.CreateQueryFilter(c)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	items, err := h.service.GetAll()
+	h.helper.SQL.InjectQueryFilter(c, fq)
+	items, err := h.service.GetAll(c)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -33,7 +55,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 }
 
 func (h *Handler) Get(c *gin.Context) {
-	item, err := h.service.Get(c.Param("id"))
+	item, err := h.service.Get(c, c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -41,7 +63,7 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 func (h *Handler) Delete(c *gin.Context) {
-	err := h.service.Delete(c.Param("id"))
+	err := h.service.Delete(c, c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -49,13 +71,13 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.PatientRegister
+	var item models.PatientDomain
 	_, err := h.helper.HTTP.GetForm(c, &item)
 
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Update(&item)
+	err = h.service.Update(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

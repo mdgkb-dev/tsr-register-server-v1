@@ -27,7 +27,7 @@ func (r *Repository) Create(item *models.DocumentType) (err error) {
 
 func (r *Repository) GetAll() (item models.DocumentTypesWithCount, err error) {
 	item.DocumentTypes = make(models.DocumentTypes, 0)
-	query := r.DB().NewSelect().Model(&item.DocumentTypes)
+	query := r.DB().NewSelect().Model(&item.DocumentTypes).Relation("DocumentTypeFields.ValueType")
 
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)

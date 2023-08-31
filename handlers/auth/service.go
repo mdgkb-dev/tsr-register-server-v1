@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	"mdgkb/tsr-tegister-server-v1/handlers/usersaccounts"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -33,12 +34,14 @@ func (s *Service) Register(item *models.UserAccount) (t *models.TokensWithUser, 
 
 func (s *Service) Login(item *models.UserAccount, skipPassword bool) (t *models.TokensWithUser, err error) {
 	foundedAccount, err := usersaccounts.CreateService(s.helper).GetByEmail(item.Email)
+	fmt.Println(foundedAccount)
 	if err != nil {
 		return nil, err
 	}
 	if !foundedAccount.CompareWithHashPassword(item.Password) && !skipPassword {
 		return nil, errors.New("wrong email or password")
 	}
+	fmt.Println(foundedAccount)
 	user, err := users.CreateService(s.helper).GetByUserAccountID(foundedAccount.ID.UUID.String())
 	if err != nil {
 		return nil, err
@@ -49,6 +52,8 @@ func (s *Service) Login(item *models.UserAccount, skipPassword bool) (t *models.
 	}
 	t = &models.TokensWithUser{}
 	t.Init(token, *user)
+	fmt.Println(user)
+	fmt.Println(t)
 	return t, err
 }
 

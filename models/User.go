@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"strings"
 
 	"github.com/uptrace/bun"
@@ -47,11 +48,26 @@ type RegisterPropertyToUser struct {
 
 type RegisterPropertiesToUser []*RegisterPropertyToUser
 
+type Claims string
+
+func (c Claims) String() string {
+	return string(c)
+}
+
+func (c Claims) FromContext(ctx context.Context) string {
+	return ctx.Value(c.String()).(string)
+}
+
+const (
+	ClaimUserID    Claims = "user_id"
+	ClaimDomainIDS Claims = "domain_ids"
+)
+
 func (item *User) SetJWTClaimsMap(claims map[string]interface{}) {
-	claims["user_id"] = item.ID.UUID
+	claims[ClaimUserID.String()] = item.ID.UUID
 	domainIds := make([]string, len(item.UsersDomains))
 	for i := range item.UsersDomains {
 		domainIds[i] = item.UsersDomains[i].DomainID.UUID.String()
 	}
-	claims["domains_ids"] = strings.Join(domainIds, ",")
+	claims[ClaimDomainIDS.String()] = strings.Join(domainIds, ",")
 }

@@ -34,9 +34,10 @@ type Patient struct {
 	PatientsResearches          PatientsResearches `bun:"rel:has-many" json:"patientsResearches"`
 	PatientsResearchesForDelete []uuid.UUID        `bun:"-" json:"patientsResearchesForDelete"`
 	PatientHistories            PatientHistories   `bun:"rel:has-many" json:"patientHistories"`
-	FullName                    string             `bun:"-" json:"fullName"`
-	IsMale                      string             `bun:"-" json:"isMale"`
-	DateBirth                   string             `bun:"-" json:"dateBirth"`
+
+	FullName  string `bun:"-" json:"fullName"`
+	IsMale    string `bun:"-" json:"isMale"`
+	DateBirth string `bun:"-" json:"dateBirth"`
 
 	Anamneses Anamneses `bun:"rel:has-many" json:"anamneses"`
 }

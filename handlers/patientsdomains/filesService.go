@@ -1,4 +1,4 @@
-package patientsregisters
+package patientsdomains
 
 import (
 	"mime/multipart"

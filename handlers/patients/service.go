@@ -3,6 +3,8 @@ package patients
 import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"
+
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -33,6 +35,18 @@ func (s *Service) Get(c context.Context, id string) (*models.Patient, error) {
 		return nil, err
 	}
 	return item, nil
+}
+
+func (s *Service) GetBySnilsNumber(c context.Context, snils string) (*models.Patient, bool, error) {
+	item, err := s.repository.GetBySnilsNumber(c, snils)
+	if err != nil {
+		return nil, false, err
+	}
+	exists, err := patientsdomains.S.PatientInDomain(c, item.ID.UUID.String(), models.ClaimDomainIDS.FromContext(c))
+	if err != nil {
+		return nil, false, err
+	}
+	return item, exists, nil
 }
 
 func (s *Service) Update(c context.Context, item *models.Patient) error {

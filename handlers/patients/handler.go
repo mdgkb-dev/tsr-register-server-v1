@@ -43,11 +43,12 @@ func (h *Handler) GetAll(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	//d, err := h.helper.Token.ExtractTokenMetadata(c.Request, "domains_ids")
-	//if h.helper.HTTP.HandleError(c, err) {
-	//	return
-	//}
+	d, err := h.helper.Token.ExtractTokenMetadata(c.Request, models.ClaimDomainIDS.String())
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
 	ctx := context.WithValue(c, "fq", fq)
+	ctx = context.WithValue(ctx, models.ClaimDomainIDS.String(), d)
 
 	items, err := h.service.GetAll(ctx)
 	if h.helper.HTTP.HandleError(c, err) {
@@ -63,6 +64,24 @@ func (h *Handler) Get(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
+}
+
+func (h *Handler) GetBySnilsNumber(c *gin.Context) {
+	snils := c.Param("snils")
+
+	d, err := h.helper.Token.ExtractTokenMetadata(c.Request, models.ClaimDomainIDS.String())
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	ctx := context.WithValue(c, models.ClaimDomainIDS.String(), d)
+	item, existsInUserDomain, err := h.service.GetBySnilsNumber(ctx, snils)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, struct {
+		Item               *models.Patient `json:"item"`
+		ExistsInUserDomain bool            `json:"existsInUserDomain"`
+	}{Item: item, ExistsInUserDomain: existsInUserDomain})
 }
 
 func (h *Handler) Delete(c *gin.Context) {
