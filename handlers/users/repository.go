@@ -36,6 +36,7 @@ func (r *Repository) get(id string) (*models.User, error) {
 	item := models.User{}
 	err := r.db().NewSelect().
 		Model(&item).
+		Relation("UsersDomains").
 		Where("?TableAlias.id = ?", id).
 		Scan(r.ctx)
 	return &item, err

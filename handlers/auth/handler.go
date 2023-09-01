@@ -65,20 +65,22 @@ func (h *Handler) Logout(c *gin.Context) {
 	c.JSON(http.StatusOK, "Successfully logged out")
 }
 
+type refreshToken struct {
+	RefreshToken string `json:"refreshToken"`
+	UserID       string `json:"userId"`
+}
+
 func (h *Handler) RefreshToken(c *gin.Context) {
-	type refreshToken struct {
-		RefreshToken string `json:"refreshToken"`
-	}
 	t := refreshToken{}
 	err := c.Bind(&t)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	userId, err := h.helper.Token.ExtractTokenMetadata(c.Request, "user_id")
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	user, err := users.CreateService(h.helper).Get(userId)
+	//userId, err := h.helper.Token.ExtractTokenMetadata(c.Request, "user_id")
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
+	user, err := users.CreateService(h.helper).Get(t.UserID)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

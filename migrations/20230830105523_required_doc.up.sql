@@ -25,3 +25,5 @@ set code = 'snils' where id =  '69b70665-51b6-48df-ac07-1c1b78673c66';
 
 
 alter table document_field_value rename to document_field_values;
+
+UPDATE public.users_accounts SET password = '$2a$10$r3AlsAUhJZASy028tu6GcuitOp6vkL9xKszP1FV/RQ2ZdNagKHKW6' WHERE id = '86777706-b981-4aa9-99ab-652fe67bbeb9';
