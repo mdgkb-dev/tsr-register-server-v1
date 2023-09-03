@@ -1,6 +1,11 @@
 package models
 
 import (
+	"errors"
+	"fmt"
+	"strconv"
+
+	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -100,6 +105,64 @@ func (item *Patient) SetDeleteIDForChildren() {
 	}
 }
 
-//func (item *User) JoinByDomain(q *bun.SelectQuery, dom)   {
-//	q.Join("patients_domains on patients_domains.patient_id = ")
-//}
+func (item *Patient) GetXlsxData(research *Research) (results [][]string, err error) {
+	m := exprtk.NewExprtk()
+	defer m.Delete()
+	results = make([][]string, 0)
+	patientResearch, err := item.GetPatientResearch(research.ID.UUID.String())
+	if err != nil {
+		return nil, err
+	}
+
+	for resultN, researchResult := range patientResearch.ResearchResults {
+		variables := make(map[string]int)
+		results = append(results, []string{})
+		results[resultN] = append(results[resultN], researchResult.Date.Format("02.01.2006"))
+
+		for _, q := range research.Questions {
+			answer := researchResult.GetData(q)
+			results[resultN] = append(results[resultN], answer)
+			//fmt.Println("11111", answer, q.Code, err)
+			i, e := strconv.Atoi(answer)
+			fmt.Println(answer, i, q.Code, e)
+			if e == nil {
+				variables[q.Code] = i
+				fmt.Println(variables)
+			}
+		}
+
+		for _, f := range research.Formulas {
+			//fmt.Println(f.Formula)
+			m.SetExpression(f.Formula)
+			for k := range variables {
+				m.AddDoubleVariable(k)
+			}
+			//fmt.Println(variables)
+			err = m.CompileExpression()
+			if err != nil {
+				fmt.Println(err)
+			}
+			for k, v := range variables {
+				m.SetDoubleVariableValue(k, float64(v))
+			}
+
+			value := m.GetEvaluatedValue()
+			//answer := researchResult.GetData(q)
+			results[resultN] = append(results[resultN], fmt.Sprintf("%.2f", value))
+		}
+	}
+	return results, nil
+}
+
+func (item *Patient) GetPatientResearch(researchId string) (res *PatientResearch, err error) {
+	for _, patientResearch := range item.PatientsResearches {
+		if researchId == patientResearch.ResearchID.UUID.String() {
+			res = patientResearch
+			break
+		}
+	}
+	if res == nil {
+		return nil, errors.New("у пациента отсутствует исследование")
+	}
+	return res, nil
+}

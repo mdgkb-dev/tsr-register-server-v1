@@ -66,3 +66,19 @@ func (item *Research) GetResultByPatientID(patientID uuid.NullUUID) *ResearchRes
 	}
 	return research
 }
+
+func (item *Research) GetHeaders(patientName string) [][]string {
+	headersLines := make([][]string, 0)
+	headersLines = append(headersLines, []string{item.Name + ": " + patientName})
+
+	headersLines = append(headersLines, []string{})
+	headersLines[1] = append(headersLines[1], "Дата")
+
+	for _, q := range item.Questions {
+		headersLines[1] = append(headersLines[1], q.Name)
+	}
+	for _, f := range item.Formulas {
+		headersLines[1] = append(headersLines[1], f.Name)
+	}
+	return headersLines
+}

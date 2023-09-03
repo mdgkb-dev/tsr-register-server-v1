@@ -81,6 +81,12 @@ func (x *XlsxHelper) WriteString(strNum int, colNum int, data interface{}) {
 	x.SetError(x.file.SetSheetRow("Sheet1", startCell, data))
 }
 
+func (x *XlsxHelper) WriteCell(strNum int, colNum int, data string) {
+	col := x.GetCol(colNum)
+	startCell := fmt.Sprintf("%s%d", col, strNum)
+	x.SetError(x.file.SetSheetRow("Sheet1", startCell, &[]string{data}))
+}
+
 func (x *XlsxHelper) MergeArea(start string, end string) {
 	x.SetError(x.file.MergeCell("Sheet1", start, end))
 }

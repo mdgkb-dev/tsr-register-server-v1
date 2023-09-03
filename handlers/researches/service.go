@@ -1,6 +1,8 @@
 package researches
 
 import (
+	"context"
+	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -23,8 +25,8 @@ func (s *Service) Create(item *models.Research) error {
 	return err
 }
 
-func (s *Service) GetAll() (models.Researches, error) {
-	items, err := s.repository.getAll()
+func (s *Service) GetAll(c context.Context) (models.Researches, error) {
+	items, err := s.repository.getAll(c)
 	if err != nil {
 		return nil, err
 	}
@@ -83,4 +85,17 @@ func (s *Service) GetValueTypes() (models.ValueTypes, error) {
 func (s *Service) setQueryFilter(c *gin.Context) (err error) {
 	err = s.repository.setQueryFilter(c)
 	return err
+}
+
+func (s *Service) GetResearchAndPatient(ctx context.Context, researchId string, patientId string) (*models.Research, *models.Patient, error) {
+	research, err := R.get(researchId)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	patient, err := patients.S.Get(ctx, patientId)
+	if err != nil {
+		return nil, nil, err
+	}
+	return research, patient, nil
 }

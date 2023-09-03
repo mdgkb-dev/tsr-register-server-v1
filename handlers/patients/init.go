@@ -56,6 +56,18 @@ type FilesService struct {
 	helper *helper.Helper
 }
 
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
+}
+
 func CreateHandler(helper *helper.Helper) *Handler {
 	repo := NewRepository(helper)
 	service := NewService(repo, helper)

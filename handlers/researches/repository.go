@@ -1,9 +1,11 @@
 package researches
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
 
 	"github.com/uptrace/bun"
 )
@@ -25,7 +27,7 @@ func (r *Repository) create(item *models.Research) (err error) {
 	return err
 }
 
-func (r *Repository) getAll() (items models.Researches, err error) {
+func (r *Repository) getAll(c context.Context) (items models.Researches, err error) {
 	query := r.db().NewSelect().
 		Model(&items).
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
@@ -43,7 +45,12 @@ func (r *Repository) getAll() (items models.Researches, err error) {
 		Relation("Questions.Children.AnswerVariants").
 		Relation("Formulas.FormulaResults")
 
-	r.queryFilter.HandleQuery(query)
+	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(models.ClaimDomainIDS.FromContextSlice(c)))
+
+	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
+	if ok {
+		i.HandleQuery(query)
+	}
 	err = query.Scan(r.ctx)
 
 	return items, err
@@ -73,7 +80,6 @@ func (r *Repository) get(id string) (*models.Research, error) {
 	if err != nil {
 		return nil, err
 	}
-	//item.ResearchToPatientCount, err = r.db().NewSelect().Model((*models.ResearchResult)(nil)).Where("Research_id = ?", id).Count(r.ctx)
 	return &item, err
 }
 

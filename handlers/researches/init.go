@@ -21,17 +21,18 @@ type IHandler interface {
 	Delete(c *gin.Context)
 
 	GetValueTypes(c *gin.Context)
-	GetXlsx(c *gin.Context)
+	Xlsx(c *gin.Context)
 }
 
 type IService interface {
 	setQueryFilter(*gin.Context) error
-	GetAll() (models.Researches, error)
+	GetAll(context.Context) (models.Researches, error)
 	Get(string) (*models.Research, error)
 	Create(*models.Research) error
 	Update(*models.Research) error
 	Delete(*string) error
 
+	GetResearchAndPatient(ctx context.Context, researchId string, patientId string) (*models.Research, *models.Patient, error)
 	GetValueTypes() (models.ValueTypes, error)
 }
 
@@ -39,7 +40,7 @@ type IRepository interface {
 	setQueryFilter(*gin.Context) error
 	db() *bun.DB
 	create(*models.Research) error
-	getAll() (models.Researches, error)
+	getAll(context.Context) (models.Researches, error)
 	get(string) (*models.Research, error)
 	update(*models.Research) error
 	delete(*string) error
@@ -70,6 +71,18 @@ type Repository struct {
 
 type FilesService struct {
 	helper *helper.Helper
+}
+
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

@@ -115,8 +115,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	insuranceCompanyRouter.Init(api.Group("/insurance-companies"), insurancecompany.CreateHandler(helper))
 	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
-	patientsRouter.Init(api.Group("/patients"), patients.CreateHandler(helper))
-	researchesRouter.Init(api.Group("/researches"), researches.CreateHandler(helper))
+
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
 	researchQueryRouter.Init(api.Group("/research-queries"), researchquery.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
@@ -144,6 +143,12 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	patientsdomains.Init(helper)
 	patientsdomainsRouter.Init(api.Group("/patients-domains"), patientsdomains.H)
+
+	patients.Init(helper)
+	patientsRouter.Init(api.Group("/patients"), patients.H)
+
+	researches.Init(helper)
+	researchesRouter.Init(api.Group("/researches"), researches.H)
 
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))

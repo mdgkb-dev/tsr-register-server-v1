@@ -3,6 +3,7 @@ module mdgkb/tsr-tegister-server-v1
 go 1.18
 
 require (
+	github.com/Pramod-Devireddy/go-exprtk v1.1.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/uuid v1.3.0

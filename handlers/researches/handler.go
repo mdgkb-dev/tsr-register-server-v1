@@ -1,6 +1,10 @@
 package researches
 
 import (
+	"context"
+	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
+	"time"
+
 	"github.com/gin-gonic/gin"
 
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -21,15 +25,17 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	err := h.service.setQueryFilter(c)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//userID, err := h.helper.Token.GetUserID(c)
+	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	items, err := h.service.GetAll()
+
+	fq, err := h.helper.SQL.CreateQueryFilter(c)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	ctx = context.WithValue(ctx, "fq", fq)
+	items, err := h.service.GetAll(ctx)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -79,22 +85,27 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-func (h *Handler) GetXlsx(c *gin.Context) {
-	//var item models.Research
-	//err := c.Bind(&item)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//err = h.service.Update(&item)
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//excelDoc, err := h.helper.XLSX.CreateFile()
-	//if h.helper.HTTP.HandleError(c, err, http.StatusInternalServerError) {
-	//	return
-	//}
-	//downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
-	//c.Header("Content-Description", "File Transfer")
-	//c.Header("Content-Disposition", "attachment; filename="+downloadName)
-	//c.Data(http.StatusOK, "application/octet-stream", excelDoc)
+func (h *Handler) Xlsx(c *gin.Context) {
+	researchId := c.Param("research-id")
+	patientResearchId := c.Param("patient-id")
+	research, patient, err := h.service.GetResearchAndPatient(c, researchId, patientResearchId)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+
+	researhQuery := models.ResearchQuery{}
+	researhQuery.Xl = xlsxhelper.NewXlsxHelper()
+	data, err := patient.GetXlsxData(research)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	file, err := researhQuery.WriteXlsxV2(research.GetHeaders(patient.Human.GetFullName()), data)
+
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
+	c.Data(http.StatusOK, "application/octet-stream", file)
 }

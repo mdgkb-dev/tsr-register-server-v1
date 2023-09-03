@@ -37,6 +37,9 @@ func (r *Repository) GetAll() (item models.DocumentTypesWithCount, err error) {
 func (r *Repository) Get(slug string) (*models.DocumentType, error) {
 	item := models.DocumentType{}
 	err := r.DB().NewSelect().Model(&item).
+		Relation("DocumentTypeFields", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("document_type_fields.item_order")
+		}).
 		Relation("DocumentTypeFields.ValueType").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)

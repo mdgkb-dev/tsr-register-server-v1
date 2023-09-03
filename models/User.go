@@ -2,8 +2,10 @@ package models
 
 import (
 	"context"
+	"net/http"
 	"strings"
 
+	"github.com/pro-assistance/pro-assister/tokenHelper"
 	"github.com/uptrace/bun"
 
 	"github.com/google/uuid"
@@ -54,8 +56,16 @@ func (c Claims) String() string {
 	return string(c)
 }
 
+func (c Claims) Split() []string {
+	return strings.Split(c.String(), ",")
+}
+
 func (c Claims) FromContext(ctx context.Context) string {
 	return ctx.Value(c.String()).(string)
+}
+
+func (c Claims) FromContextSlice(ctx context.Context) []string {
+	return strings.Split(ctx.Value(c.String()).(string), ",")
 }
 
 const (
@@ -70,4 +80,24 @@ func (item *User) SetJWTClaimsMap(claims map[string]interface{}) {
 		domainIds[i] = item.UsersDomains[i].DomainID.UUID.String()
 	}
 	claims[ClaimDomainIDS.String()] = strings.Join(domainIds, ",")
+}
+
+func (item User) InjectClaims(r *http.Request, h *tokenHelper.TokenHelper) (ctx context.Context, err error) {
+	ctx = context.Background()
+	for _, claim := range []Claims{ClaimUserID, ClaimDomainIDS} {
+		ctx, err = item.InjectClaim(r, h, claim, ctx)
+		if err != nil {
+			break
+		}
+	}
+	return ctx, err
+}
+
+func (item User) InjectClaim(r *http.Request, h *tokenHelper.TokenHelper, claim Claims, ctx context.Context) (context.Context, error) {
+	d, err := h.ExtractTokenMetadata(r, claim.String())
+	if err != nil {
+		return nil, err
+	}
+	ctx = context.WithValue(ctx, claim.String(), d)
+	return ctx, nil
 }

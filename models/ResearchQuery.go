@@ -24,6 +24,7 @@ type ResearchQuery struct {
 
 	WithAge         bool `json:"withAge"`
 	CountAverageAge bool `json:"countAverageAge"`
+	Xl              *xlsxhelper.XlsxHelper
 }
 
 type ResearchQueries []*ResearchQuery
@@ -122,4 +123,24 @@ func (item *ResearchQuery) setStyle(xl *xlsxhelper.XlsxHelper) {
 	//xl.SetBorder(height)
 	//item.ResearchQueryGroups.writeAggregates(xl)
 	//xl.AutofitAllColumns()
+}
+
+func (item *ResearchQuery) WriteXlsxV2(headers [][]string, data [][]string) ([]byte, error) {
+	item.Xl.CreateFile()
+
+	for lineN, line := range headers {
+		for colN, colName := range line {
+			fmt.Println(colName)
+			item.Xl.WriteCell(lineN+1, colN, colName)
+		}
+	}
+
+	headerLinesLen := len(headers)
+	for lineN, line := range data {
+		for colN, d := range line {
+			item.Xl.WriteCell(headerLinesLen+lineN+1, colN, d)
+		}
+	}
+
+	return item.Xl.WriteFile()
 }

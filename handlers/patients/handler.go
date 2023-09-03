@@ -39,16 +39,16 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
+	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+
 	fq, err := h.helper.SQL.CreateQueryFilter(c)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	d, err := h.helper.Token.ExtractTokenMetadata(c.Request, models.ClaimDomainIDS.String())
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	ctx := context.WithValue(c, "fq", fq)
-	ctx = context.WithValue(ctx, models.ClaimDomainIDS.String(), d)
+	ctx = context.WithValue(ctx, "fq", fq)
 
 	items, err := h.service.GetAll(ctx)
 	if h.helper.HTTP.HandleError(c, err) {
@@ -69,11 +69,10 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 	snils := c.Param("snils")
 
-	d, err := h.helper.Token.ExtractTokenMetadata(c.Request, models.ClaimDomainIDS.String())
+	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	ctx := context.WithValue(c, models.ClaimDomainIDS.String(), d)
 	item, existsInUserDomain, err := h.service.GetBySnilsNumber(ctx, snils)
 	if h.helper.HTTP.HandleError(c, err) {
 		return

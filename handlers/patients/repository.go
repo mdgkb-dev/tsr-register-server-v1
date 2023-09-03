@@ -34,7 +34,7 @@ func (r *Repository) GetAll(c context.Context) (items models.PatientsWithCount, 
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
 
-	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In([]string{models.ClaimDomainIDS.FromContext(c)}))
+	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In(models.ClaimDomainIDS.FromContextSlice(c)))
 
 	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
 	if ok {
