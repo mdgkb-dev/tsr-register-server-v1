@@ -132,19 +132,19 @@ func (items Answers) GetAnswerFilesForDelete() []uuid.UUID {
 	return itemsForGet
 }
 
-func (item *Answer) GetData(prop *Question) string {
-	if prop.ValueType.IsString() || prop.ValueType.IsText() {
+func (item *Answer) GetData(q *Question) string {
+	if q.ValueType.IsString() || q.ValueType.IsText() {
 		return item.ValueString
 	}
-	if prop.ValueType.IsNumber() {
+	if q.ValueType.IsNumber() {
 		return strconv.Itoa(int(item.ValueNumber))
 	}
-	if prop.ValueType.IsDate() {
+	if q.ValueType.IsDate() {
 		return item.ValueDate.String()
 	}
-	if prop.ValueType.IsRadio() {
+	if q.ValueType.IsRadio() {
 		res := No
-		for _, radio := range prop.AnswerVariants {
+		for _, radio := range q.AnswerVariants {
 			if radio.ID == item.AnswerVariantID {
 				res = radio.Name
 				break

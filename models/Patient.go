@@ -119,25 +119,33 @@ func (item *Patient) GetXlsxData(research *Research) (results [][]string, err er
 		results = append(results, []string{})
 		results[resultN] = append(results[resultN], researchResult.Date.Format("02.01.2006"))
 
+		if research.WithScores {
+			sum := 0
+			for _, q := range research.Questions {
+				sum += researchResult.GetScores(q)
+
+			}
+			results[resultN] = append(results[resultN], strconv.Itoa(sum))
+			continue
+		}
+
 		for _, q := range research.Questions {
 			answer := researchResult.GetData(q)
 			results[resultN] = append(results[resultN], answer)
-			//fmt.Println("11111", answer, q.Code, err)
 			i, e := strconv.Atoi(answer)
-			fmt.Println(answer, i, q.Code, e)
 			if e == nil {
 				variables[q.Code] = i
-				fmt.Println(variables)
 			}
 		}
 
 		for _, f := range research.Formulas {
-			//fmt.Println(f.Formula)
+			if !f.Xlsx {
+				continue
+			}
 			m.SetExpression(f.Formula)
 			for k := range variables {
 				m.AddDoubleVariable(k)
 			}
-			//fmt.Println(variables)
 			err = m.CompileExpression()
 			if err != nil {
 				fmt.Println(err)

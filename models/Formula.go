@@ -11,9 +11,9 @@ type Formula struct {
 	Name          string        `json:"name"`
 	Formula       string        `json:"formula"`
 	Color         string        `json:"color"`
-
-	Research   *Research     `bun:"rel:belongs-to" json:"research"`
-	ResearchID uuid.NullUUID `bun:"type:uuid" json:"researchId"`
+	Xlsx          bool          `json:"xlsx"`
+	Research      *Research     `bun:"rel:belongs-to" json:"research"`
+	ResearchID    uuid.NullUUID `bun:"type:uuid" json:"researchId"`
 
 	FormulaResults          FormulaResults `bun:"rel:has-many" json:"formulaResults"`
 	FormulaResultsForDelete []uuid.UUID    `bun:"-" json:"formulaResultsForDelete"`

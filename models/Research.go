@@ -68,17 +68,27 @@ func (item *Research) GetResultByPatientID(patientID uuid.NullUUID) *ResearchRes
 }
 
 func (item *Research) GetHeaders(patientName string) [][]string {
+
 	headersLines := make([][]string, 0)
 	headersLines = append(headersLines, []string{item.Name + ": " + patientName})
 
 	headersLines = append(headersLines, []string{})
 	headersLines[1] = append(headersLines[1], "Дата")
 
+	if item.WithScores {
+		headersLines[1] = append(headersLines[1], "Всего баллов")
+		headersLines[1] = append(headersLines[1], "Всего баллов по шкале")
+		return headersLines
+	}
+
 	for _, q := range item.Questions {
 		headersLines[1] = append(headersLines[1], q.Name)
 	}
 	for _, f := range item.Formulas {
-		headersLines[1] = append(headersLines[1], f.Name)
+		if f.Xlsx {
+			headersLines[1] = append(headersLines[1], f.Name)
+		}
 	}
+
 	return headersLines
 }

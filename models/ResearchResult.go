@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -193,4 +194,20 @@ func (item *ResearchResult) GetData(question *Question) string {
 		}
 	}
 	return res
+}
+
+func (item *ResearchResult) GetScores(q *Question) int {
+	sumScores := 0
+	for _, answer := range item.Answers {
+		if answer.QuestionID == q.ID {
+			for _, radio := range q.AnswerVariants {
+				if radio.ID == answer.AnswerVariantID {
+					fmt.Println(radio.Score)
+					sumScores += radio.Score
+					break
+				}
+			}
+		}
+	}
+	return sumScores
 }
