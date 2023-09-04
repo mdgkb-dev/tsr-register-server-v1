@@ -19,6 +19,8 @@ type Research struct {
 
 	Formulas          Formulas    `bun:"rel:has-many" json:"formulas"`
 	FormulasForDelete []uuid.UUID `bun:"-" json:"formulasForDelete"`
+
+	Order uint `bun:"item_order" json:"order"`
 }
 
 type Researches []*Research
