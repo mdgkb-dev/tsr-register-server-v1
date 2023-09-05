@@ -11,9 +11,7 @@ type Question struct {
 	Name            string        `json:"name"`
 	ShortName       string        `json:"shortName"`
 	Code            string        `json:"code"`
-	ColWidth        int           `json:"colWidth"`
 	WithOther       bool          `json:"withOther"`
-	Tag             string        `json:"tag"`
 	Order           int           `bun:"item_order" json:"order"`
 	ValueType       *ValueType    `bun:"rel:belongs-to" json:"valueType"`
 	ValueTypeID     uuid.NullUUID `bun:"type:uuid" json:"valueTypeId"`
@@ -36,9 +34,6 @@ type Question struct {
 	Children                  Questions        `bun:"rel:has-many,join:id=parent_id" json:"children"`
 	ParentID                  uuid.NullUUID    `bun:"type:uuid" json:"parentId"`
 	Parent                    *Question        `bun:"-" json:"parent"`
-
-	DomainID uuid.NullUUID `bun:"type:uuid" json:"domainId"`
-	Domain   *Domain       `bun:"-" json:"domain"`
 }
 
 type Questions []*Question

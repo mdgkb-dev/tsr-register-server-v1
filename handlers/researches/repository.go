@@ -71,7 +71,14 @@ func (r *Repository) get(id string) (*models.Research, error) {
 		Relation("Questions.QuestionVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("question_variants.name")
 		}).
+		Relation("Questions.Children", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("questions.item_order")
+		}).
+		Relation("Questions.Children.Children", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("questions.item_order")
+		}).
 		Relation("Questions.Children.ValueType").
+		Relation("Questions.Children.Children.ValueType").
 		Relation("Questions.Children.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("answer_variants.item_order")
 		}).
