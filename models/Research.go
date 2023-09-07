@@ -70,7 +70,6 @@ func (item *Research) GetResultByPatientID(patientID uuid.NullUUID) *ResearchRes
 }
 
 func (item *Research) GetHeaders(patientName string) [][]string {
-
 	headersLines := make([][]string, 0)
 	headersLines = append(headersLines, []string{item.Name + ": " + patientName})
 

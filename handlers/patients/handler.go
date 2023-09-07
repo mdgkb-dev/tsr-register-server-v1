@@ -39,18 +39,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-
-	fq, err := h.helper.SQL.CreateQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	ctx = context.WithValue(ctx, "fq", fq)
-
-	items, err := h.service.GetAll(ctx)
+	items, err := h.service.GetAll(c.Request.Context())
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -69,11 +58,11 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 	snils := c.Param("snils")
 
-	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	item, existsInUserDomain, err := h.service.GetBySnilsNumber(ctx, snils)
+	//ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
+	item, existsInUserDomain, err := h.service.GetBySnilsNumber(context.Background(), snils)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

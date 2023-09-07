@@ -32,7 +32,7 @@ type IService interface {
 	Update(*models.Research) error
 	Delete(*string) error
 
-	GetResearchAndPatient(ctx context.Context, researchId string, patientId string) (*models.Research, *models.Patient, error)
+	GetResearchAndPatient(ctx context.Context, researchID string, patientID string) (*models.Research, *models.Patient, error)
 	GetValueTypes() (models.ValueTypes, error)
 }
 

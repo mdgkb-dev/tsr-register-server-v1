@@ -1,7 +1,6 @@
 package models
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -132,15 +131,15 @@ func (items Answers) GetAnswerFilesForDelete() []uuid.UUID {
 	return itemsForGet
 }
 
-func (item *Answer) GetData(q *Question) string {
+func (item *Answer) GetData(q *Question) interface{} {
 	if q.ValueType.IsString() || q.ValueType.IsText() {
 		return item.ValueString
 	}
 	if q.ValueType.IsNumber() {
-		return strconv.Itoa(int(item.ValueNumber))
+		return item.ValueNumber
 	}
 	if q.ValueType.IsDate() {
-		return item.ValueDate.String()
+		return item.ValueDate
 	}
 	if q.ValueType.IsRadio() {
 		res := No

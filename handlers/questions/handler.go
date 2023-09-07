@@ -25,17 +25,17 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
+	//ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
 
-	fq, err := h.helper.SQL.CreateQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	h.helper.SQL.InjectQueryFilter(ctx, fq)
-	items, err := h.service.GetAll(ctx)
+	//fq, err := h.helper.SQL.CreateQueryFilter(c)
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
+	//h.helper.SQL.InjectQueryFilter(ctx, fq)
+	items, err := h.service.GetAll(c.Request.Context())
 
 	if h.helper.HTTP.HandleError(c, err) {
 		return

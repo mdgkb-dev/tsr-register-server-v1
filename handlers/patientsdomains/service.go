@@ -41,8 +41,8 @@ func (s *Service) Get(c context.Context, slug string) (*models.PatientDomain, er
 	return item, nil
 }
 
-func (s *Service) PatientInDomain(c context.Context, patientId string, domainId string) (bool, error) {
-	return R.PatientInDomain(c, patientId, domainId)
+func (s *Service) PatientInDomain(c context.Context, patientID string, domainID string) (bool, error) {
+	return R.PatientInDomain(c, patientID, domainID)
 }
 
 func (s *Service) Delete(c context.Context, id string) error {

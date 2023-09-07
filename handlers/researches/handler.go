@@ -1,7 +1,6 @@
 package researches
 
 import (
-	"context"
 	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
 	"time"
 
@@ -25,17 +24,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-
-	fq, err := h.helper.SQL.CreateQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	ctx = context.WithValue(ctx, "fq", fq)
-	items, err := h.service.GetAll(ctx)
+	items, err := h.service.GetAll(c.Request.Context())
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -86,9 +75,9 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 }
 
 func (h *Handler) Xlsx(c *gin.Context) {
-	researchId := c.Param("research-id")
-	patientResearchId := c.Param("patient-id")
-	research, patient, err := h.service.GetResearchAndPatient(c, researchId, patientResearchId)
+	researchID := c.Param("research-id")
+	patientResearchID := c.Param("patient-id")
+	research, patient, err := h.service.GetResearchAndPatient(c, researchID, patientResearchID)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

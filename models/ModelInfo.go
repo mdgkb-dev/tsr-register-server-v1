@@ -32,6 +32,9 @@ func (item *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHel
 
 func (item *ModelInfo) FillModelInfoCreate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) (err error) {
 	uid, err := tokenHelper.ExtractTokenMetadata(c.Request, "user_id")
+	if err != nil {
+		return err
+	}
 	item.CreatedByID.UUID, err = uuid.Parse(uid)
 	if err != nil {
 		return err

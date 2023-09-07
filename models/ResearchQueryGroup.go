@@ -55,9 +55,9 @@ func (item *ResearchQueryGroup) getAggregatedData(question *Question, result *Re
 		if question.ValueType.IsSet() {
 			return question.AnswerVariants.Include(result.Answers)
 		}
-		if len(result.Answers) > 0 {
-			return result.GetData(question)
-		}
+		//if len(result.Answers) > 0 {
+		//	return result.GetData(question)
+		//}
 	}
 	if item.AggregateType == AggregateExisting {
 		if item.Research.ResearchResults != nil && item.PatientIndex < len(item.Research.ResearchResults) {

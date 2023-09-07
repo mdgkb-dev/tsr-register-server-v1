@@ -103,10 +103,10 @@ func (item *ResearchQueryGroupQuestion) writeXlsxData(xl *xlsxhelper.XlsxHelper,
 			}
 			//item.writeXlsxAggregatedValues(exists)
 		}
-		for _, childQuestion := range item.Question.Children {
-			a := result.GetData(childQuestion)
-			xl.Data = append(xl.Data, a)
-		}
+		//for _, childQuestion := range item.Question.Children {
+		//a := result.GetData(childQuestion)
+		//xl.Data = append(xl.Data, a)
+		//}
 	} else {
 		res := g.GetResultFromData(item.Question, result)
 		xl.Data = append(xl.Data, res)

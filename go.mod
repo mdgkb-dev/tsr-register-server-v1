@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/oiime/logrusbun v0.1.1
-	github.com/pro-assistance/pro-assister v0.0.106-0.20230903195453-eee04ed37e3c
+	github.com/pro-assistance/pro-assister v0.0.106-0.20230907093204-ee24feb3d59a
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/sirupsen/logrus v1.9.3
 	github.com/uptrace/bun v1.1.13

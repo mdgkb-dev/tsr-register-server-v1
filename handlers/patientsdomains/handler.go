@@ -1,7 +1,6 @@
 package patientsdomains
 
 import (
-	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 
@@ -22,19 +21,12 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) AddToDomain(c *gin.Context) {
-
-	d, err := h.helper.Token.ExtractTokenMetadata(c.Request, models.ClaimDomainIDS.String())
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	ctx := context.WithValue(c, models.ClaimDomainIDS.String(), d)
-
 	var item models.PatientDomain
-	_, err = h.helper.HTTP.GetForm(c, &item)
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = S.AddToDomain(ctx, &item)
+	err = S.AddToDomain(c.Request.Context(), &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -42,12 +34,7 @@ func (h *Handler) AddToDomain(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	fq, err := h.helper.SQL.CreateQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	h.helper.SQL.InjectQueryFilter(c, fq)
-	items, err := h.service.GetAll(c)
+	items, err := h.service.GetAll(c.Request.Context())
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

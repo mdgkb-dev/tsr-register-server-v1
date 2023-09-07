@@ -125,12 +125,11 @@ func (item *ResearchQuery) setStyle(xl *xlsxhelper.XlsxHelper) {
 	//xl.AutofitAllColumns()
 }
 
-func (item *ResearchQuery) WriteXlsxV2(headers [][]string, data [][]string) ([]byte, error) {
+func (item *ResearchQuery) WriteXlsxV2(headers [][]string, data [][]interface{}) ([]byte, error) {
 	item.Xl.CreateFile()
 
 	for lineN, line := range headers {
 		for colN, colName := range line {
-			fmt.Println(colName)
 			item.Xl.WriteCell(lineN+1, colN, colName)
 		}
 	}

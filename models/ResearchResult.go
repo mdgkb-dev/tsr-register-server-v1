@@ -185,8 +185,9 @@ func (item *ResearchResult) Include(variantID uuid.NullUUID) string {
 	return res
 }
 
-func (item *ResearchResult) GetData(question *Question) string {
-	res := No
+func (item *ResearchResult) GetData(question *Question) interface{} {
+	var res interface{}
+	res = No
 	for _, answer := range item.Answers {
 		if answer.QuestionID == question.ID {
 			res = answer.GetData(question)

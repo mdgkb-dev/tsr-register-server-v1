@@ -87,13 +87,13 @@ func (s *Service) setQueryFilter(c *gin.Context) (err error) {
 	return err
 }
 
-func (s *Service) GetResearchAndPatient(ctx context.Context, researchId string, patientId string) (*models.Research, *models.Patient, error) {
-	research, err := R.get(researchId)
+func (s *Service) GetResearchAndPatient(ctx context.Context, researchID string, patientID string) (*models.Research, *models.Patient, error) {
+	research, err := R.get(researchID)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	patient, err := patients.S.Get(ctx, patientId)
+	patient, err := patients.S.Get(ctx, patientID)
 	if err != nil {
 		return nil, nil, err
 	}

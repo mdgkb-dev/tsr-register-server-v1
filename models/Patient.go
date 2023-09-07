@@ -105,25 +105,24 @@ func (item *Patient) SetDeleteIDForChildren() {
 	}
 }
 
-func (item *Patient) GetXlsxData(research *Research) (results [][]string, err error) {
+func (item *Patient) GetXlsxData(research *Research) (results [][]interface{}, err error) {
 	m := exprtk.NewExprtk()
 	defer m.Delete()
-	results = make([][]string, 0)
+	results = make([][]interface{}, 0)
 	patientResearch, err := item.GetPatientResearch(research.ID.UUID.String())
 	if err != nil {
 		return nil, err
 	}
 
 	for resultN, researchResult := range patientResearch.ResearchResults {
-		variables := make(map[string]int)
-		results = append(results, []string{})
+		variables := make(map[string]interface{})
+		results = append(results, []interface{}{""})
 		results[resultN] = append(results[resultN], researchResult.Date.Format("02.01.2006"))
 
 		if research.WithScores {
 			sum := 0
 			for _, q := range research.Questions {
 				sum += researchResult.GetScores(q)
-
 			}
 			results[resultN] = append(results[resultN], strconv.Itoa(sum))
 			continue
@@ -132,10 +131,11 @@ func (item *Patient) GetXlsxData(research *Research) (results [][]string, err er
 		for _, q := range research.Questions {
 			answer := researchResult.GetData(q)
 			results[resultN] = append(results[resultN], answer)
-			i, e := strconv.Atoi(answer)
-			if e == nil {
-				variables[q.Code] = i
-			}
+			variables[q.Code] = answer
+			//i, e := strconv.Atoi(answer)
+			//if e == nil {
+			//	variables[q.Code] = i
+			//}
 		}
 
 		for _, f := range research.Formulas {
@@ -150,10 +150,14 @@ func (item *Patient) GetXlsxData(research *Research) (results [][]string, err er
 			if err != nil {
 				fmt.Println(err)
 			}
-			for k, v := range variables {
-				m.SetDoubleVariableValue(k, float64(v))
-			}
-
+			//for k, v := range variables {
+			//i, err := strconv.Atoi(v.(string))
+			//if err != nil {
+			//	fmt.Println(err)
+			//}
+			//m.SetDoubleVariableValue(k, float64(i))
+			//}
+			//
 			value := m.GetEvaluatedValue()
 			//answer := researchResult.GetData(q)
 			results[resultN] = append(results[resultN], fmt.Sprintf("%.2f", value))
@@ -162,9 +166,9 @@ func (item *Patient) GetXlsxData(research *Research) (results [][]string, err er
 	return results, nil
 }
 
-func (item *Patient) GetPatientResearch(researchId string) (res *PatientResearch, err error) {
+func (item *Patient) GetPatientResearch(researchID string) (res *PatientResearch, err error) {
 	for _, patientResearch := range item.PatientsResearches {
-		if researchId == patientResearch.ResearchID.UUID.String() {
+		if researchID == patientResearch.ResearchID.UUID.String() {
 			res = patientResearch
 			break
 		}

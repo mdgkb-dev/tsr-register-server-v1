@@ -39,6 +39,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/representatives"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
 	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
 
@@ -105,10 +106,14 @@ import (
 )
 
 func Init(r *gin.Engine, helper *helperPack.Helper) {
+	m := middleware.CreateMiddleware(helper)
+
 	r.Static("/api/v1/static", "./static/")
 	//r.Use(helper.HTTP.CORSMiddleware())
+	authGroup := r.Group("/api/v1")
 	api := r.Group("/api/v1")
-	authRouter.Init(api.Group("/auth"), auth.CreateHandler(helper))
+	api.Use(m.InjectRequestInfo())
+	authRouter.Init(authGroup.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documenttypes.CreateHandler(helper))
 	drugsRouter.Init(api.Group("/drugs"), drugs.CreateHandler(helper))
 	fileInfosRouter.Init(api.Group("/file-infos"), fileinfos.CreateHandler(helper))

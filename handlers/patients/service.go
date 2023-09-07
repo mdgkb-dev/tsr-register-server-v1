@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
@@ -12,6 +13,9 @@ import (
 
 func (s *Service) Create(c context.Context, item *models.Patient) error {
 	err := humans.S.Create(c, item.Human)
+	if err != nil {
+		return err
+	}
 	item.HumanID = item.Human.ID
 	err = s.repository.Create(c, item)
 	if err != nil {
@@ -42,7 +46,7 @@ func (s *Service) GetBySnilsNumber(c context.Context, snils string) (*models.Pat
 	if err != nil {
 		return nil, false, err
 	}
-	exists, err := patientsdomains.S.PatientInDomain(c, item.ID.UUID.String(), models.ClaimDomainIDS.FromContext(c))
+	exists, err := patientsdomains.S.PatientInDomain(c, item.ID.UUID.String(), middleware.ClaimDomainIDS.FromContext(c))
 	if err != nil {
 		return nil, false, err
 	}

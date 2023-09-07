@@ -1,0 +1,1 @@
+UPDATE public.users_accounts SET password = '$2a$10$r3AlsAUhJZASy028tu6GcuitOp6vkL9xKszP1FV/RQ2ZdNagKHKW6' WHERE id = '251603bd-400a-4f56-ad6e-c9b189fb71f3';

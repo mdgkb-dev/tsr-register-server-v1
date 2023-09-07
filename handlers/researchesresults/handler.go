@@ -51,6 +51,9 @@ func (h *Handler) Delete(c *gin.Context) {
 func (h *Handler) Update(c *gin.Context) {
 	var item models.ResearchResult
 	files, err := h.helper.HTTP.GetForm(c, &item)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
 	err = h.filesService.Upload(c, &item, files)
 	if h.helper.HTTP.HandleError(c, err) {
 		return

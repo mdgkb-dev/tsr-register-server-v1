@@ -28,10 +28,10 @@ func (r *Repository) Get(c context.Context, slug string) (*models.PatientDomain,
 	return &item, err
 }
 
-func (r *Repository) PatientInDomain(c context.Context, patientId string, domainId string) (bool, error) {
+func (r *Repository) PatientInDomain(c context.Context, patientID string, domainID string) (bool, error) {
 	return r.helper.DB.IDB(c).NewSelect().Model((*models.PatientDomain)(nil)).
-		Where("?TableAlias.patient_id = ?", patientId).
-		Where("?TableAlias.domain_id = ?", domainId).
+		Where("?TableAlias.patient_id = ?", patientID).
+		Where("?TableAlias.domain_id = ?", domainID).
 		Exists(r.ctx)
 }
 

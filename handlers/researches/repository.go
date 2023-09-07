@@ -2,11 +2,10 @@ package researches
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pro-assistance/pro-assister/sqlHelper"
-
 	"github.com/uptrace/bun"
 )
 
@@ -45,12 +44,8 @@ func (r *Repository) getAll(c context.Context) (items models.Researches, err err
 		Relation("Questions.Children.AnswerVariants").
 		Relation("Formulas.FormulaResults")
 
-	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(models.ClaimDomainIDS.FromContextSlice(c)))
-
-	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
-	if ok {
-		i.HandleQuery(query)
-	}
+	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
 	err = query.Scan(r.ctx)
 
 	return items, err

@@ -44,12 +44,11 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx          context.Context
-	helper       *helper.Helper
-	queryFilter  *sqlHelper.QueryFilter
-	tx           *bun.Tx
-	userDomainId string
-	Error        error
+	ctx         context.Context
+	helper      *helper.Helper
+	queryFilter *sqlHelper.QueryFilter
+	tx          *bun.Tx
+	Error       error
 }
 
 type FilesService struct {

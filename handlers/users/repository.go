@@ -42,12 +42,12 @@ func (r *Repository) get(id string) (*models.User, error) {
 	return &item, err
 }
 
-func (r *Repository) getByUserAccountID(accountId string) (*models.User, error) {
+func (r *Repository) getByUserAccountID(accountID string) (*models.User, error) {
 	item := models.User{}
 	err := r.db().NewSelect().
 		Model(&item).
 		Relation("UsersDomains").
-		Where("?TableAlias.user_account_id = ?", accountId).
+		Where("?TableAlias.user_account_id = ?", accountID).
 		Scan(r.ctx)
 	return &item, err
 }

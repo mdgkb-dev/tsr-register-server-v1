@@ -21,12 +21,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	fq, err := h.helper.SQL.CreateQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	h.helper.SQL.InjectQueryFilter(c, fq)
-	items, err := h.service.GetAll(c)
+	items, err := h.service.GetAll(c.Request.Context())
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

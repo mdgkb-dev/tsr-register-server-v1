@@ -43,5 +43,3 @@ func (s *Service) UpdatePassword(item *models.UserAccount) error {
 	}
 	return s.repository.UpdatePassword(item)
 }
-
-
