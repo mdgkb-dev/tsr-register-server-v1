@@ -1,6 +1,7 @@
 package models
 
 import (
+	"mdgkb/tsr-tegister-server-v1/middleware"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -31,7 +32,7 @@ func (item *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHel
 }
 
 func (item *ModelInfo) FillModelInfoCreate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) (err error) {
-	uid, err := tokenHelper.ExtractTokenMetadata(c.Request, "user_id")
+	uid, err := tokenHelper.ExtractTokenMetadata(c.Request, middleware.ClaimUserID)
 	if err != nil {
 		return err
 	}

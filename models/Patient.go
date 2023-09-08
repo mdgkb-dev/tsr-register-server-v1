@@ -116,7 +116,7 @@ func (item *Patient) GetXlsxData(research *Research) (results [][]interface{}, e
 
 	for resultN, researchResult := range patientResearch.ResearchResults {
 		variables := make(map[string]interface{})
-		results = append(results, []interface{}{""})
+		results = append(results, []interface{}{})
 		results[resultN] = append(results[resultN], researchResult.Date.Format("02.01.2006"))
 
 		if research.WithScores {
@@ -161,6 +161,7 @@ func (item *Patient) GetXlsxData(research *Research) (results [][]interface{}, e
 			value := m.GetEvaluatedValue()
 			//answer := researchResult.GetData(q)
 			results[resultN] = append(results[resultN], fmt.Sprintf("%.2f", value))
+			fmt.Println(results[resultN])
 		}
 	}
 	return results, nil

@@ -16,7 +16,13 @@ func CreateMiddleware(helper *helper.Helper) *Middleware {
 func (m *Middleware) InjectRequestInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := Claims{ClaimUserID, ClaimDomainIDS}.Inject(c.Request, m.helper.Token)
+		if err != nil {
+			return
+		}
 		if m.helper.HTTP.HandleError(c, err) {
+			return
+		}
+		if err != nil {
 			return
 		}
 		err = m.helper.SQL.InjectQueryFilter(c)

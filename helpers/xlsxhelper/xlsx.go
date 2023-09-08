@@ -88,10 +88,13 @@ func (x *XlsxHelper) WriteCell(strNum int, colNum int, data interface{}) {
 	switch d := data.(type) {
 	case string:
 		err = x.file.SetCellStr("Sheet1", startCell, d)
-	case int:
-		err = x.file.SetCellInt("Sheet1", startCell, d)
+	case int, uint:
+		err = x.file.SetCellInt("Sheet1", startCell, d.(int))
 	case float64:
-		err = x.file.SetCellFloat("Sheet1", startCell, d, 2, 8)
+		err = x.file.SetCellFloat("Sheet1", startCell, d, 2, 32)
+	case float32:
+		fmt.Println(float64(d))
+		err = x.file.SetCellFloat("Sheet1", startCell, float64(d), 2, 64)
 	}
 	x.SetError(err)
 }

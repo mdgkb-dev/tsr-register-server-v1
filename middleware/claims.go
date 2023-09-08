@@ -17,7 +17,7 @@ const (
 )
 
 func (item Claim) Inject(r *http.Request, h *tokenHelper.TokenHelper) error {
-	d, err := h.ExtractTokenMetadata(r, item.String())
+	d, err := h.ExtractTokenMetadata(r, item)
 	if err != nil {
 		return err
 	}
@@ -45,9 +45,9 @@ func (item Claim) Split() []string {
 }
 
 func (item Claim) FromContext(ctx context.Context) string {
-	return ctx.Value(item.String()).(string)
+	return ctx.Value(item).(string)
 }
 
 func (item Claim) FromContextSlice(ctx context.Context) []string {
-	return strings.Split(ctx.Value(item.String()).(string), ",")
+	return strings.Split(ctx.Value(item).(string), ",")
 }
