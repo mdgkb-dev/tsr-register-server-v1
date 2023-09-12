@@ -93,9 +93,9 @@ func (x *XlsxHelper) WriteCell(strNum int, colNum int, data interface{}) {
 	case float64:
 		err = x.file.SetCellFloat("Sheet1", startCell, d, 2, 32)
 	case float32:
-		fmt.Println(float64(d))
 		err = x.file.SetCellFloat("Sheet1", startCell, float64(d), 2, 64)
 	}
+
 	x.SetError(err)
 }
 

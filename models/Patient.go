@@ -1,11 +1,9 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
-	"strconv"
 
-	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -105,71 +103,49 @@ func (item *Patient) SetDeleteIDForChildren() {
 	}
 }
 
-func (item *Patient) GetXlsxData(research *Research) (results [][]interface{}, err error) {
-	m := exprtk.NewExprtk()
-	defer m.Delete()
-	results = make([][]interface{}, 0)
-	patientResearch, err := item.GetPatientResearch(research.ID.UUID.String())
-	if err != nil {
-		return nil, err
-	}
-
-	for resultN, researchResult := range patientResearch.ResearchResults {
-		variables := make(map[string]interface{})
-		results = append(results, []interface{}{})
-		results[resultN] = append(results[resultN], researchResult.Date.Format("02.01.2006"))
-
-		if research.WithScores {
-			sum := 0
-			for _, q := range research.Questions {
-				sum += researchResult.GetScores(q)
-			}
-			results[resultN] = append(results[resultN], strconv.Itoa(sum))
-			continue
-		}
-
-		for _, q := range research.Questions {
-			answer := researchResult.GetData(q)
-			results[resultN] = append(results[resultN], answer)
-			variables[q.Code] = answer
-			//i, e := strconv.Atoi(answer)
-			//if e == nil {
-			//	variables[q.Code] = i
-			//}
-		}
-
-		for _, f := range research.Formulas {
-			if !f.Xlsx {
-				continue
-			}
-			m.SetExpression(f.Formula)
-			for k := range variables {
-				m.AddDoubleVariable(k)
-			}
-			err = m.CompileExpression()
-			if err != nil {
-				fmt.Println(err)
-			}
-			//for k, v := range variables {
-			//i, err := strconv.Atoi(v.(string))
-			//if err != nil {
-			//	fmt.Println(err)
-			//}
-			//m.SetDoubleVariableValue(k, float64(i))
-			//}
-			//
-			value := m.GetEvaluatedValue()
-			//answer := researchResult.GetData(q)
-			results[resultN] = append(results[resultN], fmt.Sprintf("%.2f", value))
-			fmt.Println(results[resultN])
+func (item *Patient) GetMaxResearchesResultsCount() int {
+	maxCount := 0
+	for _, patientResearch := range item.PatientsResearches {
+		resultsCount := len(patientResearch.ResearchResults)
+		if resultsCount > maxCount {
+			maxCount = resultsCount
 		}
 	}
-	return results, nil
+
+	return maxCount
 }
 
-func (item *Patient) GetPatientResearch(researchID string) (res *PatientResearch, err error) {
+func (items Patients) GetExportData(researches Researches) ([][]interface{}, error) {
+	dataLines := make([][]interface{}, 0)
+	for _, patient := range items {
+		patientData, err := patient.GetExportData(researches)
+		if err != nil {
+			return nil, err
+		}
+		dataLines = append(dataLines, patientData...)
+	}
+	return dataLines, nil
+}
+
+func (item *Patient) GetExportData(researches Researches) ([][]interface{}, error) {
+	patientData := make([][]interface{}, 0)
+	for _, research := range researches {
+		patientResearch, err := item.GetPatientResearch(research.ID)
+		if err != nil {
+			return nil, err
+		}
+		patientResearchResults, err := patientResearch.GetExportData(research)
+		if err != nil {
+			return nil, err
+		}
+		patientData = append(patientData, patientResearchResults...)
+	}
+	return patientData, nil
+}
+
+func (item *Patient) GetPatientResearch(researchID uuid.NullUUID) (res *PatientResearch, err error) {
 	for _, patientResearch := range item.PatientsResearches {
-		if researchID == patientResearch.ResearchID.UUID.String() {
+		if researchID.UUID.String() == patientResearch.ResearchID.UUID.String() {
 			res = patientResearch
 			break
 		}
@@ -178,4 +154,29 @@ func (item *Patient) GetPatientResearch(researchID string) (res *PatientResearch
 		return nil, errors.New("у пациента отсутствует исследование")
 	}
 	return res, nil
+}
+
+type PatientsExport struct {
+	IDPool          []string `json:"ids"`
+	WithAge         bool     `json:"withAge"`
+	CountAverageAge bool     `json:"countAverageAge"`
+}
+
+const patientsExportOptionsKey = "patient"
+
+func (item *PatientsExport) ParseExportOptions(options map[string]map[string]interface{}) error {
+	patientsOptions, ok := options[patientsExportOptionsKey]
+	if !ok {
+		return errors.New("not find patients")
+	}
+	jsonbody, err := json.Marshal(patientsOptions[patientsExportOptionsKey])
+	if err != nil {
+		return errors.New("parse error")
+	}
+
+	if err := json.Unmarshal(jsonbody, &item); err != nil {
+		return errors.New("parse error")
+	}
+
+	return nil
 }

@@ -11,10 +11,10 @@ import (
 
 type ResearchQueryGroup struct {
 	bun.BaseModel   `bun:"research_query_groups,alias:research_query_groups"`
-	ID              uuid.NullUUID  `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
-	Name            string         `json:"name"`
-	ResearchQueryID uuid.NullUUID  `bun:"type:uuid" json:"researchQueryId"`
-	ResearchQuery   *ResearchQuery `bun:"rel:belongs-to" json:"researchQuery"`
+	ID              uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id"`
+	Name            string        `json:"name"`
+	ResearchQueryID uuid.NullUUID `bun:"type:uuid" json:"researchQueryId"`
+	//ResearchQuery   *DataQuery    `bun:"rel:belongs-to" json:"researchQuery"`
 
 	ResearchID uuid.UUID `bun:"type:uuid" json:"researchId"`
 	Research   *Research `bun:"rel:belongs-to" json:"research"`

@@ -1,39 +1,35 @@
-package researchquery
+package dataexport
 
 import (
 	"context"
+
 	"mdgkb/tsr-tegister-server-v1/models"
+	"mime/multipart"
 
 	"github.com/pro-assistance/pro-assister/helper"
-	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
 
 	"github.com/gin-gonic/gin"
 )
 
 type IHandler interface {
-	basehandler.IHandler
-	Execute(c *gin.Context)
+	Export(c *gin.Context)
 }
 
 type IService interface {
-	basehandler.IService[models.ResearchQuery, models.ResearchQueries, models.ResearchQueriesWithCount]
-	Execute(*models.ResearchQuery) error
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.ResearchQuery, models.ResearchQueries, models.ResearchQueriesWithCount]
-	Execute(*models.ResearchQuery) error
 }
 
 type IFilesService interface {
-	basehandler.IFilesService
+	Upload(*gin.Context, *models.Research, map[string][]*multipart.FileHeader) error
 }
 
 type Handler struct {
 	service      IService
-	filesService IFilesService
 	helper       *helper.Helper
+	filesService IFilesService
 }
 
 type Service struct {
@@ -51,16 +47,23 @@ type FilesService struct {
 	helper *helper.Helper
 }
 
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
+}
+
 func CreateHandler(helper *helper.Helper) *Handler {
 	repo := NewRepository(helper)
 	service := NewService(repo, helper)
 	filesService := NewFilesService(helper)
 	return NewHandler(service, filesService, helper)
-}
-
-func CreateService(helper *helper.Helper) *Service {
-	repo := NewRepository(helper)
-	return NewService(repo, helper)
 }
 
 // NewHandler constructor

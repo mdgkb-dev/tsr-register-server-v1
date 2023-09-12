@@ -1,6 +1,9 @@
 package models
 
 import (
+	"fmt"
+
+	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -21,84 +24,59 @@ type Formula struct {
 
 type Formulas []*Formula
 
-//
-//func (item *Formula) SetIDForChildren() {
-//	if len(item.AnswerVariants) > 0 {
-//		for i := range item.AnswerVariants {
-//			item.AnswerVariants[i].FormulaID = item.ID
-//		}
-//	}
-//}
-//
-//func (items Formulas) SetIDForChildren() {
-//	if len(items) == 0 {
-//		return
-//	}
-//	for i := range items {
-//		items[i].SetIDForChildren()
-//	}
-//}
-//
-//func (items Formulas) GetRegisterPropertyExamples() FormulaExamples {
-//	itemsForGet := make(FormulaExamples, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].FormulaExamples...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyRadios() AnswerVariants {
-//	itemsForGet := make(AnswerVariants, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].AnswerVariants...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyRadioForDelete() []uuid.UUID {
-//	itemsForGet := make([]uuid.UUID, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].AnswerVariantsForDelete...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyExamplesForDelete() []uuid.UUID {
-//	itemsForGet := make([]uuid.UUID, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].FormulaExamplesForDelete...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyMeasuresForDelete() []uuid.UUID {
-//	itemsForGet := make([]uuid.UUID, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].FormulaMeasuresForDelete...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyMeasures() FormulaMeasures {
-//	itemsForGet := make(FormulaMeasures, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].FormulaMeasures...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyVariants() FormulaVariants {
-//	itemsForGet := make(FormulaVariants, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].FormulaVariants...)
-//	}
-//	return itemsForGet
-//}
-//
-//func (items Formulas) GetRegisterPropertyVariantsForDelete() []uuid.UUID {
-//	itemsForGet := make([]uuid.UUID, 0)
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].FormulaVariantsForDelete...)
-//	}
-//	return itemsForGet
-//}
+func (items Formulas) SetXlsxData(results []interface{}, variables map[string]interface{}) ([]interface{}, error) {
+	m := exprtk.NewExprtk()
+	defer m.Delete()
+	for i := range items {
+		results, _ = items[i].SetXlsxData(results, variables, m)
+		//if err != nil {
+		//	break
+		//}
+	}
+	return results, nil
+}
+
+func (item *Formula) SetXlsxData(results []interface{}, variables map[string]interface{}, m exprtk.GoExprtk) ([]interface{}, error) {
+	if !item.Xlsx {
+		return results, nil
+	}
+	m.SetExpression(item.Formula)
+	for k := range variables {
+		m.AddDoubleVariable(k)
+	}
+	err := m.CompileExpression()
+	if err != nil {
+		return results, err
+	}
+	for k, v := range variables {
+		switch v := v.(type) {
+		case float32:
+			m.SetDoubleVariableValue(k, float64(v))
+		case float64:
+			m.SetDoubleVariableValue(k, v)
+		case int:
+			m.SetDoubleVariableValue(k, float64(int64(v)))
+		}
+	}
+	value := m.GetEvaluatedValue()
+	results = append(results, value)
+	result := item.GetResult(value)
+	if result != nil {
+		results = append(results, result.Name)
+	} else {
+		results = append(results, "")
+	}
+
+	return results, nil
+}
+
+func (item *Formula) GetResult(value float64) (result *FormulaResult) {
+	for _, formulaResult := range item.FormulaResults {
+		if value > formulaResult.LowRange && value < formulaResult.HighRange {
+			fmt.Println(value, formulaResult.LowRange, formulaResult.HighRange)
+			result = formulaResult
+			break
+		}
+	}
+	return result
+}

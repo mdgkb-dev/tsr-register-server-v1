@@ -101,3 +101,31 @@ func (r *Repository) getValueTypes() (models.ValueTypes, error) {
 		Scan(r.ctx)
 	return items, err
 }
+
+func (r *Repository) GetForExport(c context.Context, idPool []string) (items models.Researches, err error) {
+	query := r.db().NewSelect().
+		Model(&items).
+		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("questions.item_order")
+		}).
+		Relation("Questions.AnswerVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("answer_variants.item_order")
+		}).
+		Relation("Questions.QuestionExamples").
+		Relation("Questions.ValueType").
+		Relation("Questions.QuestionVariants", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("question_variants.name")
+		}).
+		Relation("Questions.Children.ValueType").
+		Relation("Questions.Children.AnswerVariants").
+		Relation("Formulas.FormulaResults")
+
+	if len(idPool) > 0 {
+		query = query.Where("?TableAlias.id in (?)", bun.In(idPool))
+	}
+
+	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	err = query.Scan(r.ctx)
+	return items, err
+}

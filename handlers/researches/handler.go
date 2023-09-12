@@ -1,9 +1,6 @@
 package researches
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
-	"time"
-
 	"github.com/gin-gonic/gin"
 
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -75,26 +72,26 @@ func (h *Handler) GetValueTypes(c *gin.Context) {
 }
 
 func (h *Handler) Xlsx(c *gin.Context) {
-	researchID := c.Param("research-id")
-	patientResearchID := c.Param("patient-id")
-	research, patient, err := h.service.GetResearchAndPatient(c, researchID, patientResearchID)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
+	//researchID := c.Param("research-id")
+	//patientResearchID := c.Param("patient-id")
+	//research, patient, err := h.service.GetResearchAndPatient(c, researchID, patientResearchID)
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
 
-	researhQuery := models.ResearchQuery{}
-	researhQuery.Xl = xlsxhelper.NewXlsxHelper()
-	data, err := patient.GetXlsxData(research)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	file, err := researhQuery.WriteXlsxV2(research.GetHeaders(patient.Human.GetFullName()), data)
+	//researhQuery := models.DataQuery{}
+	//researhQuery.Xl = xlsxhelper.NewXlsxHelper()
+	//data, err := patient.GetXlsxData(research)
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
+	//file, err := researhQuery.WriteXlsxV2(research.GetHeaders(patient.Human.GetFullName()), data)
 
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
-	c.Header("Content-Description", "File Transfer")
-	c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
-	c.Data(http.StatusOK, "application/octet-stream", file)
+	//if h.helper.HTTP.HandleError(c, err) {
+	//	return
+	//}
+	//downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
+	//c.Header("Content-Description", "File Transfer")
+	//c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
+	//c.Data(http.StatusOK, "application/octet-stream", file)
 }

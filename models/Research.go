@@ -1,6 +1,9 @@
 package models
 
 import (
+	"encoding/json"
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -69,27 +72,64 @@ func (item *Research) GetResultByPatientID(patientID uuid.NullUUID) *ResearchRes
 	return research
 }
 
-func (item *Research) GetHeaders(patientName string) [][]string {
-	headersLines := make([][]string, 0)
-	headersLines = append(headersLines, []string{item.Name + ": " + patientName})
+func (items Researches) GetExportData() [][]interface{} {
+	headersLines := make([][]interface{}, 0)
+	headersLines = append(headersLines, []interface{}{})
+	for _, research := range items {
+		researchHeaders := research.GetHeaders()
+		for _, researchHeader := range researchHeaders {
+			headersLines[0] = append(headersLines[0], researchHeader...)
+		}
+	}
+	return headersLines
+}
 
-	headersLines = append(headersLines, []string{})
-	headersLines[1] = append(headersLines[1], "Дата")
+func (item *Research) GetHeaders() [][]interface{} {
+	headersLines := make([][]interface{}, 0)
+	headersLines = append(headersLines, []interface{}{})
+	headersLines[0] = append(headersLines[0], "Дата")
 
 	if item.WithScores {
-		headersLines[1] = append(headersLines[1], "Всего баллов")
-		headersLines[1] = append(headersLines[1], "Всего баллов по шкале")
+		headersLines[0] = append(headersLines[0], "Всего баллов")
+		headersLines[0] = append(headersLines[0], "Всего баллов по шкале")
 		return headersLines
 	}
 
 	for _, q := range item.Questions {
-		headersLines[1] = append(headersLines[1], q.Name)
+		headersLines[0] = append(headersLines[0], q.Name)
 	}
 	for _, f := range item.Formulas {
 		if f.Xlsx {
-			headersLines[1] = append(headersLines[1], f.Name)
+			headersLines[0] = append(headersLines[0], f.Name)
+		}
+		if len(f.FormulaResults) > 0 {
+			headersLines[0] = append(headersLines[0], "Результат")
 		}
 	}
 
 	return headersLines
+}
+
+type ResearchesExport struct {
+	IDPool          []string `json:"ids"`
+	WithAge         bool     `json:"withAge"`
+	CountAverageAge bool     `json:"countAverageAge"`
+}
+
+const researchesExportOptionsKey = "research"
+
+func (item *ResearchesExport) ParseExportOptions(options map[string]map[string]interface{}) error {
+	opt, ok := options[researchesExportOptionsKey]
+	if !ok {
+		return errors.New("not find patients")
+	}
+	jsonbody, err := json.Marshal(opt[researchesExportOptionsKey])
+	if err != nil {
+		return errors.New("parse error")
+	}
+
+	if err := json.Unmarshal(jsonbody, &item); err != nil {
+		return errors.New("parse error")
+	}
+	return nil
 }

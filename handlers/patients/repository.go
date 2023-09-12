@@ -92,3 +92,38 @@ func (r *Repository) Update(c context.Context, item *models.Patient) (err error)
 	_, err = r.helper.DB.IDB(c).NewUpdate().Model(item).Where("id = ?", item.ID).Exec(c)
 	return err
 }
+
+func (r *Repository) GetForExport(c context.Context, idPool []string) (items models.PatientsWithCount, err error) {
+	items.Patients = make(models.Patients, 0)
+	query := r.helper.DB.IDB(c).NewSelect().Model(&items.Patients).
+		Relation("Disabilities").
+		Relation("Disabilities.Edvs").
+		Relation("Disabilities.Edvs.FileInfo").
+		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.DocumentFileInfos.FileInfo").
+		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
+		Relation("Human.InsuranceCompanyToHuman.InsuranceCompany").
+		Relation("Human.Contact").
+		Relation("Human.Photo").
+		Relation("PatientsRepresentatives.Representative.Human.Contact").
+		Relation("PatientsRepresentatives.RepresentativeType").
+		Relation("PatientDiagnosis.MkbItem").
+		Relation("PatientDiagnosis.Anamneses").
+		Relation("PatientsResearchesPools.ResearchesPool").
+		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
+		Relation("PatientsRegisters.Register").
+		Relation("PatientsRegisters.User").
+		Relation("Commissions", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.Order("commissions.number")
+		}).
+		Relation("Commissions.CommissionsDoctors.Doctor").
+		Relation("Commissions.PatientDiagnosis.MkbItem").
+		Relation("Anamneses")
+	if len(idPool) > 0 {
+		query = query.Where("?TableAlias.id in (?)", bun.In(idPool))
+	}
+
+	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	err = query.Scan(c)
+	return items, err
+}

@@ -10,7 +10,7 @@ type DocumentTypeField struct {
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string        `json:"name"`
 	Code          string        `json:"code"`
-	Order         uint          `json:"order"`
+	Order         uint          `bun:"item_order"  json:"order"`
 
 	ValueType   *ValueType    `bun:"rel:belongs-to" json:"valueType"`
 	ValueTypeID uuid.NullUUID `bun:"type:uuid" json:"valueTypeId"`

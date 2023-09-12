@@ -7,6 +7,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
+	"mdgkb/tsr-tegister-server-v1/handlers/dataexport"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/documentfieldvalues"
@@ -47,7 +48,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchesresults"
-	"mdgkb/tsr-tegister-server-v1/handlers/researchquery"
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/statuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
@@ -57,6 +57,7 @@ import (
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
 	commissionsdrugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdrugapplications"
 	commissionsTemplatesRouter "mdgkb/tsr-tegister-server-v1/routing/commissionstemplates"
+	dataexportRouter "mdgkb/tsr-tegister-server-v1/routing/dataexport"
 	disabilitiesRouter "mdgkb/tsr-tegister-server-v1/routing/disabilities"
 	doctorsRouter "mdgkb/tsr-tegister-server-v1/routing/doctors"
 	documentfieldvaluesRouter "mdgkb/tsr-tegister-server-v1/routing/documentfieldvalues"
@@ -92,7 +93,6 @@ import (
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
 	researchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/researchespools"
 	researchesResultsRouter "mdgkb/tsr-tegister-server-v1/routing/researchesresults"
-	researchQueryRouter "mdgkb/tsr-tegister-server-v1/routing/researchquery"
 	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/researchsection"
 	searchRouter "mdgkb/tsr-tegister-server-v1/routing/search"
 	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
@@ -122,7 +122,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
 
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
-	researchQueryRouter.Init(api.Group("/research-queries"), researchquery.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
 	representativesRouter.Init(api.Group("/representatives"), representatives.CreateHandler(helper))
 	representativeTypesRouter.Init(api.Group("/representative-types"), representativetypes.CreateHandler(helper))
@@ -154,6 +153,9 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	researches.Init(helper)
 	researchesRouter.Init(api.Group("/researches"), researches.H)
+
+	dataexport.Init(helper)
+	dataexportRouter.Init(api.Group("/data-export"), dataexport.H)
 
 	patientsRepresentativesRouter.Init(api.Group("/patients-representatives"), patientsrepresentatives.CreateHandler(helper))
 	anamnesesRouter.Init(api.Group("/anamneses"), anamneses.CreateHandler(helper))

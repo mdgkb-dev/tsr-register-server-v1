@@ -49,5 +49,5 @@ func (item Claim) FromContext(ctx context.Context) string {
 }
 
 func (item Claim) FromContextSlice(ctx context.Context) []string {
-	return strings.Split(ctx.Value(item).(string), ",")
+	return strings.Split(item.FromContext(ctx), ",")
 }

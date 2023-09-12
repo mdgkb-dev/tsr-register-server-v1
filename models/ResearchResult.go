@@ -152,17 +152,6 @@ func (items ResearchResults) GetRegisterPropertyOthersToPatient() PatientAnswerC
 	return itemsForGet
 }
 
-//func (items ResearchResults) GetRegisterPropertySetToPatientForDelete() []uuid.UUID {
-//	itemsForGet := make([]uuid.UUID, 0)
-//	if len(items) == 0 {
-//		return itemsForGet
-//	}
-//	for i := range items {
-//		itemsForGet = append(itemsForGet, items[i].RegisterPropertySetToPatientForDelete...)
-//	}
-//	return itemsForGet
-//}
-//
 func (item *ResearchResult) GetAggregateExistingData() string {
 	res := No
 	for _, answer := range item.Answers {
@@ -211,4 +200,41 @@ func (item *ResearchResult) GetScores(q *Question) int {
 		}
 	}
 	return sumScores
+}
+
+func (items ResearchResults) GetExportData(research *Research) ([][]interface{}, error) {
+	results := make([][]interface{}, 0)
+	for _, researchResult := range items {
+		result, err := researchResult.GetXlsxData(research)
+		if err != nil {
+			break
+		}
+		results = append(results, result)
+	}
+	return results, nil
+}
+
+func (item *ResearchResult) GetXlsxData(research *Research) ([]interface{}, error) {
+	result := make([]interface{}, 0)
+
+	//if research.WithScores {
+	//	sum := 0
+	//	for _, q := range research.Questions {
+	//		sum += item.GetScores(q)
+	//	}
+	//	results[resultN] = append(results[resultN], strconv.Itoa(sum))
+	//	return err
+	//}
+
+	variables := make(map[string]interface{})
+	for _, q := range research.Questions {
+		answer := item.GetData(q)
+		result = append(result, answer)
+		variables[q.Code] = answer
+	}
+	//results[resultN], err = research.Formulas.SetXlsxData(results[resultN], variables)
+	//if err != nil {
+	//	return err
+	//}
+	return result, nil
 }

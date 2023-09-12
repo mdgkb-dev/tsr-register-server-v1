@@ -25,3 +25,7 @@ type PatientsResearchesWithCount struct {
 	PatientsResearches PatientsResearches `json:"items"`
 	Count              int                `json:"count"`
 }
+
+func (item *PatientResearch) GetExportData(research *Research) ([][]interface{}, error) {
+	return item.ResearchResults.GetExportData(research)
+}
