@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
 
 	"github.com/google/uuid"
@@ -31,7 +32,9 @@ func (item *XLSXWriter) WriteFile(headers [][]interface{}, data [][]interface{})
 	item.Xl.CreateFile()
 
 	for lineN, line := range headers {
+		fmt.Println("Header:", line)
 		for colN, colName := range line {
+			fmt.Println("ColName:", colName)
 			item.Xl.WriteCell(lineN+1, colN, colName)
 		}
 	}

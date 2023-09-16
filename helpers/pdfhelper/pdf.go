@@ -1,4 +1,4 @@
-package xlsxhelper
+package pdfhelper
 
 import (
 	"bytes"
@@ -18,12 +18,6 @@ type XlsxHelper struct {
 	keys        []string
 	data        []map[string]interface{}
 	HeaderCells []string
-
-	style     *DefaultStyle
-	Data      []string `bun:"-"`
-	Err       error
-	Cursor    int
-	StrCursor int
 }
 
 func (x *XlsxHelper) CreateFile() {
@@ -87,8 +81,6 @@ func (x *XlsxHelper) WriteCell(strNum int, colNum int, data interface{}) {
 	startCell := fmt.Sprintf("%s%d", col, strNum)
 	var err error
 	switch d := data.(type) {
-	case nil:
-		err = x.file.SetCellStr("Sheet1", startCell, "")
 	case string:
 		err = x.file.SetCellStr("Sheet1", startCell, d)
 	case int, uint:
@@ -98,8 +90,6 @@ func (x *XlsxHelper) WriteCell(strNum int, colNum int, data interface{}) {
 	case float32:
 		err = x.file.SetCellFloat("Sheet1", startCell, float64(d), 2, 64)
 	case *time.Time:
-		err = x.file.SetCellStr("Sheet1", startCell, d.Format("02.01.2006"))
-	case time.Time:
 		err = x.file.SetCellStr("Sheet1", startCell, d.Format("02.01.2006"))
 		//err = x.file.SetCellValue("Sheet1", startCell, d)
 	}

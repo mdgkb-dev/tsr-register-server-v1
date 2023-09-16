@@ -2,7 +2,6 @@ package dataexport
 
 import (
 	"encoding/json"
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -21,7 +20,6 @@ func (h *Handler) Export(c *gin.Context) {
 
 	researchesExport := models.ResearchesExport{}
 	err = exportOptions.Parse(&researchesExport)
-	fmt.Println(researchesExport)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -39,18 +37,20 @@ func (h *Handler) Export(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	fmt.Println(patientsExport)
 	exportData, err := patientsForExport.Patients.GetExportData(researchesForExport)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	exporter := exportOptions.ExportType.GetExporter()
+	exporter := exportOptions.ExportType.GetExporter(h.helper)
 	file, err := exporter.WriteFile(headers, exportData)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-
-	downloadName := time.Now().UTC().Format("data-20060102150405.xlsx")
+	ext := ".pdf"
+	if exportOptions.ExportType == models.ExportTypeXLSX {
+		ext = ".xlsx"
+	}
+	downloadName := time.Now().UTC().Format("data-20060102150405" + ext)
 	c.Header("Content-Description", "File Transfer")
 	c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
 	c.Data(http.StatusOK, "application/octet-stream", file)

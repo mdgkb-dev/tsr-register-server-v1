@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -116,12 +117,14 @@ func (item *Patient) GetMaxResearchesResultsCount() int {
 }
 
 func (items Patients) GetExportData(researches Researches) ([][]interface{}, error) {
+	fmt.Println("НАЧАЛО")
 	dataLines := make([][]interface{}, 0)
 	for _, patient := range items {
 		patientData, err := patient.GetExportData(researches)
 		if err != nil {
 			return nil, err
 		}
+		fmt.Println("FIRST PATIENT LEN", len(patientData))
 		dataLines = append(dataLines, patientData...)
 	}
 	return dataLines, nil
@@ -129,7 +132,22 @@ func (items Patients) GetExportData(researches Researches) ([][]interface{}, err
 
 func (item *Patient) GetExportData(researches Researches) ([][]interface{}, error) {
 	patientData := make([][]interface{}, 0)
-	for _, research := range researches {
+	patientData = append(patientData, []interface{}{})
+	patientData[0] = append(patientData[0], item.Human.GetFullName())
+	if item.Human.DateBirth != nil {
+		patientData[0] = append(patientData[0], item.Human.DateBirth.Format("02.01.2006"))
+	} else {
+		patientData[0] = append(patientData[0], "")
+	}
+	// colIndex := 2
+	//patientData[0][0] = item.Human.GetFullName()
+	//patientData[0][1] = item.Human.DateBirth.Format("02.01.2006")
+	startColIdx := 0
+	for researchIdx, research := range researches {
+		// fmt.Println("startColIdx", startColIdx)
+		// if researchIndex == 0 && item.Human != nil {
+
+		// }
 		patientResearch, err := item.GetPatientResearch(research.ID)
 		if err != nil {
 			return nil, err
@@ -138,8 +156,37 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 		if err != nil {
 			return nil, err
 		}
-		patientData = append(patientData, patientResearchResults...)
+		// fmt.Println(len(patientResearchResults))
+		// fmt.Println(patientResearchResults)
+		// fmt.Println(patientData)
+
+		for i, result := range patientResearchResults {
+			// Добавили строку
+			if i >= len(patientData) {
+				patientData = append(patientData, make([]interface{}, 0))
+			}
+			if i > 0 && researchIdx == 0 {
+				fmt.Println("Начало заполнения", researchIdx, i, patientData[i])
+				patientData[i] = append(patientData[i], []interface{}{""})
+				patientData[i] = append(patientData[i], []interface{}{""})
+			}
+			fmt.Println("Заполнили пустые", researchIdx, i, patientData[i])
+			if startColIdx > 0 && len(patientData[i]) < startColIdx {
+				// fmt.Println("added", startColIdx)
+				patientData[i] = append(patientData[i], []interface{}{""})
+				patientData[i] = append(patientData[i], []interface{}{""})
+				patientData[i] = append(patientData[i], make([]interface{}, startColIdx)...)
+			}
+			for _, answer := range result {
+				patientData[i] = append(patientData[i], answer)
+			}
+			fmt.Println("Заполнили ответы", researchIdx, i, patientData[i])
+		}
+		startColIdx += len(patientResearchResults[0])
+		// fmt.Println("Ответов", len(patientResearchResults[0]))
+
 	}
+	//fmt.Println("patient")
 	return patientData, nil
 }
 
@@ -151,7 +198,8 @@ func (item *Patient) GetPatientResearch(researchID uuid.NullUUID) (res *PatientR
 		}
 	}
 	if res == nil {
-		return nil, errors.New("у пациента отсутствует исследование")
+		//return nil, errors.New("у пациента отсутствует исследование")
+		return &PatientResearch{}, nil
 	}
 	return res, nil
 }

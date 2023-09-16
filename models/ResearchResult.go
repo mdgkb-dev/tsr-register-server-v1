@@ -216,7 +216,7 @@ func (items ResearchResults) GetExportData(research *Research) ([][]interface{},
 
 func (item *ResearchResult) GetXlsxData(research *Research) ([]interface{}, error) {
 	result := make([]interface{}, 0)
-
+	result = append(result, item.Date)
 	//if research.WithScores {
 	//	sum := 0
 	//	for _, q := range research.Questions {
@@ -232,9 +232,10 @@ func (item *ResearchResult) GetXlsxData(research *Research) ([]interface{}, erro
 		result = append(result, answer)
 		variables[q.Code] = answer
 	}
-	//results[resultN], err = research.Formulas.SetXlsxData(results[resultN], variables)
-	//if err != nil {
-	//	return err
-	//}
+	resultFormulas, err := research.Formulas.SetXlsxData(variables)
+	if err != nil {
+		return nil, err
+	}
+	result = append(result, resultFormulas...)
 	return result, nil
 }

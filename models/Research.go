@@ -73,45 +73,61 @@ func (item *Research) GetResultByPatientID(patientID uuid.NullUUID) *ResearchRes
 }
 
 func (items Researches) GetExportData() [][]interface{} {
-	headersLines := make([][]interface{}, 0)
-	headersLines = append(headersLines, []interface{}{})
+	researches := make([][]interface{}, 0)
+
+	researches = append(researches, []interface{}{})
+	researches = append(researches, []interface{}{})
+	//researchNames := researches[0]
+	//researchQuestions := researches[1]
+
+	researches[0] = append(researches[0], "ФИО")
+	researches[0] = append(researches[0], "Дата рождения")
+
+	researches[1] = append(researches[1], "")
+	researches[1] = append(researches[1], "")
+
 	for _, research := range items {
-		researchHeaders := research.GetHeaders()
-		for _, researchHeader := range researchHeaders {
-			headersLines[0] = append(headersLines[0], researchHeader...)
+		questionsForExport := research.GetQuestionsForExport()
+		for questionIndex, questionForExport := range questionsForExport {
+			if questionIndex == 0 {
+				researches[0] = append(researches[0], research.Name)
+			} else {
+				researches[0] = append(researches[0], "")
+			}
+			researches[1] = append(researches[1], questionForExport)
 		}
 	}
-	return headersLines
+	return researches
 }
 
-func (item *Research) GetHeaders() [][]interface{} {
-	headersLines := make([][]interface{}, 0)
-	headersLines = append(headersLines, []interface{}{})
-	headersLines[0] = append(headersLines[0], "Дата")
+func (item *Research) GetQuestionsForExport() []interface{} {
+	questionsForExport := make([]interface{}, 0)
+	questionsForExport = append(questionsForExport, "Дата")
 
 	if item.WithScores {
-		headersLines[0] = append(headersLines[0], "Всего баллов")
-		headersLines[0] = append(headersLines[0], "Всего баллов по шкале")
-		return headersLines
+		questionsForExport = append(questionsForExport, "Всего баллов")
+		questionsForExport = append(questionsForExport, "Всего баллов по шкале")
+		return questionsForExport
 	}
 
 	for _, q := range item.Questions {
-		headersLines[0] = append(headersLines[0], q.Name)
+		questionsForExport = append(questionsForExport, q.Name)
 	}
 	for _, f := range item.Formulas {
 		if f.Xlsx {
-			headersLines[0] = append(headersLines[0], f.Name)
+			questionsForExport = append(questionsForExport, f.Name)
 		}
 		if len(f.FormulaResults) > 0 {
-			headersLines[0] = append(headersLines[0], "Результат")
+			questionsForExport = append(questionsForExport, "Результат")
 		}
 	}
 
-	return headersLines
+	return questionsForExport
 }
 
 type ResearchesExport struct {
 	IDPool          []string `json:"ids"`
+	WithName        bool     `json:"withAge"`
 	WithAge         bool     `json:"withAge"`
 	CountAverageAge bool     `json:"countAverageAge"`
 }

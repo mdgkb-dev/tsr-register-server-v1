@@ -1,5 +1,7 @@
 package models
 
+import "github.com/pro-assistance/pro-assister/helper"
+
 type ExportOptions struct {
 	ExportType ExportType `json:"exportType"`
 
@@ -18,24 +20,20 @@ type FileWriter interface {
 	WriteFile([][]interface{}, [][]interface{}) ([]byte, error)
 }
 
-func (item ExportType) GetExporter() FileWriter {
+func (item ExportType) GetExporter(helper *helper.Helper) FileWriter {
 	switch item {
 	case ExportTypeXLSX:
 		return &XLSXWriter{}
 	case ExportTypeDOCX:
 		return nil
 	case ExportTypePDF:
-		return nil
+		writer := &PDFWriter{}
+		writer.PDF = helper.PDF
+		return writer
 	default:
 		return nil
 	}
 }
-
-// Может выгружать:
-// 1) Данные по конкретному исследованию у одного пациента
-// 2) Данные по всему пациенту по всем исследованиям
-// 3) Данные по всем пациентам и без исследований, и по всем исследованиям
-// 4) Не знает о том, что нужно выгружать, это задаётся опциями запроса, умеет только писать
 
 type OptionsParser interface {
 	ParseExportOptions(map[string]map[string]interface{}) error

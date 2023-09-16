@@ -1,0 +1,2 @@
+UPDATE formulas SET formula = '((0,0167*weight)^0.5)*(height^0.5)' WHERE id = '2f80780d-ab27-4657-bdf9-0110613c050e';
+UPDATE public.formulas SET formula = '((0.0167*weight)^0.5)*(height^0.5)' WHERE id = '2f80780d-ab27-4657-bdf9-0110613c050e';
