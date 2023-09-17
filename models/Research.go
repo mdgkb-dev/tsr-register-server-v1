@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -104,11 +105,11 @@ func (item *Research) GetQuestionsForExport() []interface{} {
 	questionsForExport := make([]interface{}, 0)
 	questionsForExport = append(questionsForExport, "Дата")
 
-	if item.WithScores {
-		questionsForExport = append(questionsForExport, "Всего баллов")
-		questionsForExport = append(questionsForExport, "Всего баллов по шкале")
-		return questionsForExport
-	}
+	// if item.WithScores {
+	// 	questionsForExport = append(questionsForExport, "Всего баллов")
+	// 	questionsForExport = append(questionsForExport, "Всего баллов по шкале")
+	// 	return questionsForExport
+	// }
 
 	for _, q := range item.Questions {
 		questionsForExport = append(questionsForExport, q.Name)
@@ -121,7 +122,9 @@ func (item *Research) GetQuestionsForExport() []interface{} {
 			questionsForExport = append(questionsForExport, "Результат")
 		}
 	}
-
+	if item.Name == "Рост-вес" {
+		fmt.Println("Длина роста-веса", len(questionsForExport))
+	}
 	return questionsForExport
 }
 
@@ -148,4 +151,18 @@ func (item *ResearchesExport) ParseExportOptions(options map[string]map[string]i
 		return errors.New("parse error")
 	}
 	return nil
+}
+
+func (item *Research) GetExportLen() int {
+// 	sum := len(item.Questions) + 1
+// 	for _, formula := range item.Formulas {
+// 		sum++
+// 		if len(formula.FormulaResults) > 0 {
+// 			sum++
+// 		}
+// 	}
+// 	if item.Name == "Рост-вес" {
+// 		fmt.Println("Длина роста-веса", sum)
+// 	}
+	return len(item.GetQuestionsForExport())
 }

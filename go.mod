@@ -1,6 +1,6 @@
 module mdgkb/tsr-tegister-server-v1
 
-go 1.18
+go 1.21
 
 require (
 	github.com/Pramod-Devireddy/go-exprtk v1.1.0

@@ -18,12 +18,12 @@ type IHandler interface {
 
 type IService interface {
 	basehandler.IServiceWithContext[models.PatientDomain, models.PatientsDomains, models.PatientsDomainsWithCount]
-	PatientInDomain(c context.Context, patientID string, domainID string) (bool, error)
+	PatientInDomain(c context.Context, patientID string) (bool, error)
 }
 
 type IRepository interface {
 	basehandler.IRepositoryWithContext[models.PatientDomain, models.PatientsDomains, models.PatientsDomainsWithCount]
-	PatientInDomain(c context.Context, patientID string, domainID string) (bool, error)
+	PatientInDomain(c context.Context, patientID string) (bool, error)
 }
 
 type IFilesService interface {

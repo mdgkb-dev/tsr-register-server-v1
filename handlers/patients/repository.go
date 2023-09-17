@@ -118,7 +118,8 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 		}).
 		Relation("Commissions.CommissionsDoctors.Doctor").
 		Relation("Commissions.PatientDiagnosis.MkbItem").
-		Relation("Anamneses")
+		Relation("Anamneses").
+		Order("patients_view.full_name")
 	if len(idPool) > 0 {
 		query = query.Where("?TableAlias.id in (?)", bun.In(idPool))
 	}

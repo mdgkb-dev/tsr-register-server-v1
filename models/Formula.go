@@ -1,6 +1,8 @@
 package models
 
 import (
+	"math"
+
 	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -60,7 +62,12 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 		}
 	}
 	value := m.GetEvaluatedValue()
-	results = append(results, value)
+	if math.IsNaN(value) {
+		results = append(results, "Ошибка в рассчёте")
+	} else {
+		results = append(results, value)
+	}
+		
 
 	if len(item.FormulaResults) > 0 {
 		result := item.GetResult(value)

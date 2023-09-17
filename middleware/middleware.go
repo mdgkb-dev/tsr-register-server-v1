@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
 )
@@ -16,6 +18,7 @@ func CreateMiddleware(helper *helper.Helper) *Middleware {
 func (m *Middleware) InjectRequestInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := Claims{ClaimUserID, ClaimDomainIDS}.Inject(c.Request, m.helper.Token)
+		fmt.Println(err)
 		if m.helper.HTTP.HandleError(c, err) {
 			return
 		}

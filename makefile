@@ -10,7 +10,7 @@ else
 	main := cmd/server/main.go
 endif
 
-run: migrate set_git_hooks_dir
+run: migrate set_git_hooks_dir read_logs
 	reflex -r '\.go' -s -- sh -c "go run $(main)"
 
 set_git_hooks_dir:
@@ -41,6 +41,9 @@ deploy:
 
 lint:
 	./cmd/golangci.sh
+
+read_logs:
+	tail -f ./logs/info/_actual.log ./logs/errors/_actual.log
 
 #####
 #GIT#

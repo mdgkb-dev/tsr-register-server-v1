@@ -40,9 +40,11 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) GetAll(c *gin.Context) {
 	items, err := h.service.GetAll(c.Request.Context())
+
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
+
 	c.JSON(http.StatusOK, items)
 }
 
@@ -58,18 +60,14 @@ func (h *Handler) Get(c *gin.Context) {
 func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 	snils := c.Param("snils")
 
-	//ctx, err := models.User{}.InjectClaims(c.Request, h.helper.Token)
-	//if h.helper.HTTP.HandleError(c, err) {
-	//	return
-	//}
-	item, existsInUserDomain, err := h.service.GetBySnilsNumber(context.Background(), snils)
+	item, existsInDomain, err := h.service.GetBySnilsNumber(c.Request.Context(), snils)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	c.JSON(http.StatusOK, struct {
-		Item               *models.Patient `json:"item"`
-		ExistsInUserDomain bool            `json:"existsInUserDomain"`
-	}{Item: item, ExistsInUserDomain: existsInUserDomain})
+		Item           *models.Patient `json:"item"`
+		ExistsInDomain bool            `json:"existsInDomain"`
+	}{Item: item, ExistsInDomain: existsInDomain})
 }
 
 func (h *Handler) Delete(c *gin.Context) {

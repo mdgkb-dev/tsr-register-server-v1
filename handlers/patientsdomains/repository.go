@@ -2,7 +2,11 @@ package patientsdomains
 
 import (
 	"context"
+	"fmt"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/uptrace/bun"
 	// _ "github.com/go-pg/pg/v10/orm"
 )
 
@@ -28,10 +32,11 @@ func (r *Repository) Get(c context.Context, slug string) (*models.PatientDomain,
 	return &item, err
 }
 
-func (r *Repository) PatientInDomain(c context.Context, patientID string, domainID string) (bool, error) {
+func (r *Repository) PatientInDomain(c context.Context, patientID string) (bool, error) {
+	fmt.Println("domains", middleware.ClaimDomainIDS.FromContextSlice(c))
 	return r.helper.DB.IDB(c).NewSelect().Model((*models.PatientDomain)(nil)).
 		Where("?TableAlias.patient_id = ?", patientID).
-		Where("?TableAlias.domain_id = ?", domainID).
+		Where("?TableAlias.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c))).
 		Exists(r.ctx)
 }
 

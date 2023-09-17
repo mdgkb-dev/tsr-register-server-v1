@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"mdgkb/tsr-tegister-server-v1/loggerhelper"
 	"mdgkb/tsr-tegister-server-v1/migrations"
@@ -12,6 +13,9 @@ import (
 	"github.com/pro-assistance/pro-assister/config"
 	helperPack "github.com/pro-assistance/pro-assister/helper"
 	"github.com/sirupsen/logrus"
+
+	"net/http"
+	_ "net/http/pprof"
 )
 
 func main() {
@@ -28,5 +32,10 @@ func main() {
 	router.Use(loggerhelper.LoggingMiddleware(logger))
 	routing.Init(router, helper)
 	helper.DB.DB.AddQueryHook(logrusbun.NewQueryHook(logrusbun.QueryHookOptions{Logger: logger, ErrorLevel: logrus.ErrorLevel, QueryLevel: logrus.DebugLevel}))
+
+	go func() {
+		fmt.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+
 	helper.Run(migrations.Init(), router)
 }
