@@ -1,8 +1,7 @@
 package models
 
 import (
-	"fmt"
-	"time"
+	"mdgkb/tsr-tegister-server-v1/helpers/writers"
 
 	"github.com/google/uuid"
 	"github.com/pro-assistance/pro-assister/pdfHelper"
@@ -20,35 +19,16 @@ type PDFWriter struct {
 	PDF             *pdfHelper.PDFHelper
 }
 
-func NormalizeExportData(data interface{}) interface{} {
-	switch d := data.(type) {
-	case string:
-		return d
-	case int, uint:
-		return d.(int)
-	case float64:
-		return fmt.Sprintf("%.2f", d)
-	case float32:
-		fmt.Print(d)
-		return fmt.Sprintf("%.2f", d)
-	case *time.Time:
-		return d.Format("02.01.2006")
-	case time.Time:
-		return d.Format("02.01.2006")
-	}
-	return data
-}
-
-func (item *PDFWriter) WriteFile(headers [][]interface{}, data [][]interface{}) ([]byte, error) {
+func (item *PDFWriter) WriteFile(headers [][]interface{},  _ Agregator, data [][]interface{}) ([]byte, error) {
 
 	for lineN := range headers {
 		for colN := range headers[lineN] {
-			headers[lineN][colN] = NormalizeExportData(headers[lineN][colN])
+			headers[lineN][colN] = writers.GetNormalizedData(headers[lineN][colN])
 		}
 	}
 	for lineN := range data {
 		for colN := range data[lineN] {
-			data[lineN][colN] = NormalizeExportData(data[lineN][colN])
+			data[lineN][colN] = writers.GetNormalizedData(data[lineN][colN])
 		}
 	}
 	return item.PDF.GeneratePDF("patientResearch", struct {

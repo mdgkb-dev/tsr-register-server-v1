@@ -1,10 +1,6 @@
 package models
 
 import (
-	"fmt"
-	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
-	"sort"
-
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -23,8 +19,8 @@ type ResearchQueryGroup struct {
 
 	Order int `bun:"item_order" json:"order"`
 
-	AggregateType        AggregateType `json:"aggregateType"`
-	AggregatedProperties Questions     `bun:"rel:has-many" json:"aggregatedProperties"`
+	// AggregateType        AggregateType `json:"aggregateType"`
+	// AggregatedProperties Questions     `bun:"rel:has-many" json:"aggregatedProperties"`
 
 	CountSum        bool `json:"countSum"`
 	CountPercentage bool `json:"countPercentage"`
@@ -51,89 +47,89 @@ func (item *ResearchQueryGroup) GetResultFromData(prop *Question, result *Resear
 }
 
 func (item *ResearchQueryGroup) getAggregatedData(question *Question, result *ResearchResult) string {
-	if item.AggregateType == AggregateNone {
-		if question.ValueType.IsSet() {
-			return question.AnswerVariants.Include(result.Answers)
-		}
-		//if len(result.Answers) > 0 {
-		//	return result.GetData(question)
-		//}
-	}
-	if item.AggregateType == AggregateExisting {
-		if item.Research.ResearchResults != nil && item.PatientIndex < len(item.Research.ResearchResults) {
-			return result.GetAggregateExistingData()
-		}
-	}
+	// if item.AggregateType == AggregateNone {
+	// 	if question.ValueType.IsSet() {
+	// 		return question.AnswerVariants.Include(result.Answers)
+	// 	}
+	// 	//if len(result.Answers) > 0 {
+	// 	//	return result.GetData(question)
+	// 	//}
+	// }
+	// if item.AggregateType == AggregateExisting {
+	// 	if item.Research.ResearchResults != nil && item.PatientIndex < len(item.Research.ResearchResults) {
+	// 		return result.GetAggregateExistingData()
+	// 	}
+	// }
 	return ""
 }
 
-func (item *ResearchQueryGroup) GetAggregatedPercentage() {
-	sum := float64(0)
-	for k, v := range item.AggregatedValues {
-		sum += v
-		item.RegisterQueryPercentages = append(item.RegisterQueryPercentages, &ResearchQueryPercentage{k, v})
-	}
-	sort.Slice(item.RegisterQueryPercentages, func(i, j int) bool {
-		return item.RegisterQueryPercentages[i].Value > item.RegisterQueryPercentages[j].Value
-	})
-}
+// func (item *ResearchQueryGroup) GetAggregatedPercentage() {
+// 	sum := float64(0)
+// 	for k, v := range item.AggregatedValues {
+// 		sum += v
+// 		item.RegisterQueryPercentages = append(item.RegisterQueryPercentages, &ResearchQueryPercentage{k, v})
+// 	}
+// 	sort.Slice(item.RegisterQueryPercentages, func(i, j int) bool {
+// 		return item.RegisterQueryPercentages[i].Value > item.RegisterQueryPercentages[j].Value
+// 	})
+// }
 
-func (items ResearchQueryGroups) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
-	for i := range items {
-		items[i].writeXlsxHeader(xl)
-	}
-}
+// func (items ResearchQueryGroups) writeXlsxHeader(xl *writers.XlsxHelper) {
+// 	for i := range items {
+// 		items[i].writeXlsxHeader(xl)
+// 	}
+// }
 
-func (item *ResearchQueryGroup) writeXlsxHeader(xl *xlsxhelper.XlsxHelper) {
-	xl.WriteString(1, xl.Cursor, &[]string{item.Name})
-	if item.AggregateType == AggregateNone {
-		item.ResearchQueryGroupQuestions.writeXlsxHeader(xl)
-	} else {
-		xl.WriteString(1, xl.Cursor, &[]string{item.Name})
-		xl.Cursor++
-	}
-}
+// func (item *ResearchQueryGroup) writeXlsxHeader(xl *writers.XlsxHelper) {
+// 	xl.WriteString(1, xl.Cursor, &[]string{item.Name})
+// 	// if item.AggregateType == AggregateNone {
+// 	// 	item.ResearchQueryGroupQuestions.writeXlsxHeader(xl)
+// 	// } else {
+// 	// 	xl.WriteString(1, xl.Cursor, &[]string{item.Name})
+// 	// 	xl.Cursor++
+// 	// }
+// }
 
-func (items ResearchQueryGroups) writeXlsxData(xl *xlsxhelper.XlsxHelper, patientID uuid.NullUUID) {
-	for i := range items {
-		result := items[i].Research.GetResultByPatientID(patientID)
-		items[i].writeXlsxData(xl, result)
-		items[i].PatientIndex++
-	}
-}
+// func (items ResearchQueryGroups) writeXlsxData(xl *writers.XlsxHelper, patientID uuid.NullUUID) {
+// 	for i := range items {
+// 		result := items[i].Research.GetResultByPatientID(patientID)
+// 		items[i].writeXlsxData(xl, result)
+// 		items[i].PatientIndex++
+// 	}
+// }
 
-func (item *ResearchQueryGroup) writeXlsxData(xl *xlsxhelper.XlsxHelper, result *ResearchResult) {
-	if item.AggregateType == AggregateNone {
-		item.ResearchQueryGroupQuestions.writeXlsxData(xl, item, result)
-	}
-	if item.AggregateType == AggregateExisting {
-		res := item.GetResultFromData(nil, result)
-		str := fmt.Sprintf("%v", res)
-		item.writePercentage(str)
-		xl.Data = append(xl.Data, str)
-	}
-}
+// func (item *ResearchQueryGroup) writeXlsxData(xl *writers.XlsxHelper, result *ResearchResult) {
+// 	// if item.AggregateType == AggregateNone {
+// 	// 	item.ResearchQueryGroupQuestions.writeXlsxData(xl, item, result)
+// 	// }
+// 	// if item.AggregateType == AggregateExisting {
+// 	// 	res := item.GetResultFromData(nil, result)
+// 	// 	str := fmt.Sprintf("%v", res)
+// 	// 	item.writePercentage(str)
+// 	// 	xl.Data = append(xl.Data, str)
+// 	// }
+// }
 
-func (item *ResearchQueryGroup) writePercentage(key string) {
-	_, ok := item.AggregatedValues[key]
-	if ok {
-		item.AggregatedValues[key]++
-	} else {
-		item.AggregatedValues[key] = 1
-	}
-}
+// func (item *ResearchQueryGroup) writePercentage(key string) {
+// 	_, ok := item.AggregatedValues[key]
+// 	if ok {
+// 		item.AggregatedValues[key]++
+// 	} else {
+// 		item.AggregatedValues[key] = 1
+// 	}
+// }
 
-func (items ResearchQueryGroups) writeAggregates(xl *xlsxhelper.XlsxHelper) {
-	for i := range items {
-		items[i].writeAggregates(xl)
-	}
-}
+// func (items ResearchQueryGroups) writeAggregates(xl *writers.XlsxHelper) {
+// 	for i := range items {
+// 		items[i].writeAggregates(xl)
+// 	}
+// }
 
-func (item *ResearchQueryGroup) writeAggregates(xl *xlsxhelper.XlsxHelper) {
-	if item.AggregateType == AggregateNone {
-		item.ResearchQueryGroupQuestions.writeAggregates(xl)
-	}
-	if item.AggregateType == AggregateExisting {
-		item.AggregateType.WriteAggregatedValues(xl, item.AggregatedValues)
-	}
-}
+// func (item *ResearchQueryGroup) writeAggregates(xl *writers.XlsxHelper) {
+// 	// if item.AggregateType == AggregateNone {
+// 	// 	item.ResearchQueryGroupQuestions.writeAggregates(xl)
+// 	// }
+// 	// if item.AggregateType == AggregateExisting {
+// 	// 	item.AggregateType.WriteAggregatedValues(xl, item.AggregatedValues)
+// 	// }
+// }

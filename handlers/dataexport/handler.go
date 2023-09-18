@@ -37,12 +37,12 @@ func (h *Handler) Export(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	exportData, err := patientsForExport.Patients.GetExportData(researchesForExport)
+	exportData, agregator, err := patientsForExport.Patients.GetExportData(researchesForExport)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
 	exporter := exportOptions.ExportType.GetExporter(h.helper)
-	file, err := exporter.WriteFile(headers, exportData)
+	file, err := exporter.WriteFile(headers, agregator, exportData)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

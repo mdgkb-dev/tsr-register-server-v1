@@ -1,6 +1,10 @@
 package models
 
-import "github.com/pro-assistance/pro-assister/helper"
+import (
+	"fmt"
+
+	"github.com/pro-assistance/pro-assister/helper"
+)
 
 type ExportOptions struct {
 	ExportType ExportType `json:"exportType"`
@@ -17,7 +21,24 @@ const (
 )
 
 type FileWriter interface {
-	WriteFile([][]interface{}, [][]interface{}) ([]byte, error)
+	WriteFile([][]interface{}, Agregator, [][]interface{}) ([]byte, error)
+}
+
+type Agregator struct {
+	Count []int
+	Sums  []float64
+}
+
+func (item *Agregator) GetAverage(i int) interface{} {
+	if item.Count[i] == 0 {
+		return ""
+	}
+	fmt.Println("res", item.Sums[i], item.Count[i])
+	return item.Sums[i] / float64(item.Count[i])
+}
+
+func NewAgregator(lenght int) Agregator {
+	return Agregator{Count: make([]int, lenght), Sums: make([]float64, lenght)}
 }
 
 func (item ExportType) GetExporter(helper *helper.Helper) FileWriter {

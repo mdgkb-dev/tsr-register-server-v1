@@ -2,8 +2,6 @@ package meta
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/models/schema"
-
 	"github.com/pro-assistance/pro-assister/helper"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +14,6 @@ type IHandler interface {
 
 type IService interface {
 	GetCount(*string) (*int, error)
-	GetSchema() schema.Schema
 }
 
 type IRepository interface {

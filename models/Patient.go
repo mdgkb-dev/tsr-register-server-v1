@@ -103,16 +103,36 @@ func (item *Patient) SetDeleteIDForChildren() {
 	}
 }
 
-func (items Patients) GetExportData(researches Researches) ([][]interface{}, error) {
+func (items Patients) GetExportData(researches Researches) ([][]interface{}, Agregator, error) {
 	dataLines := make([][]interface{}, 0)
+	agregator := NewAgregator(researches.GetExportLen() + 2)
 	for _, patient := range items {
 		patientData, err := patient.GetExportData(researches)
 		if err != nil {
-			return nil, err
+			return nil, agregator, err
 		}
 		dataLines = append(dataLines, patientData...)
+
+		for _, researchResult := range patientData {
+			for answerIdx, answer := range researchResult {
+				switch v := answer.(type) {
+				case int:
+					agregator.Sums[answerIdx] += float64(v)
+					agregator.Count[answerIdx]++
+				case float64:
+					agregator.Sums[answerIdx] += v
+					agregator.Count[answerIdx]++
+				case float32:
+					agregator.Sums[answerIdx] += float64(v)
+					agregator.Count[answerIdx]++
+				}
+
+			}
+
+		}
 	}
-	return dataLines, nil
+
+	return dataLines, agregator, nil
 }
 
 func (item *Patient) GetExportData(researches Researches) ([][]interface{}, error) {

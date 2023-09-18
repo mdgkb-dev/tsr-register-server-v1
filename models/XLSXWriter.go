@@ -1,7 +1,7 @@
 package models
 
 import (
-	"mdgkb/tsr-tegister-server-v1/helpers/xlsxhelper"
+	"mdgkb/tsr-tegister-server-v1/helpers/writers"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -15,10 +15,10 @@ type XLSXWriter struct {
 
 	WithAge         bool `json:"withAge"`
 	CountAverageAge bool `json:"countAverageAge"`
-	Xl              *xlsxhelper.XlsxHelper
+	Xl              *writers.XlsxHelper
 }
 
-func (item *XLSXWriter) setStyle(xl *xlsxhelper.XlsxHelper) {
+func (item *XLSXWriter) setStyle(xl *writers.XlsxHelper) {
 	xl.Cursor = 3
 	//height := 6 + len(item.ResearchesPool.RegisterToPatient)
 	//xl.SetBorder(height)
@@ -26,8 +26,8 @@ func (item *XLSXWriter) setStyle(xl *xlsxhelper.XlsxHelper) {
 	//xl.AutofitAllColumns()
 }
 
-func (item *XLSXWriter) WriteFile(headers [][]interface{}, data [][]interface{}) ([]byte, error) {
-	item.Xl = xlsxhelper.NewXlsxHelper()
+func (item *XLSXWriter) WriteFile(headers [][]interface{}, agregator Agregator, data [][]interface{}) ([]byte, error) {
+	item.Xl = writers.NewXlsxHelper()
 	item.Xl.CreateFile()
 
 	for lineN, line := range headers {
@@ -36,11 +36,19 @@ func (item *XLSXWriter) WriteFile(headers [][]interface{}, data [][]interface{})
 		}
 	}
 
-	headerLinesLen := len(headers)
+	headerLinesLen := len(headers) + 1
 	for lineN, line := range data {
 		for colN, d := range line {
 			item.Xl.WriteCell(headerLinesLen+lineN+1, colN, d)
 		}
+	}
+	dataLinesLen := len(data) + 1
+	for i := range agregator.Sums {
+		if i == 0 {
+			item.Xl.WriteCell(dataLinesLen+headerLinesLen, i, "Средние значения:")
+			continue
+		}
+		item.Xl.WriteCell(dataLinesLen+headerLinesLen, i, agregator.GetAverage(i))
 	}
 
 	return item.Xl.WriteFile()

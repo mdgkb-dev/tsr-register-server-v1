@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -122,9 +121,6 @@ func (item *Research) GetQuestionsForExport() []interface{} {
 			questionsForExport = append(questionsForExport, "Результат")
 		}
 	}
-	if item.Name == "Рост-вес" {
-		fmt.Println("Длина роста-веса", len(questionsForExport))
-	}
 	return questionsForExport
 }
 
@@ -154,15 +150,13 @@ func (item *ResearchesExport) ParseExportOptions(options map[string]map[string]i
 }
 
 func (item *Research) GetExportLen() int {
-// 	sum := len(item.Questions) + 1
-// 	for _, formula := range item.Formulas {
-// 		sum++
-// 		if len(formula.FormulaResults) > 0 {
-// 			sum++
-// 		}
-// 	}
-// 	if item.Name == "Рост-вес" {
-// 		fmt.Println("Длина роста-веса", sum)
-// 	}
 	return len(item.GetQuestionsForExport())
+}
+
+func (items Researches) GetExportLen() int {
+	sum := 0
+	for i := range items {
+		sum += items[i].GetExportLen()
+	}
+	return sum
 }

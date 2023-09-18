@@ -10,7 +10,7 @@ else
 	main := cmd/server/main.go
 endif
 
-run: migrate set_git_hooks_dir read_logs
+run: migrate set_git_hooks_dir
 	reflex -r '\.go' -s -- sh -c "go run $(main)"
 
 set_git_hooks_dir:

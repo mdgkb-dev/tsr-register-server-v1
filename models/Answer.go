@@ -119,6 +119,12 @@ func (items Answers) GetAnswerFiles() AnswerFiles {
 	return itemsForGet
 }
 
+const (
+	Yes    string = "Да"
+	No     string = "Нет"
+	NoData string = "Нет данных"
+)
+
 func (items Answers) GetAnswerFilesForDelete() []uuid.UUID {
 	itemsForGet := make([]uuid.UUID, 0)
 	if len(items) == 0 {

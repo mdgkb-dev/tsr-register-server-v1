@@ -1,7 +1,9 @@
 package models
 
 import (
+	"fmt"
 	"math"
+	"mdgkb/tsr-tegister-server-v1/helpers/writers"
 
 	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
@@ -49,6 +51,7 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 	}
 	err := m.CompileExpression()
 	if err != nil {
+		fmt.Println(err, item.Formula, variables)
 		return results, err
 	}
 	for k, v := range variables {
@@ -62,17 +65,17 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 		}
 	}
 	value := m.GetEvaluatedValue()
+	fmt.Println("value", value)
 	if math.IsNaN(value) {
 		results = append(results, "Ошибка в рассчёте")
 	} else {
 		results = append(results, value)
 	}
-		
 
 	if len(item.FormulaResults) > 0 {
 		result := item.GetResult(value)
 		if result != nil {
-			results = append(results, result.Name)
+			results = append(results, writers.NewDataWithStyle(result.Name, writers.Style{Color: result.Color}))
 		} else {
 			results = append(results, "")
 		}
