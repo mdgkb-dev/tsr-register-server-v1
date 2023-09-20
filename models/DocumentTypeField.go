@@ -15,6 +15,7 @@ type DocumentTypeField struct {
 	ValueType   *ValueType    `bun:"rel:belongs-to" json:"valueType"`
 	ValueTypeID uuid.NullUUID `bun:"type:uuid" json:"valueTypeId"`
 
+	DocumentType   *DocumentType `bun:"rel:belongs-to" json:"documentType"`
 	DocumentTypeID uuid.NullUUID `bun:"type:uuid" json:"documentTypeID"`
 }
 
