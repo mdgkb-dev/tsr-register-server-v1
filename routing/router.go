@@ -7,6 +7,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
+	"mdgkb/tsr-tegister-server-v1/handlers/customsections"
 	"mdgkb/tsr-tegister-server-v1/handlers/dataexport"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
 	"mdgkb/tsr-tegister-server-v1/handlers/doctors"
@@ -41,6 +42,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/representatives"
 	"mdgkb/tsr-tegister-server-v1/middleware"
+	customsectionsRouter "mdgkb/tsr-tegister-server-v1/routing/customsections"
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
 	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
 
@@ -141,6 +143,9 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	menus.Init(helper)
 	menusRouter.Init(api.Group("/menus"), menus.H)
+
+	customsections.Init(helper)
+	customsectionsRouter.Init(api.Group("/custom-sections"), menus.H)
 
 	questions.Init(helper)
 	questionsRouter.Init(api.Group("/questions"), questions.H)
