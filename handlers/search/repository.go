@@ -27,13 +27,13 @@ func (r *Repository) getGroups(groupID string) (search.SearchGroups, error) {
 func (r *Repository) search(searchModel *search.SearchModel) error {
 	querySelect := fmt.Sprintf("SELECT %s as value, %s as label", searchModel.SearchGroup.ValueColumn, searchModel.SearchGroup.LabelColumn)
 	queryFrom := fmt.Sprintf("FROM %s", searchModel.SearchGroup.Table)
-	search := searchModel.Query
-	if searchModel.MustBeTranslate {
-		search = r.helper.Util.TranslitToRu(searchModel.Query)
-	}
-	queryWhere := r.helper.SQL.WhereLikeWithLowerTranslit(searchModel.SearchGroup.SearchColumn, search)
+
+	condition := fmt.Sprintf("where regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+searchModel.Query+"%'")
+	conditionTranslitToRu := fmt.Sprintf("or regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+r.helper.Util.TranslitToRu(searchModel.Query)+"%'")
+	conditionTranslitToEng := fmt.Sprintf("or regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+r.helper.Util.TranslitToEng(searchModel.Query)+"%'")
+
 	queryOrder := fmt.Sprintf("ORDER BY %s", searchModel.SearchGroup.LabelColumn)
-	query := fmt.Sprintf("%s %s %s %s", querySelect, queryFrom, queryWhere, queryOrder)
+	query := fmt.Sprintf("%s %s %s %s %s %s", querySelect, queryFrom, condition, conditionTranslitToRu, conditionTranslitToEng, queryOrder)
 	rows, err := r.db().QueryContext(r.ctx, query)
 	if err != nil {
 		return err
