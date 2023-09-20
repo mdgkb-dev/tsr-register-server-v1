@@ -37,8 +37,8 @@ func (item *Agregator) GetAverage(i int) interface{} {
 	return item.Sums[i] / float64(item.Count[i])
 }
 
-func NewAgregator(lenght int) Agregator {
-	return Agregator{Count: make([]int, lenght), Sums: make([]float64, lenght)}
+func NewAgregator(length int) Agregator {
+	return Agregator{Count: make([]int, length), Sums: make([]float64, length)}
 }
 
 func (item ExportType) GetExporter(helper *helper.Helper) FileWriter {

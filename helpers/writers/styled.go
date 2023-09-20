@@ -35,7 +35,6 @@ func GetNormalizedData(data interface{}) interface{} {
 	case time.Time:
 		return d.Format("02.01.2006")
 	case DataWithStyle:
-
 	}
 
 	return data

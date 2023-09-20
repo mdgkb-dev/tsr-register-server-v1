@@ -145,7 +145,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	menusRouter.Init(api.Group("/menus"), menus.H)
 
 	customsections.Init(helper)
-	customsectionsRouter.Init(api.Group("/custom-sections"), menus.H)
+	customsectionsRouter.Init(api.Group("/custom-sections"), customsections.H)
 
 	questions.Init(helper)
 	questionsRouter.Init(api.Group("/questions"), questions.H)
