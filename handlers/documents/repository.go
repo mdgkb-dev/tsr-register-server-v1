@@ -38,6 +38,7 @@ func (r *Repository) Get(slug string) (*models.Document, error) {
 	item := models.Document{}
 	err := r.DB().NewSelect().Model(&item).
 		Relation("DocumentFieldValues.DocumentTypeField.ValueType").
+		Relation("DocumentFieldValues.DocumentTypeField.DocumentType").
 		Relation("DocumentFileInfos.FileInfo").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)
