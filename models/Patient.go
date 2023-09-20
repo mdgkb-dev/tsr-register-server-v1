@@ -126,9 +126,7 @@ func (items Patients) GetExportData(researches Researches) ([][]interface{}, Agr
 					agregator.Sums[answerIdx] += float64(v)
 					agregator.Count[answerIdx]++
 				}
-
 			}
-
 		}
 	}
 
@@ -183,12 +181,10 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 		}
 
 		for resultIDX, answers := range patientResearchResults {
-
 			for answerIDX, answer := range answers {
 				patientData[resultIDX][answerIDX+startColIdx] = answer
 			}
 		}
-
 	}
 	return patientData, nil
 }
