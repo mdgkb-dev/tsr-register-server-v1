@@ -61,4 +61,4 @@ values  ('a15b29ec-3bb0-4d6c-bcb0-a4cd9bbe3894', '408eae9d-043d-4fed-ae88-51f27c
         ('a5deb733-f2fd-41fc-a482-96976e401c87', '408eae9d-043d-4fed-ae88-51f27c508ad1', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949'),
         ('96d9f363-870c-46e8-833f-c33517d3b52f', '343a7237-f28b-4f16-99e2-4bdcd6b78f8b', 'b9d7b8a5-d155-4dd5-8040-83c2648f0949');
 
-        UPDATE public.users_accounts SET password = '$2a$10$r3AlsAUhJZASy028tu6GcuitOp6vkL9xKszP1FV/RQ2ZdNagKHKW6' WHERE id = '5ea58a1c-0671-4df6-b46b-72242641fbbb'
+        UPDATE public.users_accounts SET password = '$2a$10$r3AlsAUhJZASy028tu6GcuitOp6vkL9xKszP1FV/RQ2ZdNagKHKW6' WHERE id = '4a8aae81-abd1-433f-bd80-14729f95bf66';
