@@ -17,7 +17,7 @@ func (r *Repository) Create(c context.Context, item *models.CustomSection) (err 
 func (r *Repository) GetAll(c context.Context) (item models.CustomSectionsWithCount, err error) {
 	item.CustomSections = make(models.CustomSections, 0)
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item.CustomSections)
-	
+
 	query.Join("join custom_sections_domains on custom_sections_domains.custom_section_id = custom_sections.id and custom_sections_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)

@@ -80,11 +80,13 @@ func (items Researches) GetExportData() [][]interface{} {
 	//researchNames := researches[0]
 	//researchQuestions := researches[1]
 
-	researches[0] = append(researches[0], "ФИО")
-	researches[0] = append(researches[0], "Дата рождения")
+	if len(researches) > 0 {
+		researches[0] = append(researches[0], "ФИО")
+		researches[0] = append(researches[0], "Дата рождения")
 
-	researches[1] = append(researches[1], "")
-	researches[1] = append(researches[1], "")
+		researches[1] = append(researches[1], "")
+		researches[1] = append(researches[1], "")
+	}
 
 	for _, research := range items {
 		questionsForExport := research.GetQuestionsForExport()

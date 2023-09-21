@@ -34,7 +34,7 @@ func (r *Repository) GetAll() (item models.StatusesWithCount, err error) {
 	return item, err
 }
 
-func (r *Repository) Get(slug string) (*models.Status, error) {
+func (r *Repository) Get(_ string) (*models.Status, error) {
 	item := models.Status{}
 	err := r.DB().NewSelect().Model(&item).
 		Relation("Status").

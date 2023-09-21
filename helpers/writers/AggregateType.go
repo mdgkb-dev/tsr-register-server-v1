@@ -33,7 +33,7 @@ const (
 // 	if item == AggregateAverage {
 // 		r = append(r, &ResearchQueryPercentage{Key: "Среднее значение", Value: sum / float64(len(aggregatedValues))})
 // 	}
-// 	return 
+// 	return
 // }
 
 // func (item AggregateType) WriteAggregatedValues(xl *writers.XlsxHelper, aggregatedValues map[string]float64) {

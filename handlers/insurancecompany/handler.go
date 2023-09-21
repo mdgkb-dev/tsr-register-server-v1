@@ -28,7 +28,6 @@ func (h *Handler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
-//
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
 	item, err := h.service.Get(&id)

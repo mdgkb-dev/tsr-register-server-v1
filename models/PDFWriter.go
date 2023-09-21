@@ -19,8 +19,7 @@ type PDFWriter struct {
 	PDF             *pdfHelper.PDFHelper
 }
 
-func (item *PDFWriter) WriteFile(headers [][]interface{},  _ Agregator, data [][]interface{}) ([]byte, error) {
-
+func (item *PDFWriter) WriteFile(headers [][]interface{}, _ Agregator, data [][]interface{}) ([]byte, error) {
 	for lineN := range headers {
 		for colN := range headers[lineN] {
 			headers[lineN][colN] = writers.GetNormalizedData(headers[lineN][colN])

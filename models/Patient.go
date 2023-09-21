@@ -152,7 +152,9 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 		if len(patientResearchResults) > len(patientData) {
 			newLines := make([][]interface{}, len(patientResearchResults)-len(patientData))
 			for i := range newLines {
-				newLines[i] = append(newLines[i], make([]interface{}, len(patientData[0]))...)
+				if len(patientData) > 0 {
+					newLines[i] = append(newLines[i], make([]interface{}, len(patientData[0]))...)
+				}
 			}
 			patientData = append(patientData, newLines...)
 		}

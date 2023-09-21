@@ -21,7 +21,7 @@ type ModelInfo struct {
 	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
-func (item *ModelInfo) FillModelInfoUpdate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) error {
+func (item *ModelInfo) FillModelInfoUpdate(_ *gin.Context, _ *tokenHelper.TokenHelper) error {
 	//userID, err := tokenHelper.GetUserID(c)
 	//if err != nil {
 	//	return err

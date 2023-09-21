@@ -46,7 +46,7 @@ func (item *ResearchQueryGroup) GetResultFromData(prop *Question, result *Resear
 	return item.getAggregatedData(prop, result)
 }
 
-func (item *ResearchQueryGroup) getAggregatedData(question *Question, result *ResearchResult) string {
+func (item *ResearchQueryGroup) getAggregatedData(_ *Question, _ *ResearchResult) string {
 	// if item.AggregateType == AggregateNone {
 	// 	if question.ValueType.IsSet() {
 	// 		return question.AnswerVariants.Include(result.Answers)
