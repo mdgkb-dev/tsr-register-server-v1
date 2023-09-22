@@ -139,7 +139,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
 
 	humans.Init(helper)
-	humansRouter.Init(api.Group("/humans"), patientsdomains.H)
+	humansRouter.Init(api.Group("/humans"), humans.H)
 
 	menus.Init(helper)
 	menusRouter.Init(api.Group("/menus"), menus.H)

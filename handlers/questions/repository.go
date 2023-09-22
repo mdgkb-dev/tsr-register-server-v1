@@ -21,7 +21,7 @@ func (r *Repository) GetAll(c context.Context) (items models.QuestionsWithCount,
 		Model(&items.Questions).
 		Relation("AnswerVariants")
 
-	query.Join("join mkb_questions_domains qd on qd.question_id = questions.id and qd.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	query.Join("join questions_domains qd on qd.question_id = questions.id and qd.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 
 	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
 	if ok {

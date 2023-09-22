@@ -1,7 +1,7 @@
 package humans
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/humans"
 
 	"github.com/gin-gonic/gin"
 )
