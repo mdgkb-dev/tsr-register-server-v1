@@ -1,4 +1,4 @@
-package patientdiagnosis
+package drugregimens
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -8,12 +8,12 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.PatientDiagnosis
+	var item models.DrugRegimen
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Create(&item)
+	err = h.service.Create(c.Request.Context(), &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -21,11 +21,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	err := h.service.SetQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	items, err := h.service.GetAll()
+	items, err := h.service.GetAll(c.Request.Context())
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -33,7 +29,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 }
 
 func (h *Handler) Get(c *gin.Context) {
-	item, err := h.service.Get(c.Param("id"))
+	item, err := h.service.Get(c, c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -41,7 +37,7 @@ func (h *Handler) Get(c *gin.Context) {
 }
 
 func (h *Handler) Delete(c *gin.Context) {
-	err := h.service.Delete(c.Param("id"))
+	err := h.service.Delete(c, c.Param("id"))
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -49,13 +45,13 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.PatientDiagnosis
+	var item models.DrugRegimen
 	_, err := h.helper.HTTP.GetForm(c, &item)
 
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Update(&item)
+	err = h.service.Update(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

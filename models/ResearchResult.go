@@ -35,6 +35,16 @@ type ResearchResultsWithCount struct {
 	Count           int             `json:"count"`
 }
 
+func (items ResearchResults) GetLastResult() *ResearchResult {
+	var lastResult *ResearchResult
+	for i := range items {
+		if lastResult == nil || lastResult.Date.Before(*items[i].Date) {
+			lastResult = items[i]
+		}
+	}
+	return lastResult
+}
+
 func (items ResearchResults) SetFilePath(fileID *string) *string {
 	for i := range items {
 		path := items[i].SetFilePath(fileID)
@@ -238,4 +248,26 @@ func (item *ResearchResult) GetXlsxData(research *Research) ([]interface{}, erro
 	}
 	result = append(result, resultFormulas...)
 	return result, nil
+}
+
+func (item *ResearchResult) GetResultsMap(questions Questions) map[string]interface{} {
+	variables := make(map[string]interface{})
+	for _, q := range questions {
+		answer := item.GetData(q)
+		variables[q.Code] = answer
+	}
+	return variables
+}
+
+func (item *ResearchResult) GetAnthropometry() (uint, uint) {
+	height, weight := 0, 0
+	for _, answer := range item.Answers {
+		if answer.Question.Code == string(AnthropomethryKeyHeight) {
+			height = int(answer.ValueNumber)
+		}
+		if answer.Question.Code == string(AnthropomethryKeyWeight) {
+			weight = int(answer.ValueNumber)
+		}
+	}
+	return uint(height), uint(weight)
 }

@@ -28,6 +28,13 @@ type Research struct {
 
 type Researches []*Research
 
+type AnthropomethryKeys string
+
+const (
+	AnthropomethryKeyWeight AnthropomethryKeys = "weight"
+	AnthropomethryKeyHeight AnthropomethryKeys = "height"
+)
+
 func (item *Research) SetIDForChildren() {
 	if len(item.Questions) == 0 {
 		return

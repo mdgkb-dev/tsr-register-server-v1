@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"math"
 	"mdgkb/tsr-tegister-server-v1/helpers/writers"
 
@@ -45,27 +44,7 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 	if !item.Xlsx {
 		return results, nil
 	}
-	m.SetExpression(item.Formula)
-	for k := range variables {
-		m.AddDoubleVariable(k)
-	}
-	err := m.CompileExpression()
-	if err != nil {
-		fmt.Println(err, item.Formula, variables)
-		return results, err
-	}
-	for k, v := range variables {
-		switch v := v.(type) {
-		case float32:
-			m.SetDoubleVariableValue(k, float64(v))
-		case float64:
-			m.SetDoubleVariableValue(k, v)
-		case int:
-			m.SetDoubleVariableValue(k, float64(int64(v)))
-		}
-	}
-	value := m.GetEvaluatedValue()
-	fmt.Println("value", value)
+	value := item.Calculate(variables, m)
 	if math.IsNaN(value) {
 		results = append(results, "Ошибка в рассчёте")
 	} else {
@@ -82,6 +61,28 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 	}
 
 	return results, nil
+}
+
+func (item *Formula) Calculate(variables map[string]interface{}, m exprtk.GoExprtk) float64 {
+	m.SetExpression(item.Formula)
+	for k := range variables {
+		m.AddDoubleVariable(k)
+	}
+	err := m.CompileExpression()
+	if err != nil {
+		return math.NaN()
+	}
+	for k, v := range variables {
+		switch v := v.(type) {
+		case float32:
+			m.SetDoubleVariableValue(k, float64(v))
+		case float64:
+			m.SetDoubleVariableValue(k, v)
+		case int:
+			m.SetDoubleVariableValue(k, float64(int64(v)))
+		}
+	}
+	return m.GetEvaluatedValue()
 }
 
 func (item *Formula) GetResult(value float64) (result *FormulaResult) {

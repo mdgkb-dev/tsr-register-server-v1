@@ -13,9 +13,11 @@ type Drug struct {
 	DrugRegimens  DrugRegimens  `bun:"rel:has-many" json:"drugRegimens"`
 	DrugForms     DrugForms     `bun:"rel:has-many" json:"drugForms"`
 
-	DrugsDiagnosis          DrugsDiagnosis `bun:"rel:has-many" json:"drugsDiagnosis"`
-	DrugsDiagnosisForDelete []uuid.UUID    `bun:"-" json:"drugsDiagnosisForDelete"`
+	DrugsDiagnosis DrugsDiagnosis `bun:"rel:has-many" json:"drugsDiagnosis"`
+
+	DrugsDiagnosisForDelete []uuid.UUID `bun:"-" json:"drugsDiagnosisForDelete"`
 }
+
 type Drugs []*Drug
 type DrugsWithCount struct {
 	Drugs Drugs `json:"items"`
@@ -23,11 +25,6 @@ type DrugsWithCount struct {
 }
 
 func (item *Drug) SetIDForChildren() {
-	if len(item.DrugRegimens) > 0 {
-		for i := range item.DrugRegimens {
-			item.DrugRegimens[i].DrugID = item.ID
-		}
-	}
 	if len(item.DrugsDiagnosis) > 0 {
 		for i := range item.DrugsDiagnosis {
 			item.DrugsDiagnosis[i].DrugID = item.ID

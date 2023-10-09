@@ -22,6 +22,8 @@ type PatientDiagnosis struct {
 	PatientDiagnosisAnamnesisForDelete []string      `bun:"-" json:"patientDiagnosisAnamnesisForDelete"`
 }
 
+type PatientDiagnoses []*PatientDiagnosis
+
 type PatientDiagnosisWithCount struct {
 	PatientDiagnosis []*PatientDiagnosis `json:"items"`
 	Count            int                 `json:"count"`

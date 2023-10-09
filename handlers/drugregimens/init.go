@@ -1,4 +1,4 @@
-package patientdiagnosis
+package drugregimens
 
 import (
 	"context"
@@ -14,11 +14,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.PatientDiagnosis, []*models.PatientDiagnosis, models.PatientDiagnosisWithCount]
+	basehandler.IServiceWithManyWithContext[models.DrugRegimen, models.DrugRegimens, models.DrugRegimensWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.PatientDiagnosis, []*models.PatientDiagnosis, models.PatientDiagnosisWithCount]
+	basehandler.IRepositoryWithManyWithContext[models.DrugRegimen, models.DrugRegimens, models.DrugRegimensWithCount]
 }
 
 type IFilesService interface {
@@ -44,6 +44,18 @@ type Repository struct {
 
 type FilesService struct {
 	helper *helper.Helper
+}
+
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

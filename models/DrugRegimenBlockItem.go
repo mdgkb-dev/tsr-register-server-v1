@@ -15,3 +15,5 @@ type DrugRegimenBlockItem struct {
 
 	DrugRegimenBlock *DrugRegimenBlock `bun:"rel:belongs-to" json:"drugRegimenBlock"`
 }
+
+type DrugRegimenBlockItems []*DrugRegimenBlockItem

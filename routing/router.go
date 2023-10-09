@@ -31,9 +31,9 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/menus"
 	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkbitems"
-	"mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patienthistories"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
+	"mdgkb/tsr-tegister-server-v1/handlers/patientsdiagnosis"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsrepresentatives"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearches"
@@ -81,9 +81,9 @@ import (
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insurancecompany"
 	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbItemsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbitems"
-	patientDiagnosisRouter "mdgkb/tsr-tegister-server-v1/routing/patientdiagnosis"
 	patientHistoriesRouter "mdgkb/tsr-tegister-server-v1/routing/patienthistories"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
+	patientsDiagnosisRouter "mdgkb/tsr-tegister-server-v1/routing/patientsdiagnosis"
 	patientsdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsdomains"
 	patientsRepresentativesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsrepresentatives"
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
@@ -134,7 +134,10 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 	researchesResultsRouter.Init(api.Group("/researches-results"), researchesresults.CreateHandler(helper))
 	patientsResearchesRouter.Init(api.Group("/patients-researches"), patientsresearches.CreateHandler(helper))
-	patientDiagnosisRouter.Init(api.Group("/patient-diagnosis"), patientdiagnosis.CreateHandler(helper))
+
+	patientsdiagnosis.Init(helper)
+	patientsDiagnosisRouter.Init(api.Group("/patients-diagnosis"), patientsdiagnosis.H)
+
 	disabilitiesRouter.Init(api.Group("/disabilities"), disabilities.CreateHandler(helper))
 	edvsRouter.Init(api.Group("/edvs"), edvs.CreateHandler(helper))
 
@@ -183,5 +186,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	documentfieldvaluesRouter.Init(api.Group("/document-field-values"), documentfieldvalues.CreateHandler(helper))
 	documentfileinfosRouter.Init(api.Group("/document-file-infos"), documentfileinfos.CreateHandler(helper))
 	drugformsRouter.Init(api.Group("/drug-forms"), drugforms.CreateHandler(helper))
-	drugdozesRouter.Init(api.Group("/drug-dozes"), drugdozes.CreateHandler(helper))
+
+	drugdozes.Init(helper)
+	drugdozesRouter.Init(api.Group("/drug-dozes"), drugdozes.H)
 }

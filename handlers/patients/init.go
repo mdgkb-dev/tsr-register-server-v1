@@ -2,6 +2,7 @@ package patients
 
 import (
 	"context"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
@@ -15,11 +16,13 @@ import (
 type IHandler interface {
 	basehandler.IHandler
 	GetBySnilsNumber(c *gin.Context)
+	GetActualAnthropomethry(c *gin.Context)
 }
 
 type IService interface {
 	basehandler.IServiceWithContext[models.Patient, models.Patients, models.PatientsWithCount]
 	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Patient, bool, error)
+	GetActualAnthropomethry(c context.Context, patientId string) (uint, uint, *time.Time, error)
 }
 
 type IRepository interface {

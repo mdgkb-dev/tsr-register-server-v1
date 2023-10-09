@@ -12,11 +12,12 @@ type PatientDrugRegimen struct {
 	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Date          time.Time     `json:"date"`
 	PatientID     uuid.NullUUID `bun:"type:uuid" json:"patientId"`
-	DrugRegimenID uuid.UUID     `bun:"type:uuid" json:"drugRegimenId"`
-	DeletedAt     *time.Time    `bun:",soft_delete" json:"deletedAt"`
 
-	Patient     *Patient     `bun:"rel:belongs-to" json:"patient"`
-	DrugRegimen *DrugRegimen `bun:"rel:belongs-to" json:"drugRegimen"`
+	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
+	Patient   *Patient   `bun:"rel:belongs-to" json:"patient"`
+
+	DrugRegimen   *DrugRegimen `bun:"rel:belongs-to" json:"drugRegimen"`
+	DrugRegimenID uuid.UUID    `bun:"type:uuid" json:"drugRegimenId"`
 
 	PatientDrugRegimenItems []*PatientDrugRegimenItem `bun:"rel:has-many" json:"patientDrugRegimenItems"`
 }

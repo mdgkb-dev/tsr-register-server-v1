@@ -1,18 +1,14 @@
-package drugdozes
+package patientsdiagnosis
 
 import (
-	"fmt"
-	"math"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.DrugDoze
+	var item models.PatientDiagnosis
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
@@ -49,7 +45,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.DrugDoze
+	var item models.PatientDiagnosis
 	_, err := h.helper.HTTP.GetForm(c, &item)
 
 	if h.helper.HTTP.HandleError(c, err) {
@@ -60,31 +56,4 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{})
-}
-
-type DrugNeedingOptions struct {
-	Weight     uint          `json:"weight"`
-	Height     uint          `json:"height"`
-	Start      *time.Time    `json:"start"`
-	End        *time.Time    `json:"end"`
-	DrugDozeID uuid.NullUUID `json:"drugDozeId"`
-}
-
-func (h *Handler) CalculateNeeding(c *gin.Context) {
-	var item DrugNeedingOptions
-	_, err := h.helper.HTTP.GetForm(c, &item)
-
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	needing, err := S.CalculateNeeding(c, item)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	fmt.Println(needing)
-	if math.IsNaN(needing) {
-		c.JSON(http.StatusInternalServerError, "Не удалось сосчитать результат")
-		return
-	}
-	c.JSON(http.StatusOK, needing)
 }

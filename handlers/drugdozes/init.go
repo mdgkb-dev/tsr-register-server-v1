@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
@@ -11,14 +12,15 @@ import (
 
 type IHandler interface {
 	basehandler.IHandler
+	CalculateNeeding(с *gin.Context)
 }
 
 type IService interface {
-	basehandler.IService[models.DrugDoze, models.DrugDozes, models.DrugDozesWithCount]
+	basehandler.IServiceWithContext[models.DrugDoze, models.DrugDozes, models.DrugDozesWithCount]
 }
 
 type IRepository interface {
-	basehandler.IRepository[models.DrugDoze, models.DrugDozes, models.DrugDozesWithCount]
+	basehandler.IRepositoryWithContext[models.DrugDoze, models.DrugDozes, models.DrugDozesWithCount]
 }
 
 type IFilesService interface {
@@ -44,6 +46,18 @@ type Repository struct {
 
 type FilesService struct {
 	helper *helper.Helper
+}
+
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

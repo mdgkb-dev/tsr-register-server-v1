@@ -1,7 +1,7 @@
-package patientdiagnosis
+package patientsdiagnosis
 
 import (
-	handler "mdgkb/tsr-tegister-server-v1/handlers/patientdiagnosis"
+	handler "mdgkb/tsr-tegister-server-v1/handlers/patientsdiagnosis"
 
 	"github.com/gin-gonic/gin"
 )

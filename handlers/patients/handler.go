@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -68,6 +69,19 @@ func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 		Item           *models.Patient `json:"item"`
 		ExistsInDomain bool            `json:"existsInDomain"`
 	}{Item: item, ExistsInDomain: existsInDomain})
+}
+
+func (h *Handler) GetActualAnthropomethry(c *gin.Context) {
+	id := c.Param("id")
+	height, weight, date, err := S.GetActualAnthropomethry(c.Request.Context(), id)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, struct {
+		Weight uint       `json:"weight"`
+		Height uint       `json:"height"`
+		Date   *time.Time `json:"date"`
+	}{Weight: weight, Height: height, Date: date})
 }
 
 func (h *Handler) Delete(c *gin.Context) {

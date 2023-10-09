@@ -1,6 +1,7 @@
 package researchesresults
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/handlers/answers"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -54,4 +55,8 @@ func (s *Service) Delete(id string) error {
 func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
 	err = s.repository.SetQueryFilter(c)
 	return err
+}
+
+func (s *Service) GetActualAnthropomethryResult(c context.Context, patientID string) (*models.ResearchResult, error) {
+	return s.repository.GetActualAnthropomethryResult(c, patientID)
 }

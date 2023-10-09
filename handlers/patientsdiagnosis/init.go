@@ -1,4 +1,4 @@
-package researchesresults
+package patientsdiagnosis
 
 import (
 	"context"
@@ -14,12 +14,11 @@ type IHandler interface {
 }
 
 type IService interface {
-	basehandler.IService[models.ResearchResult, models.ResearchResults, models.ResearchResultsWithCount]
+	basehandler.IServiceWithContext[models.PatientDiagnosis, models.PatientDiagnoses, models.PatientDiagnosisWithCount]
 }
 
 type IRepository interface {
-	GetActualAnthropomethryResult(c context.Context, patientID string) (*models.ResearchResult, error)
-	basehandler.IRepository[models.ResearchResult, models.ResearchResults, models.ResearchResultsWithCount]
+	basehandler.IRepositoryWithContext[models.PatientDiagnosis, models.PatientDiagnoses, models.PatientDiagnosisWithCount]
 }
 
 type IFilesService interface {
@@ -45,6 +44,18 @@ type Repository struct {
 
 type FilesService struct {
 	helper *helper.Helper
+}
+
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

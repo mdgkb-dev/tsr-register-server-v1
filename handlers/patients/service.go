@@ -4,6 +4,8 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"
+	"mdgkb/tsr-tegister-server-v1/handlers/researchesresults"
+	"time"
 
 	"mdgkb/tsr-tegister-server-v1/handlers/patientdrugregimen"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
@@ -89,4 +91,14 @@ func (s *Service) Delete(c context.Context, id string) error {
 		return err
 	}
 	return nil
+}
+
+func (s *Service) GetActualAnthropomethry(c context.Context, snils string) (uint, uint, *time.Time, error) {
+	item, err := researchesresults.CreateService(s.helper).GetActualAnthropomethryResult(c, snils)
+	if err != nil {
+		return 0, 0, nil, err
+	}
+	height, weight := item.GetAnthropometry()
+	return height, weight, item.Date, nil
+
 }

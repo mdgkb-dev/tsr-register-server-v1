@@ -39,6 +39,13 @@ func (r *Repository) Get(c context.Context, id string) (*models.Question, error)
 	return &item, err
 }
 
+func (r *Repository) GetAnthropometryQuestions(c context.Context) (models.Questions, error) {
+	items := make(models.Questions, 0)
+	err := r.helper.DB.IDB(c).NewSelect().Model(&items).
+		Where("?TableAlias.code in (?)", bun.In([]string{string(models.AnthropomethryKeyWeight), string(models.AnthropomethryKeyHeight)})).Scan(r.ctx)
+	return items, err
+}
+
 func (r *Repository) Delete(c context.Context, id string) (err error) {
 	_, err = r.helper.DB.IDB(c).NewDelete().Model(&models.Question{}).Where("id = ?", id).Exec(r.ctx)
 	return err

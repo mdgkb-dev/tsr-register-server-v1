@@ -1,6 +1,7 @@
 package researchesresults
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -52,4 +53,18 @@ func (r *Repository) Delete(id string) (err error) {
 func (r *Repository) Update(item *models.ResearchResult) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+func (r *Repository) GetActualAnthropomethryResult(c context.Context, patientID string) (*models.ResearchResult, error) {
+	item := models.ResearchResult{}
+	query := r.helper.DB.IDB(c).NewSelect().Model(&item).
+		Relation("Answers.Question").
+		Join("join patients_researches pr on  pr.id = ?TableAlias.patient_research_id").
+		Join("join researches r on r.id = pr.research_id").
+		Join("join questions q on q.research_id = r.id and q.code in (?)", bun.In([]string{string(models.AnthropomethryKeyWeight), string(models.AnthropomethryKeyHeight)})).
+		Order("research_results.item_date desc").
+		Where("pr.patient_id = ?", patientID).
+		Limit(1)
+	err := query.Scan(c)
+	return &item, err
 }

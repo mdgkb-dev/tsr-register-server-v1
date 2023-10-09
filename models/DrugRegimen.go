@@ -1,19 +1,27 @@
 package models
 
 import (
+	"fmt"
+	"time"
+
+	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
 
 type DrugRegimen struct {
 	bun.BaseModel `bun:"drug_regimens,alias:drug_regimens"`
-	ID            uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name          string        `json:"name"`
-	DrugID        uuid.NullUUID `bun:"type:uuid" json:"drugId"`
+	ID            uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name          string    `json:"name"`
 
-	Drug                       *Drug               `bun:"rel:belongs-to" json:"drug"`
-	DrugRegimenBlocks          []*DrugRegimenBlock `bun:"rel:has-many" json:"drugRegimenBlocks"`
-	DrugRegimenBlocksForDelete []string            `bun:"-" json:"drugRegimenBlocksForDelete"`
+	DrugDoze   *DrugDoze     `bun:"rel:belongs-to" json:"drugDoze"`
+	DrugDozeID uuid.NullUUID `bun:"type:uuid" json:"drugDozeId"`
+
+	DrugRegimenBlocks          DrugRegimenBlocks `bun:"rel:has-many" json:"drugRegimenBlocks"`
+	DrugRegimenBlocksForDelete []string          `bun:"-" json:"drugRegimenBlocksForDelete"`
+
+	MaxMonths *uint `json:"maxMonths"`
+	MaxWeight *uint `json:"maxWeight"`
 }
 
 type DrugRegimens []*DrugRegimen
@@ -52,4 +60,34 @@ func GetDrugRegimenBlocksForDelete(items []*DrugRegimen) []string {
 		itemsForGet = append(itemsForGet, items[i].DrugRegimenBlocksForDelete...)
 	}
 	return itemsForGet
+}
+
+func (item *DrugRegimen) CalculateNeeding(variables map[string]interface{}, start time.Time, end time.Time) float64 {
+	m := exprtk.NewExprtk()
+	// days := end.Sub(start).Hours() / 24
+	days := 180
+	fmt.Println("days", days, variables)
+	needing := item.DrugRegimenBlocks.CalculateNeeding(variables, m, uint(days))
+
+	return needing
+}
+
+func (items DrugRegimens) FindDrugRegimen(weight uint, months uint) *DrugRegimen {
+	for i := range items {
+		if items[i].CheckConditions(weight, months) {
+			return items[i]
+		}
+	}
+	return nil
+}
+
+func (item *DrugRegimen) CheckConditions(weight uint, months uint) bool {
+	if item.MaxMonths != nil && *item.MaxMonths < months {
+		return false
+	}
+
+	if item.MaxWeight != nil && *item.MaxWeight < weight {
+		return false
+	}
+	return true
 }

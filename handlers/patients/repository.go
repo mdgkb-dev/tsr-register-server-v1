@@ -128,3 +128,10 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 	err = query.Scan(c)
 	return items, err
 }
+
+func (r *Repository) GetAnthropometryQuestions(c context.Context) (models.Questions, error) {
+	items := make(models.Questions, 0)
+	err := r.helper.DB.IDB(c).NewSelect().Model(&items).
+		Where("?TableAlias.code in (?)").Scan(r.ctx)
+	return items, err
+}

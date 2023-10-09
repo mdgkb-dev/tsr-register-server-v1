@@ -22,8 +22,8 @@ type Patient struct {
 	PatientsRepresentativesForDelete []uuid.UUID             `bun:"-" json:"patientsRepresentativesForDelete"`
 	Disabilities                     Disabilities            `bun:"rel:has-many" json:"disabilities"`
 
-	PatientDiagnosis          []*PatientDiagnosis `bun:"rel:has-many" json:"patientDiagnosis"`
-	PatientDiagnosisForDelete []uuid.UUID         `bun:"-" json:"patientDiagnosisForDelete"`
+	PatientDiagnosis          PatientDiagnoses `bun:"rel:has-many" json:"patientDiagnosis"`
+	PatientDiagnosisForDelete []uuid.UUID      `bun:"-" json:"patientDiagnosisForDelete"`
 
 	PatientDrugRegimen          []*PatientDrugRegimen `bun:"rel:has-many" json:"patientDrugRegimen"`
 	PatientDrugRegimenForDelete []uuid.UUID           `bun:"-" json:"patientDrugRegimenForDelete"`

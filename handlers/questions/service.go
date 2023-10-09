@@ -34,6 +34,10 @@ func (s *Service) Update(c context.Context, item *models.Question) error {
 	return s.repository.Update(c, item)
 }
 
+func (s *Service) GetAnthropometryQuestions(c context.Context) (models.Questions, error) {
+	return R.GetAnthropometryQuestions(c)
+}
+
 func (s *Service) Delete(c context.Context, id string) error {
 	return s.repository.Delete(c, id)
 }

@@ -18,6 +18,7 @@ type DrugRecipe struct {
 	DrugDoze   *DrugDoze     `bun:"rel:belongs-to" json:"drugDoze"`
 	DrugDozeID uuid.NullUUID `bun:"type:uuid" json:"drugDozeId"`
 }
+
 type DrugRecipes []*DrugRecipe
 
 type DrugRecipesWithCount struct {

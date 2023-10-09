@@ -1,4 +1,4 @@
-package patientdiagnosis
+package patientsdiagnosis
 
 import (
 	"mime/multipart"
