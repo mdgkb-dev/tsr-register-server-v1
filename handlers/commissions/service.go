@@ -37,6 +37,7 @@ func (s *Service) Update(item *models.Commission) error {
 	if err != nil {
 		return err
 	}
+	item.SetIDForChildren()
 	err = commissionsdoctors.CreateService(s.helper).UpsertMany(item.CommissionsDoctors)
 	if err != nil {
 		return err
