@@ -61,3 +61,13 @@ func (h *Handler) Update(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{})
 }
+
+func (h *Handler) GetPatientResearch(c *gin.Context) {
+	patientId := c.Param("patientId")
+	researchId := c.Param("researchId")
+	item, err := h.service.GetPatientResearch(c.Request.Context(), patientId, researchId)
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, item)
+}

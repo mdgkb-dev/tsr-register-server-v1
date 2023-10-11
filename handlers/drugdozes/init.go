@@ -12,7 +12,7 @@ import (
 
 type IHandler interface {
 	basehandler.IHandler
-	CalculateNeeding(с *gin.Context)
+	CalculateNeeding(c *gin.Context)
 }
 
 type IService interface {

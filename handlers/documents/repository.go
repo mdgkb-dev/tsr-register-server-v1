@@ -40,6 +40,7 @@ func (r *Repository) Get(slug string) (*models.Document, error) {
 		Relation("DocumentFieldValues.DocumentTypeField.ValueType").
 		Relation("DocumentFieldValues.DocumentTypeField.DocumentType").
 		Relation("DocumentFileInfos.FileInfo").
+		Relation("DocumentType").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)
 	return &item, err

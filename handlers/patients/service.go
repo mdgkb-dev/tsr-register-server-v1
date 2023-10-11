@@ -100,5 +100,4 @@ func (s *Service) GetActualAnthropomethry(c context.Context, snils string) (uint
 	}
 	height, weight := item.GetAnthropometry()
 	return height, weight, item.Date, nil
-
 }

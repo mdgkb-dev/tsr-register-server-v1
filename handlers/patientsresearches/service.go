@@ -1,6 +1,7 @@
 package patientsresearches
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -41,4 +42,12 @@ func (s *Service) Delete(id string) error {
 func (s *Service) SetQueryFilter(c *gin.Context) (err error) {
 	err = s.repository.SetQueryFilter(c)
 	return err
+}
+
+func (s *Service) GetPatientResearch(c context.Context, patientId string, researchId string) (*models.PatientResearch, error) {
+	item, err := s.repository.GetPatientResearch(c, patientId, researchId)
+	if err != nil {
+		return nil, err
+	}
+	return item, nil
 }

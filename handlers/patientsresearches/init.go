@@ -4,6 +4,7 @@ import (
 	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
@@ -11,14 +12,17 @@ import (
 
 type IHandler interface {
 	basehandler.IHandler
+	GetPatientResearch(c *gin.Context)
 }
 
 type IService interface {
 	basehandler.IService[models.PatientResearch, models.PatientsResearches, models.PatientsResearchesWithCount]
+	GetPatientResearch(c context.Context, patientId string, researchId string) (*models.PatientResearch, error)
 }
 
 type IRepository interface {
 	basehandler.IRepository[models.PatientResearch, models.PatientsResearches, models.PatientsResearchesWithCount]
+	GetPatientResearch(c context.Context, patientId string, researchId string) (*models.PatientResearch, error)
 }
 
 type IFilesService interface {

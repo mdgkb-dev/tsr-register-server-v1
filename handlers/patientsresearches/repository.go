@@ -1,6 +1,7 @@
 package patientsresearches
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
@@ -37,7 +38,6 @@ func (r *Repository) GetAll() (item models.PatientsResearchesWithCount, err erro
 func (r *Repository) Get(slug string) (*models.PatientResearch, error) {
 	item := models.PatientResearch{}
 	err := r.DB().NewSelect().Model(&item).
-		Relation("Answers").
 		Where("?TableAlias.id = ?", slug).
 		Scan(r.ctx)
 	return &item, err
@@ -51,4 +51,15 @@ func (r *Repository) Delete(id string) (err error) {
 func (r *Repository) Update(item *models.PatientResearch) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
+}
+
+func (r *Repository) GetPatientResearch(c context.Context, patientId string, researchId string) (*models.PatientResearch, error) {
+	item := models.PatientResearch{}
+	err := r.helper.DB.IDB(c).NewSelect().Model(&item).
+		Relation("ResearchResults.Answers.SelectedAnswerVariants").
+		Relation("ResearchResults.Answers.AnswerFiles.FileInfo").
+		Where("?TableAlias.patient_id  = ?", patientId).
+		Where("?TableAlias.research_id = ?", researchId).
+		Scan(c)
+	return &item, err
 }
