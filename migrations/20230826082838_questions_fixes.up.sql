@@ -18,28 +18,27 @@ UPDATE questions SET item_order = 1 WHERE id = 'ddfdf3d0-cb10-4a17-a916-579b12a6
 
 
 
--- Только одно исследование с эпиздоами
-update research_results set patient_research_id = pr1.id
-from patients_researches pr
-         join patients_researches pr1 on pr.patient_id = pr1.patient_id and pr1.research_id ='e9f2300f-afb7-43e0-93b9-eb110edfa686'
-where pr.research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
+-- -- Только одно исследование с эпиздоами
+-- update research_results set patient_research_id = pr1.id from patients_researches pr 
+-- join patients_researches pr1 on pr.patient_id = pr1.patient_id and pr1.research_id ='e9f2300f-afb7-43e0-93b9-eb110edfa686'
+-- where pr.research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688' and research_results.patient_research_id = pr.id;
 
-delete from patients_researches where patients_researches.research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
-delete
-from anamneses_researches
-where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
+-- delete from patients_researches where patients_researches.research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
+-- delete
+-- from anamneses_researches
+-- where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
 
-delete from selected_answer_variants sav where sav.answer_variant_id in
-(select  s.id from answer_variants s
-where s.question_id in (select id from  questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688'));
+-- delete from selected_answer_variants sav where sav.answer_variant_id in
+-- (select  s.id from answer_variants s
+-- where s.question_id in (select id from  questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688'));
 
-delete from answer_variants s
-where s.question_id in (select id from  questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688');
+-- delete from answer_variants s
+-- where s.question_id in (select id from  questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688');
 
-delete from questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
+-- delete from questions where research_id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
 
 
-delete from researches where id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
+-- delete from researches where id = 'e9f2300f-afb7-43e0-93b9-eb110edfa688';
 
 insert into public.questions (id, name, item_order, value_type_id, with_other, with_dates, research_id, tag, short_name, col_width, age_compare, is_files_storage, code, calculate_scores, parent_id, comment, domain_id)
 values  ('84a53f45-2cfe-4adf-b127-17009e6a1e0b', 'Сканы', 0, '50dfc0a4-b260-4c63-b16f-4119e152037f', false, false, 'a105c091-09e0-4ea3-9eff-41de5c3a3b8c', null, null, null, null, null, null, null, null, null, null),

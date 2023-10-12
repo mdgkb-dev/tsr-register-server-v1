@@ -25,7 +25,7 @@ func (r *Repository) getGroups(groupID string) (search.SearchGroups, error) {
 }
 
 func (r *Repository) search(searchModel *search.SearchModel) error {
-	querySelect := fmt.Sprintf("SELECT %s as value, %s as label", searchModel.SearchGroup.ValueColumn, searchModel.SearchGroup.LabelColumn)
+	querySelect := fmt.Sprintf("SELECT %s as value, substring(%s for 40) as label", searchModel.SearchGroup.ValueColumn, searchModel.SearchGroup.LabelColumn)
 	queryFrom := fmt.Sprintf("FROM %s", searchModel.SearchGroup.Table)
 
 	condition := fmt.Sprintf("where regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+searchModel.Query+"%'")
