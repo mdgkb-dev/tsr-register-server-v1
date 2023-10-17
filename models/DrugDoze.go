@@ -12,7 +12,7 @@ type DrugDoze struct {
 	Quantity      float32       `json:"quantity"`
 
 	DrugDozeComponents DrugDozeComponents `bun:"rel:has-many" json:"drugComponents"`
-	DrugRegimens       DrugRegimens       `bun:"rel:has-many" json:"drugRegimenBlocks"`
+	DrugRegimens       DrugRegimens       `bun:"rel:has-many" json:"drugRegimen"`
 
 	DrugForm   *DrugForm     `bun:"rel:belongs-to" json:"drugForm"`
 	DrugFormID uuid.NullUUID `bun:"type:uuid" json:"drugFormId"`

@@ -1,8 +1,6 @@
 package drugdozes
 
 import (
-	"fmt"
-	"math"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 	"time"
@@ -79,11 +77,6 @@ func (h *Handler) CalculateNeeding(c *gin.Context) {
 	}
 	needing, err := S.CalculateNeeding(c, item)
 	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	fmt.Println(needing)
-	if math.IsNaN(needing) {
-		c.JSON(http.StatusInternalServerError, "Не удалось сосчитать результат")
 		return
 	}
 	c.JSON(http.StatusOK, needing)
