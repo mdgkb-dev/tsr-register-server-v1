@@ -11,6 +11,7 @@ import (
 type IHandler interface {
 	GetCount(c *gin.Context)
 	GetSchema(c *gin.Context)
+	GetAddress(c *gin.Context)
 }
 
 type IService interface {

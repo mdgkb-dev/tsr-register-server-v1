@@ -42,6 +42,9 @@ type Patient struct {
 	IsMale    string `bun:"-" json:"isMale"`
 	DateBirth string `bun:"-" json:"dateBirth"`
 
+	IsMoscow bool `json:"isMoscow"`
+	Agreed   bool `json:"agreed"`
+
 	Anamneses Anamneses `bun:"rel:has-many" json:"anamneses"`
 }
 
