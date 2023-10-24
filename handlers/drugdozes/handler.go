@@ -61,11 +61,14 @@ func (h *Handler) Update(c *gin.Context) {
 }
 
 type DrugNeedingOptions struct {
-	Weight     uint          `json:"weight"`
-	Height     uint          `json:"height"`
-	Start      *time.Time    `json:"start"`
-	End        *time.Time    `json:"end"`
-	DrugDozeID uuid.NullUUID `json:"drugDozeId"`
+	PatientID       uuid.NullUUID `json:"patientId,omitempty"`
+	CommissionID    uuid.NullUUID `json:"commissionId,omitempty"`
+	Weight          uint          `json:"weight,omitempty"`
+	Height          uint          `json:"height,omitempty"`
+	MonthsFromBirth uint          `json:"montsFromBirth,omitempty"`
+	Start           *time.Time    `json:"start,omitempty"`
+	End             *time.Time    `json:"end,omitempty"`
+	DrugDozeID      uuid.NullUUID `json:"drugDozeId,omitempty"`
 }
 
 func (h *Handler) CalculateNeeding(c *gin.Context) {
@@ -75,7 +78,7 @@ func (h *Handler) CalculateNeeding(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	needing, err := S.CalculateNeeding(c, item)
+	needing, err := S.CalculateNeeding(c.Request.Context(), item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

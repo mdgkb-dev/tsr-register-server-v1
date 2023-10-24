@@ -2,7 +2,10 @@ package drugdozes
 
 import (
 	"context"
-	"errors"
+	"fmt"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugneedings"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugregimens"
+	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/models"
 )
 
@@ -43,14 +46,27 @@ func (s *Service) CalculateNeeding(c context.Context, opts DrugNeedingOptions) (
 	if err != nil {
 		return nil, err
 	}
-	drugRegimen := drugDoze.DrugRegimens.FindDrugRegimen(30, 24)
-	if drugRegimen == nil {
-		return nil, errors.New("подходящий режим приёма не найдет. проверьте данные")
+	fmt.Println("drugDOze:", drugDoze)
+	patient, err := patients.S.Get(c, opts.PatientID.UUID.String())
+	if err != nil {
+		return nil, err
 	}
+	fmt.Println("patient:", patient)
+	drugRegimen, err := drugregimens.S.GetByParameters(c, opts.DrugDozeID, patient.Human.GetMonthsFromBirth(), opts.Weight)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println("drugRegimen:", drugRegimen)
 	variablesMap := map[string]interface{}{string(models.AnthropomethryKeyWeight): opts.Weight, string(models.AnthropomethryKeyHeight): opts.Height}
-	quantity := drugRegimen.CalculateNeeding(variablesMap, *opts.Start, *opts.End)
+
+	packsNeeding := drugRegimen.CalculateNeeding(variablesMap, uint(opts.End.Sub(*opts.Start).Hours()/24), drugDoze.GetActiveComponentsSum())
 
 	drugNeeding := models.DrugNeeding{}
-	drugNeeding.Init(drugRegimen, uint(quantity), uint(quantity/drugDoze.GetActiveComponentsSum()), "24 гр 12 фл")
+	// packs := uint( / quantity)
+	// fmt.Println("packs", packs)
+	drugNeeding.Init(drugRegimen, uint(packsNeeding*float64(drugDoze.Quantity)), uint(packsNeeding))
+	drugNeeding.Weight = opts.Weight
+	drugNeeding.AgeInMonths = patient.Human.GetMonthsFromBirth()
+	drugneedings.S.Create(c, &drugNeeding)
 	return &drugNeeding, nil
 }

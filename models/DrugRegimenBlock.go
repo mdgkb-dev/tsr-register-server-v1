@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+
 	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -32,20 +34,24 @@ func (item *DrugRegimenBlock) SetIDForChildren() {
 	}
 }
 
-func (items DrugRegimenBlocks) CalculateNeeding(variables map[string]interface{}, m exprtk.GoExprtk, daysQuantity uint) float64 {
+func (items DrugRegimenBlocks) CalculateNeeding(variables map[string]interface{}, daysQuantity uint, measuresInPack float64) float64 {
 	sum := float64(0)
+	fmt.Println("days", daysQuantity, variables)
+	m := exprtk.NewExprtk()
 	for i := range items {
-		sum += items[i].CalculateNeeding(variables, m, daysQuantity)
+		sum += items[i].CalculateNeeding(variables, m, daysQuantity, measuresInPack)
 	}
 	return sum
 }
 
-func (item *DrugRegimenBlock) CalculateNeeding(variables map[string]interface{}, m exprtk.GoExprtk, daysQuantity uint) float64 {
+func (item *DrugRegimenBlock) CalculateNeeding(variables map[string]interface{}, m exprtk.GoExprtk, daysQuantity uint, measuresInPack float64) float64 {
 	blockQuantity := item.Formula.Calculate(variables, m)
+	fmt.Println("block:", blockQuantity, item.Formula.Formula, measuresInPack)
 	if daysQuantity == 0 {
 		return blockQuantity * float64(daysQuantity)
 	}
-	return float64(daysQuantity) * blockQuantity
+	fmt.Println("block:", measuresInPack/blockQuantity, float64(daysQuantity), (measuresInPack / blockQuantity))
+	return float64(daysQuantity) / (measuresInPack / blockQuantity)
 }
 
 func GetDrugRegimenBlockItems(items []*DrugRegimenBlock) []*DrugRegimenBlockItem {

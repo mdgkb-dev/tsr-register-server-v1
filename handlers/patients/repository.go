@@ -113,11 +113,6 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
-		Relation("Commissions", func(q *bun.SelectQuery) *bun.SelectQuery {
-			return q.Order("commissions.number")
-		}).
-		Relation("Commissions.CommissionsDoctors.Doctor").
-		Relation("Commissions.PatientDiagnosis.MkbItem").
 		Relation("Anamneses").
 		Order("patients_view.full_name")
 	if len(idPool) > 0 {

@@ -144,3 +144,9 @@ func (item *Human) ageFromDateOfBirth() int {
 func (item *Human) GetFormattedDateBirth() string {
 	return item.DateBirth.Format("02.01.2006")
 }
+
+func (item *Human) GetMonthsFromBirth() uint {
+    currentTime := time.Now()
+    diff := currentTime.Sub(*item.DateBirth)
+	return uint(diff.Hours() / 24/ 30)
+}

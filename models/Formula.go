@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"math"
 	"mdgkb/tsr-tegister-server-v1/helpers/writers"
 
@@ -64,6 +65,7 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 }
 
 func (item *Formula) Calculate(variables map[string]interface{}, m exprtk.GoExprtk) float64 {
+
 	m.SetExpression(item.Formula)
 	for k := range variables {
 		m.AddDoubleVariable(k)
@@ -80,7 +82,12 @@ func (item *Formula) Calculate(variables map[string]interface{}, m exprtk.GoExpr
 			m.SetDoubleVariableValue(k, v)
 		case int:
 			m.SetDoubleVariableValue(k, float64(int64(v)))
+		case uint:
+			m.SetDoubleVariableValue(k, float64(v))
+		default:
+			fmt.Println(v, "unknown")
 		}
+
 	}
 	return m.GetEvaluatedValue()
 }

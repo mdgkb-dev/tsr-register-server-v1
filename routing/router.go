@@ -20,7 +20,9 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/drugdecreases"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugdozes"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugforms"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugneedings"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugrecipes"
+	"mdgkb/tsr-tegister-server-v1/handlers/drugregimens"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugs"
 	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
 	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
@@ -70,6 +72,8 @@ import (
 	drugarrivesRouter "mdgkb/tsr-tegister-server-v1/routing/drugarrives"
 	drugdecreasesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdecreases"
 	drugdozesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdozes"
+	drugneedingsRouter "mdgkb/tsr-tegister-server-v1/routing/drugneedings"
+	drugregimensRouter "mdgkb/tsr-tegister-server-v1/routing/drugregimens"
 	drugformsRouter "mdgkb/tsr-tegister-server-v1/routing/drugforms"
 	drugrecipesRouter "mdgkb/tsr-tegister-server-v1/routing/drugrecipes"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
@@ -189,4 +193,11 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	drugdozes.Init(helper)
 	drugdozesRouter.Init(api.Group("/drug-dozes"), drugdozes.H)
+	
+
+	drugneedings.Init(helper)
+	drugneedingsRouter.Init(api.Group("/drug-needings"), drugdozes.H)
+
+	drugregimens.Init(helper)
+	drugregimensRouter.Init(api.Group("/drug-regimens"), drugdozes.H)
 }

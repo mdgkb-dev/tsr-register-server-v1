@@ -53,6 +53,7 @@ func (r *Repository) Get(id string) (*models.Commission, error) {
 		Relation("DrugRecipe.Drug").
 		Relation("DrugRecipe.DrugForm").
 		Relation("DrugRecipe.DrugDoze").
+		Relation("DrugNeeding.DrugRegimen").
 		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	if err != nil {
 		return nil, err

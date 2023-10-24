@@ -2,6 +2,7 @@ package drugregimens
 
 import (
 	"context"
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
@@ -33,6 +34,28 @@ func (r *Repository) Get(c context.Context, id string) (*models.DrugRegimen, err
 	err := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Relation("DrugRegimenBlocks").
 		Where("?TableAlias.id = ?", id).
+		Scan(r.ctx)
+	return &item, err
+}
+
+func (r *Repository) GetByParameters(c context.Context, drugDozeID uuid.NullUUID, months uint, weight uint) (*models.DrugRegimen, error) {
+	fmt.Println(months, weight)
+	item := models.DrugRegimen{}
+	err := r.helper.DB.IDB(c).NewSelect().Model(&item).
+		Relation("DrugRegimenBlocks.Formula").
+		Where("?TableAlias.drug_doze_id = ?", drugDozeID.UUID.String()).
+		WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.
+				WhereOr("?TableAlias.months_range @> ?::numeric", months).
+				WhereOr("isempty(?TableAlias.months_range)").
+				WhereOr("?TableAlias.months_range is null")
+		}).
+		WhereGroup(" AND ", func(q *bun.SelectQuery) *bun.SelectQuery {
+			return q.
+				WhereOr("?TableAlias.weight_range @> ?::numeric", weight).
+				WhereOr("isempty(?TableAlias.weight_range)").
+				WhereOr("?TableAlias.weight_range is null")
+		}).
 		Scan(r.ctx)
 	return &item, err
 }

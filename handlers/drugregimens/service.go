@@ -80,5 +80,9 @@ func (s *Service) Get(c context.Context, slug string) (*models.DrugRegimen, erro
 }
 
 func (s *Service) Delete(c context.Context, id string) error {
-	return s.repository.Delete(c, id)
+	return R.Delete(c, id)
+}
+
+func (r *Service) GetByParameters(c context.Context, drugDozeID uuid.NullUUID, months uint, weight uint) (*models.DrugRegimen, error) {
+	return R.GetByParameters(c, drugDozeID, months, weight)
 }

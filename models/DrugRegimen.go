@@ -2,9 +2,7 @@ package models
 
 import (
 	"fmt"
-	"time"
 
-	"github.com/Pramod-Devireddy/go-exprtk"
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -62,13 +60,9 @@ func GetDrugRegimenBlocksForDelete(items []*DrugRegimen) []string {
 	return itemsForGet
 }
 
-func (item *DrugRegimen) CalculateNeeding(variables map[string]interface{}, start time.Time, end time.Time) float64 {
-	m := exprtk.NewExprtk()
-	// days := end.Sub(start).Hours() / 24
-	days := 180
-	fmt.Println("days", days, variables)
-	needing := item.DrugRegimenBlocks.CalculateNeeding(variables, m, uint(days))
-
+func (item *DrugRegimen) CalculateNeeding(variables map[string]interface{}, periodInDays uint, measuresInPack float64) float64 {
+	needing := item.DrugRegimenBlocks.CalculateNeeding(variables, periodInDays, measuresInPack)
+	fmt.Println("needing:", needing)
 	return needing
 }
 
@@ -82,6 +76,10 @@ func (items DrugRegimens) FindDrugRegimen(weight uint, months uint) *DrugRegimen
 }
 
 func (item *DrugRegimen) CheckConditions(weight uint, months uint) bool {
+	if item != nil {
+		fmt.Println(weight, months, *item.MaxMonths, *item.MaxWeight, item.Name)
+	}
+
 	if item.MaxMonths != nil && *item.MaxMonths < months {
 		return false
 	}

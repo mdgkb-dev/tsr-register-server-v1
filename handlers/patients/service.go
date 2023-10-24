@@ -93,8 +93,8 @@ func (s *Service) Delete(c context.Context, id string) error {
 	return nil
 }
 
-func (s *Service) GetActualAnthropomethry(c context.Context, snils string) (uint, uint, *time.Time, error) {
-	item, err := researchesresults.CreateService(s.helper).GetActualAnthropomethryResult(c, snils)
+func (s *Service) GetActualAnthropomethry(c context.Context, patientID string) (uint, uint, *time.Time, error) {
+	item, err := researchesresults.CreateService(s.helper).GetActualAnthropomethryResult(c, patientID)
 	if err != nil {
 		return 0, 0, nil, err
 	}
