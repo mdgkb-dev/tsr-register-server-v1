@@ -6,8 +6,6 @@ values ('4519b19c-f7f7-42f4-922e-cc0b7c4ef33d','Режим дозировани�
 
 ALTER TABLE drug_regimen_blocks add column times_per_day integer;
 ALTER TABLE drug_regimen_blocks add column days_count integer;
-ALTER TABLE drug_regimen_blocks add column infinitely boolean;
-ALTER TABLE drug_regimen_blocks add column every_day boolean;
 
 
 
@@ -32,7 +30,3 @@ WHERE id in ('f1280302-c48a-4fe9-b099-0472bb1ef736', 'f1280302-c48a-4fe9-b099-04
 drop table drug_regimen_block_items;
 
 UPDATE drug_dozes set quantity = 12 where id = 'c8f40f93-7f02-4ba7-ad11-937765802125';
-
-
-
-SELECT * FROM drug_regimen_blocks;
