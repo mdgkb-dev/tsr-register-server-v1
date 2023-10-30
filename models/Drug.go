@@ -6,7 +6,7 @@ import (
 )
 
 type Drug struct {
-	bun.BaseModel `bun:"drugs,alias:drugs"`
+	bun.BaseModel `bun:"drugs,select:drugs_view,alias:drugs_view"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name          string        `json:"name"`
 	NameINN       string        `bun:"name_inn" json:"nameINN"`
@@ -31,3 +31,5 @@ func (item *Drug) SetIDForChildren() {
 		}
 	}
 }
+
+
