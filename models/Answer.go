@@ -157,6 +157,19 @@ func (item *Answer) GetData(q *Question) interface{} {
 		}
 		return res
 	}
+	if q.ValueType.IsSet() {
+		res := ""
+		for _, v := range item.SelectedAnswerVariants {
+			res += v.AnswerVariant.Name + "; "
+		}
+		// for _, radio := range q.AnswerVariants {
+		// if radio.ID == item.AnswerVariantID {
+		// 	res = radio.Name
+		// 	break
+		// }
+		// }
+		return res
+	}
 	return ""
 }
 

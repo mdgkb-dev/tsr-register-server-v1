@@ -90,7 +90,11 @@ func (items Researches) GetExportData() [][]interface{} {
 	if len(researches) > 0 {
 		researches[0] = append(researches[0], "ФИО")
 		researches[0] = append(researches[0], "Дата рождения")
+		researches[0] = append(researches[0], "Возраст")
+		researches[0] = append(researches[0], "Возраст в месяцах")
 
+		researches[1] = append(researches[1], "")
+		researches[1] = append(researches[1], "")
 		researches[1] = append(researches[1], "")
 		researches[1] = append(researches[1], "")
 	}

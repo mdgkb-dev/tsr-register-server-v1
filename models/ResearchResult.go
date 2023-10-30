@@ -202,7 +202,6 @@ func (item *ResearchResult) GetScores(q *Question) int {
 		if answer.QuestionID == q.ID {
 			for _, radio := range q.AnswerVariants {
 				if radio.ID == answer.AnswerVariantID {
-					fmt.Println(radio.Score)
 					sumScores += radio.Score
 					break
 				}
@@ -239,6 +238,12 @@ func (item *ResearchResult) GetXlsxData(research *Research) ([]interface{}, erro
 	variables := make(map[string]interface{})
 	for _, q := range research.Questions {
 		answer := item.GetData(q)
+		for _, childQuestion := range q.Children {
+			childAns := item.GetData(childQuestion)
+			if childAns != nil && childAns != "" && childAns != No {
+				answer = fmt.Sprintf("%s (%s)", answer, childAns)
+			}
+		}
 		result = append(result, answer)
 		variables[q.Code] = answer
 	}

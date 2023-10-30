@@ -110,7 +110,7 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 		Relation("PatientDiagnosis.MkbItem").
 		Relation("PatientDiagnosis.Anamneses").
 		Relation("PatientsResearchesPools.ResearchesPool").
-		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants").
+		Relation("PatientsResearches.ResearchResults.Answers.SelectedAnswerVariants.AnswerVariant").
 		Relation("PatientsRegisters.Register").
 		Relation("PatientsRegisters.User").
 		Relation("Anamneses").

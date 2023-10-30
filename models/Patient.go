@@ -3,6 +3,8 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -162,7 +164,7 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 			patientData = append(patientData, newLines...)
 		}
 		if researchIdx == 0 {
-			startColIdx = 2
+			startColIdx = 4
 		} else {
 			startColIdx = len(patientData[0])
 		}
@@ -173,10 +175,16 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 					patientData[i] = append(patientData[i], item.Human.GetFullName())
 					if item.Human.DateBirth != nil {
 						patientData[i] = append(patientData[i], item.Human.DateBirth.Format("02.01.2006"))
+						patientData[i] = append(patientData[i], item.GetAge())
+						patientData[i] = append(patientData[i], item.GetAgeInMonths())
 					} else {
+						patientData[i] = append(patientData[i], "")
+						patientData[i] = append(patientData[i], "")
 						patientData[i] = append(patientData[i], "")
 					}
 				} else {
+					patientData[i] = append(patientData[i], []interface{}{""})
+					patientData[i] = append(patientData[i], []interface{}{""})
 					patientData[i] = append(patientData[i], []interface{}{""})
 					patientData[i] = append(patientData[i], []interface{}{""})
 				}
@@ -230,4 +238,61 @@ func (item *PatientsExport) ParseExportOptions(options map[string]map[string]int
 	}
 
 	return nil
+}
+
+func (item *Patient) GetAge() string {
+	y, m, _, _, _, _ := diff(*item.Human.DateBirth, time.Now())
+	return fmt.Sprintf("%dг %d мес", y, m)
+}
+
+func (item *Patient) GetAgeInMonths() string {
+	y, m, _, _, _, _ := diff(*item.Human.DateBirth, time.Now())
+	return fmt.Sprintf("%d", y*12+m)
+}
+
+func diff(a, b time.Time) (year, month, day, hour, min, sec int) {
+	if a.Location() != b.Location() {
+		b = b.In(a.Location())
+	}
+	if a.After(b) {
+		a, b = b, a
+	}
+	y1, M1, d1 := a.Date()
+	y2, M2, d2 := b.Date()
+
+	h1, m1, s1 := a.Clock()
+	h2, m2, s2 := b.Clock()
+
+	year = int(y2 - y1)
+	month = int(M2 - M1)
+	day = int(d2 - d1)
+	hour = int(h2 - h1)
+	min = int(m2 - m1)
+	sec = int(s2 - s1)
+
+	// Normalize negative values
+	if sec < 0 {
+		sec += 60
+		min--
+	}
+	if min < 0 {
+		min += 60
+		hour--
+	}
+	if hour < 0 {
+		hour += 24
+		day--
+	}
+	if day < 0 {
+		// days in month:
+		t := time.Date(y1, M1, 32, 0, 0, 0, 0, time.UTC)
+		day += 32 - t.Day()
+		month--
+	}
+	if month < 0 {
+		month += 12
+		year--
+	}
+
+	return
 }
