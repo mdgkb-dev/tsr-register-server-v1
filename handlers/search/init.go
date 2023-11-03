@@ -20,7 +20,7 @@ type IHandler interface {
 
 type IService interface {
 	SearchMain(*search.SearchModel) error
-	SearchObjects(*search.SearchModel) error
+	SearchObjects(context.Context, *search.SearchModel) error
 	SearchGroups() (search.SearchGroups, error)
 	Search(*search.SearchModel) error
 }
@@ -28,7 +28,7 @@ type IService interface {
 type IRepository interface {
 	db() *bun.DB
 	getGroups(string) (search.SearchGroups, error)
-	search(*search.SearchModel) error
+	search(context.Context,*search.SearchModel) error
 	elasticSearch(*search.SearchModel) error
 	elasticSuggester(*search.SearchModel) error
 }
