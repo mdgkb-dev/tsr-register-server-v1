@@ -75,6 +75,8 @@ func (r *Repository) GetBySnilsNumber(c context.Context, snillsNumber string) (*
 	item := models.Patient{}
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Relation("Human").
+		Relation("Human.Documents.DocumentType").
+		Relation("Human.Documents.DocumentFieldValues.DocumentTypeField").
 		Join("join humans h on h.id = ?TableAlias.human_id").
 		Join("join documents d on d.human_id = h.id").
 		Join("join document_field_values dfv on dfv.document_id = d.id and dfv.value_string = ?", snillsNumber).

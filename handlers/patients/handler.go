@@ -2,6 +2,7 @@ package patients
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/helpers/writers/validators"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
 	"time"
@@ -26,7 +27,7 @@ func (h *Handler) Create(c *gin.Context) {
 	}
 
 	err = h.helper.DB.WithinTransaction(c, func(ctx context.Context) error {
-		return h.service.Create(c, &item)
+		return h.service.Create(c.Request.Context(), &item)
 	})
 
 	if h.helper.HTTP.HandleError(c, err) {
@@ -51,7 +52,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	item, err := h.service.Get(c, id)
+	item, err := h.service.Get(c.Request.Context(), id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -60,7 +61,11 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 	snils := c.Param("snils")
-
+	err := validators.SnilsCheckControlSum(snils)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
 	item, existsInDomain, err := h.service.GetBySnilsNumber(c.Request.Context(), snils)
 	if h.helper.HTTP.HandleError(c, err) {
 		return

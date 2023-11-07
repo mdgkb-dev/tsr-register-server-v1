@@ -2,72 +2,68 @@ package representatives
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/models"
-	"mime/multipart"
-
-	"github.com/pro-assistance/pro-assister/helper"
-	"github.com/pro-assistance/pro-assister/sqlHelper"
 
 	"github.com/gin-gonic/gin"
-	"github.com/uptrace/bun"
+	"github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
+	"github.com/pro-assistance/pro-assister/sqlHelper"
+
+	"mdgkb/tsr-tegister-server-v1/models"
 )
 
 type IHandler interface {
-	GetAll(c *gin.Context)
-	Get(c *gin.Context)
-	Create(c *gin.Context)
-	Update(c *gin.Context)
-	Delete(c *gin.Context)
+	basehandler.IHandler
+	GetBySnilsNumber(c *gin.Context)
 }
 
 type IService interface {
-	setQueryFilter(*gin.Context) error
-	GetAll() (models.RepresentativesWithCount, error)
-	GetOnlyNames() (models.RepresentativesWithCount, error)
-	Get(*string) (*models.Representative, error)
-	Create(*models.Representative) error
-	Update(*models.Representative) error
-	Delete(*string) error
-
-	GetBySearch(*string) (models.Representatives, error)
+	basehandler.IServiceWithContext[models.Representative, models.Representative, models.RepresentativesWithCount]
+	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Representative, bool, error)
 }
 
 type IRepository interface {
-	setQueryFilter(*gin.Context) error
-	db() *bun.DB
-	create(*models.Representative) error
-	getAll() (models.RepresentativesWithCount, error)
-	get(*string) (*models.Representative, error)
-	update(*models.Representative) error
-	delete(*string) error
-
-	getOnlyNames() (models.RepresentativesWithCount, error)
-	getBySearch(*string) (models.Representatives, error)
+	basehandler.IRepositoryWithContext[models.Representative, models.Representative, models.RepresentativesWithCount]
+	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Representative, error)
 }
 
 type IFilesService interface {
-	Upload(*gin.Context, *models.Representative, map[string][]*multipart.FileHeader) error
+	basehandler.IFilesService
 }
 
 type Handler struct {
 	service      IService
-	helper       *helper.Helper
 	filesService IFilesService
+	helper       *helper.Helper
 }
 
 type Service struct {
 	repository IRepository
 	helper     *helper.Helper
+	// err        error
 }
 
 type Repository struct {
 	ctx         context.Context
 	helper      *helper.Helper
 	queryFilter *sqlHelper.QueryFilter
+	// tx          *bun.Tx
+	Error error
 }
 
 type FilesService struct {
 	helper *helper.Helper
+}
+
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
+func Init(h *helper.Helper) {
+	R = NewRepository(h)
+	S = NewService(R, h)
+	F = NewFilesService(h)
+	H = NewHandler(S, F, h)
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

@@ -1,4 +1,4 @@
-package search
+package patientsdomains
 
 import (
 	handler "mdgkb/tsr-tegister-server-v1/handlers/patientsdomains"

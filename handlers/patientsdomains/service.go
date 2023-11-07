@@ -2,7 +2,10 @@ package patientsdomains
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/google/uuid"
 )
 
 func (s *Service) Create(c context.Context, item *models.PatientDomain) error {
@@ -13,8 +16,26 @@ func (s *Service) Create(c context.Context, item *models.PatientDomain) error {
 	return nil
 }
 
-func (s *Service) AddToDomain(c context.Context, item *models.PatientDomain) error {
-	err := R.AddToDomain(c, item)
+func createFromPatientID(c context.Context, patientID uuid.NullUUID) (models.PatientsDomains, error) {
+	domainsIDS := middleware.ClaimDomainIDS.FromContextSlice(c)
+	items := make(models.PatientsDomains, len(domainsIDS))
+	for i := range domainsIDS {
+		dID, err := uuid.Parse(domainsIDS[i])
+		if err != nil {
+			return nil, err
+		}
+		d := models.PatientDomain{PatientID: patientID, DomainID: uuid.NullUUID{UUID: dID, Valid: true}}
+		items[i] = &d
+	}
+	return items, nil
+}
+
+func (s *Service) AddToDomain(c context.Context, patientID uuid.NullUUID) error {
+	items, err := createFromPatientID(c, patientID)
+	if err != nil {
+		return err
+	}
+	err = R.AddToDomain(c, items)
 	if err != nil {
 		return err
 	}

@@ -1,43 +1,45 @@
 package representatives
 
 import (
+	"context"
+	"mdgkb/tsr-tegister-server-v1/handlers/humans"
+	"mdgkb/tsr-tegister-server-v1/handlers/representativesdomains"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetopatient"
 	"mdgkb/tsr-tegister-server-v1/models"
-
-	"github.com/gin-gonic/gin"
 )
 
-func (s *Service) Create(item *models.Representative) error {
-	//err := humans.S.Create(item.Human)
-	//if err != nil {
-	//	return err
-	//}
-	item.HumanID = item.Human.ID
-	err := s.repository.create(item)
+func (s *Service) Create(c context.Context, item *models.Representative) error {
+	err := humans.S.Create(c, item.Human)
 	if err != nil {
 		return err
 	}
+	item.HumanID = item.Human.ID
+	err = s.repository.Create(c, item)
+	if err != nil {
+		return err
+	}
+	err = representativesdomains.S.AddToDomain(c, item.ID)
+	if err != nil {
+		return err
+	}
+
 	return err
 }
 
-func (s *Service) GetAll() (models.RepresentativesWithCount, error) {
-	return s.repository.getAll()
+func (s *Service) GetAll(c context.Context) (models.RepresentativesWithCount, error) {
+	return s.repository.GetAll(c)
 }
 
-func (s *Service) GetOnlyNames() (models.RepresentativesWithCount, error) {
-	return s.repository.getOnlyNames()
-}
-
-func (s *Service) Get(id *string) (*models.Representative, error) {
-	item, err := s.repository.get(id)
+func (s *Service) Get(c context.Context, id string) (*models.Representative, error) {
+	item, err := s.repository.Get(c, id)
 	if err != nil {
 		return nil, err
 	}
 	return item, nil
 }
 
-func (s *Service) Update(item *models.Representative) error {
-	err := s.repository.update(item)
+func (s *Service) Update(c context.Context, item *models.Representative) error {
+	err := s.repository.Update(c, item)
 	if err != nil {
 		return err
 	}
@@ -55,20 +57,18 @@ func (s *Service) Update(item *models.Representative) error {
 	return nil
 }
 
-func (s *Service) Delete(id *string) error {
-	return s.repository.delete(id)
+func (s *Service) Delete(c context.Context, id string) error {
+	return s.repository.Delete(c, id)
 }
 
-func (s *Service) GetBySearch(query *string) (models.Representatives, error) {
-	queryRu := s.helper.Util.TranslitToRu(*query)
-	items, err := s.repository.getBySearch(&queryRu)
+func (s *Service) GetBySnilsNumber(c context.Context, snils string) (*models.Representative, bool, error) {
+	item, err := s.repository.GetBySnilsNumber(c, snils)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
-	return items, nil
-}
-
-func (s *Service) setQueryFilter(c *gin.Context) (err error) {
-	err = s.repository.setQueryFilter(c)
-	return err
+	exists, err := representativesdomains.S.RepresentativeInDomain(c, item.ID.UUID.String())
+	if err != nil {
+		return nil, false, err
+	}
+	return item, exists, nil
 }

@@ -1,88 +1,63 @@
 package representatives
 
 import (
-	"fmt"
+	"context"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
-
-	"github.com/gin-gonic/gin"
 
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) db() *bun.DB {
-	return r.helper.DB.DB
-}
-
-func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *Repository) create(item *models.Representative) (err error) {
-	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
+func (r *Repository) Create(c context.Context, item *models.Representative) (err error) {
+	_, err = r.helper.DB.IDB(c).NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) getAll() (item models.RepresentativesWithCount, err error) {
-	item.Representatives = make(models.Representatives, 0)
-	query := r.db().NewSelect().
-		Model(&item.Representatives).
+func (r *Repository) GetAll(c context.Context) (items models.RepresentativesWithCount, err error) {
+	items.Representatives = make(models.Representatives, 0)
+	query := r.helper.DB.IDB(c).NewSelect().
+		Model(&items.Representatives).
 		Relation("Human.Documents.DocumentType").
 		Relation("Human.Documents.DocumentFileInfos.FileInfo").
 		Relation("Human.Contact").
 		Relation("PatientsRepresentatives.Patient.Human").
 		Relation("PatientsRepresentatives.RepresentativeType")
 	//Order("human.surname")
-	r.queryFilter.HandleQuery(query)
-	item.Count, err = query.ScanAndCount(r.ctx)
-	return item, err
-}
-
-func (r *Repository) getOnlyNames() (items models.RepresentativesWithCount, err error) {
-	fmt.Println()
-	items.Count, err = r.db().NewSelect().
-		Model(&items.Representatives).
-		Relation("Human").
-		Order("human.surname").
-		Order("human.name").
-		Order("human.patronymic").
-		ScanAndCount(r.ctx)
+	query.Join("join representatives_domains on representatives_domains.representative_id = representatives_view.id and representatives_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	items.Count, err = query.ScanAndCount(c)
 	return items, err
 }
 
-func (r *Repository) get(id *string) (*models.Representative, error) {
+func (r *Repository) Get(c context.Context, id string) (*models.Representative, error) {
 	item := models.Representative{}
-	err := r.db().NewSelect().Model(&item).
+	err := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Relation("Human.Contact").
 		Relation("Human.Photo").
 		Relation("PatientsRepresentatives.Patient.Human").
 		Relation("PatientsRepresentatives.RepresentativeType").
-		Where("?TableAlias.id = ?", *id).Scan(r.ctx)
+		Where("?TableAlias.id = ?", id).Scan(r.ctx)
 	return &item, err
 }
 
-func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db().NewDelete().Model(&models.Representative{}).Where("id = ?", *id).Exec(r.ctx)
+func (r *Repository) Delete(c context.Context, id string) (err error) {
+	_, err = r.helper.DB.IDB(c).NewDelete().Model(&models.Representative{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) update(item *models.Representative) (err error) {
-	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+func (r *Repository) Update(c context.Context, item *models.Representative) (err error) {
+	_, err = r.helper.DB.IDB(c).NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
 }
 
-func (r *Repository) getBySearch(search *string) (models.Representatives, error) {
-	items := make(models.Representatives, 0)
-
-	err := r.db().NewSelect().
-		Model(&items).
+func (r *Repository) GetBySnilsNumber(c context.Context, snillsNumber string) (*models.Representative, error) {
+	item := models.Representative{}
+	query := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Relation("Human").
-		Where("lower(regexp_replace(human.name, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		WhereOr("lower(regexp_replace(human.surname, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		WhereOr("lower(regexp_replace(human.patronymic, '[^а-яА-Яa-zA-Z0-9 ]', '', 'g')) LIKE lower(?)", "%"+*search+"%").
-		Scan(r.ctx)
-	return items, err
+		Join("join humans h on h.id = ?TableAlias.human_id").
+		Join("join documents d on d.human_id = h.id").
+		Join("join document_field_values dfv on dfv.document_id = d.id and dfv.value_string = ?", snillsNumber).
+		Join("join document_types dt on d.document_type_id = dt.id and dt.code = ?", models.DocumentTypeCodeSnils)
+	err := query.Scan(c)
+	return &item, err
 }

@@ -26,7 +26,7 @@ func (h *Handler) AddToDomain(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = S.AddToDomain(c.Request.Context(), &item)
+	err = S.AddToDomain(c.Request.Context(), item.ID)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
