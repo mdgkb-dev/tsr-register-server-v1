@@ -1,4 +1,4 @@
-package patientsdomains
+package representativesdomains
 
 import (
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -8,7 +8,7 @@ import (
 )
 
 func (h *Handler) Create(c *gin.Context) {
-	var item models.PatientDomain
+	var item models.RepresentativeDomain
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
@@ -21,7 +21,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) AddToDomain(c *gin.Context) {
-	var item models.PatientDomain
+	var item models.RepresentativeDomain
 	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
@@ -58,7 +58,7 @@ func (h *Handler) Delete(c *gin.Context) {
 }
 
 func (h *Handler) Update(c *gin.Context) {
-	var item models.PatientDomain
+	var item models.RepresentativeDomain
 	_, err := h.helper.HTTP.GetForm(c, &item)
 
 	if h.helper.HTTP.HandleError(c, err) {

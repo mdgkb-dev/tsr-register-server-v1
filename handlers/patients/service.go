@@ -27,6 +27,11 @@ func (s *Service) Create(c context.Context, item *models.Patient) error {
 	if err != nil {
 		return err
 	}
+	err = patientsdomains.S.AddToDomain(c, item.ID)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

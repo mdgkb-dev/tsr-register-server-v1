@@ -8,10 +8,10 @@ import (
 type Representative struct {
 	bun.BaseModel `bun:"representatives,select:representatives_view,alias:representatives_view"`
 	ModelInfo
-	ID uuid.UUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
 	Human   *Human    `bun:"rel:belongs-to" json:"human"`
-	HumanID uuid.UUID `bun:"type:uuid" json:"humanId"`
+	HumanID uuid.NullUUID `bun:"type:uuid" json:"humanId"`
 
 	PatientsRepresentatives          PatientsRepresentatives `bun:"rel:has-many" json:"patientsRepresentatives"`
 	PatientsRepresentativesForDelete []uuid.UUID             `bun:"-" json:"patientsRepresentativesForDelete"`

@@ -15,7 +15,7 @@ func (h *Handler) Search(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.SearchObjects(&item)
+	err = h.service.SearchObjects(c.Request.Context(),&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

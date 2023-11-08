@@ -15,7 +15,7 @@ type Patient struct {
 	ModelInfo
 	ID      uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Human   *Human        `bun:"rel:belongs-to" json:"human"`
-	HumanID uuid.UUID     `bun:"type:uuid" json:"humanId"`
+	HumanID uuid.NullUUID `bun:"type:uuid" json:"humanId"`
 
 	Region   *Region   `bun:"rel:belongs-to" json:"region"`
 	RegionID uuid.UUID `bun:"type:uuid" json:"regionId"`
@@ -101,7 +101,7 @@ func (item *Patient) SetIDForChildren() {
 
 func (item *Patient) SetDeleteIDForChildren() {
 	for i := range item.PatientsRepresentatives {
-		item.PatientsRepresentativesForDelete = append(item.PatientsRepresentativesForDelete, item.PatientsRepresentatives[i].ID)
+		item.PatientsRepresentativesForDelete = append(item.PatientsRepresentativesForDelete, item.PatientsRepresentatives[i].ID.UUID)
 	}
 	for i := range item.PatientDrugRegimen {
 		item.PatientDrugRegimenForDelete = append(item.PatientDrugRegimenForDelete, item.PatientDrugRegimen[i].ID)

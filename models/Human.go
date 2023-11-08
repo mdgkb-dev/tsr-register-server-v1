@@ -13,7 +13,7 @@ import (
 
 type Human struct {
 	bun.BaseModel       `bun:"humans,alias:humans"`
-	ID                  uuid.UUID     `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	ID                  uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Name                string        `json:"name"`
 	Surname             string        `json:"surname"`
 	Patronymic          string        `json:"patronymic"`
@@ -27,7 +27,7 @@ type Human struct {
 	PhotoID             uuid.NullUUID `bun:"type:uuid" json:"photoId"`
 	DeletedAt           *time.Time    `bun:",soft_delete" json:"deletedAt"`
 
-	Documents          []*Document `bun:"rel:has-many" json:"documents"`
+	Documents          Documents   `bun:"rel:has-many" json:"documents"`
 	DocumentsForDelete []uuid.UUID `bun:"-" json:"documentsForDelete"`
 
 	InsuranceCompanyToHuman          []*InsuranceCompanyToHuman `bun:"rel:has-many" json:"insuranceCompanyToHuman"`
@@ -81,7 +81,7 @@ type InsuranceCompanyToHuman struct {
 	InsuranceCompany   *InsuranceCompany `bun:"rel:belongs-to" json:"insuranceCompany"`
 	InsuranceCompanyID uuid.UUID         `bun:"type:uuid" json:"insuranceCompanyId"`
 	Human              *Human            `bun:"rel:belongs-to" json:"human"`
-	HumanID            uuid.UUID         `bun:"type:uuid" json:"humanId"`
+	HumanID            uuid.NullUUID     `bun:"type:uuid" json:"humanId"`
 	DeletedAt          *time.Time        `bun:",soft_delete" json:"deletedAt"`
 }
 
@@ -146,7 +146,7 @@ func (item *Human) GetFormattedDateBirth() string {
 }
 
 func (item *Human) GetMonthsFromBirth() uint {
-    currentTime := time.Now()
-    diff := currentTime.Sub(*item.DateBirth)
-	return uint(diff.Hours() / 24/ 30)
+	currentTime := time.Now()
+	diff := currentTime.Sub(*item.DateBirth)
+	return uint(diff.Hours() / 24 / 30)
 }

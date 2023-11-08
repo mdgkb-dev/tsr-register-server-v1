@@ -1,7 +1,9 @@
 package search
 
 import (
+	"context"
 	"fmt"
+	"mdgkb/tsr-tegister-server-v1/middleware"
 
 	"github.com/pro-assistance/pro-assister/search"
 	"github.com/uptrace/bun"
@@ -24,20 +26,23 @@ func (r *Repository) getGroups(groupID string) (search.SearchGroups, error) {
 	return items, err
 }
 
-func (r *Repository) search(searchModel *search.SearchModel) error {
-	querySelect := fmt.Sprintf("SELECT %s as value, substring(%s for 40) as label", searchModel.SearchGroup.ValueColumn, searchModel.SearchGroup.LabelColumn)
+func (r *Repository) search(c context.Context, searchModel *search.SearchModel) error {
+	querySelect := fmt.Sprintf("SELECT %s.%s as value, substring(%s for 40) as label", searchModel.SearchGroup.Table, searchModel.SearchGroup.ValueColumn, searchModel.SearchGroup.LabelColumn)
 	queryFrom := fmt.Sprintf("FROM %s", searchModel.SearchGroup.Table)
+
+	join := fmt.Sprintf("JOIN %s on %s.%s = %s.id and %s.domain_id in (?)", searchModel.SearchGroup.JoinTable, searchModel.SearchGroup.JoinTable, searchModel.SearchGroup.JoinColumn, searchModel.SearchGroup.Table, searchModel.SearchGroup.JoinTable)
 
 	condition := fmt.Sprintf("where regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+searchModel.Query+"%'")
 	conditionTranslitToRu := fmt.Sprintf("or regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+r.helper.Util.TranslitToRu(searchModel.Query)+"%'")
 	conditionTranslitToEng := fmt.Sprintf("or regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+r.helper.Util.TranslitToEng(searchModel.Query)+"%'")
 
 	queryOrder := fmt.Sprintf("ORDER BY %s", searchModel.SearchGroup.LabelColumn)
-	query := fmt.Sprintf("%s %s %s %s %s %s", querySelect, queryFrom, condition, conditionTranslitToRu, conditionTranslitToEng, queryOrder)
-	rows, err := r.db().QueryContext(r.ctx, query)
+	query := fmt.Sprintf("%s %s %s %s %s %s %s", querySelect, queryFrom, join, condition, conditionTranslitToRu, conditionTranslitToEng, queryOrder)
+	rows, err := r.db().QueryContext(r.ctx, query, bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	if err != nil {
 		return err
 	}
+
 	err = r.db().ScanRows(r.ctx, rows, &searchModel.SearchGroup.SearchElements)
 	return err
 }

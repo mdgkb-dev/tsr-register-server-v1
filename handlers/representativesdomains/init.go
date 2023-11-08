@@ -1,29 +1,29 @@
-package representatives
+package representativesdomains
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-
-	"mdgkb/tsr-tegister-server-v1/models"
+	"github.com/uptrace/bun"
 )
 
 type IHandler interface {
 	basehandler.IHandler
-	GetBySnilsNumber(c *gin.Context)
+	AddToDomain(c *gin.Context)
 }
 
 type IService interface {
-	basehandler.IServiceWithContext[models.Representative, models.Representative, models.RepresentativesWithCount]
-	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Representative, bool, error)
+	basehandler.IServiceWithContext[models.RepresentativeDomain, models.RepresentativesDomains, models.RepresentativesDomainsWithCount]
+	RepresentativeInDomain(c context.Context, RepresentativeID string) (bool, error)
 }
 
 type IRepository interface {
-	basehandler.IRepositoryWithContext[models.Representative, models.Representative, models.RepresentativesWithCount]
-	GetBySnilsNumber(c context.Context, snilsNumber string) (*models.Representative, error)
+	basehandler.IRepositoryWithContext[models.RepresentativeDomain, models.RepresentativesDomains, models.RepresentativesDomainsWithCount]
+	RepresentativeInDomain(c context.Context, RepresentativeID string) (bool, error)
 }
 
 type IFilesService interface {
@@ -36,28 +36,26 @@ type Handler struct {
 	helper       *helper.Helper
 }
 
+var H *Handler
+var S *Service
+var R *Repository
+var F *FilesService
+
 type Service struct {
-	repository IRepository
+	Repository IRepository
 	helper     *helper.Helper
-	// err        error
 }
 
 type Repository struct {
 	ctx         context.Context
 	helper      *helper.Helper
 	queryFilter *sqlHelper.QueryFilter
-	// tx          *bun.Tx
-	Error error
+	Tx          *bun.Tx
 }
 
 type FilesService struct {
 	helper *helper.Helper
 }
-
-var H *Handler
-var S *Service
-var R *Repository
-var F *FilesService
 
 func Init(h *helper.Helper) {
 	R = NewRepository(h)
@@ -66,20 +64,13 @@ func Init(h *helper.Helper) {
 	H = NewHandler(S, F, h)
 }
 
-func CreateHandler(helper *helper.Helper) *Handler {
-	repo := NewRepository(helper)
-	service := NewService(repo, helper)
-	filesService := NewFilesService(helper)
-	return NewHandler(service, filesService, helper)
-}
-
 // NewHandler constructor
 func NewHandler(s IService, filesService IFilesService, helper *helper.Helper) *Handler {
 	return &Handler{service: s, filesService: filesService, helper: helper}
 }
 
 func NewService(repository IRepository, helper *helper.Helper) *Service {
-	return &Service{repository: repository, helper: helper}
+	return &Service{Repository: repository, helper: helper}
 }
 
 func NewRepository(helper *helper.Helper) *Repository {

@@ -2,7 +2,6 @@ package patientsdomains
 
 import (
 	"context"
-	"fmt"
 	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -33,15 +32,14 @@ func (r *Repository) Get(c context.Context, slug string) (*models.PatientDomain,
 }
 
 func (r *Repository) PatientInDomain(c context.Context, patientID string) (bool, error) {
-	fmt.Println("domains", middleware.ClaimDomainIDS.FromContextSlice(c))
 	return r.helper.DB.IDB(c).NewSelect().Model((*models.PatientDomain)(nil)).
 		Where("?TableAlias.patient_id = ?", patientID).
 		Where("?TableAlias.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c))).
 		Exists(r.ctx)
 }
 
-func (r *Repository) AddToDomain(c context.Context, item *models.PatientDomain) error {
-	_, err := r.helper.DB.IDB(c).NewInsert().Model(item).Exec(c)
+func (r *Repository) AddToDomain(c context.Context, items models.PatientsDomains) error {
+	_, err := r.helper.DB.IDB(c).NewInsert().Model(&items).Exec(c)
 	return err
 }
 

@@ -43,10 +43,12 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/representatives"
+	"mdgkb/tsr-tegister-server-v1/handlers/representativesdomains"
 	"mdgkb/tsr-tegister-server-v1/middleware"
 	customsectionsRouter "mdgkb/tsr-tegister-server-v1/routing/customsections"
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
 	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
+	representativesdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/representativesdomains"
 
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
@@ -72,10 +74,10 @@ import (
 	drugarrivesRouter "mdgkb/tsr-tegister-server-v1/routing/drugarrives"
 	drugdecreasesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdecreases"
 	drugdozesRouter "mdgkb/tsr-tegister-server-v1/routing/drugdozes"
-	drugneedingsRouter "mdgkb/tsr-tegister-server-v1/routing/drugneedings"
-	drugregimensRouter "mdgkb/tsr-tegister-server-v1/routing/drugregimens"
 	drugformsRouter "mdgkb/tsr-tegister-server-v1/routing/drugforms"
+	drugneedingsRouter "mdgkb/tsr-tegister-server-v1/routing/drugneedings"
 	drugrecipesRouter "mdgkb/tsr-tegister-server-v1/routing/drugrecipes"
+	drugregimensRouter "mdgkb/tsr-tegister-server-v1/routing/drugregimens"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
 	fileInfosRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfos"
@@ -129,7 +131,13 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
 	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
-	representativesRouter.Init(api.Group("/representatives"), representatives.CreateHandler(helper))
+
+	representatives.Init(helper)
+	representativesRouter.Init(api.Group("/representatives"), representatives.H)
+
+	representativesdomains.Init(helper)
+	representativesdomainsRouter.Init(api.Group("/representatives-domains"), representativesdomains.H)
+
 	representativeTypesRouter.Init(api.Group("/representative-types"), representativetypes.CreateHandler(helper))
 	usersRouter.Init(api.Group("/users"), users.CreateHandler(helper))
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(helper))
@@ -193,7 +201,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	drugdozes.Init(helper)
 	drugdozesRouter.Init(api.Group("/drug-dozes"), drugdozes.H)
-	
 
 	drugneedings.Init(helper)
 	drugneedingsRouter.Init(api.Group("/drug-needings"), drugdozes.H)

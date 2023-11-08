@@ -1,4 +1,4 @@
-package representatives
+package representativesdomains
 
 import (
 	"mime/multipart"

@@ -15,7 +15,7 @@ type Document struct {
 	DocumentType   *DocumentType `bun:"rel:belongs-to" json:"documentType"`
 	DocumentTypeID uuid.NullUUID `bun:"type:uuid" json:"documentTypeId"`
 	Human          *Human        `bun:"rel:has-one" json:"human"`
-	HumanID        uuid.UUID     `bun:"type:uuid" json:"humanId"`
+	HumanID        uuid.NullUUID     `bun:"type:uuid" json:"humanId"`
 	DeletedAt      *time.Time    `bun:",soft_delete" json:"deletedAt"`
 
 	DocumentFieldValues DocumentFieldValues `bun:"rel:has-many" json:"documentFieldValues"`
