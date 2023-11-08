@@ -29,8 +29,10 @@ func (r *Repository) getGroups(groupID string) (search.SearchGroups, error) {
 func (r *Repository) search(c context.Context, searchModel *search.SearchModel) error {
 	querySelect := fmt.Sprintf("SELECT %s.%s as value, substring(%s for 40) as label", searchModel.SearchGroup.Table, searchModel.SearchGroup.ValueColumn, searchModel.SearchGroup.LabelColumn)
 	queryFrom := fmt.Sprintf("FROM %s", searchModel.SearchGroup.Table)
-
-	join := fmt.Sprintf("JOIN %s on %s.%s = %s.id and %s.domain_id in (?)", searchModel.SearchGroup.JoinTable, searchModel.SearchGroup.JoinTable, searchModel.SearchGroup.JoinColumn, searchModel.SearchGroup.Table, searchModel.SearchGroup.JoinTable)
+	join := ""
+	if searchModel.SearchGroup.JoinTable != "" {
+		join = fmt.Sprintf("JOIN %s on %s.%s = %s.id and %s.domain_id in (?)", searchModel.SearchGroup.JoinTable, searchModel.SearchGroup.JoinTable, searchModel.SearchGroup.JoinColumn, searchModel.SearchGroup.Table, searchModel.SearchGroup.JoinTable)
+	}
 
 	condition := fmt.Sprintf("where regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+searchModel.Query+"%'")
 	conditionTranslitToRu := fmt.Sprintf("or regexp_replace(%s, '[^а-яА-Яa-zA-Z0-9. ]', '', 'g') ILIKE %s", searchModel.SearchGroup.SearchColumn, "'%"+r.helper.Util.TranslitToRu(searchModel.Query)+"%'")
