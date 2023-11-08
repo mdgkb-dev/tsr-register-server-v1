@@ -10,7 +10,7 @@ import (
 type DrugApplication struct {
 	bun.BaseModel               `bun:"drug_applications,alias:drug_applications"`
 	ID                          uuid.NullUUID               `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Date                        *time.Time                  `bun:"item_date" json:"name"`
+	Date                        *time.Time                  `bun:"item_date" json:"date"`
 	Number                      string                      `json:"number"`
 	Status                      *Status                     `bun:"rel:belongs-to" json:"status"`
 	StatusID                    uuid.NullUUID               `bun:"type:uuid" json:"statusId"`
