@@ -65,7 +65,6 @@ func (item *Formula) SetXlsxData(variables map[string]interface{}, m exprtk.GoEx
 }
 
 func (item *Formula) Calculate(variables map[string]interface{}, m exprtk.GoExprtk) float64 {
-
 	m.SetExpression(item.Formula)
 	for k := range variables {
 		m.AddDoubleVariable(k)
@@ -87,7 +86,6 @@ func (item *Formula) Calculate(variables map[string]interface{}, m exprtk.GoExpr
 		default:
 			fmt.Println(v, "unknown")
 		}
-
 	}
 	return m.GetEvaluatedValue()
 }

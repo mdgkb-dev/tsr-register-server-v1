@@ -67,6 +67,9 @@ func (s *Service) CalculateNeeding(c context.Context, opts DrugNeedingOptions) (
 	drugNeeding.Init(drugRegimen, uint(packsNeeding*float64(drugDoze.Quantity)), uint(packsNeeding))
 	drugNeeding.Weight = opts.Weight
 	drugNeeding.AgeInMonths = patient.Human.GetMonthsFromBirth()
-	drugneedings.S.Create(c, &drugNeeding)
+	err = drugneedings.S.Create(c, &drugNeeding)
+	if err != nil {
+		return nil, err
+	}
 	return &drugNeeding, nil
 }

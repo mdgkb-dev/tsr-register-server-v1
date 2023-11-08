@@ -31,7 +31,7 @@ func CreateFromPatientID(c context.Context, patientID uuid.NullUUID) (PatientsDo
 	for i := range domainsIDS {
 		dID, err := uuid.Parse(domainsIDS[i])
 		if err != nil {
-			return  nil, err
+			return nil, err
 		}
 		d := PatientDomain{PatientID: patientID, DomainID: uuid.NullUUID{UUID: dID, Valid: true}}
 		items[i] = &d

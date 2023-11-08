@@ -15,7 +15,7 @@ func (s *Service) SearchMain(searchModel *search.SearchModel) (err error) {
 		return err
 	}
 	for i := range searchModel.SearchGroups {
-		err = s.repository.search(context.TODO() ,searchModel)
+		err = s.repository.search(context.TODO(), searchModel)
 		if err != nil {
 			return err
 		}
@@ -24,7 +24,7 @@ func (s *Service) SearchMain(searchModel *search.SearchModel) (err error) {
 	return nil
 }
 
-func (s *Service) SearchObjects(c context.Context, searchModel  *search.SearchModel) (err error) {
+func (s *Service) SearchObjects(c context.Context, searchModel *search.SearchModel) (err error) {
 	searchModel.SearchGroups, err = s.repository.getGroups(searchModel.SearchGroupID)
 	if err != nil {
 		return err

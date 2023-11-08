@@ -31,5 +31,3 @@ func (item *Drug) SetIDForChildren() {
 		}
 	}
 }
-
-

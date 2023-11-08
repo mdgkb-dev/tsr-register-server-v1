@@ -87,7 +87,6 @@ func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	h.helper.Validator.Validate()
 	item, existsInDomain, err := h.service.GetBySnilsNumber(c.Request.Context(), snils)
 	if h.helper.HTTP.HandleError(c, err) {
 		return

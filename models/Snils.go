@@ -9,7 +9,6 @@ import (
 )
 
 func CheckControlSum(snils string) error {
-
 	//убираем пробелы и дефисы
 	snils = strings.Replace(snils, "-", "", -1)
 	snils = strings.Replace(snils, " ", "", -1)
@@ -24,7 +23,7 @@ func CheckControlSum(snils string) error {
 	snils = snils[0:9]
 	//fmt.Println(snils)
 
-	//проверяем подходит ли снилс для проверки  
+	//проверяем подходит ли снилс для проверки
 	q, err := strconv.Atoi(snils)
 	//fmt.Println(q)
 	if q <= 1001998 {

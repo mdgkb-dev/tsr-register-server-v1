@@ -47,7 +47,6 @@ func (items DrugRegimenBlocks) CalculateNeeding(variables map[string]interface{}
 	for _, block := range items {
 		// случай, когда дней больше, чем приёма
 		if block.Infinitely {
-
 			for {
 				// fmt.Println(measuresInPack);
 				dl, s := block.CalculateNeeding(variables, m, daysLeast, measuresInPack)
@@ -81,7 +80,7 @@ func (item *DrugRegimenBlock) CalculateNeeding(variables map[string]interface{},
 	if (item.DaysCount > 1 && !item.EveryDay) || item.Infinitely {
 		calculation = measuresInPack / blockQuantity
 		fmt.Println("calc1", item.EveryDay, item.Infinitely)
-		daysLeast = daysQuantity - int(item.DaysCount)
+		daysLeast = daysQuantity - item.DaysCount
 	}
 	if daysQuantity > 1 && item.EveryDay && item.Infinitely {
 		calculation = float64(daysQuantity) / (measuresInPack / blockQuantity)

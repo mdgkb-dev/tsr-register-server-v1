@@ -2,6 +2,7 @@ package patients
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/helpers/writers/errorshelper"
 	"mdgkb/tsr-tegister-server-v1/helpers/writers/validators"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
@@ -63,7 +64,7 @@ func (h *Handler) GetBySnilsNumber(c *gin.Context) {
 	snils := c.Param("snils")
 	err := validators.SnilsCheckControlSum(snils)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err.Error())
+		c.JSON(http.StatusBadRequest, errorshelper.NewHttpError(err.Error(), http.StatusBadRequest, err.Error()))
 		return
 	}
 	item, existsInDomain, err := h.service.GetBySnilsNumber(c.Request.Context(), snils)

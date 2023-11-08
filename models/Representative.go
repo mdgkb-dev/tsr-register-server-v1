@@ -10,7 +10,7 @@ type Representative struct {
 	ModelInfo
 	ID uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 
-	Human   *Human    `bun:"rel:belongs-to" json:"human"`
+	Human   *Human        `bun:"rel:belongs-to" json:"human"`
 	HumanID uuid.NullUUID `bun:"type:uuid" json:"humanId"`
 
 	PatientsRepresentatives          PatientsRepresentatives `bun:"rel:has-many" json:"patientsRepresentatives"`

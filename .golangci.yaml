@@ -1,8 +1,8 @@
 run:
   concurrency: 4
-  timeout: 1m
+  timeout: 5m
   issues-exit-code: 1
-  modules-download-mode: mod
+  modules-download-mode: readonly
   tests: true
 linters:
   disable-all: true

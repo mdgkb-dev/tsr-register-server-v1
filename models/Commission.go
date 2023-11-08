@@ -28,7 +28,6 @@ type Commission struct {
 	DrugNeeding   *DrugNeeding  `bun:"rel:belongs-to" json:"drugNeeding"`
 	DrugNeedingID uuid.NullUUID `bun:"type:uuid" json:"drugNeedingId"`
 
-
 	DzmAnswerFile               *FileInfo                   `bun:"rel:belongs-to" json:"dzmAnswerFile"`
 	DzmAnswerFileID             uuid.NullUUID               `bun:"type:uuid" json:"dzmAnswerFileId"`
 	DzmAnswerComment            string                      `json:"dzmAnswerComment"`

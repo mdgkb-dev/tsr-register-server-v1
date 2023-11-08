@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
@@ -61,7 +61,7 @@ func (h *Handler) GetAddress(c *gin.Context) {
 		log.Println(err)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
 	}

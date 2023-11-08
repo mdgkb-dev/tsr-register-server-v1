@@ -9,7 +9,6 @@ import (
 )
 
 func SnilsCheckControlSum(snils string) error {
-
 	//убираем пробелы и дефисы
 	snils = strings.Replace(snils, "-", "", -1)
 	snils = strings.Replace(snils, " ", "", -1)
