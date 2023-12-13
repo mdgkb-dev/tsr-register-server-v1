@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
 )
@@ -12,5 +10,10 @@ type Contact struct {
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
 	Phone         string        `json:"phone"`
 	Email         string        `json:"email"`
-	DeletedAt     *time.Time    `bun:",soft_delete" json:"deletedAt"`
+}
+type Contacts []*Contact
+
+type ContactsWithCount struct {
+	Contacts Contacts `json:"items"`
+	Count    int      `json:"count"`
 }

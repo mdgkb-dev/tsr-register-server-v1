@@ -7,6 +7,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
+	"mdgkb/tsr-tegister-server-v1/handlers/contacts"
 	"mdgkb/tsr-tegister-server-v1/handlers/customsections"
 	"mdgkb/tsr-tegister-server-v1/handlers/dataexport"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
@@ -44,12 +45,6 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/representatives"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativesdomains"
-	"mdgkb/tsr-tegister-server-v1/middleware"
-	customsectionsRouter "mdgkb/tsr-tegister-server-v1/routing/customsections"
-	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
-	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
-	representativesdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/representativesdomains"
-
 	"mdgkb/tsr-tegister-server-v1/handlers/representativetypes"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchespools"
@@ -57,6 +52,13 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/statuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
+	"mdgkb/tsr-tegister-server-v1/middleware"
+	contactsRouter "mdgkb/tsr-tegister-server-v1/routing/contacts"
+	customsectionsRouter "mdgkb/tsr-tegister-server-v1/routing/customsections"
+	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
+	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
+	representativesdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/representativesdomains"
+
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
@@ -117,7 +119,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	m := middleware.CreateMiddleware(helper)
 
 	r.Static("/api/v1/static", "./static/")
-	//r.Use(helper.HTTP.CORSMiddleware())
+	// r.Use(helper.HTTP.CORSMiddleware())
 	authGroup := r.Group("/api/v1")
 	api := r.Group("/api/v1")
 	api.Use(m.InjectRequestInfo())
@@ -207,4 +209,7 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	drugregimens.Init(helper)
 	drugregimensRouter.Init(api.Group("/drug-regimens"), drugdozes.H)
+
+	contacts.Init(helper)
+	contactsRouter.Init(api.Group("/contacts"), contacts.H)
 }
