@@ -29,7 +29,7 @@ func (h *Handler) Create(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Create(&item)
+	err = h.service.Upsert(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
