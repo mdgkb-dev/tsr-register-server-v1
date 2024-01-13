@@ -45,6 +45,9 @@ lint:
 read_logs:
 	tail -f ./logs/info/_actual.log ./logs/errors/_actual.log
 
+show_sql_error: 
+    @./cmd/scripts/write_last_sql_error.sh | sed 's/\\//g'
+
 #####
 #GIT#
 #####
