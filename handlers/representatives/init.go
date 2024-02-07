@@ -2,17 +2,17 @@ package representatives
 
 import (
 	"context"
+	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pro-assistance/pro-assister/helper"
 	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
 	"github.com/pro-assistance/pro-assister/sqlHelper"
-
-	"mdgkb/tsr-tegister-server-v1/models"
 )
 
 type IHandler interface {
 	basehandler.IHandler
+	FTSP(c *gin.Context)
 	GetBySnilsNumber(c *gin.Context)
 }
 
@@ -54,10 +54,12 @@ type FilesService struct {
 	helper *helper.Helper
 }
 
-var H *Handler
-var S *Service
-var R *Repository
-var F *FilesService
+var (
+	H *Handler
+	S *Service
+	R *Repository
+	F *FilesService
+)
 
 func Init(h *helper.Helper) {
 	R = NewRepository(h)

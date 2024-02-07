@@ -22,8 +22,9 @@ func (r *Repository) GetAll(c context.Context) (items models.RepresentativesWith
 		Relation("Human.Contact").
 		Relation("PatientsRepresentatives.Patient.Human").
 		Relation("PatientsRepresentatives.RepresentativeType")
-	//Order("human.surname")
+	// Order("human.surname")
 	query.Join("join representatives_domains on representatives_domains.representative_id = representatives_view.id and representatives_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
 	items.Count, err = query.ScanAndCount(c)
 	return items, err

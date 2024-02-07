@@ -9,6 +9,7 @@ import (
 // Init func
 func Init(r *gin.RouterGroup, h handler.IHandler) {
 	r.GET("", h.GetAll)
+	r.POST("/ftsp", h.FTSP)
 	r.GET("/actual-anthropometry/:id", h.GetActualAnthropomethry)
 	r.GET("/:id", h.Get)
 	r.GET("/by-snils/:snils", h.GetBySnilsNumber)

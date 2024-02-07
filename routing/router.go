@@ -118,6 +118,8 @@ import (
 func Init(r *gin.Engine, helper *helperPack.Helper) {
 	m := middleware.CreateMiddleware(helper)
 
+	r.Use(m.InjectFTSP())
+
 	r.Static("/api/v1/static", "./static/")
 	// r.Use(helper.HTTP.CORSMiddleware())
 	authGroup := r.Group("/api/v1")

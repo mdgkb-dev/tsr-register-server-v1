@@ -35,7 +35,8 @@ func (r *Repository) GetAll(c context.Context) (items models.PatientsWithCount, 
 		Relation("UpdatedBy")
 
 	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
-	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
+	// r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
 	items.Count, err = query.ScanAndCount(c)
 	return items, err
 }
