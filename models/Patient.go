@@ -43,6 +43,7 @@ type Patient struct {
 	FullName  string `bun:"-" json:"fullName"`
 	IsMale    string `bun:"-" json:"isMale"`
 	DateBirth string `bun:"-" json:"dateBirth"`
+	CreatedAt string `bun:"-" json:"dateBirth"`
 
 	IsMoscow bool `json:"isMoscow"`
 	Agreed   bool `json:"agreed"`
