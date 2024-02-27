@@ -5,7 +5,7 @@ import (
 	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pro-assistance/pro-assister/uploadHelper"
+	"github.com/pro-assistance/pro-assister/helpers/uploader"
 )
 
 func (s *FilesService) GetFullPath(fileSystemPath *string) *string {
@@ -15,7 +15,7 @@ func (s *FilesService) GetFullPath(fileSystemPath *string) *string {
 func (s *FilesService) Upload(c *gin.Context, item *models.FileInfo, files map[string][]*multipart.FileHeader) (err error) {
 	for i, file := range files {
 		if i == item.ID.UUID.String() {
-			item.FileSystemPath = uploadHelper.BuildPath(&i)
+			item.FileSystemPath = uploader.BuildPath(&i)
 			err = s.helper.Uploader.Upload(c, file, &item.FileSystemPath)
 			if err != nil {
 				return err

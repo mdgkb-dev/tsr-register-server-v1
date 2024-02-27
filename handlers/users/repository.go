@@ -1,90 +1,48 @@
 package users
 
 import (
+	"context"
 	"mdgkb/tsr-tegister-server-v1/models"
-
-	"github.com/gin-gonic/gin"
-	//_ "github.com/go-pg/pg/v10/orm"
-	"github.com/uptrace/bun"
 )
 
-func (r *Repository) db() *bun.DB {
-	return r.helper.DB.DB
-}
-
-func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *Repository) getAll() (item models.UsersWithCount, err error) {
+func (r *Repository) GetAll(c context.Context) (item models.UsersWithCount, err error) {
 	item.Users = make(models.Users, 0)
-	query := r.db().NewSelect().
-		Model(&item.Users).
-		Relation("Human").
+	q := r.helper.DB.IDB(c).NewSelect().Model(&item.Users).
 		Relation("Role")
 
-	r.queryFilter.HandleQuery(query)
-	item.Count, err = query.ScanAndCount(r.ctx)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(q)
+	item.Count, err = q.ScanAndCount(c)
 	return item, err
 }
 
-func (r *Repository) get(id string) (*models.User, error) {
+func (r *Repository) Get(c context.Context, id string) (*models.User, error) {
 	item := models.User{}
-	err := r.db().NewSelect().
-		Model(&item).
-		Relation("UsersDomains").
+	err := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Where("?TableAlias.id = ?", id).
-		Scan(r.ctx)
+		Scan(c)
 	return &item, err
 }
 
-func (r *Repository) getByUserAccountID(accountID string) (*models.User, error) {
+func (r *Repository) GetByUserAccountID(c context.Context, id string) (*models.User, error) {
 	item := models.User{}
-	err := r.db().NewSelect().
-		Model(&item).
+	err := r.helper.DB.IDB(c).NewSelect().Model(&item).
 		Relation("UsersDomains").
-		Where("?TableAlias.user_account_id = ?", accountID).
-		Scan(r.ctx)
+		Where("?TableAlias.user_account_id = ?", id).
+		Scan(c)
 	return &item, err
 }
 
-func (r *Repository) create(user *models.User) (err error) {
-	_, err = r.db().NewInsert().Model(user).Exec(r.ctx)
+func (r *Repository) Delete(c context.Context, id string) (err error) {
+	_, err = r.helper.DB.IDB(c).NewDelete().Model(&models.User{}).Where("id = ?", id).Exec(c)
 	return err
 }
 
-func (r *Repository) update(item *models.User) (err error) {
-	_, err = r.db().NewUpdate().Model(item).
-		OmitZero().
-		ExcludeColumn("password", "is_active"). // all columns except col1
-		Where("id = ?", item.ID).
-		Exec(r.ctx)
+func (r *Repository) Update(c context.Context, item *models.User) (err error) {
+	_, err = r.helper.DB.IDB(c).NewUpdate().Model(item).Where("id = ?", item.ID).Exec(c)
 	return err
 }
 
-func (r *Repository) upsertEmail(item *models.User) (err error) {
-	_, err = r.db().NewInsert().On("conflict (email) DO UPDATE").
-		Set("phone = EXCLUDED.phone").
-		Set("login = ''").
-		Model(item).
-		Exec(r.ctx)
-	return err
-}
-
-func (r *Repository) addToUser(values map[string]interface{}, table string) error {
-	_, err := r.db().NewInsert().Model(&values).TableExpr(table).Exec(r.ctx)
-	return err
-}
-
-func (r *Repository) removeFromUser(values map[string]interface{}, table string) error {
-	q := r.db().NewDelete().Table(table)
-	for key, value := range values {
-		q = q.Where("? = ?", bun.Ident(key), value)
-	}
-	_, err := q.Exec(r.ctx)
+func (r *Repository) Create(c context.Context, item *models.User) (err error) {
+	_, err = r.helper.DB.IDB(c).NewInsert().Model(item).Exec(c)
 	return err
 }

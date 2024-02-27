@@ -13,7 +13,6 @@ func (r *Repository) DB() *bun.DB {
 }
 
 func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}
@@ -36,7 +35,6 @@ func (r *Repository) GetAll() (items models.DrugApplicationsWithCount, err error
 		Relation("FundContract.DrugArrives.DrugDecreases").
 		Relation("DrugApplicationFiles.FileInfo").
 		Relation("CommissionsDrugApplications.Commission.Patient.Human")
-	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }

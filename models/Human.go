@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/pro-assistance/pro-assister/uploadHelper"
+	"github.com/pro-assistance/pro-assister/helpers/uploader"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -49,7 +49,7 @@ func (item *Human) SetFilePath(fileID *string) *string {
 		}
 	}
 	if item.Photo != nil && item.Photo.ID.UUID.String() == *fileID {
-		item.Photo.FileSystemPath = uploadHelper.BuildPath(fileID)
+		item.Photo.FileSystemPath = uploader.BuildPath(fileID)
 		return &item.Photo.FileSystemPath
 	}
 	return nil

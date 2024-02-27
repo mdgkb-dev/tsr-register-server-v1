@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/pro-assistance/pro-assister/uploadHelper"
+	"github.com/pro-assistance/pro-assister/helpers/uploader"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -41,7 +41,7 @@ func (item *Disability) SetIDForChildren() {
 func (item *Disability) SetFilePath(fileID *string) *string {
 	for i := range item.Edvs {
 		if item.Edvs[i].FileInfo.ID.UUID.String() == *fileID {
-			item.Edvs[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
+			item.Edvs[i].FileInfo.FileSystemPath = uploader.BuildPath(fileID)
 			return &item.Edvs[i].FileInfo.FileSystemPath
 		}
 	}

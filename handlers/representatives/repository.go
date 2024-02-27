@@ -2,8 +2,9 @@ package representatives
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/pro-assistance/pro-assister/middleware"
 
 	"github.com/uptrace/bun"
 )
@@ -25,7 +26,7 @@ func (r *Repository) GetAll(c context.Context) (items models.RepresentativesWith
 	// Order("human.surname")
 	query.Join("join representatives_domains on representatives_domains.representative_id = representatives_view.id and representatives_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
-	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	items.Count, err = query.ScanAndCount(c)
 	return items, err
 }

@@ -2,11 +2,10 @@ package questions
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
-	"github.com/pro-assistance/pro-assister/sqlHelper"
+	"github.com/pro-assistance/pro-assister/middleware"
 	"github.com/uptrace/bun"
 )
 
@@ -23,10 +22,6 @@ func (r *Repository) GetAll(c context.Context) (items models.QuestionsWithCount,
 
 	query.Join("join questions_domains qd on qd.question_id = questions.id and qd.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 
-	i, ok := c.Value("fq").(*sqlHelper.QueryFilter)
-	if ok {
-		i.HandleQuery(query)
-	}
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }

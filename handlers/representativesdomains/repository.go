@@ -2,8 +2,9 @@ package representativesdomains
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/pro-assistance/pro-assister/middleware"
 
 	"github.com/uptrace/bun"
 	// _ "github.com/go-pg/pg/v10/orm"
@@ -18,7 +19,6 @@ func (r *Repository) GetAll(c context.Context) (item models.RepresentativesDomai
 	item.RepresentativesDomains = make(models.RepresentativesDomains, 0)
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item.RepresentativesDomains)
 
-	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

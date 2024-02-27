@@ -17,7 +17,7 @@ func (r *Repository) GetAll(c context.Context) (item models.DrugDozesWithCount, 
 	item.DrugDozes = make(models.DrugDozes, 0)
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item.DrugDozes)
 
-	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

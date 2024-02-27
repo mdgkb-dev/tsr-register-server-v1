@@ -13,7 +13,6 @@ func (r *Repository) DB() *bun.DB {
 }
 
 func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}
@@ -33,7 +32,6 @@ func (r *Repository) GetAll() (items models.CommissionsDrugApplicationsWithCount
 		Relation("PatientDiagnosis.MkbItem").
 		Relation("Patient.Human").
 		Relation("CommissionDrugApplicationsDrugApplicationstatus")
-	r.queryFilter.HandleQuery(query)
 	items.Count, err = query.ScanAndCount(r.ctx)
 	return items, err
 }
@@ -55,6 +53,7 @@ func (r *Repository) Delete(id string) (err error) {
 	_, err = r.DB().NewDelete().Model(&models.CommissionDrugApplication{}).Where("id = ?", id).Exec(r.ctx)
 	return err
 }
+
 func (r *Repository) Update(item *models.CommissionDrugApplication) (err error) {
 	_, err = r.DB().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err

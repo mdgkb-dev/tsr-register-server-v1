@@ -2,8 +2,9 @@ package researches
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/pro-assistance/pro-assister/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
@@ -14,7 +15,6 @@ func (r *Repository) db() *bun.DB {
 }
 
 func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}
@@ -45,7 +45,7 @@ func (r *Repository) getAll(c context.Context) (items models.Researches, err err
 		Relation("Formulas.FormulaResults")
 
 	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
-	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	err = query.Scan(r.ctx)
 
 	return items, err
@@ -125,7 +125,7 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 	}
 
 	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
-	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	err = query.Scan(r.ctx)
 	return items, err
 }

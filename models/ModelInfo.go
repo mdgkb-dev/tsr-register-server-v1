@@ -1,12 +1,12 @@
 package models
 
 import (
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/pro-assistance/pro-assister/tokenHelper"
+	"github.com/pro-assistance/pro-assister/helpers/token"
+	"github.com/pro-assistance/pro-assister/middleware"
 )
 
 type ModelInfo struct {
@@ -21,7 +21,7 @@ type ModelInfo struct {
 	DeletedAt *time.Time `bun:",soft_delete" json:"deletedAt"`
 }
 
-func (item *ModelInfo) FillModelInfoUpdate(_ *gin.Context, _ *tokenHelper.TokenHelper) error {
+func (item *ModelInfo) FillModelInfoUpdate(_ *gin.Context, _ *token.Token) error {
 	//userID, err := tokenHelper.GetUserID(c)
 	//if err != nil {
 	//	return err
@@ -31,7 +31,7 @@ func (item *ModelInfo) FillModelInfoUpdate(_ *gin.Context, _ *tokenHelper.TokenH
 	return nil
 }
 
-func (item *ModelInfo) FillModelInfoCreate(c *gin.Context, tokenHelper *tokenHelper.TokenHelper) (err error) {
+func (item *ModelInfo) FillModelInfoCreate(c *gin.Context, tokenHelper *token.Token) (err error) {
 	uid, err := tokenHelper.ExtractTokenMetadata(c.Request, middleware.ClaimUserID)
 	if err != nil {
 		return err

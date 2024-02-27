@@ -4,6 +4,7 @@ run:
   issues-exit-code: 1
   modules-download-mode: readonly
   tests: true
+  skip-cache: true
 linters:
   disable-all: true
   enable:

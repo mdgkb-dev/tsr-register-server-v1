@@ -26,13 +26,11 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/drugregimens"
 	"mdgkb/tsr-tegister-server-v1/handlers/drugs"
 	"mdgkb/tsr-tegister-server-v1/handlers/edvs"
-	"mdgkb/tsr-tegister-server-v1/handlers/fileinfos"
 	"mdgkb/tsr-tegister-server-v1/handlers/fundcontracts"
 	"mdgkb/tsr-tegister-server-v1/handlers/fundcouncils"
 	"mdgkb/tsr-tegister-server-v1/handlers/humans"
 	"mdgkb/tsr-tegister-server-v1/handlers/insurancecompany"
 	"mdgkb/tsr-tegister-server-v1/handlers/menus"
-	"mdgkb/tsr-tegister-server-v1/handlers/meta"
 	"mdgkb/tsr-tegister-server-v1/handlers/mkbitems"
 	"mdgkb/tsr-tegister-server-v1/handlers/patienthistories"
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
@@ -49,10 +47,9 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/researchesresults"
-	"mdgkb/tsr-tegister-server-v1/handlers/search"
 	"mdgkb/tsr-tegister-server-v1/handlers/statuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
-	"mdgkb/tsr-tegister-server-v1/middleware"
+	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	contactsRouter "mdgkb/tsr-tegister-server-v1/routing/contacts"
 	customsectionsRouter "mdgkb/tsr-tegister-server-v1/routing/customsections"
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
@@ -60,7 +57,6 @@ import (
 	representativesdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/representativesdomains"
 
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
-	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
 	commissionsdrugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdrugapplications"
@@ -82,12 +78,10 @@ import (
 	drugregimensRouter "mdgkb/tsr-tegister-server-v1/routing/drugregimens"
 	drugsRouter "mdgkb/tsr-tegister-server-v1/routing/drugs"
 	edvsRouter "mdgkb/tsr-tegister-server-v1/routing/edvs"
-	fileInfosRouter "mdgkb/tsr-tegister-server-v1/routing/fileinfos"
 	fundcontractsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcontracts"
 	fundcouncilsRouter "mdgkb/tsr-tegister-server-v1/routing/fundcouncils"
 	humansRouter "mdgkb/tsr-tegister-server-v1/routing/humans"
 	insuranceCompanyRouter "mdgkb/tsr-tegister-server-v1/routing/insurancecompany"
-	metaRouter "mdgkb/tsr-tegister-server-v1/routing/meta"
 	mkbItemsRouter "mdgkb/tsr-tegister-server-v1/routing/mkbitems"
 	patientHistoriesRouter "mdgkb/tsr-tegister-server-v1/routing/patienthistories"
 	patientsRouter "mdgkb/tsr-tegister-server-v1/routing/patients"
@@ -104,7 +98,6 @@ import (
 	researchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/researchespools"
 	researchesResultsRouter "mdgkb/tsr-tegister-server-v1/routing/researchesresults"
 	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/researchsection"
-	searchRouter "mdgkb/tsr-tegister-server-v1/routing/search"
 	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
 	statusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
@@ -113,24 +106,21 @@ import (
 	"github.com/gin-gonic/gin"
 
 	helperPack "github.com/pro-assistance/pro-assister/helper"
+	"github.com/pro-assistance/pro-assister/middleware"
+	baseRouter "github.com/pro-assistance/pro-assister/routing"
 )
 
 func Init(r *gin.Engine, helper *helperPack.Helper) {
 	m := middleware.CreateMiddleware(helper)
+	api, apiNoToken := baseRouter.Init(r, helper)
+	api.Use(m.InjectClaims())
+	api.Use(m.InjectFTSP())
+	auth.Init(helper)
+	authRouter.Init(apiNoToken.Group("/auth"), auth.H)
 
-	r.Use(m.InjectFTSP())
-
-	r.Static("/api/v1/static", "./static/")
-	// r.Use(helper.HTTP.CORSMiddleware())
-	authGroup := r.Group("/api/v1")
-	api := r.Group("/api/v1")
-	api.Use(m.InjectRequestInfo())
-	authRouter.Init(authGroup.Group("/auth"), auth.CreateHandler(helper))
 	documentTypesRouter.Init(api.Group("/document-types"), documenttypes.CreateHandler(helper))
 	drugsRouter.Init(api.Group("/drugs"), drugs.CreateHandler(helper))
-	fileInfosRouter.Init(api.Group("/file-infos"), fileinfos.CreateHandler(helper))
 	insuranceCompanyRouter.Init(api.Group("/insurance-companies"), insurancecompany.CreateHandler(helper))
-	metaRouter.Init(api.Group("/meta"), meta.CreateHandler(helper))
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
 
 	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
@@ -143,10 +133,12 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	representativesdomainsRouter.Init(api.Group("/representatives-domains"), representativesdomains.H)
 
 	representativeTypesRouter.Init(api.Group("/representative-types"), representativetypes.CreateHandler(helper))
-	usersRouter.Init(api.Group("/users"), users.CreateHandler(helper))
+
+	users.Init(helper)
+	usersRouter.Init(api.Group("/users"), users.H)
+
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(helper))
 	researchesPoolsRouter.Init(api.Group("/researches-pools"), researchespools.CreateHandler(helper))
-	searchRouter.Init(api.Group("/search"), search.CreateHandler(helper))
 	patientsResearchesPoolsRouter.Init(api.Group("/patients-researches-pools"), patientsresearchespools.CreateHandler(helper))
 	researchesResultsRouter.Init(api.Group("/researches-results"), researchesresults.CreateHandler(helper))
 	patientsResearchesRouter.Init(api.Group("/patients-researches"), patientsresearches.CreateHandler(helper))

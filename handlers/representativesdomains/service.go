@@ -2,8 +2,9 @@ package representativesdomains
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
+
+	"github.com/pro-assistance/pro-assister/middleware"
 
 	"github.com/google/uuid"
 )

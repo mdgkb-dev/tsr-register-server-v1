@@ -13,7 +13,6 @@ func (r *Repository) DB() *bun.DB {
 }
 
 func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}
@@ -29,7 +28,6 @@ func (r *Repository) GetAll() (item models.StatusesWithCount, err error) {
 	item.Statuses = make(models.Statuses, 0)
 	query := r.DB().NewSelect().Model(&item.Statuses)
 
-	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

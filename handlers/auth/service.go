@@ -1,58 +1,78 @@
 package auth
 
 import (
-	"errors"
+	"context"
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
-	"mdgkb/tsr-tegister-server-v1/handlers/usersaccounts"
 	"mdgkb/tsr-tegister-server-v1/models"
 
-	"github.com/gin-gonic/gin"
+	"github.com/pro-assistance/pro-assister/handlers/auth"
 )
 
-func (s *Service) Register(item *models.UserAccount) (t *models.TokensWithUser, err error) {
-	err = usersaccounts.CreateService(s.helper).Create(item)
+func (s *Service) Register(c context.Context, email string, password string) (tokenWithUser *models.TokensWithUser, err error) {
+	duplicate := false
+	item := &models.User{}
+	item.UserAccountID, duplicate, err = auth.S.Register(c, email, password)
+	if duplicate {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}
-	user := models.User{}
-	user.UserAccountID = item.ID
-	user.UserAccount = item
-
-	err = users.CreateService(s.helper).Create(&user)
+	err = users.S.Create(c, item)
 	if err != nil {
 		return nil, err
 	}
-
-	token, err := s.helper.Token.CreateToken(&user)
+	ts, err := s.helper.Token.CreateToken(item)
 	if err != nil {
 		return nil, err
 	}
-	t.Init(token, user)
-	return t, err
+	return &models.TokensWithUser{Tokens: ts, User: *item}, nil
 }
 
-func (s *Service) Login(item *models.UserAccount, skipPassword bool) (t *models.TokensWithUser, err error) {
-	foundedAccount, err := usersaccounts.CreateService(s.helper).GetByEmail(item.Email)
+func (s *Service) Login(c context.Context, email string, password string) (*models.TokensWithUser, error) {
+	userAccountID, err := auth.S.Login(c, email, password)
 	if err != nil {
 		return nil, err
 	}
-	if !foundedAccount.CompareWithHashPassword(item.Password) && !skipPassword {
-		return nil, errors.New("wrong email or password")
-	}
-	user, err := users.CreateService(s.helper).GetByUserAccountID(foundedAccount.ID.UUID.String())
+	user, err := users.S.GetByUserAccountID(c, userAccountID.UUID.String())
 	if err != nil {
 		return nil, err
 	}
-	token, err := s.helper.Token.CreateToken(user)
+	fmt.Println(user.UsersDomains)
+	ts, err := s.helper.Token.CreateToken(user)
 	if err != nil {
 		return nil, err
 	}
-	t = &models.TokensWithUser{}
-	t.Init(token, *user)
-	return t, err
+	return &models.TokensWithUser{Tokens: ts, User: *user}, nil
 }
 
-func (s *Service) setQueryFilter(c *gin.Context) (err error) {
-	err = s.repository.setQueryFilter(c)
-	return err
+func (s *Service) RestorePassword(c context.Context, email string) error {
+	userAccount, err := auth.R.GetByEmail(c, email)
+	if err != nil {
+		return err
+	}
+	user, err := users.S.GetByUserAccountID(c, userAccount.ID.UUID.String())
+	if err != nil {
+		return err
+	}
+
+	emailStruct := struct {
+		RestoreLink string
+		Host        string
+	}{
+		s.helper.HTTP.GetRestorePasswordURL(user.ID.UUID.String(), userAccount.UUID.String()),
+		s.helper.HTTP.Host,
+	}
+
+	mail, err := s.helper.Templater.ParseTemplate(emailStruct, "email/passwordRestore.gohtml")
+	if err != nil {
+		return err
+	}
+	err = s.helper.Email.SendEmail([]string{userAccount.Email}, "Восстановление пароля для сайта Просодействие", mail)
+
+	if err != nil {
+		return err
+	}
+	return nil
 }

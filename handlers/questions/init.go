@@ -5,9 +5,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/google/uuid"
+	"github.com/pro-assistance/pro-assister/handlers/basehandler"
 	"github.com/pro-assistance/pro-assister/helper"
-	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
-	"github.com/pro-assistance/pro-assister/sqlHelper"
 )
 
 type IHandler interface {
@@ -48,9 +47,8 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx         context.Context
-	helper      *helper.Helper
-	queryFilter *sqlHelper.QueryFilter
+	ctx    context.Context
+	helper *helper.Helper
 }
 
 func CreateHandler(helper *helper.Helper) *Handler {

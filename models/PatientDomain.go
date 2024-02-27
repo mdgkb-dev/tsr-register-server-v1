@@ -2,9 +2,9 @@ package models
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 
 	"github.com/google/uuid"
+	"github.com/pro-assistance/pro-assister/middleware"
 	"github.com/uptrace/bun"
 )
 

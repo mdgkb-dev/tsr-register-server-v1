@@ -3,9 +3,8 @@ package models
 import (
 	"time"
 
-	"github.com/pro-assistance/pro-assister/uploadHelper"
-
 	"github.com/google/uuid"
+	"github.com/pro-assistance/pro-assister/helpers/uploader"
 	"github.com/uptrace/bun"
 )
 
@@ -32,7 +31,7 @@ type DocumentsWithCount struct {
 func (item *Document) SetFilePath(fileID *string) *string {
 	for i := range item.DocumentFileInfos {
 		if item.DocumentFileInfos[i].FileInfoID.UUID.String() == *fileID {
-			item.DocumentFileInfos[i].FileInfo.FileSystemPath = uploadHelper.BuildPath(fileID)
+			item.DocumentFileInfos[i].FileInfo.FileSystemPath = uploader.BuildPath(fileID)
 			return &item.DocumentFileInfos[i].FileInfo.FileSystemPath
 		}
 	}

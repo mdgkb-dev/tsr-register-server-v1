@@ -6,9 +6,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pro-assistance/pro-assister/handlers/basehandler"
 	"github.com/pro-assistance/pro-assister/helper"
-	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
-	"github.com/pro-assistance/pro-assister/sqlHelper"
 	"github.com/uptrace/bun"
 )
 
@@ -47,11 +46,10 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx         context.Context
-	helper      *helper.Helper
-	queryFilter *sqlHelper.QueryFilter
-	tx          *bun.Tx
-	Error       error
+	ctx    context.Context
+	helper *helper.Helper
+	tx     *bun.Tx
+	Error  error
 }
 
 type FilesService struct {

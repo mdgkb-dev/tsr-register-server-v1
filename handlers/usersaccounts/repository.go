@@ -13,7 +13,6 @@ func (r *Repository) DB() *bun.DB {
 }
 
 func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}

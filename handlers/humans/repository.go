@@ -15,7 +15,6 @@ func (r *Repository) GetAll(c context.Context) (item models.HumansWithCount, err
 	item.Humans = make(models.Humans, 0)
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item.Humans)
 
-	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

@@ -2,9 +2,9 @@ package menus
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/middleware"
 	"mdgkb/tsr-tegister-server-v1/models"
 
+	"github.com/pro-assistance/pro-assister/middleware"
 	"github.com/uptrace/bun"
 	// _ "github.com/go-pg/pg/v10/orm"
 )
@@ -18,7 +18,6 @@ func (r *Repository) GetAll(c context.Context) (item models.MenusWithCount, err 
 	item.Menus = make(models.Menus, 0)
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item.Menus)
 	query.Join("join menus_domains on menus_domains.menu_id = menus.id and menus_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
-	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

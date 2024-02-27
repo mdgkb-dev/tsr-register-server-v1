@@ -2,13 +2,11 @@ package commissionsdrugapplications
 
 import (
 	"context"
-
-	"github.com/pro-assistance/pro-assister/helper"
-	"github.com/pro-assistance/pro-assister/httpHelper/basehandler"
-	"github.com/pro-assistance/pro-assister/sqlHelper"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
+
+	"github.com/pro-assistance/pro-assister/handlers/basehandler"
+	"github.com/pro-assistance/pro-assister/helper"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +20,7 @@ type IService interface {
 }
 
 type IRepository interface {
-	basehandler.IService[models.CommissionDrugApplication, models.CommissionsDrugApplications, models.CommissionsDrugApplicationsWithCount]
+	basehandler.IRepository[models.CommissionDrugApplication, models.CommissionsDrugApplications, models.CommissionsDrugApplicationsWithCount]
 }
 
 type IFilesService interface {
@@ -41,9 +39,8 @@ type Service struct {
 }
 
 type Repository struct {
-	ctx         context.Context
-	helper      *helper.Helper
-	queryFilter *sqlHelper.QueryFilter
+	ctx    context.Context
+	helper *helper.Helper
 }
 
 type FilesService struct {

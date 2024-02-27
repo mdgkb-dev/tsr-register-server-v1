@@ -63,7 +63,7 @@ func (r *Repository) GetByParameters(c context.Context, drugDozeID uuid.NullUUID
 func (r *Repository) GetAll(c context.Context) (item models.DrugRegimensWithCount, err error) {
 	item.DrugRegimens = make(models.DrugRegimens, 0)
 	query := r.helper.DB.IDB(c).NewSelect().Model(&item.DrugRegimens)
-	r.helper.SQL.ExtractQueryFilter(c).HandleQuery(query)
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

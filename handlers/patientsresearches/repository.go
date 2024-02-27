@@ -14,7 +14,6 @@ func (r *Repository) DB() *bun.DB {
 }
 
 func (r *Repository) SetQueryFilter(c *gin.Context) (err error) {
-	r.queryFilter, err = r.helper.SQL.CreateQueryFilter(c)
 	if err != nil {
 		return err
 	}
@@ -30,7 +29,6 @@ func (r *Repository) GetAll() (item models.PatientsResearchesWithCount, err erro
 	item.PatientsResearches = make(models.PatientsResearches, 0)
 	query := r.DB().NewSelect().Model(&item.PatientsResearches)
 
-	r.queryFilter.HandleQuery(query)
 	item.Count, err = query.ScanAndCount(r.ctx)
 	return item, err
 }

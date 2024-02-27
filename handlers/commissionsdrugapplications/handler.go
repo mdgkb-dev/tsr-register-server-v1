@@ -1,10 +1,10 @@
 package commissionsdrugapplications
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Create(c *gin.Context) {

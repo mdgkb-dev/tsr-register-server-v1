@@ -1,8 +1,10 @@
 package models
 
 import (
-	"mdgkb/tsr-tegister-server-v1/middleware"
+	"fmt"
 	"strings"
+
+	"github.com/pro-assistance/pro-assister/middleware"
 
 	"github.com/uptrace/bun"
 
@@ -55,4 +57,5 @@ func (item *User) SetJWTClaimsMap(claims map[string]interface{}) {
 		domainIds[i] = item.UsersDomains[i].DomainID.UUID.String()
 	}
 	claims[middleware.ClaimDomainIDS.String()] = strings.Join(domainIds, ",")
+	fmt.Println(claims)
 }
