@@ -31,7 +31,8 @@ func (s *Service) Register(c context.Context, email string, password string) (to
 }
 
 func (s *Service) Login(c context.Context, email string, password string) (*models.TokensWithUser, error) {
-	userAccountID, err := auth.S.Login(c, email, password)
+	userAccountID, err, err1 := auth.S.Login(c, email, password)
+	fmt.Println(err1)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +40,6 @@ func (s *Service) Login(c context.Context, email string, password string) (*mode
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(user.UsersDomains)
 	ts, err := s.helper.Token.CreateToken(user)
 	if err != nil {
 		return nil, err

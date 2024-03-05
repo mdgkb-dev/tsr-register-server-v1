@@ -48,15 +48,8 @@ func (r *Repository) delete(id *string) (err error) {
 	_, err = r.db().NewDelete().Model(&models.CommissionTemplate{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
+
 func (r *Repository) update(item *models.CommissionTemplate) (err error) {
 	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
-}
-
-func (r *Repository) getValueTypes() (models.ValueTypes, error) {
-	items := make(models.ValueTypes, 0)
-	err := r.db().NewSelect().
-		Model(&items).
-		Scan(r.ctx)
-	return items, err
 }

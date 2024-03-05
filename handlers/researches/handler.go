@@ -1,15 +1,15 @@
 package researches
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Research
-	err := c.Bind(&item)
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -26,6 +26,14 @@ func (h *Handler) GetAll(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, items)
+}
+
+func (h *Handler) FTSP(c *gin.Context) {
+	data, err := S.GetAll(c.Request.Context())
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, models.FTSPAnswer{Data: data, FTSP: *h.helper.SQL.ExtractFTSP(c.Request.Context())})
 }
 
 func (h *Handler) Get(c *gin.Context) {
@@ -52,7 +60,7 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Research
-	err := c.Bind(&item)
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -61,14 +69,6 @@ func (h *Handler) Update(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, item)
-}
-
-func (h *Handler) GetValueTypes(c *gin.Context) {
-	items, err := h.service.GetValueTypes()
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
-	c.JSON(http.StatusOK, items)
 }
 
 func (h *Handler) Xlsx(c *gin.Context) {

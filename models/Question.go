@@ -2,23 +2,24 @@ package models
 
 import (
 	"github.com/google/uuid"
+	basemodels "github.com/pro-assistance/pro-assister/models"
 	"github.com/uptrace/bun"
 )
 
 type Question struct {
 	bun.BaseModel   `bun:"questions,alias:questions"`
-	ID              uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Name            string        `json:"name"`
-	ShortName       string        `json:"shortName"`
-	Code            string        `json:"code"`
-	WithOther       bool          `json:"withOther"`
-	Order           int           `bun:"item_order" json:"order"`
-	ValueType       *ValueType    `bun:"rel:belongs-to" json:"valueType"`
-	ValueTypeID     uuid.NullUUID `bun:"type:uuid" json:"valueTypeId"`
-	Research        *Research     `bun:"rel:belongs-to" json:"research"`
-	ResearchID      uuid.NullUUID `bun:"type:uuid" json:"researchId"`
-	AgeCompare      bool          `json:"ageCompare"`
-	CalculateScores bool          `json:"calculateScores"`
+	ID              uuid.NullUUID         `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
+	Name            string                `json:"name"`
+	ShortName       string                `json:"shortName"`
+	Code            string                `json:"code"`
+	WithOther       bool                  `json:"withOther"`
+	Order           int                   `bun:"item_order" json:"order"`
+	ValueType       *basemodels.ValueType `bun:"rel:belongs-to" json:"valueType"`
+	ValueTypeID     uuid.NullUUID         `bun:"type:uuid" json:"valueTypeId"`
+	Research        *Research             `bun:"rel:belongs-to" json:"research"`
+	ResearchID      uuid.NullUUID         `bun:"type:uuid" json:"researchId"`
+	AgeCompare      bool                  `json:"ageCompare"`
+	CalculateScores bool                  `json:"calculateScores"`
 
 	AnswerVariants          AnswerVariants `bun:"rel:has-many" json:"answerVariants"`
 	AnswerVariantsForDelete []uuid.UUID    `bun:"-" json:"answerVariantsForDelete"`

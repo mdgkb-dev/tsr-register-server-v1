@@ -14,7 +14,7 @@ func (s *Service) Create(item *models.Research) error {
 		return err
 	}
 	item.SetIDForChildren()
-	//err = Researchgroup.CreateService(s.helper).UpsertMany(item.ResearchGroups)
+	// err = Researchgroup.CreateService(s.helper).UpsertMany(item.ResearchGroups)
 	if err != nil {
 		return err
 	}
@@ -72,14 +72,6 @@ func (s *Service) Update(item *models.Research) error {
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
-}
-
-func (s *Service) GetValueTypes() (models.ValueTypes, error) {
-	items, err := s.repository.getValueTypes()
-	if err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 func (s *Service) setQueryFilter(c *gin.Context) (err error) {

@@ -11,8 +11,8 @@ func (s *Service) Create(item *models.CommissionTemplate) error {
 	if err != nil {
 		return err
 	}
-	//item.SetIDForChildren()
-	//err = CommissionTemplategroup.CreateService(s.helper).UpsertMany(item.CommissionTemplateGroups)
+	// item.SetIDForChildren()
+	// err = CommissionTemplategroup.CreateService(s.helper).UpsertMany(item.CommissionTemplateGroups)
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (s *Service) Update(item *models.CommissionTemplate) error {
 	if err != nil {
 		return err
 	}
-	//item.SetIDForChildren()
+	// item.SetIDForChildren()
 
 	//CommissionTemplateGroupService := CommissionTemplategroup.CreateService(s.helper)
 	//err = CommissionTemplateGroupService.UpsertMany(item.CommissionTemplateGroups)
@@ -70,14 +70,6 @@ func (s *Service) Update(item *models.CommissionTemplate) error {
 
 func (s *Service) Delete(id *string) error {
 	return s.repository.delete(id)
-}
-
-func (s *Service) GetValueTypes() (models.ValueTypes, error) {
-	items, err := s.repository.getValueTypes()
-	if err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 func (s *Service) setQueryFilter(c *gin.Context) (err error) {

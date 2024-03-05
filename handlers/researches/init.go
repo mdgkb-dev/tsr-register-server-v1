@@ -2,7 +2,6 @@ package researches
 
 import (
 	"context"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
 
@@ -19,8 +18,8 @@ type IHandler interface {
 	Update(c *gin.Context)
 	Delete(c *gin.Context)
 
-	GetValueTypes(c *gin.Context)
 	Xlsx(c *gin.Context)
+	FTSP(c *gin.Context)
 }
 
 type IService interface {
@@ -32,7 +31,6 @@ type IService interface {
 	Delete(*string) error
 
 	GetResearchAndPatient(ctx context.Context, researchID string, patientID string) (*models.Research, *models.Patient, error)
-	GetValueTypes() (models.ValueTypes, error)
 }
 
 type IRepository interface {
@@ -43,8 +41,6 @@ type IRepository interface {
 	get(string) (*models.Research, error)
 	update(*models.Research) error
 	delete(*string) error
-
-	getValueTypes() (models.ValueTypes, error)
 }
 
 type IFilesService interface {
@@ -71,10 +67,12 @@ type FilesService struct {
 	helper *helper.Helper
 }
 
-var H *Handler
-var S *Service
-var R *Repository
-var F *FilesService
+var (
+	H *Handler
+	S *Service
+	R *Repository
+	F *FilesService
+)
 
 func Init(h *helper.Helper) {
 	R = NewRepository(h)

@@ -2,11 +2,10 @@ package commissionstemplates
 
 import (
 	"context"
-
-	"github.com/pro-assistance/pro-assister/helper"
-
 	"mdgkb/tsr-tegister-server-v1/models"
 	"mime/multipart"
+
+	"github.com/pro-assistance/pro-assister/helper"
 
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
@@ -19,7 +18,6 @@ type IHandler interface {
 	Update(c *gin.Context)
 	Delete(c *gin.Context)
 
-	GetValueTypes(c *gin.Context)
 	GetXlsx(c *gin.Context)
 }
 
@@ -30,8 +28,6 @@ type IService interface {
 	Create(*models.CommissionTemplate) error
 	Update(*models.CommissionTemplate) error
 	Delete(*string) error
-
-	GetValueTypes() (models.ValueTypes, error)
 }
 
 type IRepository interface {
@@ -42,8 +38,6 @@ type IRepository interface {
 	get(string) (*models.CommissionTemplate, error)
 	update(*models.CommissionTemplate) error
 	delete(*string) error
-
-	getValueTypes() (models.ValueTypes, error)
 }
 
 type IFilesService interface {

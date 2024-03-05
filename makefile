@@ -48,9 +48,11 @@ read_logs:
 show_sql_error: 
 	@./cmd/scripts/write_last_sql_error.sh | sed 's/\\//g'
 
-update_assister: 
-	go get github.com/pro-assistance/pro-assister@${tag} 
+# update_assister: 
+# 	go get github.com/pro-assistance/pro-assister@${tag} 
 
+update_assister: 
+	@./cmd/scripts/update_assister.sh
 #####
 #GIT#
 #####

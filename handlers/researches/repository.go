@@ -2,6 +2,7 @@ package researches
 
 import (
 	"context"
+	"fmt"
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/middleware"
@@ -22,6 +23,7 @@ func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
 }
 
 func (r *Repository) create(item *models.Research) (err error) {
+	fmt.Println(item)
 	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
 	return err
 }
@@ -44,7 +46,7 @@ func (r *Repository) getAll(c context.Context) (items models.Researches, err err
 		Relation("Questions.Children.AnswerVariants").
 		Relation("Formulas.FormulaResults")
 
-	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	// query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	err = query.Scan(r.ctx)
 
@@ -89,17 +91,10 @@ func (r *Repository) delete(id *string) (err error) {
 	_, err = r.db().NewDelete().Model(&models.Research{}).Where("id = ?", *id).Exec(r.ctx)
 	return err
 }
+
 func (r *Repository) update(item *models.Research) (err error) {
 	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
 	return err
-}
-
-func (r *Repository) getValueTypes() (models.ValueTypes, error) {
-	items := make(models.ValueTypes, 0)
-	err := r.db().NewSelect().
-		Model(&items).
-		Scan(r.ctx)
-	return items, err
 }
 
 func (r *Repository) GetForExport(c context.Context, idPool []string) (items models.Researches, err error) {
