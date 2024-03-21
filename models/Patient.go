@@ -175,7 +175,7 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 				if i == 0 {
 					patientData[i] = append(patientData[i], item.Human.GetFullName())
 					if item.Human.DateBirth != nil {
-						patientData[i] = append(patientData[i], item.Human.DateBirth.Format("02.01.2006"))
+						patientData[i] = append(patientData[i], item.Human.DateBirth)
 						patientData[i] = append(patientData[i], item.GetAge())
 						patientData[i] = append(patientData[i], item.GetAgeInMonths())
 					} else {

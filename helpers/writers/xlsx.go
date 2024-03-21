@@ -66,8 +66,7 @@ func (x *XlsxHelper) stylingHeader() error {
 	return err
 }
 
-//func (x *XlsxHelper)
-
+// func (x *XlsxHelper)
 func (x *XlsxHelper) SetError(err error) {
 	if x.Err != nil {
 		return
@@ -97,12 +96,42 @@ func (x *XlsxHelper) WriteCell(strNum int, colNum int, data interface{}) {
 	case float32:
 		err = x.file.SetCellFloat("Sheet1", cell, float64(d), 2, 64)
 	case *time.Time:
-		err = x.file.SetCellStr("Sheet1", cell, d.Format("02.01.2006"))
-	case DataWithStyle:
-		err = x.file.SetCellStr("Sheet1", cell, GetNormalizedData(d.Data).(string))
+		// err = x.file.SetCellStr("Sheet1", cell, d.Format("02.01.2006"))
+		style, err := x.file.NewStyle(&excelize.Style{NumFmt: 22})
 		if err != nil {
-			break
+			fmt.Println(err)
 		}
+		err = x.file.SetCellStyle("Sheet1", cell, cell, style)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// err = x.file.SetCellValue("Sheet1", cell, d.Format("02.01.2006"))
+		err = x.file.SetCellValue("Sheet1", cell, *d)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(d)
+	case DataWithStyle:
+		style, err := x.file.NewStyle(&excelize.Style{NumFmt: 40})
+		if err != nil {
+			fmt.Println(err)
+		}
+		err = x.file.SetCellStyle("Sheet1", cell, cell, style)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		// err = x.file.SetCellValue("Sheet1", cell, d.Format("02.01.2006"))
+		err = x.file.SetCellValue("Sheet1", cell, d)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// err = x.file.SetCellValue("Sheet1", cell, GetNormalizedData(d.Data).(string))
+		// err = x.file.SetCellValue("Sheet1", cell, d.Data)
+		// if err != nil {
+		// 	break
+		// }
 		color := d.Style.Color
 		x.SetCellColor(cell, color)
 	}
@@ -146,7 +175,7 @@ func (x *XlsxHelper) writeData() error {
 			values = append(values, mapa[k])
 		}
 		row := fmt.Sprintf("A%d", i+2)
-		//fmt.Println(row)
+		// fmt.Println(row)
 		err := x.file.SetSheetRow("Sheet1", row, &values)
 		if err != nil {
 			return err

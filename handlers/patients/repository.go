@@ -3,6 +3,7 @@ package patients
 import (
 	"context"
 	"fmt"
+
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/middleware"
@@ -127,6 +128,7 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 	}
 
 	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	err = query.Scan(c)
 	return items, err
 }

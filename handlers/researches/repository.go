@@ -3,6 +3,7 @@ package researches
 import (
 	"context"
 	"fmt"
+
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/middleware"
@@ -46,7 +47,7 @@ func (r *Repository) getAll(c context.Context) (items models.Researches, err err
 		Relation("Questions.Children.AnswerVariants").
 		Relation("Formulas.FormulaResults")
 
-	// query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
+	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	err = query.Scan(r.ctx)
 
@@ -120,7 +121,7 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 	}
 
 	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
-	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
+	// r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
 	err = query.Scan(r.ctx)
 	return items, err
 }

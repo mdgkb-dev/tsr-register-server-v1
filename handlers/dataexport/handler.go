@@ -1,38 +1,50 @@
 package dataexport
 
 import (
-	"encoding/json"
+	"fmt"
+	"net/http"
+	"time"
+
 	"mdgkb/tsr-tegister-server-v1/handlers/patients"
 	"mdgkb/tsr-tegister-server-v1/handlers/researches"
 	"mdgkb/tsr-tegister-server-v1/models"
-	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+type ExportOpts struct {
+	ExportOptions models.ExportOptions `json:"exportOptions"`
+}
+
 func (h *Handler) Export(c *gin.Context) {
-	exportOptions := models.ExportOptions{}
-	err := json.Unmarshal([]byte(c.Query("exportOptions")), &exportOptions)
+	opts := ExportOpts{}
+	// exportOptions :=
+	_, err := h.helper.HTTP.GetForm(c, &opts)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
+	fmt.Println(opts)
+	exportOptions := opts.ExportOptions
 
+	fmt.Println(2)
 	researchesExport := models.ResearchesExport{}
 	err = exportOptions.Parse(&researchesExport)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
+	fmt.Println(3)
 	researchesForExport, err := researches.R.GetForExport(c.Request.Context(), researchesExport.IDPool)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
+	fmt.Println(4)
 	headers := researchesForExport.GetExportData()
 	patientsExport := models.PatientsExport{}
 	err = exportOptions.Parse(&patientsExport)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
+	fmt.Println(5)
 	patientsForExport, err := patients.R.GetForExport(c.Request.Context(), patientsExport.IDPool)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
@@ -50,6 +62,7 @@ func (h *Handler) Export(c *gin.Context) {
 	if exportOptions.ExportType == models.ExportTypeXLSX {
 		ext = ".xlsx"
 	}
+	fmt.Println(7)
 	downloadName := time.Now().UTC().Format("data-20060102150405" + ext)
 	c.Header("Content-Description", "File Transfer")
 	c.Header("Content-Disposition", "attachment; filename="+`"`+downloadName+`"`)
