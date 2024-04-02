@@ -7,7 +7,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdrugapplications"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionstemplates"
-	"mdgkb/tsr-tegister-server-v1/handlers/contacts"
+
+	// "mdgkb/tsr-tegister-server-v1/handlers/contacts"
 	"mdgkb/tsr-tegister-server-v1/handlers/customsections"
 	"mdgkb/tsr-tegister-server-v1/handlers/dataexport"
 	"mdgkb/tsr-tegister-server-v1/handlers/disabilities"
@@ -50,7 +51,8 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/statuses"
 	"mdgkb/tsr-tegister-server-v1/handlers/users"
 	authRouter "mdgkb/tsr-tegister-server-v1/routing/auth"
-	contactsRouter "mdgkb/tsr-tegister-server-v1/routing/contacts"
+
+	// contactsRouter "mdgkb/tsr-tegister-server-v1/routing/contacts"
 	customsectionsRouter "mdgkb/tsr-tegister-server-v1/routing/customsections"
 	menusRouter "mdgkb/tsr-tegister-server-v1/routing/menus"
 	representativesRouter "mdgkb/tsr-tegister-server-v1/routing/representatives"
@@ -204,6 +206,6 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	drugregimens.Init(helper)
 	drugregimensRouter.Init(api.Group("/drug-regimens"), drugdozes.H)
 
-	contacts.Init(helper)
-	contactsRouter.Init(api.Group("/contacts"), contacts.H)
+	// contacts.Init(helper)
+	// contactsRouter.Init(api.Group("/contacts"), contacts.H)
 }

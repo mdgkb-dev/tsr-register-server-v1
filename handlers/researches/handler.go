@@ -13,7 +13,7 @@ func (h *Handler) Create(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Create(&item)
+	err = S.Create(c.Request.Context(), &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -21,7 +21,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	items, err := h.service.GetAll(c.Request.Context())
+	items, err := S.GetAll(c.Request.Context())
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -37,12 +37,8 @@ func (h *Handler) FTSP(c *gin.Context) {
 }
 
 func (h *Handler) Get(c *gin.Context) {
-	err := h.service.setQueryFilter(c)
-	if h.helper.HTTP.HandleError(c, err) {
-		return
-	}
 	id := c.Param("id")
-	item, err := h.service.Get(id)
+	item, err := S.Get(c.Request.Context(), id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -51,7 +47,7 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := h.service.Delete(&id)
+	err := S.Delete(c.Request.Context(), &id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -64,7 +60,7 @@ func (h *Handler) Update(c *gin.Context) {
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Update(&item)
+	err = S.Update(c.Request.Context(), &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -74,7 +70,7 @@ func (h *Handler) Update(c *gin.Context) {
 func (h *Handler) Xlsx(c *gin.Context) {
 	//researchID := c.Param("research-id")
 	//patientResearchID := c.Param("patient-id")
-	//research, patient, err := h.service.GetResearchAndPatient(c, researchID, patientResearchID)
+	//research, patient, err := S.GetResearchAndPatient(c, researchID, patientResearchID)
 	//if h.helper.HTTP.HandleError(c, err) {
 	//	return
 	//}

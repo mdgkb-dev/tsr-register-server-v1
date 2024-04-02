@@ -2,35 +2,21 @@ package researches
 
 import (
 	"context"
-	"fmt"
 
 	"mdgkb/tsr-tegister-server-v1/models"
 
 	"github.com/pro-assistance/pro-assister/middleware"
 
-	"github.com/gin-gonic/gin"
 	"github.com/uptrace/bun"
 )
 
-func (r *Repository) db() *bun.DB {
-	return r.helper.DB.DB
-}
-
-func (r *Repository) setQueryFilter(c *gin.Context) (err error) {
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *Repository) create(item *models.Research) (err error) {
-	fmt.Println(item)
-	_, err = r.db().NewInsert().Model(item).Exec(r.ctx)
+func (r *Repository) Create(c context.Context, item *models.Research) (err error) {
+	_, err = r.helper.DB.IDB(c).NewInsert().Model(item).Exec(c)
 	return err
 }
 
-func (r *Repository) getAll(c context.Context) (items models.Researches, err error) {
-	query := r.db().NewSelect().
+func (r *Repository) GetAll(c context.Context) (items models.Researches, err error) {
+	query := r.helper.DB.IDB(c).NewSelect().
 		Model(&items).
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("questions.item_order")
@@ -49,14 +35,14 @@ func (r *Repository) getAll(c context.Context) (items models.Researches, err err
 
 	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
-	err = query.Scan(r.ctx)
+	err = query.Scan(c)
 
 	return items, err
 }
 
-func (r *Repository) get(id string) (*models.Research, error) {
+func (r *Repository) Get(c context.Context, id string) (*models.Research, error) {
 	item := models.Research{}
-	err := r.db().NewSelect().
+	err := r.helper.DB.IDB(c).NewSelect().
 		Model(&item).
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("questions.item_order")
@@ -81,25 +67,25 @@ func (r *Repository) get(id string) (*models.Research, error) {
 			return q.Order("answer_variants.item_order")
 		}).
 		Relation("Formulas.FormulaResults").
-		Where("?TableAlias.id = ?", id).Scan(r.ctx)
+		Where("?TableAlias.id = ?", id).Scan(c)
 	if err != nil {
 		return nil, err
 	}
 	return &item, err
 }
 
-func (r *Repository) delete(id *string) (err error) {
-	_, err = r.db().NewDelete().Model(&models.Research{}).Where("id = ?", *id).Exec(r.ctx)
+func (r *Repository) Delete(c context.Context, id *string) (err error) {
+	_, err = r.helper.DB.IDB(c).NewDelete().Model(&models.Research{}).Where("id = ?", *id).Exec(c)
 	return err
 }
 
-func (r *Repository) update(item *models.Research) (err error) {
-	_, err = r.db().NewUpdate().Model(item).Where("id = ?", item.ID).Exec(r.ctx)
+func (r *Repository) Update(c context.Context, item *models.Research) (err error) {
+	_, err = r.helper.DB.IDB(c).NewUpdate().Model(item).Where("id = ?", item.ID).Exec(c)
 	return err
 }
 
 func (r *Repository) GetForExport(c context.Context, idPool []string) (items models.Researches, err error) {
-	query := r.db().NewSelect().
+	query := r.helper.DB.IDB(c).NewSelect().
 		Model(&items).
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("questions.item_order")
@@ -122,6 +108,6 @@ func (r *Repository) GetForExport(c context.Context, idPool []string) (items mod
 
 	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	// r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
-	err = query.Scan(r.ctx)
+	err = query.Scan(c)
 	return items, err
 }

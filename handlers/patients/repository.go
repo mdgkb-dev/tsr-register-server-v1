@@ -2,7 +2,6 @@ package patients
 
 import (
 	"context"
-	"fmt"
 
 	"mdgkb/tsr-tegister-server-v1/models"
 
@@ -36,8 +35,6 @@ func (r *Repository) GetAll(c context.Context) (items models.PatientsWithCount, 
 		Relation("PatientsRegisters.User").
 		Relation("CreatedBy").
 		Relation("UpdatedBy")
-
-	fmt.Println("domains", c.Value(middleware.ClaimDomainIDS.String()))
 
 	d := bun.In(middleware.ClaimDomainIDS.FromContextSlice(c))
 	query.Join("join patients_domains on patients_domains.patient_id = patients_view.id and patients_domains.domain_id in (?)", d)

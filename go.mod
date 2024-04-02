@@ -8,7 +8,7 @@ require (
 	github.com/go-pg/pg/v10 v10.10.6
 	github.com/google/uuid v1.3.0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
-	github.com/pro-assistance/pro-assister v1.0.5
+	github.com/pro-assistance/pro-assister v1.0.17
 	github.com/rifflock/lfshook v0.0.0-20180920164130-b9218ef580f5
 	github.com/sirupsen/logrus v1.9.3
 	github.com/uptrace/bun v1.1.13
