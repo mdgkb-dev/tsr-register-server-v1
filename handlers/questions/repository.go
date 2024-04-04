@@ -18,7 +18,8 @@ func (r *Repository) GetAll(c context.Context) (items models.QuestionsWithCount,
 	items.Questions = make(models.Questions, 0)
 	query := r.helper.DB.IDB(c).NewSelect().
 		Model(&items.Questions).
-		Relation("AnswerVariants")
+		Relation("AnswerVariants").
+		Relation("ValueType")
 
 	query.Join("join questions_domains qd on qd.question_id = questions.id and qd.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 

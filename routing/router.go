@@ -2,6 +2,7 @@ package routing
 
 import (
 	"mdgkb/tsr-tegister-server-v1/handlers/anamneses"
+	"mdgkb/tsr-tegister-server-v1/handlers/answervariants"
 	"mdgkb/tsr-tegister-server-v1/handlers/auth"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissions"
 	"mdgkb/tsr-tegister-server-v1/handlers/commissionsdoctors"
@@ -59,6 +60,7 @@ import (
 	representativesdomainsRouter "mdgkb/tsr-tegister-server-v1/routing/representativesdomains"
 
 	anamnesesRouter "mdgkb/tsr-tegister-server-v1/routing/anamneses"
+	answervariantsRouter "mdgkb/tsr-tegister-server-v1/routing/answervariants"
 	commissionsRouter "mdgkb/tsr-tegister-server-v1/routing/commissions"
 	commissionsDoctorsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdoctors"
 	commissionsdrugapplicationsRouter "mdgkb/tsr-tegister-server-v1/routing/commissionsdrugapplications"
@@ -138,6 +140,9 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	users.Init(helper)
 	usersRouter.Init(api.Group("/users"), users.H)
+
+	answervariants.Init(helper)
+	answervariantsRouter.Init(api.Group("/answer-variants"), answervariants.H)
 
 	regionsRouter.Init(api.Group("/regions"), regions.CreateHandler(helper))
 	researchesPoolsRouter.Init(api.Group("/researches-pools"), researchespools.CreateHandler(helper))

@@ -2,7 +2,6 @@ package questions
 
 import (
 	"context"
-	"mdgkb/tsr-tegister-server-v1/handlers/answervariants"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionexamples"
 	"mdgkb/tsr-tegister-server-v1/handlers/questionmeasures"
 	"mdgkb/tsr-tegister-server-v1/models"
@@ -52,15 +51,15 @@ func (s *Service) UpsertMany(c context.Context, items models.Questions) error {
 		return err
 	}
 	items.SetIDForChildren()
-	registerPropertyRadioService := answervariants.CreateService(s.helper)
-	err = registerPropertyRadioService.UpsertMany(items.GetRegisterPropertyRadios())
-	if err != nil {
-		return err
-	}
-	err = registerPropertyRadioService.DeleteMany(items.GetRegisterPropertyRadioForDelete())
-	if err != nil {
-		return err
-	}
+	// registerPropertyRadioService := answervariants.CreateService(s.helper)
+	// err = registerPropertyRadioService.UpsertMany(items.GetRegisterPropertyRadios())
+	// if err != nil {
+	// 	return err
+	// }
+	// err = registerPropertyRadioService.DeleteMany(items.GetRegisterPropertyRadioForDelete())
+	// if err != nil {
+	// 	return err
+	// }
 
 	registerPropertyExamplesService := questionexamples.CreateService(s.helper)
 	err = registerPropertyExamplesService.UpsertMany(items.GetRegisterPropertyExamples())

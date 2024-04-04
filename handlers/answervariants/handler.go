@@ -9,11 +9,11 @@ import (
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.AnswerVariant
-	err := c.Bind(&item)
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Create(&item)
+	err = S.Create(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -21,7 +21,7 @@ func (h *Handler) Create(c *gin.Context) {
 }
 
 func (h *Handler) GetAll(c *gin.Context) {
-	items, err := h.service.GetAll()
+	items, err := S.GetAll()
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -30,7 +30,7 @@ func (h *Handler) GetAll(c *gin.Context) {
 
 func (h *Handler) Get(c *gin.Context) {
 	id := c.Param("id")
-	item, err := h.service.Get(&id)
+	item, err := S.Get(&id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -39,7 +39,7 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := h.service.Delete(&id)
+	err := S.Delete(&id)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -48,11 +48,11 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.AnswerVariant
-	err := c.Bind(&item)
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
-	err = h.service.Update(&item)
+	err = S.Update(&item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

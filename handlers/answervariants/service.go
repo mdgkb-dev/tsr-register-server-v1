@@ -8,11 +8,11 @@ import (
 )
 
 func (s *Service) Create(item *models.AnswerVariant) error {
-	return s.repository.create(item)
+	return R.create(item)
 }
 
 func (s *Service) GetAll() ([]*models.AnswerVariant, error) {
-	items, err := s.repository.getAll()
+	items, err := R.getAll()
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +20,7 @@ func (s *Service) GetAll() ([]*models.AnswerVariant, error) {
 }
 
 func (s *Service) Get(id *string) (*models.AnswerVariant, error) {
-	item, err := s.repository.get(id)
+	item, err := R.get(id)
 	if err != nil {
 		return nil, err
 	}
@@ -28,18 +28,18 @@ func (s *Service) Get(id *string) (*models.AnswerVariant, error) {
 }
 
 func (s *Service) Update(item *models.AnswerVariant) error {
-	return s.repository.update(item)
+	return R.update(item)
 }
 
 func (s *Service) Delete(id *string) error {
-	return s.repository.delete(id)
+	return R.delete(id)
 }
 
 func (s *Service) UpsertMany(items models.AnswerVariants) error {
 	if len(items) == 0 {
 		return nil
 	}
-	err := s.repository.upsertMany(items)
+	err := R.upsertMany(items)
 	if err != nil {
 		return err
 	}
@@ -60,5 +60,5 @@ func (s *Service) DeleteMany(idPool []uuid.UUID) error {
 	if len(idPool) == 0 {
 		return nil
 	}
-	return s.repository.deleteMany(idPool)
+	return R.deleteMany(idPool)
 }

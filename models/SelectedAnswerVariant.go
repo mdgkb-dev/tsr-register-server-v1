@@ -13,6 +13,7 @@ type SelectedAnswerVariant struct {
 
 	AnswerVariant   *AnswerVariant `bun:"rel:belongs-to" json:"answerVariant"`
 	AnswerVariantID uuid.NullUUID  `bun:"type:uuid" json:"answerVariantId"`
+	PatientID       uuid.NullUUID  `bun:"type:uuid" json:"patientId"`
 }
 
 type SelectedAnswerVariants []*SelectedAnswerVariant
