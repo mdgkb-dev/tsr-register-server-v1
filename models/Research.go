@@ -29,7 +29,7 @@ type Research struct {
 type Researches []*Research
 
 type ResearchesWithCount struct {
-	Researches Researches `json:"researches"`
+	Researches Researches `json:"items"`
 	Count      int        `json:"count"`
 }
 
