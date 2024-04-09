@@ -28,6 +28,11 @@ type Research struct {
 
 type Researches []*Research
 
+type ResearchesWithCount struct {
+	Researches Researches `json:"researches"`
+	Count      int        `json:"count"`
+}
+
 type AnthropomethryKeys string
 
 const (

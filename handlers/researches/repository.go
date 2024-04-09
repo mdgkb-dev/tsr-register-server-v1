@@ -15,9 +15,10 @@ func (r *Repository) Create(c context.Context, item *models.Research) (err error
 	return err
 }
 
-func (r *Repository) GetAll(c context.Context) (items models.Researches, err error) {
+func (r *Repository) GetAll(c context.Context) (items models.ResearchesWithCount, err error) {
+	items.Researches = make(models.Researches, 0)
 	query := r.helper.DB.IDB(c).NewSelect().
-		Model(&items).
+		Model(&items.Researches).
 		Relation("Questions", func(q *bun.SelectQuery) *bun.SelectQuery {
 			return q.Order("questions.item_order")
 		}).
@@ -35,8 +36,8 @@ func (r *Repository) GetAll(c context.Context) (items models.Researches, err err
 
 	query.Join("join researches_domains on researches_domains.research_id = researches.id and researches_domains.domain_id in (?)", bun.In(middleware.ClaimDomainIDS.FromContextSlice(c)))
 	r.helper.SQL.ExtractFTSP(c).HandleQuery(query)
-	err = query.Scan(c)
 
+	items.Count, err = query.ScanAndCount(c)
 	return items, err
 }
 

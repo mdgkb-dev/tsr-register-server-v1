@@ -7,8 +7,7 @@ import (
 
 func (r *Repository) GetAll(c context.Context) (item models.UsersWithCount, err error) {
 	item.Users = make(models.Users, 0)
-	q := r.helper.DB.IDB(c).NewSelect().Model(&item.Users).
-		Relation("Role")
+	q := r.helper.DB.IDB(c).NewSelect().Model(&item.Users)
 
 	r.helper.SQL.ExtractFTSP(c).HandleQuery(q)
 	item.Count, err = q.ScanAndCount(c)

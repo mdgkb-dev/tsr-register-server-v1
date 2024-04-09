@@ -23,12 +23,8 @@ func (s *Service) Create(c context.Context, item *models.Research) error {
 	return err
 }
 
-func (s *Service) GetAll(c context.Context) (models.Researches, error) {
-	items, err := R.GetAll(c)
-	if err != nil {
-		return nil, err
-	}
-	return items, nil
+func (s *Service) GetAll(c context.Context) (models.ResearchesWithCount, error) {
+	return R.GetAll(c)
 }
 
 func (s *Service) Get(c context.Context, id string) (*models.Research, error) {

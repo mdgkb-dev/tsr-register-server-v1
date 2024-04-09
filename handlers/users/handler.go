@@ -28,6 +28,14 @@ func (h *Handler) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, items)
 }
 
+func (h *Handler) FTSP(c *gin.Context) {
+	data, err := S.GetAll(c.Request.Context())
+	if h.helper.HTTP.HandleError(c, err) {
+		return
+	}
+	c.JSON(http.StatusOK, models.FTSPAnswer{Data: data, FTSP: *h.helper.SQL.ExtractFTSP(c.Request.Context())})
+}
+
 func (h *Handler) Get(c *gin.Context) {
 	item, err := S.Get(c.Request.Context(), c.Param("slug"))
 	if h.helper.HTTP.HandleError(c, err) {
