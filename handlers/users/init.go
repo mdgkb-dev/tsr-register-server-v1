@@ -1,45 +1,16 @@
 package users
 
-import (
-	"context"
-	"mdgkb/tsr-tegister-server-v1/models"
-	"mime/multipart"
-
-	"github.com/pro-assistance/pro-assister/handlers/basehandler"
-	"github.com/pro-assistance/pro-assister/helper"
-
-	"github.com/gin-gonic/gin"
-)
-
-type IHandler interface {
-	basehandler.IHandler
-}
-
-type IService interface {
-	basehandler.IServiceWithContext[models.User, models.Users, models.UsersWithCount]
-}
-
-type IRepository interface {
-	basehandler.IRepositoryWithContext[models.User, models.Users, models.UsersWithCount]
-}
-
-type IFilesService interface {
-	Upload(*gin.Context, *models.User, map[string][]*multipart.FileHeader) error
-}
+import "github.com/pro-assistance/pro-assister/helper"
 
 type Handler struct {
-	service      IService
-	filesService IFilesService
-	helper       *helper.Helper
+	helper *helper.Helper
 }
 
 type Service struct {
-	repository IRepository
-	helper     *helper.Helper
+	helper *helper.Helper
 }
 
 type Repository struct {
-	ctx    context.Context
 	helper *helper.Helper
 }
 
@@ -57,6 +28,6 @@ var (
 func Init(h *helper.Helper) {
 	H = &Handler{helper: h}
 	S = &Service{helper: h}
-	R = &Repository{ctx: context.Background(), helper: h}
+	R = &Repository{helper: h}
 	F = &FilesService{helper: h}
 }
