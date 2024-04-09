@@ -9,8 +9,7 @@ import (
 
 func (h *Handler) Create(c *gin.Context) {
 	var item models.Question
-	err := c.Bind(&item)
-
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}
@@ -64,7 +63,7 @@ func (h *Handler) Delete(c *gin.Context) {
 
 func (h *Handler) Update(c *gin.Context) {
 	var item models.Question
-	err := c.Bind(&item)
+	_, err := h.helper.HTTP.GetForm(c, &item)
 	if h.helper.HTTP.HandleError(c, err) {
 		return
 	}

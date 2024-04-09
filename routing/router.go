@@ -95,13 +95,11 @@ import (
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
 	questionsRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
-	registerPropertyRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	representativeTypesRouter "mdgkb/tsr-tegister-server-v1/routing/representativetypes"
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
 	researchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/researchespools"
 	researchesResultsRouter "mdgkb/tsr-tegister-server-v1/routing/researchesresults"
-	registerGroupRouter "mdgkb/tsr-tegister-server-v1/routing/researchsection"
 	drugapplicationsstatusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
 	statusesRouter "mdgkb/tsr-tegister-server-v1/routing/statuses"
 	usersRouter "mdgkb/tsr-tegister-server-v1/routing/users"
@@ -127,8 +125,8 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 	insuranceCompanyRouter.Init(api.Group("/insurance-companies"), insurancecompany.CreateHandler(helper))
 	mkbItemsRouter.Init(api.Group("/mkb-items"), mkbitems.CreateHandler(helper))
 
-	registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
-	registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
+	// registerGroupRouter.Init(api.Group("/register-groups"), questions.CreateHandler(helper))
+	// registerPropertyRouter.Init(api.Group("/register-properties"), questions.CreateHandler(helper))
 
 	representatives.Init(helper)
 	representativesRouter.Init(api.Group("/representatives"), representatives.H)
