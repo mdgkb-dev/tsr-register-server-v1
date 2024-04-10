@@ -42,6 +42,7 @@ import (
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearches"
 	"mdgkb/tsr-tegister-server-v1/handlers/patientsresearchespools"
 	"mdgkb/tsr-tegister-server-v1/handlers/questions"
+	"mdgkb/tsr-tegister-server-v1/handlers/questionvariants"
 	"mdgkb/tsr-tegister-server-v1/handlers/regions"
 	"mdgkb/tsr-tegister-server-v1/handlers/representatives"
 	"mdgkb/tsr-tegister-server-v1/handlers/representativesdomains"
@@ -95,6 +96,7 @@ import (
 	patientsResearchesRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearches"
 	patientsResearchesPoolsRouter "mdgkb/tsr-tegister-server-v1/routing/patientsresearchespools"
 	questionsRouter "mdgkb/tsr-tegister-server-v1/routing/questions"
+	questionvariantsRouter "mdgkb/tsr-tegister-server-v1/routing/questionvariants"
 	regionsRouter "mdgkb/tsr-tegister-server-v1/routing/regions"
 	representativeTypesRouter "mdgkb/tsr-tegister-server-v1/routing/representativetypes"
 	researchesRouter "mdgkb/tsr-tegister-server-v1/routing/researches"
@@ -174,6 +176,9 @@ func Init(r *gin.Engine, helper *helperPack.Helper) {
 
 	researches.Init(helper)
 	researchesRouter.Init(api.Group("/researches"), researches.H)
+
+	questionvariants.Init(helper)
+	questionvariantsRouter.Init(api.Group("/question-variants"), questionvariants.H)
 
 	dataexport.Init(helper)
 	dataexportRouter.Init(api.Group("/data-export"), dataexport.H)

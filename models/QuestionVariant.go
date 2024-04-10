@@ -14,3 +14,8 @@ type QuestionVariant struct {
 }
 
 type QuestionVariants []*QuestionVariant
+
+type QuestionVariantsWithCount struct {
+	QuestionVariants QuestionVariants `json:"items"`
+	Count            int              `json:"count"`
+}
