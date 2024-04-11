@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pro-assistance/pro-assister/middleware"
+	baseModels "github.com/pro-assistance/pro-assister/models"
 
 	"github.com/uptrace/bun"
 
@@ -14,7 +15,8 @@ import (
 type User struct {
 	bun.BaseModel `bun:"users,alias:users"`
 	ID            uuid.NullUUID `bun:"id,pk,type:uuid,default:uuid_generate_v4()" json:"id" `
-	Login         string        `json:"login"`
+	Position      string        `json:"position"`
+	Division      string        `json:"division"`
 
 	RegisterPropertyToUser  RegisterPropertiesToUser `bun:"rel:has-many" json:"registerPropertyToUser"`
 	RegistersUsers          RegistersUsers           `bun:"rel:has-many" json:"registersUsers"`
@@ -22,8 +24,8 @@ type User struct {
 
 	UsersDomains UsersDomains `bun:"rel:has-many" json:"-"`
 
-	UserAccountID uuid.NullUUID `bun:"type:uuid" json:"userAccountId"`
-	UserAccount   *UserAccount  `bun:"rel:belongs-to" json:"userAccount"`
+	UserAccountID uuid.NullUUID           `bun:"type:uuid" json:"userAccountId"`
+	UserAccount   *baseModels.UserAccount `bun:"rel:belongs-to" json:"userAccount"`
 }
 
 type Users []*User
