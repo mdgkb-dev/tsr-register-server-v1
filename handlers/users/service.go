@@ -26,7 +26,7 @@ func (s *Service) GetByUserAccountID(c context.Context, id string) (*models.User
 }
 
 func (s *Service) Update(c context.Context, item *models.User) error {
-	err := R.Create(c, item)
+	err := R.Update(c, item)
 	if err != nil {
 		return err
 	}
