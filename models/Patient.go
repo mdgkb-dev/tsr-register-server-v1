@@ -111,7 +111,7 @@ func (item *Patient) SetDeleteIDForChildren() {
 
 func (items Patients) GetExportData(researches Researches) ([][]interface{}, Agregator, error) {
 	dataLines := make([][]interface{}, 0)
-	agregator := NewAgregator(researches.GetExportLen() + 2)
+	agregator := NewAgregator(researches.GetExportLen() + 4)
 	for _, patient := range items {
 		patientData, err := patient.GetExportData(researches)
 		if err != nil {
@@ -119,21 +119,21 @@ func (items Patients) GetExportData(researches Researches) ([][]interface{}, Agr
 		}
 		dataLines = append(dataLines, patientData...)
 
-		for _, researchResult := range patientData {
-			for answerIdx, answer := range researchResult {
-				switch v := answer.(type) {
-				case int:
-					agregator.Sums[answerIdx] += float64(v)
-					agregator.Count[answerIdx]++
-				case float64:
-					agregator.Sums[answerIdx] += v
-					agregator.Count[answerIdx]++
-				case float32:
-					agregator.Sums[answerIdx] += float64(v)
-					agregator.Count[answerIdx]++
-				}
-			}
-		}
+		// for _, researchResult := range patientData {
+		// 	for answerIdx, answer := range researchResult {
+		// 		switch v := answer.(type) {
+		// 		case int:
+		// 			agregator.Sums[answerIdx] += float64(v)
+		// 			agregator.Count[answerIdx]++
+		// 		case float64:
+		// 			agregator.Sums[answerIdx] += v
+		// 			agregator.Count[answerIdx]++
+		// 		case float32:
+		// 			agregator.Sums[answerIdx] += float64(v)
+		// 			agregator.Count[answerIdx]++
+		// 		}
+		// 	}
+		// }
 	}
 
 	return dataLines, agregator, nil
@@ -144,17 +144,18 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 	patientData = append(patientData, []interface{}{})
 
 	startColIdx := 0
+
 	for researchIdx, research := range researches {
 		patientResearch, err := item.GetPatientResearch(research.ID)
 		if err != nil {
 			return nil, err
 		}
-
 		patientResearchResults, err := patientResearch.GetExportData(research)
 		if err != nil {
 			return nil, err
 		}
 
+		// add additionalResultLine
 		if len(patientResearchResults) > len(patientData) {
 			newLines := make([][]interface{}, len(patientResearchResults)-len(patientData))
 			for i := range newLines {
@@ -164,21 +165,27 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 			}
 			patientData = append(patientData, newLines...)
 		}
+
+		// resetStartCol
 		if researchIdx == 0 {
-			startColIdx = 4
+			startColIdx = 5
 		} else {
 			startColIdx = len(patientData[0])
 		}
 
 		for i := range patientData {
+			// если исследование первое
 			if researchIdx == 0 {
+				// если результат первый
 				if i == 0 {
 					patientData[i] = append(patientData[i], item.Human.GetFullName())
 					if item.Human.DateBirth != nil {
 						patientData[i] = append(patientData[i], item.Human.DateBirth)
 						patientData[i] = append(patientData[i], item.GetAge())
 						patientData[i] = append(patientData[i], item.GetAgeInMonths())
+						patientData[i] = append(patientData[i], item.GetAgeGroup())
 					} else {
+						patientData[i] = append(patientData[i], "")
 						patientData[i] = append(patientData[i], "")
 						patientData[i] = append(patientData[i], "")
 						patientData[i] = append(patientData[i], "")
@@ -188,8 +195,10 @@ func (item *Patient) GetExportData(researches Researches) ([][]interface{}, erro
 					patientData[i] = append(patientData[i], []interface{}{""})
 					patientData[i] = append(patientData[i], []interface{}{""})
 					patientData[i] = append(patientData[i], []interface{}{""})
+					patientData[i] = append(patientData[i], []interface{}{""})
 				}
 			}
+
 			length := research.GetExportLen()
 			patientData[i] = append(patientData[i], make([]interface{}, length)...)
 		}
@@ -249,6 +258,27 @@ func (item *Patient) GetAge() string {
 func (item *Patient) GetAgeInMonths() string {
 	y, m := diff(*item.Human.DateBirth, time.Now())
 	return fmt.Sprintf("%d", y*12+m)
+}
+
+func (item *Patient) GetAgeGroup() string {
+	y, m := diff(*item.Human.DateBirth, time.Now())
+	g := y*12 + m
+	if g < 12 {
+		return "1 гр"
+	}
+	if g >= 12 && g <= 36 {
+		return "2 гр"
+	}
+	if g > 36 && g <= 84 {
+		return "3 гр"
+	}
+	if g > 84 && g <= 156 {
+		return "4 гр"
+	}
+	if g > 156 && g <= 216 {
+		return "5 гр"
+	}
+	return ""
 }
 
 func diff(a, b time.Time) (year, month int) {
